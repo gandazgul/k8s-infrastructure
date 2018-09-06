@@ -1,0 +1,79 @@
+repositories:
+  - name: bananaspliff
+    url: https://bananaspliff.github.io/geek-charts
+
+releases:
+  - name: main-volume
+    namespace: gandazgul
+    chart: bananaspliff/myvolume
+    version: 0.1.0
+    values:
+      - volumeName: main-volume
+      - storage: 1024Gi
+
+  - name: file-browser
+    namespace: gandazgul
+    chart: bananaspliff/filebrowser
+    version: 0.1.0
+    values:
+    - volumes:
+      - name: main-volume
+        persistentVolumeClaim:
+          claimName: main-volume
+    - volumeMounts:
+      - name: main-volume
+        mountPath: "/etc/config.json"
+        subPath: "configs/filebrowser/config.json"
+      - name: main-volume
+        mountPath: "/etc/database.db"
+        subPath: "configs/filebrowser/database.db"
+      - name: main-volume
+        mountPath: "/srv"
+
+  # kubectl create configmap openvpn-common-config --from-file SlickVPN_IAD.ovpn --namespace gandazgul
+  - name: transmission-openvpn
+    namespace: gandazgul
+    chart: bananaspliff/transmission-openvpn
+    version: 0.1.0
+    values:
+    - env:
+      - name: OPENVPN_PROVIDER
+        value: "slickvpn"
+      - name: OPENVPN_CONFIG
+        value: "United-States-New-York"
+      - name: LOCAL_NETWORK
+        value: "10.244.0.0/16"
+      - name: OPENVPN_USERNAME
+        value: "sv238245@slickvpn.com"
+      - name: OPENVPN_PASSWORD
+        value: "mq59AW2zgUoIFKsfr1Be"
+      - name: TRANSMISSION_RPC_USERNAME
+        value: "transmission"
+      - name: TRANSMISSION_RPC_PASSWORD
+        value: "WinterIsComing!"
+      - name: TRANSMISSION_PEER_PORT
+        value: "47444"
+      - name: TRANSMISSION_RPC_AUTHENTICATION_REQUIRED
+        value: "true"
+      - name: TRANSMISSION_DOWNLOAD_DIR
+        value: "/transmission/downloads"
+      - name: PUID
+        value: "1000"
+      - name: PGID
+        value: "1000"
+    - volumes:
+      - name: main-volume
+        persistentVolumeClaim:
+          claimName: main-volume
+      - name: dev-tun
+        hostPath:
+          path: "/dev/net/tun"
+    - volumeMounts:
+      - name: main-volume
+        mountPath: "/data"
+        subPath: "configs/transmission-data"
+      - name: main-volume
+        mountPath: "/transmission/downloads"
+        subPath: "transmission/downloads"
+      - name: dev-tun
+        mountPath: "/dev/net/tun"
