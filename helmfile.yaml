@@ -85,3 +85,22 @@ releases:
       - name: dev-tun
         hostPath:
           path: "/dev/net/tun"
+
+  - name: plex
+    namespace: gandazgul
+    chart: ../kube-plex/charts/kube-plex
+    version: 0.1.0
+    values:
+      - kubePlexImage:
+          repository: quay.io/munnerz/kube-plex
+          tag: latest
+          pullPolicy: Always
+      - timezone: America/New_York
+      - persistence:
+          transcode:
+            enabled: true
+      - service:
+          type: NodePort
+          externalIPs:
+            - 10.1.1.189
+
