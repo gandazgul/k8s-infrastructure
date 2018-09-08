@@ -3,11 +3,16 @@
 replicaCount: 1
 
 image:
-  repository: scoobadog/alpine-seedbox
-  tag: 1.8
-  pullPolicy: IfNotPresent
+  repository: gandazgul/openvpn-transmission-flexget
+  tag: v12
+  pullPolicy: Always
 
+#dnsPolicy: "None"
 
+dnsConfig:
+  nameservers:
+    - 8.8.8.8
+    - 8.8.4.4
 
 service:
   type: ClusterIP
@@ -25,6 +30,42 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+
+env:
+  - name: TRANSMISSION_PEER_CONGESTION_ALGORITHM
+    value: "\"\""
+  - name: TRANSMISSION_RPC_HOST_WHITELIST
+    value: "\"\""
+  - name: TRANSMISSION_SCRIPT_TORRENT_DONE_FILENAME
+    value: "\"\""
+  - name: DROP_DEFAULT_ROUTE
+    value: "false"
+
+volumes:
+  - name: main-volume
+    persistentVolumeClaim:
+      claimName: main-volume
+  - name: dev-tun
+    hostPath:
+      path: "/dev/net/tun"
+
+volumeMounts:
+  - name: main-volume
+    mountPath: "/var/log"
+    subPath: "logs/seedbox"
+  - name: main-volume
+    mountPath: "/data"
+    subPath: "transmission"
+  - name: main-volume
+    mountPath: "/config"
+    subPath: "configs/"
+  - name: dev-tun
+    mountPath: "/dev/net/tun"
+
+securityContext:
+  capabilities:
+    add:
+      - NET_ADMIN
 
 resources: {}
 

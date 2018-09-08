@@ -30,10 +30,9 @@ releases:
       - name: main-volume
         mountPath: "/srv"
 
-  # kubectl create configmap openvpn-common-config --from-file SlickVPN_IAD.ovpn --namespace gandazgul
-  - name: transmission-openvpn
+  - name: seedbox
     namespace: gandazgul
-    chart: bananaspliff/transmission-openvpn
+    chart: ./charts/seedbox
     version: 0.1.0
     values:
     - env:
@@ -50,17 +49,35 @@ releases:
       - name: TRANSMISSION_RPC_USERNAME
         value: "transmission"
       - name: TRANSMISSION_RPC_PASSWORD
-        value: "WinterIsComing!"
+        value: "Winter is coming!"
       - name: TRANSMISSION_PEER_PORT
         value: "47444"
       - name: TRANSMISSION_RPC_AUTHENTICATION_REQUIRED
         value: "true"
+      - name: TRANSMISSION_BLOCKLIST_ENABLED
+        value: "true"
+      - name: TRANSMISSION_BLOCKLIST_URL
+        value: "http://list.iblocklist.com/?list=bt_level1&fileformat=p2p&archiveformat=gz"
+      - name: TRANSMISSION_INCOMPLETE_DIR_ENABLED
+        value: "true"
+      - name: TRANSMISSION_HOME
+        value: "/data"
+      - name: TRANSMISSION_INCOMPLETE_DIR
+        value: "/data/downloading"
       - name: TRANSMISSION_DOWNLOAD_DIR
-        value: "/transmission/downloads"
+        value: "/data/downloads"
       - name: PUID
         value: "1000"
       - name: PGID
         value: "1000"
+      - name: TRANSMISSION_PEER_CONGESTION_ALGORITHM
+        value: "\"\""
+      - name: TRANSMISSION_RPC_HOST_WHITELIST
+        value: "\"\""
+      - name: TRANSMISSION_SCRIPT_TORRENT_DONE_FILENAME
+        value: "\"\""
+      - name: DROP_DEFAULT_ROUTE
+        value: "false"
     - volumes:
       - name: main-volume
         persistentVolumeClaim:
@@ -68,12 +85,3 @@ releases:
       - name: dev-tun
         hostPath:
           path: "/dev/net/tun"
-    - volumeMounts:
-      - name: main-volume
-        mountPath: "/data"
-        subPath: "configs/transmission-data"
-      - name: main-volume
-        mountPath: "/transmission/downloads"
-        subPath: "transmission/downloads"
-      - name: dev-tun
-        mountPath: "/dev/net/tun"
