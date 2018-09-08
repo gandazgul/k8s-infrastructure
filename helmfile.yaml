@@ -91,10 +91,6 @@ releases:
     chart: ../kube-plex/charts/kube-plex
     version: 0.1.0
     values:
-      - kubePlexImage:
-          repository: quay.io/munnerz/kube-plex
-          tag: latest
-          pullPolicy: Always
       - timezone: America/New_York
       - persistence:
           transcode:
