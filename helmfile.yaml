@@ -1,6 +1,8 @@
 repositories:
   - name: bananaspliff
     url: https://bananaspliff.github.io/geek-charts
+  - name: incubator
+    url: https://kubernetes-charts-incubator.storage.googleapis.com/
 
 releases:
 #  - name: main-volume
@@ -118,3 +120,25 @@ releases:
 #          externalIPs:
 #            - 10.1.1.189
 
+#  - name: resilio
+#    namespace: gandazgul
+#    chart: ./charts/resilio
+#    version: 0.1.0
+#    values:
+#      - volumes:
+#        - name: main-volume
+#          persistentVolumeClaim:
+#            claimName: main-volume
+#      - volumeMounts:
+#        - name: main-volume
+#          mountPath: "/mnt/sync"
+#          subPath: "configs/resilio"
+#        # TODO: mount the document's folders here mapped to the real HDD once that's configured
+#      - service:
+#          externalIPs:
+#            - 10.1.1.189
+
+  - name: gogs
+    namespace: gandazgul
+    chart: incubator/gogs
+    version: 0.6.0
