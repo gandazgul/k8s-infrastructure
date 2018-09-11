@@ -1,0 +1,7 @@
+apiVersion: kubeadm.k8s.io/v1alpha2
+kind: MasterConfiguration
+kubernetesVersion: v1.11.1
+apiServerExtraArgs:
+  service-node-port-range: "1025-32767"
+networking:
+  podSubnet: "10.244.0.0/16"

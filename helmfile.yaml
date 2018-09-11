@@ -3,94 +3,116 @@ repositories:
     url: https://bananaspliff.github.io/geek-charts
 
 releases:
-  - name: main-volume
-    namespace: gandazgul
-    chart: bananaspliff/myvolume
-    version: 0.1.0
-    values:
-      - volumeName: main-volume
-      - storage: 1024Gi
+#  - name: main-volume
+#    namespace: gandazgul
+#    chart: bananaspliff/myvolume
+#    version: 0.1.0
+#    values:
+#      - volumeName: main-volume
+#      - storage: 1024Gi
+#
+#  - name: file-browser
+#    namespace: gandazgul
+#    chart: bananaspliff/filebrowser
+#    version: 0.1.0
+#    values:
+#    - volumes:
+#      - name: main-volume
+#        persistentVolumeClaim:
+#          claimName: main-volume
+#    - volumeMounts:
+#      - name: main-volume
+#        mountPath: "/etc/config.json"
+#        subPath: "configs/filebrowser/config.json"
+#      - name: main-volume
+#        mountPath: "/etc/database.db"
+#        subPath: "configs/filebrowser/database.db"
+#      - name: main-volume
+#        mountPath: "/srv"
 
-  - name: file-browser
-    namespace: gandazgul
-    chart: bananaspliff/filebrowser
-    version: 0.1.0
-    values:
-    - volumes:
-      - name: main-volume
-        persistentVolumeClaim:
-          claimName: main-volume
-    - volumeMounts:
-      - name: main-volume
-        mountPath: "/etc/config.json"
-        subPath: "configs/filebrowser/config.json"
-      - name: main-volume
-        mountPath: "/etc/database.db"
-        subPath: "configs/filebrowser/database.db"
-      - name: main-volume
-        mountPath: "/srv"
-
-  - name: seedbox
-    namespace: gandazgul
-    chart: ./charts/seedbox
-    version: 0.1.0
-    values:
-    - env:
-      - name: OPENVPN_PROVIDER
-        value: "slickvpn"
-      - name: OPENVPN_CONFIG
-        value: "United-States-New-York"
-      - name: LOCAL_NETWORK
-        value: "10.244.0.0/16"
-      - name: OPENVPN_USERNAME
-        value: "sv238245@slickvpn.com"
-      - name: OPENVPN_PASSWORD
-        value: "mq59AW2zgUoIFKsfr1Be"
-      - name: TRANSMISSION_RPC_USERNAME
-        value: "transmission"
-      - name: TRANSMISSION_RPC_PASSWORD
-        value: "Winter is coming!"
-      - name: TRANSMISSION_PEER_PORT
-        value: "47444"
-      - name: TRANSMISSION_RPC_AUTHENTICATION_REQUIRED
-        value: "true"
-      - name: TRANSMISSION_BLOCKLIST_ENABLED
-        value: "true"
-      - name: TRANSMISSION_BLOCKLIST_URL
-        value: "http://list.iblocklist.com/?list=bt_level1&fileformat=p2p&archiveformat=gz"
-      - name: TRANSMISSION_INCOMPLETE_DIR_ENABLED
-        value: "true"
-      - name: TRANSMISSION_HOME
-        value: "/data"
-      - name: TRANSMISSION_INCOMPLETE_DIR
-        value: "/data/downloading"
-      - name: TRANSMISSION_DOWNLOAD_DIR
-        value: "/data/downloads"
-      - name: PUID
-        value: "1000"
-      - name: PGID
-        value: "1000"
-      - name: TRANSMISSION_PEER_CONGESTION_ALGORITHM
-        value: "\"\""
-      - name: TRANSMISSION_RPC_HOST_WHITELIST
-        value: "\"\""
-      - name: TRANSMISSION_SCRIPT_TORRENT_DONE_FILENAME
-        value: "\"\""
-      - name: DROP_DEFAULT_ROUTE
-        value: "false"
-    - volumes:
-      - name: main-volume
-        persistentVolumeClaim:
-          claimName: main-volume
-      - name: dev-tun
-        hostPath:
-          path: "/dev/net/tun"
+#  - name: seedbox
+#    namespace: gandazgul
+#    chart: ./charts/seedbox
+#    version: 0.1.0
+#    values:
+#    - env:
+#      - name: OPENVPN_PROVIDER
+#        value: "slickvpn"
+#      - name: OPENVPN_CONFIG
+#        value: "United-States-New-York"
+#      - name: LOCAL_NETWORK
+#        value: "10.244.0.0/16"
+#      - name: OPENVPN_USERNAME
+#        value: "sv238245@slickvpn.com"
+#      - name: OPENVPN_PASSWORD
+#        value: {{ requiredEnv "OPENVPN_PASSWORD" }}
+#      - name: TRANSMISSION_RPC_USERNAME
+#        value: "transmission"
+#      - name: TRANSMISSION_RPC_PASSWORD
+#        value: {{ requiredEnv "TRANSMISSION_RPC_PASSWORD" }}
+#      - name: TRANSMISSION_PEER_PORT
+#        value: "47444"
+#      - name: TRANSMISSION_RPC_URL
+#        value: "/"
+#      - name: TRANSMISSION_RPC_AUTHENTICATION_REQUIRED
+#        value: "true"
+#      - name: TRANSMISSION_BLOCKLIST_ENABLED
+#        value: "true"
+#      - name: TRANSMISSION_BLOCKLIST_URL
+#        value: "http://list.iblocklist.com/?list=bt_level1&fileformat=p2p&archiveformat=gz"
+#      - name: TRANSMISSION_INCOMPLETE_DIR_ENABLED
+#        value: "true"
+#      - name: TRANSMISSION_HOME
+#        value: "/data"
+#      - name: TRANSMISSION_INCOMPLETE_DIR
+#        value: "/data/downloading"
+#      - name: TRANSMISSION_DOWNLOAD_DIR
+#        value: "/data/downloads"
+#      - name: PUID
+#        value: "1000"
+#      - name: PGID
+#        value: "1000"
+#      - name: TRANSMISSION_PEER_CONGESTION_ALGORITHM
+#        value: "\"\""
+#      - name: TRANSMISSION_RPC_HOST_WHITELIST
+#        value: "\"\""
+#      - name: TRANSMISSION_SCRIPT_TORRENT_DONE_FILENAME
+#        value: "\"\""
+#      - name: DROP_DEFAULT_ROUTE
+#        value: "false"
+#      - name: TRANSMISSION_ENCRYPTION
+#        value: "2"
+#      - name: TRANSMISSION_IDLE_SEEDING_LIMIT
+#        value: "120"
+#      - name: TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED
+#        value: "true"
+#    - volumes:
+#      - name: main-volume
+#        persistentVolumeClaim:
+#          claimName: main-volume
+#      - name: dev-tun
+#        hostPath:
+#          path: "/dev/net/tun"
+#    - ingress:
+#        enabled: true
+#        rules:
+#          - http:
+#              paths:
+#                - path: /transmission
+#                  backend:
+#                    serviceName: seedbox
+#                    servicePort: http
+#        annotations:
+#          kubernetes.io/ingress.class: nginx
+#          nginx.ingress.kubernetes.io/rewrite-target: /
 
   - name: plex
     namespace: gandazgul
     chart: ../kube-plex/charts/kube-plex
     version: 0.1.0
     values:
+      - image:
+          tag: plexpass
       - timezone: America/New_York
       - persistence:
           transcode:
