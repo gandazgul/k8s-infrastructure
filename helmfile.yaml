@@ -36,10 +36,6 @@ releases:
 #    version: 0.1.0
 #    values:
 #    - env:
-#      - name: OPENVPN_PROVIDER
-#        value: "slickvpn"
-#      - name: OPENVPN_CONFIG
-#        value: "United-States-New-York"
 #      - name: LOCAL_NETWORK
 #        value: "10.244.0.0/16"
 #      - name: OPENVPN_USERNAME
@@ -50,8 +46,8 @@ releases:
 #        value: "transmission"
 #      - name: TRANSMISSION_RPC_PASSWORD
 #        value: {{ requiredEnv "TRANSMISSION_RPC_PASSWORD" }}
-#      - name: TRANSMISSION_PEER_PORT
-#        value: "47444"
+##      - name: TRANSMISSION_PEER_PORT
+##        value: "44444"
 #      - name: TRANSMISSION_RPC_URL
 #        value: "/"
 #      - name: TRANSMISSION_RPC_AUTHENTICATION_REQUIRED
@@ -62,10 +58,10 @@ releases:
 #        value: "http://list.iblocklist.com/?list=bt_level1&fileformat=p2p&archiveformat=gz"
 #      - name: TRANSMISSION_INCOMPLETE_DIR_ENABLED
 #        value: "true"
-#      - name: TRANSMISSION_HOME
-#        value: "/data"
 #      - name: TRANSMISSION_INCOMPLETE_DIR
 #        value: "/data/downloading"
+#      - name: TRANSMISSION_HOME
+#        value: "/data"
 #      - name: TRANSMISSION_DOWNLOAD_DIR
 #        value: "/data/downloads"
 #      - name: PUID
@@ -106,19 +102,19 @@ releases:
 #          kubernetes.io/ingress.class: nginx
 #          nginx.ingress.kubernetes.io/rewrite-target: /
 
-  - name: plex
-    namespace: gandazgul
-    chart: ../kube-plex/charts/kube-plex
-    version: 0.1.0
-    values:
-      - image:
-          tag: plexpass
-      - timezone: America/New_York
-      - persistence:
-          transcode:
-            enabled: true
-      - service:
-          type: NodePort
-          externalIPs:
-            - 10.1.1.189
+#  - name: plex
+#    namespace: gandazgul
+#    chart: ../kube-plex/charts/kube-plex
+#    version: 0.1.0
+#    values:
+#      - image:
+#          tag: plexpass
+#      - timezone: America/New_York
+#      - persistence:
+#          transcode:
+#            enabled: true
+#      - service:
+#          type: NodePort
+#          externalIPs:
+#            - 10.1.1.189
 

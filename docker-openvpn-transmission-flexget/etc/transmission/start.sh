@@ -48,18 +48,6 @@ fi
 echo "STARTING TRANSMISSION"
 exec su --preserve-environment ${RUN_AS} -s /bin/bash -c "/usr/bin/transmission-daemon -g ${TRANSMISSION_HOME} --logfile ${TRANSMISSION_HOME}/transmission.log" &
 
-if [ "$OPENVPN_PROVIDER" = "PIA" ]
-then
-    echo "CONFIGURING PORT FORWARDING"
-    exec /etc/transmission/updatePort.sh &
-elif [ "$OPENVPN_PROVIDER" = "PERFECTPRIVACY" ]
-then
-    echo "CONFIGURING PORT FORWARDING"
-    exec /etc/transmission/updatePPPort.sh ${TRANSMISSION_BIND_ADDRESS_IPV4} &
-else
-    echo "NO PORT UPDATER FOR THIS PROVIDER"
-fi
-
 # If transmission-post-start.sh exists, run it
 if [ -x /scripts/transmission-post-start.sh ]
 then

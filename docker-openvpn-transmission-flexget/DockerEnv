@@ -1,5 +1,4 @@
 #Remove # for variables you want to use
-#OPENVPN_PROVIDER=
 #OPENVPN_CONFIG=
 #OPENVPN_USERNAME=
 #OPENVPN_PASSWORD=
