@@ -12,7 +12,7 @@
 # when the configuration actually changes.
 #
 
-s6-setuidgid abc /usr/bin/flexget \
-    -c /config/flexget/config.yml \
-    --loglevel "${FLEXGET_LOG_LEVEL:-debug}" \
-    daemon start --autoreload-config
+#s6-setuidgid abc /usr/bin/flexget \
+#    -c /config/flexget/config.yml \
+#    --loglevel "${FLEXGET_LOG_LEVEL:-debug}" \
+#    daemon start --autoreload-config
