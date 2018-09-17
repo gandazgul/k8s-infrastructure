@@ -10,11 +10,13 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-#      nodePort: {{ .Values.service.port }}
-      targetPort: http
+    - name: http
+{{- if contains "NodePort" .Values.service.type }}
+      nodePort: {{ .Values.service.port }}
+{{- end }}
+      port: {{ .Values.service.port }}
       protocol: TCP
-      name: http
+      targetPort: http
   selector:
     app: {{ include "seedbox.name" . }}
     release: {{ .Release.Name }}

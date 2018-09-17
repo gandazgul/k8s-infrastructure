@@ -5,7 +5,7 @@ replicaCount: 1
 image:
   repository: resilio/sync
   tag: latest
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 nameOverride: "resilio"
 

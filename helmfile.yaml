@@ -1,39 +1,59 @@
 repositories:
-  - name: bananaspliff
-    url: https://bananaspliff.github.io/geek-charts
   - name: incubator
     url: https://kubernetes-charts-incubator.storage.googleapis.com/
 
 releases:
+#  - name: yasr-volume
+#    namespace: services
+#    chart: ./charts/persistentvolume
+#    version: 0.1.0
+#    values:
+#      - volumeName: yasr-volume
+#      - storage: 2Ti
+
 #  - name: main-volume
-#    namespace: gandazgul
-#    chart: bananaspliff/myvolume
+#    namespace: services
+#    chart: ./charts/persistentvolume
 #    version: 0.1.0
 #    values:
 #      - volumeName: main-volume
-#      - storage: 1024Gi
+#      - storage: 4Ti
+#      - stageClass: main
 #
-#  - name: file-browser
-#    namespace: gandazgul
-#    chart: bananaspliff/filebrowser
+#  - name: backup-volume
+#    namespace: services
+#    chart: ./charts/persistentvolume
+#    version: 0.1.0
+#    values:
+#      - volumeName: backup-volume
+#      - storage: 4Ti
+#      - stageClass: backup
+
+#  - name: filebrowser
+#    namespace: services
+#    chart: ./charts/filebrowser
 #    version: 0.1.0
 #    values:
 #    - volumes:
-#      - name: main-volume
+#      - name: yasr-volume
 #        persistentVolumeClaim:
-#          claimName: main-volume
+#          claimName: yasr-volume
 #    - volumeMounts:
-#      - name: main-volume
-#        mountPath: "/etc/config.json"
-#        subPath: "configs/filebrowser/config.json"
-#      - name: main-volume
-#        mountPath: "/etc/database.db"
-#        subPath: "configs/filebrowser/database.db"
-#      - name: main-volume
+#      - name: yasr-volume
 #        mountPath: "/srv"
+#    - service:
+#        type: NodePort
+#        port: 8080
+
+#### NFS Shares
+#### Windows: https://graspingtech.com/mount-nfs-share-windows-10/
+#### https://www.hiroom2.com/2017/12/05/fedora-27-nfs-utils-server-en/
+#  - name: nfs-shares
+#    namespace: services
+#    chart:
 
 #  - name: seedbox
-#    namespace: gandazgul
+#    namespace: services
 #    chart: ./charts/seedbox
 #    version: 0.1.0
 #    values:
@@ -41,7 +61,7 @@ releases:
 #      - name: LOCAL_NETWORK
 #        value: "10.244.0.0/16"
 #      - name: OPENVPN_USERNAME
-#        value: "sv238245@slickvpn.com"
+#        value: {{ requiredEnv "OPENVPN_USERNAME" }}
 #      - name: OPENVPN_PASSWORD
 #        value: {{ requiredEnv "OPENVPN_PASSWORD" }}
 #      - name: TRANSMISSION_RPC_USERNAME
@@ -70,42 +90,41 @@ releases:
 #        value: "1000"
 #      - name: PGID
 #        value: "1000"
-#      - name: TRANSMISSION_PEER_CONGESTION_ALGORITHM
-#        value: "\"\""
-#      - name: TRANSMISSION_RPC_HOST_WHITELIST
-#        value: "\"\""
-#      - name: TRANSMISSION_SCRIPT_TORRENT_DONE_FILENAME
-#        value: "\"\""
-#      - name: DROP_DEFAULT_ROUTE
-#        value: "false"
 #      - name: TRANSMISSION_ENCRYPTION
 #        value: "2"
 #      - name: TRANSMISSION_IDLE_SEEDING_LIMIT
 #        value: "120"
 #      - name: TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED
 #        value: "true"
+##       fix container so that these are not needed
+#      - name: TRANSMISSION_PEER_CONGESTION_ALGORITHM
+#        value: "\"\""
+#      - name: TRANSMISSION_RPC_HOST_WHITELIST
+#        value: "\"\""
+#      - name: TRANSMISSION_SCRIPT_TORRENT_DONE_FILENAME
+#        value: "\"\""
 #    - volumes:
-#      - name: main-volume
+#      - name: yasr-volume
 #        persistentVolumeClaim:
-#          claimName: main-volume
+#          claimName: yasr-volume
 #      - name: dev-tun
 #        hostPath:
 #          path: "/dev/net/tun"
-#    - ingress:
-#        enabled: true
-#        rules:
-#          - http:
-#              paths:
-#                - path: /transmission
-#                  backend:
-#                    serviceName: seedbox
-#                    servicePort: http
-#        annotations:
-#          kubernetes.io/ingress.class: nginx
-#          nginx.ingress.kubernetes.io/rewrite-target: /
+#    - volumeMounts:
+#      - name: yasr-volume
+#        mountPath: "/var/log"
+#        subPath: "logs/seedbox"
+#      - name: yasr-volume
+#        mountPath: "/data"
+#        subPath: "transmission"
+#      - name: yasr-volume
+#        mountPath: "/config"
+#        subPath: "configs/"
+#      - name: dev-tun
+#        mountPath: "/dev/net/tun"
 
 #  - name: plex
-#    namespace: gandazgul
+#    namespace: services
 #    chart: ../kube-plex/charts/kube-plex
 #    version: 0.1.0
 #    values:
@@ -115,30 +134,24 @@ releases:
 #      - persistence:
 #          transcode:
 #            enabled: true
-#      - service:
-#          type: NodePort
-#          externalIPs:
-#            - 10.1.1.189
+#      - ipaddress.yaml
 
 #  - name: resilio
-#    namespace: gandazgul
+#    namespace: services
 #    chart: ./charts/resilio
 #    version: 0.1.0
 #    values:
 #      - volumes:
-#        - name: main-volume
+#        - name: yasr-volume
 #          persistentVolumeClaim:
-#            claimName: main-volume
+#            claimName: yasr-volume
 #      - volumeMounts:
-#        - name: main-volume
+#        - name: yasr-volume
 #          mountPath: "/mnt/sync"
 #          subPath: "configs/resilio"
-#        # TODO: mount the document's folders here mapped to the real HDD once that's configured
-#      - service:
-#          externalIPs:
-#            - 10.1.1.189
+#         TODO: mount the document's folders here mapped to the real HDD once that's configured
 
-  - name: gogs
-    namespace: gandazgul
-    chart: incubator/gogs
-    version: 0.6.0
+#  - name: gogs
+#    namespace: services
+#    chart: incubator/gogs
+#    version: 0.6.0

@@ -15,16 +15,6 @@ service:
 
 ingress:
   enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  path: /
-  hosts:
-    - chart-example.local
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
 env:
   - name: TRANSMISSION_PEER_CONGESTION_ALGORITHM
@@ -33,8 +23,6 @@ env:
     value: "\"\""
   - name: TRANSMISSION_SCRIPT_TORRENT_DONE_FILENAME
     value: "\"\""
-  - name: DROP_DEFAULT_ROUTE
-    value: "false"
 
 volumes:
   - name: main-volume

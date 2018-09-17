@@ -45,27 +45,28 @@ On your local machine (NOTE: Only works on your local network):
 1. Customize helmfile.yaml to your needs
 2. On the root of infrastructure `cp ./secrets.example.sh ./secrets.sh`
 3. Fill in secrets with your passwords and other settings
-4. run ./secrets.sh to set up the passwords
-5. run `helmfile sync` - to setup the rest of the services (`helmfile charts` to retry after)
+4. run `source ./secrets.sh` to set up the passwords/settings
+5. run `helmfile sync` - to setup the rest of the services (`helmfile charts` to retry/update after)
+6. `helm list` to see what is installed
 6. `helm delete --purge [NAME]` to remove one particular service if you need to retry 
 
 ## Services Included:
 
 * Volumes for service configs and data
-* 
 * K8s Dashboard
 * Plex
 * Resilio Sync
-* File Browser
-* Samba
+* FileBrowser
 * Seedbox (transmission, flexget, OpenVPN)
+* NFS Shares Server
+* SSHD - for tunneling, etc
 * Gogs
-* Custom web apps as containerized apps
-* And others
+* Samba
 
 ## Access
 
-Each service will be accessed a little different depending on what it is. The dashboard, plex and transmission will probably just open their ports on the machine they are on.
-For others I'll use an ingress controller and path (http://server_name/app_name) config. If I end up adding more nodes this will probably have to change.
+Each service will be accessed a little different depending on what it is. The dashboard, plex and transmission will 
+probably just open their ports on the machine they are on. If I end up adding more nodes this will probably have to 
+change.
 
 DNS?
