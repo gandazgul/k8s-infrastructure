@@ -14,17 +14,7 @@ service:
   port: 8888
 
 ingress:
-  enabled: true
-  rules:
-    - http:
-        paths:
-          - path: /resilio
-            backend:
-              serviceName: resilio
-              servicePort: http
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /
+  enabled: false
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
