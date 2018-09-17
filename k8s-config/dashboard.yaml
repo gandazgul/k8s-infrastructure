@@ -31,7 +31,7 @@ spec:
   externalTrafficPolicy: Cluster
   ports:
     - nodePort: 8443
-      port: 443
+      port: 8443
       protocol: TCP
       targetPort: 8443
   selector:
