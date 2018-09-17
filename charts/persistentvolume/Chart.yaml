@@ -1,0 +1,4 @@
+apiVersion: v1
+description: PVC ReadWriteMany
+name: myvolume
+version: 0.1.0

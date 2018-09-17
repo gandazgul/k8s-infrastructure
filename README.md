@@ -6,16 +6,53 @@ Mostly each service will have its own container with the exception of the seedbo
 
 ## Getting started
 
+This will install a fully functioning kubernetes master where you can run all of your services.
+
 1. Install Fedora 28
-2. Copy k8s-config/ to the Fedora machine
-3. `cd k8s-config/ && chmod +x *.sh && ./configMaster.sh`
+2. Check out this repo on local machine
+3. `scp -r ./k8s-config fedora-ip:~/`
+4. `ssh fedora-ip`
+5. `cd k8s-config/ && chmod +x *.sh && ./configMaster.sh`
+6. If something fails, reset with `sudo kubeadm reset` and try again, the other commands are repeatable
 
-This will install a fully functioning kubernetes master where you can run all of the apps.
+Verify Kubelet that is running with `sudo systemctl status kubelet`
 
-Use helmfile to sync up the helmfile.yaml file to get all of the services up and running. Customize for your needs. 
+If you see this: `failed to run Kubelet: failed to create kubelet: misconfiguration: kubelet cgroup driver: "systemd" is different from docker cgroup driver: "cgroupfs"` 
+Look up how to change docker's cgroup from cgroupfs to systemd. Restart the machine.
 
-## Services I plan to run:
+### Verify kubectl works:
 
+NOTE: Kubectl does not need sudo, it will fail with sudo
+
+* `kubectl get nodes` ← gets all nodes
+* `kubectl get all --all-namespaces` ← shows everything that’s running in kubernetes
+
+### Setting up your local machine for using k8s
+
+On your local machine (NOTE: Only works on your local network):
+1. Install kubectl (`brew install kubernetes-client` or find the package for your linux distro that install kubectl)
+2. `scp fedora-ip:~/.kube/config ~/.kube/config` <-- configuration file for connecting to the cluster
+3. Test with `kubectl get nodes` you should see your node listed, if not check the permissions on the config file (should be owned by your user/group).
+4. Install helm with ./k8s-config/installHelm.sh. This installs helm without tiller, instead it uses the tiller plugin to run tiller locally :)
+    1. Test helm with:
+    2. `helm tiller start` <-- starts bash with tiller enabled
+    3. `helm list` <-- Should see no output, if error then something went wrong
+    4. `exit`
+5. Install helmfile: `brew install helmfile` (for linux see helmfile's releases: https://github.com/roboll/helmfile/releases)
+
+### To Install the services
+
+1. Customize helmfile.yaml to your needs
+2. On the root of infrastructure `cp ./secrets.example.sh ./secrets.sh`
+3. Fill in secrets with your passwords and other settings
+4. run ./secrets.sh to set up the passwords
+5. run `helmfile sync` - to setup the rest of the services (`helmfile charts` to retry after)
+6. `helm delete --purge [NAME]` to remove one particular service if you need to retry 
+
+## Services Included:
+
+* Volumes for service configs and data
+* 
 * K8s Dashboard
 * Plex
 * Resilio Sync

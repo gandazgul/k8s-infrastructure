@@ -1,0 +1,34 @@
+# default values for filebrowser
+
+replicaCount: 1
+
+image:
+  repository: filebrowser/filebrowser
+  tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: "filebrowser"
+
+service:
+  type: NodePort
+  port: 8080
+
+ingress:
+  enabled: false
+
+volumes:
+  - name: myvolume
+    persistentVolumeClaim:
+      claimName: myvolume
+
+volumeMounts:
+  - name: myvolume
+    mountPath: "/srv"
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
