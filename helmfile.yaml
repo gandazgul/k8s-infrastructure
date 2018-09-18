@@ -155,3 +155,17 @@ releases:
 #    namespace: services
 #    chart: incubator/gogs
 #    version: 0.6.0
+
+# TODO: figure out how to add users here from a file
+#  - name: sshd
+#    namespace: services
+#    chart: ./charts/sshd
+#    version: 0.1.0
+#    values:
+#      - volumes:
+#        - name: main-volume
+#          persistentVolumeClaim:
+#            claimName: main-volume
+#      - volumeMounts:
+#        - name: main-volume
+#          mountPath: "/home

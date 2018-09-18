@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sshd.fullname" . }}
+  labels:
+    app: {{ include "sshd.name" . }}
+    chart: {{ include "sshd.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - name: sshd
+{{- if contains "NodePort" .Values.service.type }}
+      nodePort: {{ .Values.service.port }}
+{{- end }}
+      port: {{ .Values.service.port }}
+      protocol: TCP
+      targetPort: sshd
+  selector:
+    app: {{ include "sshd.name" . }}
+    release: {{ .Release.Name }}
