@@ -3,6 +3,7 @@
 echo "Installing helm with the tiller plugin ========================================================================="
 if [ ! -f ~/.helm/plugins ]; then
     curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+    helm init --client-only
     mkdir -p ~/.helm/plugins
     helm plugin install https://github.com/rimusz/helm-tiller || exit 1
     helm tiller run helm list || exit 1

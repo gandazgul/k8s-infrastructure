@@ -39,6 +39,8 @@ On your local machine (NOTE: Only works on your local network):
     3. `helm list` <-- Should see no output, if error then something went wrong
     4. `exit`
 5. Install helmfile: `brew install helmfile` (for linux see helmfile's releases: https://github.com/roboll/helmfile/releases)
+6. Set default namespace for kubectl `kubectl config set-context $(kubectl config current-context) --namespace=services`
+    1. Check that the namespace was set: `kubectl config view | grep namespace:`
 
 ### To Install the services
 
