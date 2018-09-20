@@ -1,4 +1,5 @@
 .idea/workspace.xml
 docker/sshd/users.conf
+docker/size-checker/ssmtp.conf
 secrets.sh
 ipaddress.yaml
