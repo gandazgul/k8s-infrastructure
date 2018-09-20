@@ -17,12 +17,11 @@ if [ `df | grep /hdd | wc -l` -gt 1 ]; then
     DF_OUTPUT=`df | grep /hdd`
 
     # send email
-    echo "To:$MAIL_TO" >> /tmp/mail.txt
-    echo "From:<Size Checker at k8s> $MAIL_TO" >> /tmp/mail.txt
-    echo "Subject:Size checker: df output had more than 1 line" >> /tmp/mail.txt
-    printf "\n\n" >> /tmp/mail.txt
-    echo "Please check size-checker, df output was too long. $DF_OUTPUT" >> /tmp/mail.txt
-    cat /tmp/mail.txt
+    printf "To:$MAIL_TO" >> /tmp/mail.txt
+    printf "From:<Size Checker at k8s> $MAIL_TO" >> /tmp/mail.txt
+    printf "Subject:Size checker: df output had more than 1 line\n\n" >> /tmp/mail.txt
+    printf "Please check size-checker, df output was too long. $DF_OUTPUT" >> /tmp/mail.txt
+
     ssmtp -t < /tmp/mail.txt
 
     exit 1
@@ -47,12 +46,11 @@ if [ $(( PREV_SIZE - NEW_SIZE )) -gt 5242880 ]; then
     #sound the alarm
     echo "Something is wrong, HDD size went down more than 5G. Old size: ${HUMAN_PREV_SIZE}G -> New size: ${HUMAN_NEW_SIZE}G"
 
-    echo "To:$MAIL_TO" >> /tmp/mail.txt
-    echo "From:<Size Checker at k8s> $MAIL_TO" >> /tmp/mail.txt
-    echo "Subject:Size checker: HDD size decreased more than 5G" >> /tmp/mail.txt
-    printf "\n\n" >> /tmp/mail.txt
-    echo "Please check what happened to the HDD. Old size: ${HUMAN_PREV_SIZE}G -> New size: ${HUMAN_NEW_SIZE}G." >> /tmp/mail.txt
-    cat /tmp/mail.txt
+    printf "To:$MAIL_TO" >> /tmp/mail.txt
+    printf "From:<Size Checker at k8s> $MAIL_TO" >> /tmp/mail.txt
+    printf "Subject:Size checker: HDD size decreased more than 5G\n\n" >> /tmp/mail.txt
+    printf "Please check what happened to the HDD. Old size: ${HUMAN_PREV_SIZE}G -> New size: ${HUMAN_NEW_SIZE}G." >> /tmp/mail.txt
+
     ssmtp -t < /tmp/mail.txt
 
     #stop backups?

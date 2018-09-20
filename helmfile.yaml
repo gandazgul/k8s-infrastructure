@@ -103,6 +103,8 @@ releases:
 #        value: "\"\""
 #      - name: TRANSMISSION_SCRIPT_TORRENT_DONE_FILENAME
 #        value: "\"\""
+#      - name: MAIL_TO
+#        value: {{ requiredEnv "MAIL_TO" }}
 #    - volumes:
 #      - name: yasr-volume
 #        persistentVolumeClaim:

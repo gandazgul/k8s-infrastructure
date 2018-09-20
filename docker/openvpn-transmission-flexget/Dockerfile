@@ -15,16 +15,13 @@ RUN printf "\
 @community http://nl.alpinelinux.org/alpine/edge/community\n\
 " >> /etc/apk/repositories
 
-RUN apk add --no-cache \
-        apk-tools bash dumb-init ip6tables ufw@testing openvpn shadow transmission-daemon curl jq \
-        # Dependency for libtorrent-rasterbar.
-#        boost-python@edge boost-system@edge libressl-dev@edge \
-#        libtorrent-rasterbar@testing \
+RUN apk update \
+    && apk add --no-cache \
+        apk-tools bash dumb-init ip6tables ufw@testing openvpn shadow transmission-daemon curl jq ssmtp \
     && echo "Install dockerize $DOCKERIZE_VERSION" \
     && wget -qO- https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz | tar xz -C /usr/bin \
     && rm -rf /tmp/* /var/tmp/* \
     && groupmod -g 1000 users \
-#    && useradd -u 911 -U -d /config -s /bin/false abc \
     && usermod -G users abc
 
 RUN pip install -U pip \
