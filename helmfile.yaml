@@ -158,7 +158,6 @@ releases:
 #    chart: incubator/gogs
 #    version: 0.6.0
 
-# TODO: figure out how to add users here from a file
 #  - name: sshd
 #    namespace: services
 #    chart: ./charts/sshd
@@ -170,4 +169,32 @@ releases:
 #            claimName: main-volume
 #      - volumeMounts:
 #        - name: main-volume
-#          mountPath: "/home
+#          mountPath: "/home"
+
+#  - name: samba
+#    namespace: services
+#TODO: copy the chart to customize
+#    chart: ../charts/samba
+#    version: 0.1.0
+#    values:
+#      - image:
+#          repository: dperson/samba
+#          tag: latest
+#          pullPolicy: IfNotPresent
+#      - hostNetwork: true
+#      - volumes:
+#          - name: yasr-volume
+#            persistentVolumeClaim:
+#              claimName: yasr-volume
+#      - volumeMounts:
+#          - name: yasr-volume
+#            mountPath: "/etc/samba/"
+#            subPath: "configs/samba/"
+#          - name: yasr-volume
+#            mountPath: "/shared"
+#      - env:
+#          - name: IMPORT
+#            value: "/etc/samba/smbpasswd"
+#          - name: TZ
+#            value: "EST5EDT"
+
