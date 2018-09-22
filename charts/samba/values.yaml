@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: samnco/samba
+  repository: dperson/samba
   tag: latest
   pullPolicy: IfNotPresent
 

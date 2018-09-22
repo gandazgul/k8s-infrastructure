@@ -1,0 +1,20 @@
+{
+  "kind": "PersistentVolume",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "{{ .Values.volumeName }}",
+  },
+  "spec": {
+    "capacity": {
+      "storage": "{{ .Values.storage }}"
+    },
+    "hostPath": {
+      "path": "{{ .Values.hostPath.path }}",
+      "type": "{{ .Values.hostPath.type }}"
+    },
+    "accessModes": [
+      "ReadWriteMany"
+    ],
+    "persistentVolumeReclaimPolicy": "Retain"
+  },
+}

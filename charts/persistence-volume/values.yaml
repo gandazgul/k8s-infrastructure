@@ -1,0 +1,10 @@
+---
+# Default values for main-volume.
+
+volumeName: "main-volume"
+
+storage: "1T"
+
+hostPath:
+  path": "/media/main",
+  type: "Directory"

@@ -10,26 +10,42 @@ releases:
 #    values:
 #      - volumeName: yasr-volume
 #      - storage: 2Ti
-
-  - name: main-volume
-
+#
+#  - name: main-volume-pv
+#    namespace: services
+#    chart: ./charts/persistence-volume
+#    version: 0.1.0
+#    values:
+#      - volumeName: "main-volume"
+#      - storage: "4Ti"
+#      - hostPath:
+#          path": "/media/main"
+#
+#  - name: backup-volume-pv
+#    namespace: services
+#    chart: ./charts/persistence-volume
+#    version: 0.1.0
+#    values:
+#      - volumeName: "backup-volume"
+#      - storage: "4Ti"
+#      - hostPath:
+#          path": "/media/backup"
+#
 #  - name: main-volume
 #    namespace: services
 #    chart: ./charts/pvc
 #    version: 0.1.0
 #    values:
-#      - volumeName: main-volume
+#      - volumeName: main-volume-pv
 #      - storage: 4Ti
-#      - stageClass: main
 #
 #  - name: backup-volume
 #    namespace: services
 #    chart: ./charts/pvc
 #    version: 0.1.0
 #    values:
-#      - volumeName: backup-volume
+#      - volumeName: backup-volume-pv
 #      - storage: 4Ti
-#      - stageClass: backup
 
 #  - name: filebrowser
 #    namespace: services
@@ -143,7 +159,7 @@ releases:
 #          persistentVolumeClaim:
 #            claimName: yasr-volume
 #      - volumeMounts:
-#        - name: yasr-volume
+#        - name: main-volume
 #          mountPath: "/mnt/sync"
 #          subPath: "configs/resilio"
 #         TODO: mount the document's folders here mapped to the real HDD once that's configured
@@ -166,30 +182,27 @@ releases:
 #        - name: main-volume
 #          mountPath: "/home"
 
-  - name: samba
-    namespace: services
-    chart: ./charts/samba
-    version: 0.1.0
-    values:
-      - image:
-          repository: dperson/samba
-          tag: latest
-          pullPolicy: IfNotPresent
-      - hostNetwork: true
-      - volumes:
-          - name: yasr-volume
-            persistentVolumeClaim:
-              claimName: yasr-volume
-      - volumeMounts:
-          - name: yasr-volume
-            mountPath: "/etc/samba/"
-            subPath: "configs/samba/"
-          - name: yasr-volume
-#          - name: main-volume
-            mountPath: "/shared"
-      - env:
-          - name: IMPORT
-            value: "/etc/samba/smbpasswd"
-          - name: TZ
-            value: "EST5EDT"
+#  - name: samba
+#    namespace: services
+#    chart: ./charts/samba
+#    version: 0.1.0
+#    values:
+#      - hostNetwork: true
+#      - volumes:
+#          - name: yasr-volume
+#            persistentVolumeClaim:
+#              claimName: yasr-volume
+#      - volumeMounts:
+#          - name: yasr-volume
+#            mountPath: "/etc/samba/"
+#            subPath: "configs/samba/"
+#          - name: yasr-volume
+##          - name: main-volume
+#            mountPath: "/shared"
+#      - env:
+#          - name: IMPORT
+#            value: "/etc/samba/smbpasswd"
+#          - name: TZ
+#            value: "EST5EDT"
 
+#  https://github.com/giantswarm/kubernetes-prometheus
