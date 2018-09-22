@@ -1,0 +1,32 @@
+# Default values for samba.
+
+replicaCount: 1
+
+image:
+  repository: samnco/samba
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  name: samba
+  type: ClusterIP
+  externalNMBPort137: 137
+  internalNMBPort137: 137
+  externalNMBPort138: 138
+  internalNMBPort138: 138
+  externalSMBPort139: 139
+  internalSMBPort139: 139
+  externalSMBPort445: 445
+  internalSMBPort445: 445
+
+resources: 
+  requests:
+   cpu: 100m
+   memory: 128Mi
+  limits:
+   cpu: 100m
+   memory: 128Mi
+
+nodeSelector: {}
+
+hostNetwork: true

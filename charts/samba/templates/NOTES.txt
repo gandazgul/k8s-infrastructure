@@ -1,0 +1,9 @@
+Thanks for deploying Samba. Your shared repository is available at: 
+
+1. Inside of the cluster: 
+
+  smb://{{ template "fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:445/shared
+
+{{ if .Values.hostNetwork }}
+2. Directly on the host where the pod is running
+{{ end }}

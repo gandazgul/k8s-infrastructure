@@ -5,15 +5,17 @@ repositories:
 releases:
 #  - name: yasr-volume
 #    namespace: services
-#    chart: ./charts/persistentvolume
+#    chart: ./charts/pvc
 #    version: 0.1.0
 #    values:
 #      - volumeName: yasr-volume
 #      - storage: 2Ti
 
+  - name: main-volume
+
 #  - name: main-volume
 #    namespace: services
-#    chart: ./charts/persistentvolume
+#    chart: ./charts/pvc
 #    version: 0.1.0
 #    values:
 #      - volumeName: main-volume
@@ -22,7 +24,7 @@ releases:
 #
 #  - name: backup-volume
 #    namespace: services
-#    chart: ./charts/persistentvolume
+#    chart: ./charts/pvc
 #    version: 0.1.0
 #    values:
 #      - volumeName: backup-volume
@@ -44,13 +46,6 @@ releases:
 #    - service:
 #        type: NodePort
 #        port: 8080
-
-#### NFS Shares
-#### Windows: https://graspingtech.com/mount-nfs-share-windows-10/
-#### https://www.hiroom2.com/2017/12/05/fedora-27-nfs-utils-server-en/
-#  - name: nfs-shares
-#    namespace: services
-#    chart:
 
 #  - name: seedbox
 #    namespace: services
@@ -171,30 +166,30 @@ releases:
 #        - name: main-volume
 #          mountPath: "/home"
 
-#  - name: samba
-#    namespace: services
-#TODO: copy the chart to customize
-#    chart: ../charts/samba
-#    version: 0.1.0
-#    values:
-#      - image:
-#          repository: dperson/samba
-#          tag: latest
-#          pullPolicy: IfNotPresent
-#      - hostNetwork: true
-#      - volumes:
-#          - name: yasr-volume
-#            persistentVolumeClaim:
-#              claimName: yasr-volume
-#      - volumeMounts:
-#          - name: yasr-volume
-#            mountPath: "/etc/samba/"
-#            subPath: "configs/samba/"
-#          - name: yasr-volume
-#            mountPath: "/shared"
-#      - env:
-#          - name: IMPORT
-#            value: "/etc/samba/smbpasswd"
-#          - name: TZ
-#            value: "EST5EDT"
+  - name: samba
+    namespace: services
+    chart: ./charts/samba
+    version: 0.1.0
+    values:
+      - image:
+          repository: dperson/samba
+          tag: latest
+          pullPolicy: IfNotPresent
+      - hostNetwork: true
+      - volumes:
+          - name: yasr-volume
+            persistentVolumeClaim:
+              claimName: yasr-volume
+      - volumeMounts:
+          - name: yasr-volume
+            mountPath: "/etc/samba/"
+            subPath: "configs/samba/"
+          - name: yasr-volume
+#          - name: main-volume
+            mountPath: "/shared"
+      - env:
+          - name: IMPORT
+            value: "/etc/samba/smbpasswd"
+          - name: TZ
+            value: "EST5EDT"
 
