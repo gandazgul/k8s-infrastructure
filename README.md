@@ -58,7 +58,7 @@ On your local machine (NOTE: Only works on your local network):
 * K8s Dashboard
 * Plex
 * Resilio Sync
-* FileBrowser
+* FileBrowser (default credentials admin:admin, port 8080)
 * Seedbox (transmission, flexget, OpenVPN)
 * NFS Shares Server
 * SSHD - for tunneling, etc
