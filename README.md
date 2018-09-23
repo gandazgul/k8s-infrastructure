@@ -59,7 +59,7 @@ On your local machine (NOTE: Only works on your local network):
 * Plex
 * Resilio Sync
 * FileBrowser (default credentials admin:admin, port 8080)
-* Seedbox (transmission, flexget, OpenVPN)
+* Seedbox (transmission (default username: transmission), flexget, OpenVPN)
 * NFS Shares Server
 * SSHD - for tunneling, etc
 * Gogs
