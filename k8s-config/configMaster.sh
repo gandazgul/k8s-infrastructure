@@ -24,7 +24,7 @@ printf "\nEnable docker ========================================================
 sudo systemctl enable --now docker || exit 1
 
 printf "\nVerify docker is working by running hello-world"
-sudo docker run -rm hello-world
+sudo docker run --rm hello-world
 
 if [ ! -f /etc/yum.repos.d/kubernetes.repo ]; then
     printf "\nInstall kubelet, kubeadm, crictl(needed by kubelet), cockpit (nice fedora dashboard):"
@@ -61,9 +61,9 @@ printf "\nDisabling swap =======================================================
 sudo swapoff -a || exit 1
 
 printf "\nDisabling the firewall ===================================================================================\n"
-sudo systemctl stop firewalld || exit 1
-sudo systemctl disable firewalld || exit 1
-sudo dnf -y remove firewalld || exit 1
+sudo systemctl stop firewalld
+sudo systemctl disable firewalld
+sudo dnf -y remove firewalld
 sudo setenforce 0
 echo "SELINUX=disabled" | sudo tee -a /etc/sysconfig/selinux
 

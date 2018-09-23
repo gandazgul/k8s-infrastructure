@@ -197,6 +197,15 @@ releases:
 #  https://github.com/giantswarm/kubernetes-prometheus
 
 # CRON JOBS ==================================================
+
+#TODO:
+# size-checker
+# backup with rdiff
+# backup of yasr-volume with rdiff
+# rsync renepor
+# rsync movies -> rene
+# rsync gandazgul -> rene
+
 #  - name: size-checker
 #    namespace: services
 #    chart: ./charts/cronjob
