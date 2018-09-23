@@ -30,7 +30,7 @@ NOTE: Kubectl does not need sudo, it will fail with sudo
 ### Setting up your local machine for using k8s
 
 On your local machine (NOTE: Only works on your local network):
-1. Install kubectl (`brew install kubernetes-client` or find the package for your linux distro that install kubectl)
+1. Install kubectl (`brew install kubernetes-cli` or find the package for your linux distro that install kubectl)
 2. `scp fedora-ip:~/.kube/config ~/.kube/config` <-- configuration file for connecting to the cluster
 3. Test with `kubectl get nodes` you should see your node listed, if not check the permissions on the config file (should be owned by your user/group).
 4. Install helm with ./k8s-config/installHelm.sh. This installs helm without tiller, instead it uses the tiller plugin to run tiller locally :)
