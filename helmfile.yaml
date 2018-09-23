@@ -75,7 +75,7 @@ releases:
 ##      - name: TRANSMISSION_PEER_PORT
 ##        value: "44444"
 #      - name: TRANSMISSION_RPC_URL
-#        value: "/"
+#        value: "/transmission/"
 #      - name: TRANSMISSION_RPC_AUTHENTICATION_REQUIRED
 #        value: "true"
 #      - name: TRANSMISSION_BLOCKLIST_ENABLED
