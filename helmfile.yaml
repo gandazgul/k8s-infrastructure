@@ -6,51 +6,13 @@ releases:
 #  - name: yasr-volume
 #    namespace: services
 #    chart: ./charts/pvc
-#    version: 0.1.0
 #    values:
 #      - volumeName: yasr-volume
 #      - storage: 2Ti
-#
-#  - name: main-volume-pv
-#    namespace: services
-#    chart: ./charts/persistence-volume
-#    version: 0.1.0
-#    values:
-#      - volumeName: "main-volume"
-#      - storage: "4Ti"
-#      - hostPath:
-#          path": "/media/main"
-#
-#  - name: backup-volume-pv
-#    namespace: services
-#    chart: ./charts/persistence-volume
-#    version: 0.1.0
-#    values:
-#      - volumeName: "backup-volume"
-#      - storage: "4Ti"
-#      - hostPath:
-#          path": "/media/backup"
-#
-#  - name: main-volume
-#    namespace: services
-#    chart: ./charts/pvc
-#    version: 0.1.0
-#    values:
-#      - volumeName: main-volume-pv
-#      - storage: 4Ti
-#
-#  - name: backup-volume
-#    namespace: services
-#    chart: ./charts/pvc
-#    version: 0.1.0
-#    values:
-#      - volumeName: backup-volume-pv
-#      - storage: 4Ti
 
 #  - name: filebrowser
 #    namespace: services
 #    chart: ./charts/filebrowser
-#    version: 0.1.0
 #    values:
 #    - volumes:
 #      - name: yasr-volume
@@ -63,10 +25,41 @@ releases:
 #        type: NodePort
 #        port: 8080
 
+#  - name: main-volume-pv
+#    namespace: services
+#    chart: ./charts/persistence-volume
+#    values:
+#      - volumeName: "main-volume"
+#      - storage: "4Ti"
+#      - hostPath:
+#          path": "/media/main"
+#
+#  - name: backup-volume-pv
+#    namespace: services
+#    chart: ./charts/persistence-volume
+#    values:
+#      - volumeName: "backup-volume"
+#      - storage: "4Ti"
+#      - hostPath:
+#          path": "/media/backup"
+#
+#  - name: main-volume
+#    namespace: services
+#    chart: ./charts/pvc
+#    values:
+#      - volumeName: main-volume-pv
+#      - storage: 4Ti
+#
+#  - name: backup-volume
+#    namespace: services
+#    chart: ./charts/pvc
+#    values:
+#      - volumeName: backup-volume-pv
+#      - storage: 4Ti
+
 #  - name: seedbox
 #    namespace: services
 #    chart: ./charts/seedbox
-#    version: 0.1.0
 #    values:
 #    - env:
 #      - name: LOCAL_NETWORK
@@ -139,7 +132,6 @@ releases:
 #  - name: plex
 #    namespace: services
 #    chart: ../kube-plex/charts/kube-plex
-#    version: 0.1.0
 #    values:
 #      - image:
 #          tag: plexpass
@@ -152,17 +144,16 @@ releases:
 #  - name: resilio
 #    namespace: services
 #    chart: ./charts/resilio
-#    version: 0.1.0
 #    values:
 #      - volumes:
 #        - name: yasr-volume
 #          persistentVolumeClaim:
 #            claimName: yasr-volume
 #      - volumeMounts:
-#        - name: main-volume
+##        - name: main-volume
+#        - name: yasr-volume
 #          mountPath: "/mnt/sync"
 #          subPath: "configs/resilio"
-#         TODO: mount the document's folders here mapped to the real HDD once that's configured
 
 #  - name: gogs
 #    namespace: services
@@ -172,7 +163,6 @@ releases:
 #  - name: sshd
 #    namespace: services
 #    chart: ./charts/sshd
-#    version: 0.1.0
 #    values:
 #      - volumes:
 #        - name: main-volume
@@ -185,7 +175,6 @@ releases:
 #  - name: samba
 #    namespace: services
 #    chart: ./charts/samba
-#    version: 0.1.0
 #    values:
 #      - hostNetwork: true
 #      - volumes:
@@ -206,3 +195,18 @@ releases:
 #            value: "EST5EDT"
 
 #  https://github.com/giantswarm/kubernetes-prometheus
+
+# CRON JOBS ==================================================
+#  - name: size-checker
+#    namespace: services
+#    chart: ./charts/cronjob
+#    values:
+#      - schedule: "*/1 * * * *"
+#      - image:
+#          repository: busybox
+#          tag: latest
+#          pullPolicy: IfNotPresent
+#          args:
+#            - /bin/sh
+#            - -c
+#            - date; echo Hello from the Kubernetes cluster
