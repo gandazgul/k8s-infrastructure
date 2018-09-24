@@ -21,7 +21,16 @@ do
     else
         echo "Found user $username:$uid"
 
-        adduser -D -H -s /bin/bash -u ${uid} ${username}
+        adduser -D -H -s /bin/ash -u ${uid} ${username}
+#        wget https://github.com/${username}.keys
+#        if [ -f ${username}.keys ]; then
+#            mkdir /home/${username}/.ssh/
+#            cp ${username}.keys /home/${username}/.ssh/authorized_keys
+#            rm -f ${username}.keys
+#            chown -R ${username}:${username} /home/${username}/.ssh/
+#            chmod 700 /home/${username}/.ssh
+#            chmod 600 /home/${username}/.ssh/authorized_keys
+#        fi;
         passwd -u ${username}
         addgroup ${username} wheel
     fi;

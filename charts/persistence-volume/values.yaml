@@ -1,10 +1,12 @@
 ---
 # Default values for main-volume.
 
-volumeName: "main-volume"
+volumeName: main-volume
 
-storage: "1T"
+storage: 1Ti
+
+storageClass: hdd
 
 hostPath:
-  path": "/media/main",
-  type: "Directory"
+  path": /media/main
+  type: Directory

@@ -9,7 +9,7 @@ releases:
 #    values:
 #      - volumeName: yasr-volume
 #      - storage: 2Ti
-
+#
 #  - name: filebrowser
 #    namespace: services
 #    chart: ./charts/filebrowser
@@ -29,32 +29,36 @@ releases:
 #    namespace: services
 #    chart: ./charts/persistence-volume
 #    values:
-#      - volumeName: "main-volume"
-#      - storage: "4Ti"
+#      - volumeName: main-volume
+#      - storage: 4Ti
+#      - storageClass: hdd
 #      - hostPath:
-#          path": "/media/main"
-#
+#          path: /media/main
+
 #  - name: backup-volume-pv
 #    namespace: services
 #    chart: ./charts/persistence-volume
 #    values:
-#      - volumeName: "backup-volume"
-#      - storage: "4Ti"
+#      - volumeName: backup-volume
+#      - storage: 4Ti
+#      - storageClass: hdd
 #      - hostPath:
-#          path": "/media/backup"
-#
+#          path: /media/backup
+
 #  - name: main-volume
 #    namespace: services
 #    chart: ./charts/pvc
 #    values:
-#      - volumeName: main-volume-pv
+#      - storageClass: hdd
+#      - volumeName: main-volume
 #      - storage: 4Ti
-#
+
 #  - name: backup-volume
 #    namespace: services
 #    chart: ./charts/pvc
 #    values:
-#      - volumeName: backup-volume-pv
+#      - storageClass: hdd
+#      - volumeName: backup-volume
 #      - storage: 4Ti
 
 #  - name: seedbox
@@ -74,8 +78,6 @@ releases:
 #        value: {{ requiredEnv "TRANSMISSION_RPC_PASSWORD" }}
 ##      - name: TRANSMISSION_PEER_PORT
 ##        value: "44444"
-#      - name: TRANSMISSION_RPC_URL
-#        value: "/transmission/"
 #      - name: TRANSMISSION_RPC_AUTHENTICATION_REQUIRED
 #        value: "true"
 #      - name: TRANSMISSION_BLOCKLIST_ENABLED
@@ -118,9 +120,6 @@ releases:
 #          path: "/dev/net/tun"
 #    - volumeMounts:
 #      - name: yasr-volume
-#        mountPath: "/var/log"
-#        subPath: "logs/seedbox"
-#      - name: yasr-volume
 #        mountPath: "/data"
 #        subPath: "transmission"
 #      - name: yasr-volume
@@ -128,6 +127,9 @@ releases:
 #        subPath: "configs/"
 #      - name: dev-tun
 #        mountPath: "/dev/net/tun"
+#      - name: yasr-volume
+#        mountPath: "/etc/ssmtp/"
+#        subPath: "configs/ssmtp"
 
 #  - name: plex
 #    namespace: services
@@ -139,6 +141,12 @@ releases:
 #      - persistence:
 #          transcode:
 #            enabled: true
+#          config:
+#            claimName: yasr-volume
+#            subPath: "configs/plex"
+#          data:
+#            claimName: main-volume
+#            subPath: "Public"
 #      - ipaddress.yaml
 
 #  - name: resilio
@@ -149,12 +157,18 @@ releases:
 #        - name: yasr-volume
 #          persistentVolumeClaim:
 #            claimName: yasr-volume
+#        - name: main-volume
+#          persistentVolumeClaim:
+#            claimName: main-volume
 #      - volumeMounts:
-##        - name: main-volume
 #        - name: yasr-volume
 #          mountPath: "/mnt/sync"
 #          subPath: "configs/resilio"
+#        - name: main-volume
+#          mountPath: "/mnt/mounted_folders/"
+#          subPath: "btsync"
 
+# TODO: Persistence for gogs - Rafa
 #  - name: gogs
 #    namespace: services
 #    chart: ./charts/gog
@@ -187,12 +201,15 @@ releases:
 #          - name: yasr-volume
 #            persistentVolumeClaim:
 #              claimName: yasr-volume
+#          - name: main-volume
+#            persistentVolumeClaim:
+#              claimName: main-volume
 #      - volumeMounts:
 #          - name: yasr-volume
 #            mountPath: "/etc/samba/"
 #            subPath: "configs/samba/"
-#          - name: yasr-volume
-##          - name: main-volume
+##          - name: yasr-volume
+#          - name: main-volume
 #            mountPath: "/shared"
 #      - env:
 #          - name: IMPORT
