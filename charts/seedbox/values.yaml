@@ -9,6 +9,7 @@ image:
 
 nameOverride: "seedbox"
 
+# Without this you can't dns resolve anything inside the container
 dnsPolicy: "None"
 dnsConfig:
   nameservers:
