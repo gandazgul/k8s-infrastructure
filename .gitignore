@@ -4,3 +4,4 @@ docker/size-checker/ssmtp.conf
 ipaddress.yaml
 secrets.sh
 helm-configs/gogs.yaml
+charts/gogs/charts/
