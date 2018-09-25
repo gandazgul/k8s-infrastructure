@@ -1,7 +1,3 @@
-repositories:
-  - name: incubator
-    url: https://kubernetes-charts-incubator.storage.googleapis.com/
-
 releases:
 #  - name: yasr-volume
 #    namespace: services
@@ -168,22 +164,19 @@ releases:
 #          mountPath: "/mnt/mounted_folders/"
 #          subPath: "btsync"
 
-#- name: gogs
-#  namespace: services
-#  chart: ./charts/gogs
-#  version: 0.6.0
-#  values:
-#  - persistence:
-#        claimName: yasr-volume
-#        subPath: "configs/gogs/site_data"
-#  - helm-configs/gogs.yaml
-#
-#  - postgresql:
-#        persistence:
-#            existingClaim: yasr-volume
-#            subPath: "configs/gogs/db"
-
-
+#  - name: gogs
+#    namespace: services
+#    chart: ./charts/gogs
+#    version: 0.6.0
+#    values:
+#    - persistence:
+#          claimName: yasr-volume
+#          subPath: "configs/gogs/site_data"
+#    - postgresql:
+#          persistence:
+#              existingClaim: yasr-volume
+#              subPath: "configs/gogs/db"
+#    - helm-configs/gogs.yaml
 
 #  - name: sshd
 #    namespace: services
@@ -234,7 +227,8 @@ releases:
 # rsync movies -> rene
 # rsync gandazgul -> rene
 
-#  - name: size-checker
+# EXAMPLE: Every minute output the date
+#  - name: example
 #    namespace: services
 #    chart: ./charts/cronjob
 #    values:
@@ -243,7 +237,43 @@ releases:
 #          repository: busybox
 #          tag: latest
 #          pullPolicy: IfNotPresent
-#          args:
+#          command:
 #            - /bin/sh
 #            - -c
-#            - date; echo Hello from the Kubernetes cluster
+#            - date
+
+#  - name: size-checker
+#    namespace: services
+#    chart: ./charts/cronjob
+#    values:
+#      # Sunday at 1:00am
+#      - schedule: "0 1 * * 0"
+#      - image:
+#          repository: gandazgul/size-checker
+#          tag: v3
+#      - volumes:
+#          - name: yasr-volume
+#            persistentVolumeClaim:
+#              claimName: yasr-volume
+#          - name: main-volume
+#            persistentVolumeClaim:
+#              claimName: main-volume
+#      - volumeMounts:
+#          - name: yasr-volume
+#            mountPath: "/etc/ssmtp/"
+#            subPath: "configs/ssmtp/"
+#          - name: main-volume
+#            mountPath: "/hdd"
+#      - env:
+#          - name: MAIL_TO
+#            value: "ravelo.carlos@gmail.com"
+
+#  - name: example
+#    namespace: services
+#    chart: ./charts/cronjob
+#    values:
+##       Every hour
+#      - schedule: "0 */1 * * *"
+#      - image:
+#          command:
+#            -

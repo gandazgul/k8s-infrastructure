@@ -3,3 +3,4 @@ docker/sshd/users.conf
 docker/size-checker/ssmtp.conf
 ipaddress.yaml
 secrets.sh
+helm-configs/gogs.yaml

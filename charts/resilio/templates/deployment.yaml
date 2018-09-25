@@ -38,6 +38,14 @@ spec:
             - name: http
               containerPort: 8888
               protocol: TCP
+#          livenessProbe:
+#            httpGet:
+#              path: /
+#              port: http
+#          readinessProbe:
+#            httpGet:
+#              path: /
+#              port: http
           securityContext:
 {{ toYaml .Values.securityContext | indent 12 }}
           volumeMounts:

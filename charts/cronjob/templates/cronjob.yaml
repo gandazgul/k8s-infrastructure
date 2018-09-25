@@ -12,6 +12,10 @@ spec:
       activeDeadlineSeconds: {{ .Values.activeDeadlineSeconds }}
       template:
         spec:
+          {{- if .Values.volumes }}
+          volumes:
+{{ toYaml .Values.volumes | indent 12 }}
+          {{- end}}
           containers:
             - name: {{ .Chart.Name }}
               image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -19,5 +23,13 @@ spec:
               {{- if .Values.image.command }}
               command:
                 {{ .Values.image.command }}
+              {{- end }}
+              {{- if .Values.env }}
+              env:
+{{ toYaml .Values.env | indent 16 }}
+              {{- end }}
+              {{- if .Values.volumeMounts }}
+              volumeMounts:
+{{ toYaml .Values.volumeMounts | indent 16 }}
               {{- end }}
           restartPolicy: OnFailure
