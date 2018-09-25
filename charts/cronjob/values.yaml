@@ -14,8 +14,6 @@ image:
   repository: busybox
   tag: latest
   pullPolicy: IfNotPresent
-  command:
-    - date
 
 concurrencyPolicy: Forbid
 activeDeadlineSeconds: 3600

@@ -23,14 +23,14 @@ spec:
           ports:
             - containerPort: 3000
             - containerPort: 22
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 3000
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 3000
+#          livenessProbe:
+#            httpGet:
+#              path: /
+#              port: 3000
+#          readinessProbe:
+#            httpGet:
+#              path: /
+#              port: 3000
           env:
             # https://github.com/gogits/gogs/tree/master/docker#container-options
             - name: SOCAT_LINK
