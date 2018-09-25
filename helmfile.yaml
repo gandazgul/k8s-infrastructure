@@ -168,16 +168,21 @@ releases:
 #          mountPath: "/mnt/mounted_folders/"
 #          subPath: "btsync"
 
-# TODO: Persistence for gogs - Rafa
-#  - name: gogs
-#    namespace: services
-#    chart: ./charts/gog
-#    version: 0.6.0
-#    values:
-#      - persistence:
-#          claimName: yasr-volume
-#          subPath: "configs/gogs"
-#      - helm-configs/gogs.yaml
+#- name: gogs
+#  namespace: services
+#  chart: ./charts/gogs
+#  version: 0.6.0
+#  values:
+#  - persistence:
+#        claimName: yasr-volume
+#        subPath: "configs/gogs/site_data"
+#  - helm-configs/gogs.yaml
+#
+#  - postgresql:
+#        persistence:
+#            existingClaim: yasr-volume
+#            subPath: "configs/gogs/db"
+
 
 
 #  - name: sshd
