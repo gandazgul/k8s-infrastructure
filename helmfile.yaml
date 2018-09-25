@@ -147,7 +147,7 @@ releases:
 #          data:
 #            claimName: main-volume
 #            subPath: "Public"
-#      - ipaddress.yaml
+#      - helm/configs/ipaddress.yaml
 
 #  - name: resilio
 #    namespace: services
