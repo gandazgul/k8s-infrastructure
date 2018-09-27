@@ -142,7 +142,7 @@ releases:
 #            subPath: "configs/plex"
 #          data:
 #            claimName: main-volume
-#            subPath: "Public"
+#            subPath: "public"
 #      - helm-configs/ipaddress.yaml
 
 #  - name: resilio
