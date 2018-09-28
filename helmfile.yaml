@@ -1,26 +1,17 @@
 releases:
-#  - name: yasr-volume
+# STORAGE ===============================================
+
+#    Yet Another SR, this is a volume for all configs
+#  - name: yasr-volume-pv
 #    namespace: services
-#    chart: ./charts/pvc
+#    chart: ./charts/persistence-volume
 #    values:
 #      - volumeName: yasr-volume
-#      - storage: 2Ti
+#      - storage: 4Ti
+#      - storageClass: hdd
+#      - path: /media/yasr
 #
-#  - name: filebrowser
-#    namespace: services
-#    chart: ./charts/filebrowser
-#    values:
-#    - volumes:
-#      - name: yasr-volume
-#        persistentVolumeClaim:
-#          claimName: yasr-volume
-#    - volumeMounts:
-#      - name: yasr-volume
-#        mountPath: "/srv"
-#    - service:
-#        type: NodePort
-#        port: 8080
-
+#  # This is the main source of storage
 #  - name: main-volume-pv
 #    namespace: services
 #    chart: ./charts/persistence-volume
@@ -28,9 +19,9 @@ releases:
 #      - volumeName: main-volume
 #      - storage: 4Ti
 #      - storageClass: hdd
-#      - hostPath:
-#          path: /media/main
-
+#      - path: /media/main
+#
+#  # This is the backup volume for main and some of the stuff in yasr (I know the math doesnt work but I'm on a budget)
 #  - name: backup-volume-pv
 #    namespace: services
 #    chart: ./charts/persistence-volume
@@ -38,9 +29,16 @@ releases:
 #      - volumeName: backup-volume
 #      - storage: 4Ti
 #      - storageClass: hdd
-#      - hostPath:
-#          path: /media/backup
-
+#      - path: /media/backup
+#
+#  - name: yasr-volume
+#    namespace: services
+#    chart: ./charts/pvc
+#    values:
+#      - storageClass: hdd
+#      - volumeName: yasr-volume
+#      - storage: 2Ti
+#
 #  - name: main-volume
 #    namespace: services
 #    chart: ./charts/pvc
@@ -48,7 +46,7 @@ releases:
 #      - storageClass: hdd
 #      - volumeName: main-volume
 #      - storage: 4Ti
-
+#
 #  - name: backup-volume
 #    namespace: services
 #    chart: ./charts/pvc
@@ -57,75 +55,102 @@ releases:
 #      - volumeName: backup-volume
 #      - storage: 4Ti
 
+# SERVICES =================================
+
+#  - name: filebrowser
+#    namespace: services
+#    chart: ./charts/filebrowser
+#    values:
+#      - volumes:
+#          - name: yasr-volume
+#            persistentVolumeClaim:
+#              claimName: yasr-volume
+#          - name: main-volume
+#            persistentVolumeClaim:
+#              claimName: main-volume
+#          - name: backup-volume
+#            persistentVolumeClaim:
+#              claimName: backup-volume
+#      - volumeMounts:
+#          - name: yasr-volume
+#            mountPath: "/srv/YASR"
+#          - name: main-volume
+#            mountPath: "/srv/main"
+#          - name: backup-volume
+#            mountPath: "/srv/backup"
+#      - service:
+#          type: NodePort
+#          port: 8080
+
 #  - name: seedbox
 #    namespace: services
 #    chart: ./charts/seedbox
 #    values:
-#    - env:
-#      - name: LOCAL_NETWORK
-#        value: "10.244.0.0/16"
-#      - name: OPENVPN_USERNAME
-#        value: {{ requiredEnv "OPENVPN_USERNAME" }}
-#      - name: OPENVPN_PASSWORD
-#        value: {{ requiredEnv "OPENVPN_PASSWORD" }}
-#      - name: TRANSMISSION_RPC_USERNAME
-#        value: "transmission"
-#      - name: TRANSMISSION_RPC_PASSWORD
-#        value: {{ requiredEnv "TRANSMISSION_RPC_PASSWORD" }}
-##      - name: TRANSMISSION_PEER_PORT
-##        value: "44444"
-#      - name: TRANSMISSION_RPC_AUTHENTICATION_REQUIRED
-#        value: "true"
-#      - name: TRANSMISSION_BLOCKLIST_ENABLED
-#        value: "true"
-#      - name: TRANSMISSION_BLOCKLIST_URL
-#        value: "http://list.iblocklist.com/?list=bt_level1&fileformat=p2p&archiveformat=gz"
-#      - name: TRANSMISSION_INCOMPLETE_DIR_ENABLED
-#        value: "true"
-#      - name: TRANSMISSION_INCOMPLETE_DIR
-#        value: "/data/downloading"
-#      - name: TRANSMISSION_HOME
-#        value: "/data"
-#      - name: TRANSMISSION_DOWNLOAD_DIR
-#        value: "/data/downloads"
-#      - name: PUID
-#        value: "1000"
-#      - name: PGID
-#        value: "1000"
-#      - name: TRANSMISSION_ENCRYPTION
-#        value: "2"
-#      - name: TRANSMISSION_IDLE_SEEDING_LIMIT
-#        value: "120"
-#      - name: TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED
-#        value: "true"
-##       fix container so that these are not needed
-#      - name: TRANSMISSION_PEER_CONGESTION_ALGORITHM
-#        value: "\"\""
-#      - name: TRANSMISSION_RPC_HOST_WHITELIST
-#        value: "\"\""
-#      - name: TRANSMISSION_SCRIPT_TORRENT_DONE_FILENAME
-#        value: "\"\""
-#      - name: MAIL_TO
-#        value: {{ requiredEnv "MAIL_TO" }}
-#    - volumes:
-#      - name: yasr-volume
-#        persistentVolumeClaim:
-#          claimName: yasr-volume
-#      - name: dev-tun
-#        hostPath:
-#          path: "/dev/net/tun"
-#    - volumeMounts:
-#      - name: yasr-volume
-#        mountPath: "/data"
-#        subPath: "transmission"
-#      - name: yasr-volume
-#        mountPath: "/config"
-#        subPath: "configs/"
-#      - name: dev-tun
-#        mountPath: "/dev/net/tun"
-#      - name: yasr-volume
-#        mountPath: "/etc/ssmtp/"
-#        subPath: "configs/ssmtp"
+#      - env:
+#        - name: LOCAL_NETWORK
+#          value: "10.244.0.0/16"
+#        - name: OPENVPN_USERNAME
+#          value: {{ requiredEnv "OPENVPN_USERNAME" }}
+#        - name: OPENVPN_PASSWORD
+#          value: {{ requiredEnv "OPENVPN_PASSWORD" }}
+#        - name: TRANSMISSION_RPC_USERNAME
+#          value: "transmission"
+#        - name: TRANSMISSION_RPC_PASSWORD
+#          value: {{ requiredEnv "TRANSMISSION_RPC_PASSWORD" }}
+##        - name: TRANSMISSION_PEER_PORT
+##          value: "44444"
+#        - name: TRANSMISSION_RPC_AUTHENTICATION_REQUIRED
+#          value: "true"
+#        - name: TRANSMISSION_BLOCKLIST_ENABLED
+#          value: "true"
+#        - name: TRANSMISSION_BLOCKLIST_URL
+#          value: "http://list.iblocklist.com/?list=bt_level1&fileformat=p2p&archiveformat=gz"
+#        - name: TRANSMISSION_INCOMPLETE_DIR_ENABLED
+#          value: "true"
+#        - name: TRANSMISSION_INCOMPLETE_DIR
+#          value: "/data/downloading"
+#        - name: TRANSMISSION_HOME
+#          value: "/data"
+#        - name: TRANSMISSION_DOWNLOAD_DIR
+#          value: "/data/downloads"
+#        - name: PUID
+#          value: "1000"
+#        - name: PGID
+#          value: "1000"
+#        - name: TRANSMISSION_ENCRYPTION
+#          value: "2"
+#        - name: TRANSMISSION_IDLE_SEEDING_LIMIT
+#          value: "120"
+#        - name: TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED
+#          value: "true"
+##         fix container so that these are not needed
+#        - name: TRANSMISSION_PEER_CONGESTION_ALGORITHM
+#          value: "\"\""
+#        - name: TRANSMISSION_RPC_HOST_WHITELIST
+#          value: "\"\""
+#        - name: TRANSMISSION_SCRIPT_TORRENT_DONE_FILENAME
+#          value: "\"\""
+#        - name: MAIL_TO
+#          value: {{ requiredEnv "MAIL_TO" }}
+#      - volumes:
+#        - name: yasr-volume
+#          persistentVolumeClaim:
+#            claimName: yasr-volume
+#        - name: dev-tun
+#          hostPath:
+#            path: "/dev/net/tun"
+#      - volumeMounts:
+#        - name: yasr-volume
+#          mountPath: "/data"
+#          subPath: "transmission"
+#        - name: yasr-volume
+#          mountPath: "/config"
+#          subPath: "configs/"
+#        - name: dev-tun
+#          mountPath: "/dev/net/tun"
+#        - name: yasr-volume
+#          mountPath: "/etc/ssmtp/"
+#          subPath: "configs/ssmtp"
 
 #  - name: plex
 #    namespace: services
@@ -169,14 +194,14 @@ releases:
 #    chart: ./charts/gogs
 #    version: 0.6.0
 #    values:
-#    - persistence:
+#      - persistence:
 #          claimName: yasr-volume
 #          subPath: "configs/gogs/site_data"
-#    - postgresql:
+#      - postgresql:
 #          persistence:
 #              existingClaim: yasr-volume
 #              subPath: "configs/gogs/db"
-#    - helm-configs/gogs.yaml
+#      - helm-configs/gogs.yaml
 
 #  - name: sshd
 #    namespace: services
@@ -215,17 +240,13 @@ releases:
 #          - name: TZ
 #            value: "EST5EDT"
 
+# MONITORING =================================================
+
 #  https://github.com/giantswarm/kubernetes-prometheus
+# heapster?
+# grafana - prometheus was no gathering data on kubernetes
 
 # CRON JOBS ==================================================
-
-#TODO:
-# size-checker
-# backup with rdiff
-# backup of yasr-volume with rdiff
-# rsync renepor
-# rsync movies -> rene
-# rsync gandazgul -> rene
 
 # EXAMPLE: Every minute output the date
 #  - name: example
@@ -266,14 +287,27 @@ releases:
 #            mountPath: "/hdd"
 #      - env:
 #          - name: MAIL_TO
-#            value: "ravelo.carlos@gmail.com"
+#            value: {{ requiredEnv "MAIL_TO" }}
 
-#  - name: example
+#  - name: incremental-backups
 #    namespace: services
 #    chart: ./charts/cronjob
 #    values:
 ##       Every hour
 #      - schedule: "0 */1 * * *"
 #      - image:
-#          command:
-#            -
+#          repository: gandazgul/rdiff-backup
+#          tag: v2
+#      - volumes:
+#          - name: main-volume
+#            persistentVolumeClaim:
+#              claimName: main-volume
+#          - name: backup-volume
+#            persistentVolumeClaim:
+#              claimName: backup-volume
+#      - volumeMounts:
+#          - name: main-volume
+#            mountPath: "/media/main"
+#          - name: backup-volume
+#            mountPath: "/media/backup"
+

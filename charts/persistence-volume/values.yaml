@@ -1,5 +1,5 @@
 ---
-# Default values for main-volume.
+# Default values for persistence-volume.
 
 volumeName: main-volume
 
@@ -7,6 +7,8 @@ storage: 1Ti
 
 storageClass: hdd
 
-hostPath:
-  path": /media/main
-  type: Directory
+path: /media/main
+
+volumeMode: filesystem
+
+nodeHostname: localhost.localdomain

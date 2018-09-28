@@ -22,7 +22,11 @@ spec:
               imagePullPolicy: {{ .Values.image.pullPolicy }}
               {{- if .Values.image.command }}
               command:
-                {{ .Values.image.command }}
+{{ toYaml .Values.image.command | indent 16 }}
+              {{- end }}
+              {{- if .Values.image.command }}
+              args:
+{{ toYaml .Values.image.args | indent 16 }}
               {{- end }}
               {{- if .Values.env }}
               env:

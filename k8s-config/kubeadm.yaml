@@ -6,5 +6,4 @@ apiServerExtraArgs:
 networking:
   podSubnet: "10.244.0.0/16"
 nodeRegistration:
-#  name: k8s.sytes.net
   taints: []
