@@ -1,7 +1,7 @@
 releases:
 # STORAGE ===============================================
 
-#    Yet Another SR, this is a volume for all configs
+#  # Yet Another SR, this is a volume for all configs
 #  - name: yasr-volume-pv
 #    namespace: services
 #    chart: ./charts/persistence-volume
@@ -10,6 +10,7 @@ releases:
 #      - storage: 4Ti
 #      - storageClass: hdd
 #      - path: /media/yasr
+#      - nodeHostname: {{ requiredEnv "MASTER_NODE_NAME" }}
 #
 #  # This is the main source of storage
 #  - name: main-volume-pv
@@ -20,6 +21,7 @@ releases:
 #      - storage: 4Ti
 #      - storageClass: hdd
 #      - path: /media/main
+#      - nodeHostname: {{ requiredEnv "MASTER_NODE_NAME" }}
 #
 #  # This is the backup volume for main and some of the stuff in yasr (I know the math doesnt work but I'm on a budget)
 #  - name: backup-volume-pv
@@ -30,6 +32,7 @@ releases:
 #      - storage: 4Ti
 #      - storageClass: hdd
 #      - path: /media/backup
+#      - nodeHostname: {{ requiredEnv "MASTER_NODE_NAME" }}
 #
 #  - name: yasr-volume
 #    namespace: services
@@ -81,6 +84,24 @@ releases:
 #      - service:
 #          type: NodePort
 #          port: 8080
+
+  - name: plex
+    namespace: services
+    chart: ../kube-plex/charts/kube-plex
+    values:
+      - image:
+          tag: plexpass
+      - timezone: America/New_York
+      - persistence:
+          transcode:
+            enabled: true
+          config:
+            claimName: yasr-volume
+            subPath: "configs/plex"
+          data:
+            claimName: main-volume
+            subPath: "public"
+      - helm-configs/ipaddress.yaml
 
 #  - name: seedbox
 #    namespace: services
@@ -151,24 +172,6 @@ releases:
 #        - name: yasr-volume
 #          mountPath: "/etc/ssmtp/"
 #          subPath: "configs/ssmtp"
-
-#  - name: plex
-#    namespace: services
-#    chart: ../kube-plex/charts/kube-plex
-#    values:
-#      - image:
-#          tag: plexpass
-#      - timezone: America/New_York
-#      - persistence:
-#          transcode:
-#            enabled: true
-#          config:
-#            claimName: yasr-volume
-#            subPath: "configs/plex"
-#          data:
-#            claimName: main-volume
-#            subPath: "public"
-#      - helm-configs/ipaddress.yaml
 
 #  - name: resilio
 #    namespace: services

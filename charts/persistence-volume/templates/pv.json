@@ -2,7 +2,10 @@
     "kind": "PersistentVolume",
     "apiVersion": "v1",
     "metadata": {
-        "name": "{{ .Values.volumeName }}"
+        "name": "{{ .Values.volumeName }}",
+        "labels": {
+            "name": "{{ .Values.volumeName }}"
+        }
     },
     "spec": {
         "capacity": {
