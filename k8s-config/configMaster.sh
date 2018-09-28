@@ -41,7 +41,7 @@ exclude=kube*
 [kubernetes-unstable]
 name=Kubernetes-unstable
 baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64-unstable
-enabled=1
+enabled=0
 gpgcheck=1
 repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
@@ -52,7 +52,7 @@ fi;
 sudo setenforce 0
 sudo dnf -y install --enablerepo=kubernetes kubelet kubectl --disableexcludes=kubernetes || exit 1
 sudo dnf -y install --enablerepo=kubernetes-unstable kubeadm --disableexcludes=kubernetes || exit 1
-sudo dnf -y install cockpit-docker cockpit-kubernetes git || exit 1
+sudo dnf -y install cockpit-docker cockpit-kubernetes || exit 1
 
 printf "\nEnabling cockpit =========================================================================================\n"
 sudo systemctl enable --now cockpit.socket || exit 1
@@ -86,44 +86,9 @@ printf "\nInstalling flannel ===================================================
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/k8s-manifests/kube-flannel-rbac.yml
 
-printf "\nLetting the master node run pods =========================================================================\n"
-MASTER_HOSTNAME=`kubectl get nodes -o jsonpath='{.items[0].metadata.name}'`
-kubectl taint node $MASTER_HOSTNAME node-role.kubernetes.io/master:NoSchedule-
-
-printf "\nInstalling Hostpath Provisioner ==========================================================================\n"
-kubectl apply -f ./hostpath.yaml || exit 1
-
-MASTER_SERVER=`kubectl config view -o jsonpath='{.clusters[0].cluster.server}'`;
-MASTER_IP=`printf "${MASTER_SERVER}" | awk -F: '{print $2}' | awk -F/ '{print $3}'`
-
-printf "\nInstalling Ingress controller ============================================================================\n"
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/mandatory.yaml
-kubectl apply -f ./ingress.yaml
-kubectl patch service ingress-nginx --namespace=ingress-nginx --patch '{"spec": {"externalIPs": ["'${MASTER_IP}'"]}}'
-
-printf "\nInstalling the dashboard ==================================================================================\n"
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
-kubectl apply -f ./dashboard.yaml || exit 1
-DASHBOARD_USER_SECRET=`kubectl -n kube-system get secret | grep admin-user | awk '{print $1}'`
-if [ ! -z "$DASHBOARD_USER_SECRET" ]; then
-    printf "\nDashboard installed!\n"
-    kubectl -n kube-system describe secret ${DASHBOARD_USER_SECRET} | grep token: | awk -F: '{gsub(/^[ \t]+/, "", $2); print $2}' > dashboard.token
-else
-    printf "\nSomething went wrong getting the credentials for the dashboard\n"
-fi;
-
-./installHelm.sh
-
-printf "\nVerify that is running: ===================================================================================\n"
+printf "\n\n=========================================================================================================\n"
+printf "Kubernetes is now installed. Please check the status of flannel and kubelet to make sure the network is ready before we proceed to the next step."
+printf "\nVerify that is running:\n"
 kubectl get nodes
 kubectl get all --all-namespaces
 printf "Run 'sudo systemctl status kubelet' to see how kubelet is doing"
-
-printf "\n"
-printf "\n"
-printf "=============================================================================================================\n"
-printf "=========== Dashboard Installed! ============================================================================\n"
-printf "=========== https://${MASTER_IP}:8443/ ======================================================================\n"
-printf "=============================================================================================================\n"
-printf "Token: \n"
-cat dashboard.token

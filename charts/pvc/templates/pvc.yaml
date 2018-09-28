@@ -9,3 +9,6 @@ spec:
   resources:
     requests:
       storage: {{ .Values.storage }}
+  selector:
+    matchLabels:
+      name: {{ .Values.volumeName }}

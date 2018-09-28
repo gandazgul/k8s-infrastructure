@@ -1,1 +1,1 @@
-Main volume is now available.
+{{ include "persistenceVolume.name" . }} is now available.
