@@ -1,6 +1,6 @@
 apiVersion: kubeadm.k8s.io/v1alpha2
 kind: MasterConfiguration
-kubernetesVersion: v1.11.1
+kubernetesVersion: v1.12.0
 apiServerExtraArgs:
   service-node-port-range: "1025-32767"
 networking:
