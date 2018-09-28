@@ -9,11 +9,12 @@ Mostly each service will have its own container with the exception of the seedbo
 This will install a fully functioning kubernetes master where you can run all of your services.
 
 1. Install Fedora 28
-2. Check out this repo on local machine
-3. `scp -r ./k8s-config fedora-ip:~/`
-4. `ssh fedora-ip`
-5. `cd k8s-config/ && chmod +x *.sh && ./configMaster.sh`
-6. If something fails, reset with `sudo kubeadm reset` and try again, the other commands are repeatable
+2. Set the hostname, this will be the name of this node
+3. Check out this repo on local machine
+4. `scp -r ./k8s-config fedora-ip:~/`
+5. `ssh fedora-ip`
+6. `cd k8s-config/ && chmod +x *.sh && ./configMaster.sh`
+7. If something fails, reset with `sudo kubeadm reset` and try again, the other commands are repeatable
 
 Verify Kubelet that is running with `sudo systemctl status kubelet`
 
@@ -50,7 +51,7 @@ On your local machine (NOTE: Only works on your local network):
 4. run `source ./secrets.sh` to set up the passwords/settings
 5. run `helmfile sync` - to setup the rest of the services (`helmfile charts` to retry/update after)
 6. `helm list` to see what is installed
-6. `helm delete --purge [NAME]` to remove one particular service if you need to retry 
+7. `helm delete --purge [NAME]` to remove one particular service if you need to retry 
 
 ## Services Included:
 
