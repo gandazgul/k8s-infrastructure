@@ -109,6 +109,8 @@ releases:
 #    namespace: services
 #    chart: ./charts/seedbox
 #    values:
+#      - image:
+#          tag: v17
 #      - env:
 #        - name: LOCAL_NETWORK
 #          value: "10.244.0.0/16"
@@ -155,8 +157,6 @@ releases:
 #          value: "\"\""
 #        - name: MAIL_TO
 #          value: {{ requiredEnv "MAIL_TO" }}
-#      - image:
-#          tag: v17
 #      - volumes:
 #        - name: yasr-volume
 #          persistentVolumeClaim:
@@ -307,11 +307,11 @@ releases:
 #    namespace: services
 #    chart: ./charts/cronjob
 #    values:
-##       Every hour
+#      # Every hour
 #      - schedule: "0 */1 * * *"
 #      - image:
 #          repository: gandazgul/rdiff-backup
-#          tag: v2
+#          tag: v3
 #      - volumes:
 #          - name: main-volume
 #            persistentVolumeClaim:

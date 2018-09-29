@@ -5,4 +5,4 @@ VOLUME /media/backup
 
 RUN apk update && apk add --no-cache rdiff-backup && rm -rf /tmp/* /var/tmp/*
 
-CMD rdiff-backup -v4 /media/main /media/backup
+CMD rdiff-backup -v5 /media/main /media/backup
