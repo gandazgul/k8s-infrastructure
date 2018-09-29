@@ -85,23 +85,23 @@ releases:
 #          type: NodePort
 #          port: 8080
 
-  - name: plex
-    namespace: services
-    chart: ../kube-plex/charts/kube-plex
-    values:
-      - image:
-          tag: plexpass
-      - timezone: America/New_York
-      - persistence:
-          transcode:
-            enabled: true
-          config:
-            claimName: yasr-volume
-            subPath: "configs/plex"
-          data:
-            claimName: main-volume
-            subPath: "public"
-      - helm-configs/ipaddress.yaml
+#  - name: plex
+#    namespace: services
+#    chart: ../kube-plex/charts/kube-plex
+#    values:
+#      - image:
+#          tag: plexpass
+#      - timezone: America/New_York
+#      - persistence:
+#          transcode:
+#            enabled: true
+#          config:
+#            claimName: yasr-volume
+#            subPath: "configs/plex"
+#          data:
+#            claimName: main-volume
+#            subPath: "public"
+#      - helm-configs/ipaddress.yaml
 
 #  - name: seedbox
 #    namespace: services
