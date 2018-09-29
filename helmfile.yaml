@@ -92,6 +92,8 @@ releases:
 #      - image:
 #          tag: plexpass
 #      - timezone: America/New_York
+#      - kubePlex:
+#          enabled: false
 #      - persistence:
 #          transcode:
 #            enabled: true
@@ -153,14 +155,21 @@ releases:
 #          value: "\"\""
 #        - name: MAIL_TO
 #          value: {{ requiredEnv "MAIL_TO" }}
+#      - image:
+#          tag: v17
 #      - volumes:
 #        - name: yasr-volume
 #          persistentVolumeClaim:
 #            claimName: yasr-volume
+#        - name: main-volume
+#          persistentVolumeClaim:
+#            claimName: main-volume
 #        - name: dev-tun
 #          hostPath:
 #            path: "/dev/net/tun"
 #      - volumeMounts:
+#        - name: main-volume
+#          mountPath: "/main"
 #        - name: yasr-volume
 #          mountPath: "/data"
 #          subPath: "transmission"
@@ -172,7 +181,7 @@ releases:
 #        - name: yasr-volume
 #          mountPath: "/etc/ssmtp/"
 #          subPath: "configs/ssmtp"
-
+#
 #  - name: resilio
 #    namespace: services
 #    chart: ./charts/resilio

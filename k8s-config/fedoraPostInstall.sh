@@ -17,3 +17,25 @@ sudo mount /media/yasr
 
 # addgroup public
 # adduser rafag 1004, renepor 1003
+
+#/media/main/plex_db_backup$ sudo cp com.plexapp.plugins.library.blobs.db-2018-09-28 /media/yasr/configs/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.blobs.db
+#gandazgul@k8s:/media/main/plex_db_backup$ sudo cp com.plexapp.plugins.trakttv.db /media/yasr/configs/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/
+#gandazgul@k8s:/media/main/plex_db_backup$ sudo cp com.plexapp.plugins.library.db-2018-09-28 /media/yasr/configs/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db
+#gandazgul@k8s:/media/main/plex_db_backup$ sudo rm  /media/yasr/configs/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.blobs.db-*
+#gandazgul@k8s:/media/main/plex_db_backup$ sudo rm  /media/yasr/configs/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db-*
+#gandazgul@k8s:/media/main/plex_db_backup$ sudo rm  /media/yasr/configs/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.
+#com.plexapp.dlna.db                   com.plexapp.dlna.db-wal               com.plexapp.plugins.library.db        com.plexapp.plugins.trakttv.db-shm
+#com.plexapp.dlna.db-shm               com.plexapp.plugins.library.blobs.db  com.plexapp.plugins.trakttv.db        com.plexapp.plugins.trakttv.db-wal
+#gandazgul@k8s:/media/main/plex_db_backup$ sudo rm  /media/yasr/configs/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.
+#com.plexapp.dlna.db                   com.plexapp.dlna.db-wal               com.plexapp.plugins.library.db        com.plexapp.plugins.trakttv.db-shm
+#com.plexapp.dlna.db-shm               com.plexapp.plugins.library.blobs.db  com.plexapp.plugins.trakttv.db        com.plexapp.plugins.trakttv.db-wal
+#gandazgul@k8s:/media/main/plex_db_backup$ sudo rm  /media/yasr/configs/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.
+#com.plexapp.dlna.db                   com.plexapp.dlna.db-wal               com.plexapp.plugins.library.db        com.plexapp.plugins.trakttv.db-shm
+#com.plexapp.dlna.db-shm               com.plexapp.plugins.library.blobs.db  com.plexapp.plugins.trakttv.db        com.plexapp.plugins.trakttv.db-wal
+#gandazgul@k8s:/media/main/plex_db_backup$ sudo rm  /media/yasr/configs/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.
+#com.plexapp.dlna.db                   com.plexapp.dlna.db-wal               com.plexapp.plugins.library.db        com.plexapp.plugins.trakttv.db-shm
+#com.plexapp.dlna.db-shm               com.plexapp.plugins.library.blobs.db  com.plexapp.plugins.trakttv.db        com.plexapp.plugins.trakttv.db-wal
+#gandazgul@k8s:/media/main/plex_db_backup$ sudo rm  /media/yasr/configs/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.trakttv.db-
+#com.plexapp.plugins.trakttv.db-shm  com.plexapp.plugins.trakttv.db-wal
+#gandazgul@k8s:/media/main/plex_db_backup$ sudo rm  /media/yasr/configs/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.trakttv.db-*
+#gandazgul@k8s:/media/main/plex_db_backup$
