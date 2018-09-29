@@ -1,5 +1,10 @@
 FROM sickp/alpine-sshd:latest
 
+RUN apk update \
+    && apk add --no-cache \
+        sudo nano screen bash \
+    && rm -rf /tmp/* /var/tmp/*
+
 COPY ./createUsers.sh /createUsers.sh
 COPY ./users.conf /users.conf
 RUN chmod +x createUsers.sh && \
@@ -8,6 +13,3 @@ RUN chmod +x createUsers.sh && \
     rm -f /users.conf && \
     passwd -d root && \
     echo "%wheel ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-
-RUN apk update && \
-    apk add sudo nano
