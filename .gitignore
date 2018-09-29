@@ -1,8 +1,8 @@
 .idea/workspace.xml
 docker/sshd/users.conf
 docker/size-checker/ssmtp.conf
-helm-configs/ipaddress.yaml
-helm-configs/gogs.yaml
+values/ipaddress.yaml
+values/gogs.yaml
 charts/gogs/charts/
 secrets.sh
 cronjobs.carlos.yaml
