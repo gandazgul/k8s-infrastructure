@@ -1,3 +1,12 @@
+#default values to set for args along with dedicated keys that can be set by contributers, cli args take precedence overe these
+helmDefaults:
+  # defaults for verify, wait, force, timeout and recreatePods under releases[]
+  verify: true
+  wait: true
+  timeout: 600
+  recreatePods: true
+  force: true
+
 releases:
 # STORAGE ===============================================
 
@@ -103,7 +112,7 @@ releases:
 #          data:
 #            claimName: main-volume
 #            subPath: "public"
-#      - helm-configs/ipaddress.yaml
+#      - values/ipaddress.yaml
 
 #  - name: seedbox
 #    namespace: services
@@ -213,7 +222,7 @@ releases:
 #          persistence:
 #              existingClaim: yasr-volume
 #              subPath: "configs/gogs/db"
-#      - helm-configs/gogs.yaml
+#      - values/gogs.yaml
 #
 #  - name: sshd
 #    namespace: services
