@@ -73,3 +73,11 @@ probably just open their ports on the machine they are on. If I end up adding mo
 change.
 
 DNS?
+
+## Reboot a node
+
+1. Run this to stop all pods, delete-local-data doesnt actually delete anything, if any pods are using emptyDir as a volume it gets deleted, is just a warning.
+`kubectl drain node-name --ignore-daemonsets --delete-local-data`
+2. Do any maintenance needed and reboot
+3. Run this to allow pods to be started on this node again.
+`kubectl uncordon node-name`

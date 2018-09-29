@@ -214,11 +214,13 @@ releases:
 #              existingClaim: yasr-volume
 #              subPath: "configs/gogs/db"
 #      - helm-configs/gogs.yaml
-
+#
 #  - name: sshd
 #    namespace: services
 #    chart: ./charts/sshd
 #    values:
+#      - image:
+#          tag: v12
 #      - volumes:
 #        - name: main-volume
 #          persistentVolumeClaim:

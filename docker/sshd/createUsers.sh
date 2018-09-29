@@ -4,7 +4,8 @@ for line in $(cat ./users.conf)
 do
     username=`echo "$line" | awk -F: '{print $1}'`
     uid=`echo "$line" | awk -F: '{print $2}'`
-    members=`echo "$line" | awk -F: '{print $3}'`
+    gid=`echo "$line" | awk -F: '{print $3}'`
+    members=`echo "$line" | awk -F: '{print $4}'`
 
     if [ ! -z "$members" ]; then
         echo "Found group $username:$uid:$members"
@@ -21,7 +22,8 @@ do
     else
         echo "Found user $username:$uid"
 
-        adduser -D -H -s /bin/ash -u ${uid} ${username}
+        addgroup -g ${gid} ${username}
+        adduser -D -H -s /bin/bash -u ${uid} -G ${username} ${username}
 #        wget https://github.com/${username}.keys
 #        if [ -f ${username}.keys ]; then
 #            mkdir /home/${username}/.ssh/
