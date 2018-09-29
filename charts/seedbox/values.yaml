@@ -47,6 +47,8 @@ volumeMounts:
     mountPath: "/data"
     subPath: "transmission"
   - name: main-volume
+    mountPath: "/main"
+  - name: main-volume
     mountPath: "/config"
     subPath: "configs/"
   - name: dev-tun

@@ -29,6 +29,7 @@ RUN pip install -U pip \
     # https://github.com/pypa/setuptools/issues/951
     && pip install -U setuptools>=36 \
     && pip install -U urllib3[socks] \
+    && pip install -U subliminal \
     && pip install -U chardet \
     && pip install -U irc_bot \
     && pip install -U rarfile \
