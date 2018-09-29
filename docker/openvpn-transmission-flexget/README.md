@@ -2,8 +2,6 @@
 
 **Heavily modified from https://github.com/haugene/docker-transmission-openvpn, most of the credit goes there. I simply added flexget and stripped down the container for my needs**
 
-**I'm still testing this to see how it works, I got it to work on k8s but is not in "production" yet**
-
 This container contains OpenVPN, Flexget and Transmission with a configuration
 where Transmission and Flexget are running only when OpenVPN has an active tunnel.
 It expects the OpenVPN and flexget config files to be mounted on /config.

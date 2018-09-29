@@ -5,4 +5,4 @@ helm-configs/ipaddress.yaml
 helm-configs/gogs.yaml
 charts/gogs/charts/
 secrets.sh
-carlos.cronjobs.yaml
+cronjobs.carlos.yaml
