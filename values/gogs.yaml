@@ -1,0 +1,2 @@
+service:
+  sshDomain: "10.1.1.2"
