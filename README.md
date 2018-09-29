@@ -73,10 +73,10 @@ On your local machine (NOTE: Only works on your local network):
 * Plex (Port 32400, needs extra configuration, see readme @ https://github.com/munnerz/kube-plex)
 * Resilio Sync (Port 8888)
 * FileBrowser (default credentials admin:admin, port 8080)
-* Seedbox (transmission - 9091, flexget, OpenVPN - [README](!./charts/seedbox/README.md))
+* Seedbox (transmission - 9091, flexget, OpenVPN - [README](/charts/seedbox/README.md))
 * SSHD - for tunneling, etc - Port 22222
 * Gogs - Port 3000
-* Samba - (Opens the default ports on the node directly [README](!./charts/samba/README.md))
+* Samba - (Opens the default ports on the node directly [README](/charts/samba/README.md))
 * CronJob to take a differential backup of main-volume into backup-volume
 
 ## Access
