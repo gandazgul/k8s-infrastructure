@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./configNode.sh
+./configNode.sh || exit 1
 
 printf "\nInstalling kubernetes ====================================================================================\n"
 if [ ! -f "kubeadminit.lock" ]; then
