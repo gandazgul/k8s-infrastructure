@@ -1,0 +1,2 @@
+alias ll='ls -laH'
+PS1='\n$(if [[ $? == 0 ]]; then echo "\[\e[32m\]\u"; else echo "\[\e[31m\]\u"; fi) \[\e[36m\w\] \[\e[33m\]\[\e[1m\]\n\$ \[\e[0m\]'

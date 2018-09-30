@@ -4,6 +4,7 @@
 # docker
 docker/sshd/users.conf
 docker/size-checker/ssmtp.conf
+docker/openvpn-transmission-flexget/bash_history
 
 # helmfile values
 helmfile.d/70-cronjobs.carlos.yaml

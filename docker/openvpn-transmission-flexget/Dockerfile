@@ -24,6 +24,9 @@ RUN apk update \
     && groupmod -g 1000 users \
     && usermod -G users abc
 
+COPY ./bashrc /root/.bashrc
+COPY ./bash_history* /root/.bash_history
+
 RUN pip install -U pip \
     # Make sure to install setuptools version >=36 to avoid a race condition, see:
     # https://github.com/pypa/setuptools/issues/951
