@@ -1,7 +1,7 @@
 
 storageClass:
 
-volumeName: myvolume
+volumeName: main-volume
 
 storage: 512Gi
 
