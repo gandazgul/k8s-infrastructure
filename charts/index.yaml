@@ -1,0 +1,97 @@
+apiVersion: v1
+entries:
+  cronjob:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-09-30T10:53:49.722121398-04:00
+    description: A Helm chart for creating cron jobs
+    digest: c7ded763741f9fbb6c96fb929d422dad9453d67b90e2e6e0395a0717de80863d
+    name: cronjob
+    urls:
+    - cronjob-0.1.0.tgz
+    version: 0.1.0
+  filebrowser:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-09-30T10:53:49.722513899-04:00
+    description: A chart for filebrowser
+    digest: 6e07c8153f40e2da9daef50220f3069a45fc58243364c1a165cd1258db04a1e9
+    name: filebrowser
+    urls:
+    - filebrowser-0.1.0.tgz
+    version: 0.1.0
+  gogs:
+  - apiVersion: v1
+    appVersion: 0.11.29
+    created: 2018-09-30T10:53:49.723538037-04:00
+    description: 'Gogs: Go Git Service'
+    digest: 328cbd95930da62be9952e0e90cd8de3b14b8bae6b09585e4b6707e12e53960d
+    home: https://gogs.io/
+    icon: https://gogs.io/img/favicon.ico
+    keywords:
+    - git
+    name: gogs
+    urls:
+    - gogs-0.6.0.tgz
+    version: 0.6.0
+  persistence-volume:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-09-30T10:53:49.723827463-04:00
+    description: A Helm chart to install my data volumes
+    digest: 38e19b5216d0d99253f88830b14c90e37f53e33b697019e2ca8e4cfbe8b9f52e
+    name: persistence-volume
+    urls:
+    - persistence-volume-0.1.0.tgz
+    version: 0.1.0
+  pvc:
+  - apiVersion: v1
+    created: 2018-09-30T10:53:49.724080984-04:00
+    description: PVC ReadWriteMany
+    digest: ec53c382c310910f4ada8c4040800ab72f592e39ca8184e97b5f700a888d7cec
+    name: pvc
+    urls:
+    - pvc-0.1.0.tgz
+    version: 0.1.0
+  resilio:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-09-30T10:53:49.72435383-04:00
+    description: A Helm chart for resilio sync
+    digest: 3b4eb3fe3f40475b2fc67a2264b772a22833d60e6ee68bc39fe0fc9521fd391b
+    name: resilio
+    urls:
+    - resilio-0.1.0.tgz
+    version: 0.1.0
+  samba:
+  - apiVersion: v1
+    created: 2018-09-30T10:53:49.724648794-04:00
+    description: Chart to deploy a simple Samba server on K8s available on hostNetwork
+      or just inside the cluster
+    digest: cf8dedb08af54c0a89044f42fe894cbf6f64dcd0e92c59a06da4711207b86be5
+    name: samba
+    urls:
+    - samba-0.1.0.tgz
+    version: 0.1.0
+  seedbox:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-09-30T10:53:49.724954808-04:00
+    description: A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission
+      and Flexget
+    digest: cb3fb75cbbfa50a1f1219bdd65e2a16dac6c09d4ab9adb146e909ce99d3c3996
+    name: seedbox
+    urls:
+    - seedbox-0.1.0.tgz
+    version: 0.1.0
+  sshd:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-09-30T10:53:49.725177457-04:00
+    description: My Helm chart for sshd
+    digest: 06b2969b13b286060039bb69d0ac5b8161970247cd6b961c9fc0b19bc2e4517b
+    name: sshd
+    urls:
+    - sshd-0.1.0.tgz
+    version: 0.1.0
+generated: 2018-09-30T10:53:49.72155322-04:00
