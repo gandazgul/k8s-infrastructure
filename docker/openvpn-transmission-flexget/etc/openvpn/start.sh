@@ -2,17 +2,27 @@
 OPENVPN_CONFIG="/config/openvpn/config.ovpn"
 
 # Check OpenVPN config
-if [[ ! -f $OPENVPN_CONFIG ]]; then
+if [[ ! -f ${OPENVPN_CONFIG} ]]; then
   echo "OpenVPN config not found. Exiting."
   exit 1
 fi
 
 # Check OpenVPN credentials
-if [[ ! -f /config/openvpn/credentials.conf ]] ; then
-  echo "OpenVPN credentials not found. Exiting."
+# Add OpenVPN credentials
+if [[ -f /config/openvpn/credentials.conf ]]; then
+  echo "Found existing OPENVPN credentials..."
+  chmod 600 /config/openvpn/credentials.conf
+elif [[ -n ${OPENVPN_USERNAME} ]] && [[ -n ${OPENVPN_PASSWORD} ]]; then
+  echo "Setting OPENVPN credentials..."
+  mkdir -p /config/openvpn/
+  echo "${OPENVPN_USERNAME}" > /config/openvpn/credentials.conf
+  echo "${OPENVPN_PASSWORD}" >> /config/openvpn/credentials.conf
+  chmod 600 /config/openvpn/credentials.conf
+else
+  echo "/config/openvpn/credentials.conf doesnt exist and OPENVPN_USERNAME and OPENVPN_PASSWORD were not set. Can't proceed without credentials."
   exit 1
 fi
-echo "Found OpenVPN credentials..."
+
 echo "Starting OpenVPN using config ${OPENVPN_CONFIG}"
 
 # Persist transmission settings for use by transmission-daemon
