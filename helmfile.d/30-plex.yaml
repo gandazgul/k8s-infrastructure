@@ -3,7 +3,6 @@
 
 # NOTE: cli args take precedence over these
 helmDefaults:
-  verify: true
   wait: true
   timeout: 600
   recreatePods: true
@@ -12,7 +11,7 @@ helmDefaults:
 releases:
   - name: plex
     namespace: services
-    chart: ../kube-plex/charts/kube-plex
+    chart: ../../kube-plex/charts/kube-plex
     values:
       - image:
           tag: plexpass

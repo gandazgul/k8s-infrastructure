@@ -1,4 +1,4 @@
-#!/bin/bash
+    #!/bin/bash
 
 echo "Installing helm with the tiller plugin ========================================================================="
 if [ ! -f ~/.helm/plugins ]; then
@@ -6,6 +6,7 @@ if [ ! -f ~/.helm/plugins ]; then
     helm init --client-only
     mkdir -p ~/.helm/plugins
     helm plugin install https://github.com/rimusz/helm-tiller || exit 1
+    helm plugin install https://github.com/databus23/helm-diff --version master || exit 1
     helm tiller run helm list || exit 1
     echo "If you see any errors before this line then helm didn't install ============================================"
     echo "Usage: helm tiller start|stop|run"

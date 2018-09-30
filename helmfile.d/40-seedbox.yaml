@@ -3,7 +3,6 @@
 
 # NOTE: cli args take precedence over these
 helmDefaults:
-  verify: true
   wait: true
   timeout: 600
   recreatePods: true
@@ -12,7 +11,7 @@ helmDefaults:
 releases:
   - name: seedbox
     namespace: services
-    chart: ./charts/seedbox
+    chart: ../charts/seedbox
     values:
       - image:
           tag: v18
@@ -20,9 +19,9 @@ releases:
         - name: LOCAL_NETWORK
           value: "10.244.0.0/16"
         - name: OPENVPN_USERNAME
-          value: {{ requiredEnv "OPENVPN_USERNAME" }}
+          value: {{ env "OPENVPN_USERNAME" | default "" }}
         - name: OPENVPN_PASSWORD
-          value: {{ requiredEnv "OPENVPN_PASSWORD" }}
+          value: {{ env "OPENVPN_PASSWORD" | default "" }}
         - name: TRANSMISSION_RPC_USERNAME
           value: "transmission"
         - name: TRANSMISSION_RPC_PASSWORD

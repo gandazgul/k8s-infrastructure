@@ -2,7 +2,6 @@
 
 # NOTE: cli args take precedence over these
 helmDefaults:
-  verify: true
   wait: true
   timeout: 600
   recreatePods: true
@@ -12,7 +11,7 @@ releases:
 #  EXAMPLE: Every minute output the date
 #  - name: example
 #    namespace: services
-#    chart: ./charts/cronjob
+#    chart: ../charts/cronjob
 #    values:
 #      - schedule: "*/1 * * * *"
 #      - image:
@@ -26,7 +25,7 @@ releases:
 
   - name: size-checker
     namespace: services
-    chart: ./charts/cronjob
+    chart: ../charts/cronjob
     values:
       # Sunday at 1:00am
       - schedule: "0 1 * * 0"
@@ -52,7 +51,7 @@ releases:
 
   - name: incremental-backups
     namespace: services
-    chart: ./charts/cronjob
+    chart: ../charts/cronjob
     values:
       # Every hour
       - schedule: "0 */1 * * *"
