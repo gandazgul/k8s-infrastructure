@@ -62,20 +62,22 @@ On your local machine (NOTE: Only works on your local network):
 2. On the root of infrastructure `cp ./secrets.example.sh ./secrets.sh`
 3. Fill in secrets with your passwords and other settings
 4. Run `source ./secrets.sh` to set up the passwords/settings
-5. Run `helmfile sync` - to setup the rest of the services (`helmfile charts` to retry/update after)
-6. `helm list` to see what is installed
-7. `helm delete --purge [NAME]` to remove one particular service if you need to retry/stop it 
+5. Run `helmfile sync` - to setup the rest of the services (`helmfile apply` to retry/update after)
+6. You can run one individual file with: `helmfile apply -f helmfile.d/00-storage.yaml`
+7. You can also add new yaml files in helmfile.d and they will be synched as well
+8. `helm list` to see what is installed
+9. `helm delete --purge [NAME]` to remove one particular service if you need to retry/stop it 
 
 ## Services Included:
 
 * Volumes for service configs and data
 * K8s Dashboard (Port 8443, https required)
-* Plex (Port 32400, needs extra configuration, see readme @ https://github.com/munnerz/kube-plex)
-* Resilio Sync (Port 8888)
 * FileBrowser (default credentials admin:admin, port 8080)
+* Plex (Port 32400, needs extra configuration, see readme @ https://github.com/munnerz/kube-plex)
 * Seedbox  - transmission - 9091, flexget, OpenVPN - [README](/charts/seedbox/README.md)
 * SSHD - for tunneling, etc - Port 22222 - [README](/docker/sshd/README.md))
 * Gogs - Port 3000
+* Resilio Sync (Port 8888)
 * Samba - Opens the default ports on the node directly - [README](/charts/samba/README.md)
 * CronJob to take a differential backup of main-volume into backup-volume
 

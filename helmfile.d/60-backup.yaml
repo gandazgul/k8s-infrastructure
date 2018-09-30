@@ -1,0 +1,73 @@
+# Backup and size checked ===========================================================
+
+# NOTE: cli args take precedence over these
+helmDefaults:
+  verify: true
+  wait: true
+  timeout: 600
+  recreatePods: true
+  force: true
+
+releases:
+#  EXAMPLE: Every minute output the date
+#  - name: example
+#    namespace: services
+#    chart: ./charts/cronjob
+#    values:
+#      - schedule: "*/1 * * * *"
+#      - image:
+#          repository: busybox
+#          tag: latest
+#          pullPolicy: IfNotPresent
+#          command:
+#            - /bin/sh
+#            - -c
+#            - date
+
+  - name: size-checker
+    namespace: services
+    chart: ./charts/cronjob
+    values:
+      # Sunday at 1:00am
+      - schedule: "0 1 * * 0"
+      - image:
+          repository: gandazgul/size-checker
+          tag: v3
+      - volumes:
+          - name: yasr-volume
+            persistentVolumeClaim:
+              claimName: yasr-volume
+          - name: main-volume
+            persistentVolumeClaim:
+              claimName: main-volume
+      - volumeMounts:
+          - name: yasr-volume
+            mountPath: "/etc/ssmtp/"
+            subPath: "configs/ssmtp/"
+          - name: main-volume
+            mountPath: "/hdd"
+      - env:
+          - name: MAIL_TO
+            value: {{ requiredEnv "MAIL_TO" }}
+
+  - name: incremental-backups
+    namespace: services
+    chart: ./charts/cronjob
+    values:
+      # Every hour
+      - schedule: "0 */1 * * *"
+      - image:
+          repository: gandazgul/rdiff-backup
+          tag: v3
+      - volumes:
+          - name: main-volume
+            persistentVolumeClaim:
+              claimName: main-volume
+          - name: backup-volume
+            persistentVolumeClaim:
+              claimName: backup-volume
+      - volumeMounts:
+          - name: main-volume
+            mountPath: "/media/main"
+          - name: backup-volume
+            mountPath: "/media/backup"

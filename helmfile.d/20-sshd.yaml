@@ -1,0 +1,25 @@
+# SSHD ===============================================
+# For tunneling and accessing files
+
+# NOTE: cli args take precedence over these
+helmDefaults:
+  verify: true
+  wait: true
+  timeout: 600
+  recreatePods: true
+  force: true
+
+releases:
+  - name: sshd
+    namespace: services
+    chart: ./charts/sshd
+    values:
+      - image:
+          tag: v12
+      - volumes:
+        - name: main-volume
+          persistentVolumeClaim:
+            claimName: main-volume
+      - volumeMounts:
+        - name: main-volume
+          mountPath: "/home"

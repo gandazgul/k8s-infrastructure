@@ -1,0 +1,88 @@
+# Seedbox ===========================================================
+# Transmission and flexget running over an OpenVPN connection ;)
+
+# NOTE: cli args take precedence over these
+helmDefaults:
+  verify: true
+  wait: true
+  timeout: 600
+  recreatePods: true
+  force: true
+
+releases:
+  - name: seedbox
+    namespace: services
+    chart: ./charts/seedbox
+    values:
+      - image:
+          tag: v18
+      - env:
+        - name: LOCAL_NETWORK
+          value: "10.244.0.0/16"
+        - name: OPENVPN_USERNAME
+          value: {{ requiredEnv "OPENVPN_USERNAME" }}
+        - name: OPENVPN_PASSWORD
+          value: {{ requiredEnv "OPENVPN_PASSWORD" }}
+        - name: TRANSMISSION_RPC_USERNAME
+          value: "transmission"
+        - name: TRANSMISSION_RPC_PASSWORD
+          value: {{ requiredEnv "TRANSMISSION_RPC_PASSWORD" }}
+#        - name: TRANSMISSION_PEER_PORT
+#          value: "44444"
+        - name: TRANSMISSION_RPC_AUTHENTICATION_REQUIRED
+          value: "true"
+        - name: TRANSMISSION_BLOCKLIST_ENABLED
+          value: "true"
+        - name: TRANSMISSION_BLOCKLIST_URL
+          value: "http://list.iblocklist.com/?list=bt_level1&fileformat=p2p&archiveformat=gz"
+        - name: TRANSMISSION_INCOMPLETE_DIR_ENABLED
+          value: "true"
+        - name: TRANSMISSION_INCOMPLETE_DIR
+          value: "/data/downloading"
+        - name: TRANSMISSION_HOME
+          value: "/data"
+        - name: TRANSMISSION_DOWNLOAD_DIR
+          value: "/data/downloads"
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TRANSMISSION_ENCRYPTION
+          value: "2"
+        - name: TRANSMISSION_IDLE_SEEDING_LIMIT
+          value: "120"
+        - name: TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED
+          value: "true"
+#         fix container so that these are not needed
+        - name: TRANSMISSION_PEER_CONGESTION_ALGORITHM
+          value: "\"\""
+        - name: TRANSMISSION_RPC_HOST_WHITELIST
+          value: "\"\""
+        - name: TRANSMISSION_SCRIPT_TORRENT_DONE_FILENAME
+          value: "\"\""
+        - name: MAIL_TO
+          value: {{ requiredEnv "MAIL_TO" }}
+      - volumes:
+        - name: yasr-volume
+          persistentVolumeClaim:
+            claimName: yasr-volume
+        - name: main-volume
+          persistentVolumeClaim:
+            claimName: main-volume
+        - name: dev-tun
+          hostPath:
+            path: "/dev/net/tun"
+      - volumeMounts:
+        - name: main-volume
+          mountPath: "/main"
+        - name: yasr-volume
+          mountPath: "/data"
+          subPath: "transmission"
+        - name: yasr-volume
+          mountPath: "/config"
+          subPath: "configs/"
+        - name: dev-tun
+          mountPath: "/dev/net/tun"
+        - name: yasr-volume
+          mountPath: "/etc/ssmtp/"
+          subPath: "configs/ssmtp"

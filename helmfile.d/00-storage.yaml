@@ -1,0 +1,68 @@
+# STORAGE ===============================================
+# This sets up all the volumes and claims that the rest of the services rely on
+
+# NOTE: cli args take precedence over these
+helmDefaults:
+  verify: true
+  wait: true
+  timeout: 600
+  recreatePods: true
+  force: true
+
+releases:
+  # Yet Another SR, this is a volume for all configs
+  - name: yasr-volume-pv
+    namespace: services
+    chart: ./charts/persistence-volume
+    values:
+      - volumeName: yasr-volume
+      - storage: 4Ti
+      - storageClass: hdd
+      - path: /media/yasr
+      - nodeHostname: {{ requiredEnv "MASTER_NODE_NAME" }}
+
+  # This is the main source of storage
+  - name: main-volume-pv
+    namespace: services
+    chart: ./charts/persistence-volume
+    values:
+      - volumeName: main-volume
+      - storage: 4Ti
+      - storageClass: hdd
+      - path: /media/main
+      - nodeHostname: {{ requiredEnv "MASTER_NODE_NAME" }}
+
+  # This is the backup volume for main and some of the stuff in yasr (I know the math doesnt work but I'm on a budget)
+  - name: backup-volume-pv
+    namespace: services
+    chart: ./charts/persistence-volume
+    values:
+      - volumeName: backup-volume
+      - storage: 4Ti
+      - storageClass: hdd
+      - path: /media/backup
+      - nodeHostname: {{ requiredEnv "MASTER_NODE_NAME" }}
+
+  - name: yasr-volume
+    namespace: services
+    chart: ./charts/pvc
+    values:
+      - storageClass: hdd
+      - volumeName: yasr-volume
+      - storage: 2Ti
+
+  - name: main-volume
+    namespace: services
+    chart: ./charts/pvc
+    values:
+      - storageClass: hdd
+      - volumeName: main-volume
+      - storage: 4Ti
+
+  - name: backup-volume
+    namespace: services
+    chart: ./charts/pvc
+    values:
+      - storageClass: hdd
+      - volumeName: backup-volume
+      - storage: 4Ti
