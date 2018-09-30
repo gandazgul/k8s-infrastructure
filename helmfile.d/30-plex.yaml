@@ -1,0 +1,31 @@
+# Plex ===============================================
+# It's Plex what else needs to be said? :)
+
+# NOTE: cli args take precedence over these
+helmDefaults:
+  verify: true
+  wait: true
+  timeout: 600
+  recreatePods: true
+  force: true
+
+releases:
+  - name: plex
+    namespace: services
+    chart: ../kube-plex/charts/kube-plex
+    values:
+      - image:
+          tag: plexpass
+      - timezone: America/New_York
+      - kubePlex:
+          enabled: false
+      - persistence:
+          transcode:
+            enabled: true
+          config:
+            claimName: yasr-volume
+            subPath: "configs/plex"
+          data:
+            claimName: main-volume
+            subPath: "public"
+      - values/ipaddress.yaml

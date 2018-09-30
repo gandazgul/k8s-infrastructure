@@ -1,0 +1,68 @@
+# Gogs, Resilio Sync and Samba ===========================================================
+
+# NOTE: cli args take precedence over these
+helmDefaults:
+  verify: true
+  wait: true
+  timeout: 600
+  recreatePods: true
+  force: true
+
+releases:
+  - name: resilio
+    namespace: services
+    chart: ./charts/resilio
+    values:
+      - volumes:
+        - name: yasr-volume
+          persistentVolumeClaim:
+            claimName: yasr-volume
+        - name: main-volume
+          persistentVolumeClaim:
+            claimName: main-volume
+      - volumeMounts:
+        - name: yasr-volume
+          mountPath: "/mnt/sync"
+          subPath: "configs/resilio"
+        - name: main-volume
+          mountPath: "/mnt/mounted_folders/"
+          subPath: "btsync"
+
+  - name: gogs
+    namespace: services
+    chart: ./charts/gogs
+    version: 0.6.0
+    values:
+      - persistence:
+          claimName: yasr-volume
+          subPath: "configs/gogs/site_data"
+      - postgresql:
+          persistence:
+              existingClaim: yasr-volume
+              subPath: "configs/gogs/db"
+      - values/gogs.yaml
+
+  - name: samba
+    namespace: services
+    chart: ./charts/samba
+    values:
+      - hostNetwork: true
+      - volumes:
+          - name: yasr-volume
+            persistentVolumeClaim:
+              claimName: yasr-volume
+          - name: main-volume
+            persistentVolumeClaim:
+              claimName: main-volume
+      - volumeMounts:
+          - name: yasr-volume
+            mountPath: "/etc/samba/"
+            subPath: "configs/samba/"
+#          - name: yasr-volume
+          - name: main-volume
+            mountPath: "/shared"
+      - env:
+          - name: IMPORT
+            value: "/etc/samba/smbpasswd"
+          - name: TZ
+            value: "EST5EDT"

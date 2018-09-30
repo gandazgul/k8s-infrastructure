@@ -1,0 +1,36 @@
+# File Browser ====================================================================
+# This helps setup other things if needed or prepare data for other releases
+
+# NOTE: cli args take precedence over these
+helmDefaults:
+  verify: true
+  wait: true
+  timeout: 600
+  recreatePods: true
+  force: true
+
+releases:
+  - name: filebrowser
+    namespace: services
+    chart: ./charts/filebrowser
+    values:
+      - volumes:
+          - name: yasr-volume
+            persistentVolumeClaim:
+              claimName: yasr-volume
+          - name: main-volume
+            persistentVolumeClaim:
+              claimName: main-volume
+          - name: backup-volume
+            persistentVolumeClaim:
+              claimName: backup-volume
+      - volumeMounts:
+          - name: yasr-volume
+            mountPath: "/srv/YASR"
+          - name: main-volume
+            mountPath: "/srv/main"
+          - name: backup-volume
+            mountPath: "/srv/backup"
+      - service:
+          type: NodePort
+          port: 8080

@@ -1,8 +1,17 @@
+#Injellij
 .idea/workspace.xml
+
+# docker
 docker/sshd/users.conf
 docker/size-checker/ssmtp.conf
-values/ipaddress.yaml
-values/gogs.yaml
+
+# helmfile values
+helmfile.d/70-cronjobs.carlos.yaml
+helmfile.d/values/ipaddress.yaml
+helmfile.d/values/gogs.yaml
+
+# chart deps
 charts/gogs/charts/
+
+# secrets and private files
 secrets.sh
-cronjobs.carlos.yaml
