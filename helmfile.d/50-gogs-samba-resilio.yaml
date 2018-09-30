@@ -2,7 +2,6 @@
 
 # NOTE: cli args take precedence over these
 helmDefaults:
-  verify: true
   wait: true
   timeout: 600
   recreatePods: true
@@ -11,7 +10,7 @@ helmDefaults:
 releases:
   - name: resilio
     namespace: services
-    chart: ./charts/resilio
+    chart: ../charts/resilio
     values:
       - volumes:
         - name: yasr-volume
@@ -30,7 +29,7 @@ releases:
 
   - name: gogs
     namespace: services
-    chart: ./charts/gogs
+    chart: ../charts/gogs
     version: 0.6.0
     values:
       - persistence:
@@ -44,7 +43,7 @@ releases:
 
   - name: samba
     namespace: services
-    chart: ./charts/samba
+    chart: ../charts/samba
     values:
       - hostNetwork: true
       - volumes:
