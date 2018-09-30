@@ -1,3 +1,5 @@
+# https://github.com/kubernetes/kubernetes/blob/master/cmd/kubeadm/app/apis/kubeadm/v1alpha3/types.go
+---
 apiVersion: kubeadm.k8s.io/v1alpha2
 kind: MasterConfiguration
 kubernetesVersion: v1.12.0
@@ -7,3 +9,4 @@ networking:
   podSubnet: "10.244.0.0/16"
 nodeRegistration:
   taints: []
+#  criSocket: /var/run/crio/crio.sock

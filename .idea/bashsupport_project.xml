@@ -3,6 +3,7 @@
   <component name="BashSupportProjectSettings">
     <option name="globalVariables">
       <set>
+        <option value="KUBE_JOIN_COMMAND" />
         <option value="MAIL_TO" />
       </set>
     </option>

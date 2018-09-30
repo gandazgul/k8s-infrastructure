@@ -1,5 +1,9 @@
 #!/bin/bash
 
+printf "Upgrade =====================================================================================================\n"
+sudo dnf -y update || exit 1
+
+printf "Install screen, and other tools =============================================================================\n"
 sudo dnf -y install screen htop git
 
 sudo mkdir /media/main
