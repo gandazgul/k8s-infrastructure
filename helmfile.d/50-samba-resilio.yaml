@@ -27,20 +27,6 @@ releases:
           mountPath: "/mnt/mounted_folders/"
           subPath: "btsync"
 
-  - name: gogs
-    namespace: services
-    chart: ../charts/gogs
-    version: 0.6.0
-    values:
-      - persistence:
-          claimName: yasr-volume
-          subPath: "configs/gogs/site_data"
-      - postgresql:
-          persistence:
-              existingClaim: yasr-volume
-              subPath: "configs/gogs/db"
-      - values/gogs.yaml
-
   - name: samba
     namespace: services
     chart: ../charts/samba
