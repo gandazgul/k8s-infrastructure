@@ -27,6 +27,7 @@ printf "\nDisable SELINUX because kubelet doesnt support it ====================
 sudo setenforce 0
 echo "SELINUX=disabled" | sudo tee /etc/sysconfig/selinux
 
+printf "\nInstalling Kubernetes packages from repo =================================================================\n"
 if [ ! -f /etc/yum.repos.d/kubernetes.repo ]; then
     printf "\nInstall kubelet, kubeadm, crictl(needed by kubelet), cockpit (nice fedora dashboard):"
     sudo bash -c 'cat <<EOF > /etc/yum.repos.d/kubernetes.repo
@@ -48,10 +49,10 @@ repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 exclude=kube*
 EOF'
-fi;
 
-sudo dnf -y install --enablerepo=kubernetes kubelet kubectl kubeadm --disableexcludes=kubernetes || exit 1
-sudo dnf -y install cockpit-docker cockpit-kubernetes cockpit-pcp || exit 1
+    sudo dnf -y install --enablerepo=kubernetes kubelet kubectl kubeadm --disableexcludes=kubernetes || exit 1
+    sudo dnf -y install cockpit-docker cockpit-kubernetes cockpit-pcp || exit 1
+fi;
 
 printf "\nEnabling cockpit =========================================================================================\n"
 sudo systemctl enable --now cockpit.socket || exit 1
