@@ -1,0 +1,23 @@
+# Gogs, Resilio Sync and Samba ===========================================================
+
+# NOTE: cli args take precedence over these
+helmDefaults:
+  wait: true
+  timeout: 600
+  recreatePods: true
+  force: true
+
+releases:
+  - name: gogs
+    namespace: services
+    chart: ../charts/gogs
+    version: 0.6.0
+    values:
+      - persistence:
+          claimName: yasr-volume
+          subPath: "configs/gogs/site_data"
+      - postgresql:
+          persistence:
+              existingClaim: yasr-volume
+              subPath: "configs/gogs/db"
+      - values/gogs.yaml

@@ -10,6 +10,7 @@ docker/openvpn-transmission-flexget/bash_history
 helmfile.d/70-cronjobs.carlos.yaml
 helmfile.d/values/ipaddress.yaml
 helmfile.d/values/gogs.yaml
+secondary-master.d/values/ipaddress.yaml
 
 # chart deps
 charts/gogs/charts/
