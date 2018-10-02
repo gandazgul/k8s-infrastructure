@@ -8,3 +8,9 @@ export OPENVPN_PASSWORD=""
 export TRANSMISSION_RPC_PASSWORD=""
 export MAIL_TO=""
 export MASTER_NODE_NAME=""
+
+#docker repositories
+export REPOSITORY_USERNAME=""
+
+#docker repositories versions
+export SSHD_REPOSITORY_TAG=""
