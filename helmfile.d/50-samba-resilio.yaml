@@ -43,7 +43,6 @@ releases:
           - name: yasr-volume
             mountPath: "/etc/samba/"
             subPath: "configs/samba/"
-#          - name: yasr-volume
           - name: main-volume
             mountPath: "/shared"
       - env:

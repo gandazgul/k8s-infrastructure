@@ -9,7 +9,6 @@ spec:
   successfulJobsHistoryLimit: {{ .Values.successfulJobsHistoryLimit }}
   jobTemplate:
     spec:
-      activeDeadlineSeconds: {{ .Values.activeDeadlineSeconds }}
       template:
         spec:
           {{- if .Values.volumes }}
@@ -20,8 +19,14 @@ spec:
           initContainers:
             - name: init
               image: busybox
-              command: {{ .Values.initContainer.command }}
-              args: {{ .Values.initContainer.args }}
+              {{- if .Values.initContainer.command }}
+              command:
+{{ toYaml .Values.initContainer.command | indent 16 }}
+              {{- end }}
+              {{- if .Values.initContainer.args }}
+              args:
+{{ toYaml .Values.initContainer.args | indent 16 }}
+              {{- end }}
               {{- if .Values.volumeMounts }}
               volumeMounts:
 {{ toYaml .Values.initContainer.volumeMounts | indent 16 }}
@@ -35,7 +40,7 @@ spec:
               command:
 {{ toYaml .Values.image.command | indent 16 }}
               {{- end }}
-              {{- if .Values.image.command }}
+              {{- if .Values.image.args }}
               args:
 {{ toYaml .Values.image.args | indent 16 }}
               {{- end }}

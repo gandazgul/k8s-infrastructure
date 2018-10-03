@@ -18,9 +18,8 @@ releases:
 #          repository: busybox
 #          tag: latest
 #          pullPolicy: IfNotPresent
-#          command:
-#            - /bin/sh
-#            - -c
+#          command: ["/bin/sh", "-c"]
+#          args:
 #            - date
 
   - name: size-checker
@@ -67,6 +66,6 @@ releases:
               claimName: backup-volume
       - volumeMounts:
           - name: main-volume
-            mountPath: "/media/main"
+            mountPath: /media/main
           - name: backup-volume
-            mountPath: "/media/backup"
+            mountPath: /media/backup
