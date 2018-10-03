@@ -79,7 +79,7 @@ On your local machine (NOTE: Only works on your local network):
 * Gogs - Port 3000
 * Resilio Sync (Port 8888)
 * Samba - Opens the default ports on the node directly - [README](/charts/samba/README.md)
-* CronJob to take a differential backup of main-volume into backup-volume
+* CronJob to take a differential backup of main-volume into backup-volume (Docs: https://www.nongnu.org/rdiff-backup/docs.html)
 
 ## Access
 

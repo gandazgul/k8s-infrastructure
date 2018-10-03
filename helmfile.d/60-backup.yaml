@@ -48,6 +48,7 @@ releases:
           - name: MAIL_TO
             value: {{ requiredEnv "MAIL_TO" }}
 
+  # Docs: https://www.nongnu.org/rdiff-backup/docs.htmls
   - name: incremental-backups
     namespace: services
     chart: ../charts/cronjob
