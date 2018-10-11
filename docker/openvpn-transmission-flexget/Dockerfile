@@ -8,6 +8,9 @@ ENV DOCKERIZE_VERSION=v0.6.0
 VOLUME /data
 VOLUME /config
 
+COPY ./bashrc /root/.bashrc
+COPY ./bash_history* /root/.bash_history
+
 # Add edge/testing repositories.
 RUN printf "\
 @edge http://nl.alpinelinux.org/alpine/edge/main\n\
@@ -23,9 +26,6 @@ RUN apk update \
     && rm -rf /tmp/* /var/tmp/* \
     && groupmod -g 1000 users \
     && usermod -G users abc
-
-COPY ./bashrc /root/.bashrc
-COPY ./bash_history* /root/.bash_history
 
 RUN pip install -U pip \
     # Make sure to install setuptools version >=36 to avoid a race condition, see:
