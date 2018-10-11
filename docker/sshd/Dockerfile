@@ -2,7 +2,7 @@ FROM sickp/alpine-sshd:latest
 
 RUN apk update \
     && apk add --no-cache \
-        sudo nano screen bash \
+        sudo nano screen bash rsync rdiff-backup \
     && rm -rf /tmp/* /var/tmp/*
 
 COPY ./createUsers.sh /createUsers.sh
