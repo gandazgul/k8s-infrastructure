@@ -15,7 +15,7 @@ releases:
     chart: ../charts/persistence-volume
     values:
       - volumeName: yasr-volume
-      - storage: 4Ti
+      - storage: 2Ti
       - storageClass: hdd
       - path: /media/yasr
       - nodeHostname: {{ requiredEnv "MASTER_NODE_NAME" }}
