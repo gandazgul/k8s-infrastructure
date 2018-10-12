@@ -15,11 +15,22 @@ releases:
     values:
       - image:
           repository: {{ env "REPOSITORY_USERNAME" | default "gandazgul" }}/sshd
-          tag: {{ env "SSHD_REPOSITORY_TAG" | default "v2" }}
+          tag: {{ env "SSHD_REPOSITORY_TAG" | default "v1" }}
       - volumes:
         - name: main-volume
           persistentVolumeClaim:
             claimName: main-volume
+        - name: rafag-volume
+          persistentVolumeClaim:
+            claimName: rafag-volume
+        - name: yasr-volume
+          persistentVolumeClaim:
+            claimName: yasr-volume
       - volumeMounts:
         - name: main-volume
           mountPath: "/home"
+        - name: rafag-volume
+          mountPath: "/home/rafag/backup"
+        - name: yasr-volume
+          mountPath: "/etc/ssh"
+          subPath: "configs/sshd"
