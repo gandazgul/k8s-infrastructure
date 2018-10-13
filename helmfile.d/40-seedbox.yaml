@@ -14,7 +14,7 @@ releases:
     chart: ../charts/seedbox
     values:
       - image:
-          tag: v24
+          tag: v1
       - env:
         - name: LOCAL_NETWORK
           value: "10.244.0.0/16"

@@ -20,7 +20,7 @@ RUN printf "\
 
 RUN apk update \
     && apk add --no-cache \
-        apk-tools bash dumb-init ip6tables ufw@testing openvpn shadow transmission-daemon curl jq ssmtp \
+        apk-tools bash dumb-init ip6tables ufw@testing openvpn shadow transmission-daemon curl jq ssmtp rsync \
     && echo "Install dockerize $DOCKERIZE_VERSION" \
     && wget -qO- https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz | tar xz -C /usr/bin \
     && rm -rf /tmp/* /var/tmp/* \
