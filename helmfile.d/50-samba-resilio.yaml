@@ -8,13 +8,19 @@ helmDefaults:
   force: true
 
 releases:
-  - name: resilio
+  - name: resilio-rafag
     namespace: services
     chart: ../charts/resilio
     values:
     - image:
         repository: {{ env "RESILIO_REPOSITORY" | default "resilio/sync" }}
         tag: {{ env "RESILIO_REPOSITORY_TAG" | default "latest" }}
+    - env:
+      - name: PUID
+        value: "1000"
+      - name: PGID
+        value: "1000"
+
     - volumes:
         - name: yasr-volume
           persistentVolumeClaim:
@@ -24,11 +30,77 @@ releases:
             claimName: main-volume
     - volumeMounts:
       - name: yasr-volume
-        mountPath: "/mnt/sync"
-        subPath: "configs/resilio"
+        mountPath: "/config"
+        subPath: "configs/resilio/rafag/config"
+      - name: yasr-volume
+        mountPath: "/downloads"
+        subPath: "configs/resilio/rafag/downloads"
       - name: main-volume
-        mountPath: "/mnt/mounted_folders/"
-        subPath: "btsync"
+        mountPath: "/sync"
+        subPath: "rafag"
+
+
+  - name: resilio-angela
+    namespace: services
+    chart: ../charts/resilio
+    values:
+    - image:
+        repository: {{ env "RESILIO_REPOSITORY" | default "resilio/sync" }}
+        tag: {{ env "RESILIO_REPOSITORY_TAG" | default "latest" }}
+    - env:
+      - name: PUID
+        value: "1001"
+      - name: PGID
+        value: "1002"
+
+    - volumes:
+      - name: yasr-volume
+        persistentVolumeClaim:
+          claimName: yasr-volume
+      - name: main-volume
+        persistentVolumeClaim:
+          claimName: main-volume
+    - volumeMounts:
+      - name: yasr-volume
+        mountPath: "/config"
+        subPath: "configs/resilio/angela/config"
+      - name: main-volume
+        mountPath: "/sync"
+        subPath: "angela"
+    - service:
+        port: 8881
+
+  - name: resilio-haycel
+    namespace: services
+    chart: ../charts/resilio
+    values:
+    - image:
+        repository: {{ env "RESILIO_REPOSITORY" | default "resilio/sync" }}
+        tag: {{ env "RESILIO_REPOSITORY_TAG" | default "latest" }}
+    - env:
+      - name: PUID
+        value: "1002"
+      - name: PGID
+        value: "1003"
+
+    - volumes:
+      - name: yasr-volume
+        persistentVolumeClaim:
+          claimName: yasr-volume
+      - name: main-volume
+        persistentVolumeClaim:
+          claimName: main-volume
+    - volumeMounts:
+      - name: yasr-volume
+        mountPath: "/config"
+        subPath: "configs/resilio/haycel/config"
+      - name: main-volume
+        mountPath: "/sync"
+        subPath: "haycel"
+    - service:
+        port: 8882
+
+
 
   - name: samba
     namespace: services
