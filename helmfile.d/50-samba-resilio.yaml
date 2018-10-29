@@ -22,13 +22,13 @@ releases:
         - name: main-volume
           persistentVolumeClaim:
             claimName: main-volume
-      - volumeMounts:
-        - name: yasr-volume
-          mountPath: "/mnt/sync"
-          subPath: "configs/resilio"
-        - name: main-volume
-          mountPath: "/mnt/mounted_folders/"
-          subPath: "btsync"
+    - volumeMounts:
+      - name: yasr-volume
+        mountPath: "/mnt/sync"
+        subPath: "configs/resilio"
+      - name: main-volume
+        mountPath: "/mnt/mounted_folders/"
+        subPath: "btsync"
 
   - name: samba
     namespace: services
