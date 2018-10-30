@@ -56,8 +56,8 @@ releases:
       # Every hour
       - schedule: "0 */1 * * *"
       - image:
-          repository: gandazgul/rdiff-backup
-          tag: v3
+          repository: {{ env "REPOSITORY_USERNAME" | default "gandazgul" }}/rdiff-backup
+          tag: {{ env "RDIFF_REPOSITORY_TAG" | default "latest" }}
       - volumes:
           - name: main-volume
             persistentVolumeClaim:

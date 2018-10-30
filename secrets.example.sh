@@ -18,3 +18,6 @@ export SSHD_REPOSITORY_TAG=""
 #resilio variables
 export RESILIO_REPOSITORY=""
 export RESILIO_REPOSITORY_TAG=""
+
+#rdiff-backup variables
+export RDIFF_REPOSITORY_TAG=""
