@@ -73,3 +73,55 @@ releases:
             mountPath: /media/main
           - name: backup-volume
             mountPath: /media/backup
+
+  - name: media-sort
+    namespace: services
+    chart: ../charts/cronjob
+    values:
+    # Every Weds@3:28
+    - schedule: "28 3 * * 3"
+    - image:
+        repository: rafaelgil83/phockup
+        tag: latest
+    - env:
+        - name: UID
+          value: "1000"
+        - name: GUID
+          value: "1000"
+    - volumes:
+      - name: main-volume
+        persistentVolumeClaim:
+          claimName: main-volume
+    - volumeMounts:
+      - name: main-volume
+        mountPath: "/source"
+        subPath: "public/uploaded_photos"
+      - name: main-volume
+        mountPath: "/destination"
+        subPath: "rafag/photos"
+
+
+  - name: folder-cleaner
+    namespace: services
+    chart: ../charts/cronjob
+    values:
+    # Every Weds@3:28
+    - schedule: "28 2 * * 3"
+    - image:
+        repository: rafaelgil83/folder_clean
+        tag: latest
+    - volumes:
+      - name: main-volume
+        persistentVolumeClaim:
+          claimName: main-volume
+    - volumeMounts:
+      - name: main-volume
+        mountPath: "/data/films"
+        subPath: "public/films"
+      - name: main-volume
+        mountPath: "/data/shows"
+        subPath: "public/shows"
+    - env:
+        - name: size
+          value: "250"
+
