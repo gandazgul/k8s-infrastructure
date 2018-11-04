@@ -58,9 +58,6 @@ releases:
       - image:
           repository: {{ env "REPOSITORY_USERNAME" | default "gandazgul" }}/rdiff-backup
           tag: {{ env "RDIFF_REPOSITORY_TAG" | default "latest" }}
-      - env:
-        - name: exclude
-          value: "public"
       - volumes:
           - name: main-volume
             persistentVolumeClaim:
@@ -71,13 +68,7 @@ releases:
           - name: backup-volume
             persistentVolumeClaim:
               claimName: backup-volume
-      - volumeMounts:
-          - name: main-volume
-            mountPath: /mnt/main
-          - name: yasr-volume
-            mountPath: /mnt/yasr
-          - name: backup-volume
-            mountPath: /media/backup
+      - values/incremental-backups.yaml
 
   - name: media-sort
     namespace: services
