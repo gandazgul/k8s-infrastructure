@@ -1,0 +1,15 @@
+env:
+  - name: PUID
+    value: "1000"
+  - name: PGID
+    value: "1000"
+volumeMounts:
+  - name: yasr-volume
+    mountPath: "/config"
+    subPath: "configs/resilio/rafag/config"
+  - name: yasr-volume
+    mountPath: "/downloads"
+    subPath: "configs/resilio/rafag/downloads"
+  - name: main-volume
+    mountPath: "/sync"
+    subPath: "rafag"
