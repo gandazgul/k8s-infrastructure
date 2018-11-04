@@ -60,17 +60,22 @@ releases:
           tag: {{ env "RDIFF_REPOSITORY_TAG" | default "latest" }}
       - env:
         - name: exclude
-          value: "--exclude=/media/main/public"
+          value: "public"
       - volumes:
           - name: main-volume
             persistentVolumeClaim:
               claimName: main-volume
+          - name: yasr-volume
+            persistentVolumeClaim:
+              claimName: yasr-volume
           - name: backup-volume
             persistentVolumeClaim:
               claimName: backup-volume
       - volumeMounts:
           - name: main-volume
-            mountPath: /media/main
+            mountPath: /mnt/main
+          - name: yasr-volume
+            mountPath: /mnt/yasr
           - name: backup-volume
             mountPath: /media/backup
 
