@@ -111,13 +111,19 @@ releases:
       - name: main-volume
         persistentVolumeClaim:
           claimName: main-volume
+      - name: yasr-volume
+        persistentVolumeClaim:
+          claimName: yasr-volume
     - volumeMounts:
       - name: main-volume
         mountPath: "/data/films"
         subPath: "public/films"
-      - name: main-volume
-        mountPath: "/data/shows"
-        subPath: "public/shows"
+#      - name: main-volume
+#        mountPath: "/data/shows"
+#        subPath: "public/shows"
+      - name: yasr-volume
+        mountPath: "/mnt"
+        subPath: "configs/folder_cleaner"
     - env:
         - name: size
           value: "250"
