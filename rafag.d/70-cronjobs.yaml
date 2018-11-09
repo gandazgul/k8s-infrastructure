@@ -1,0 +1,113 @@
+# Backup and size checked ===========================================================
+
+# NOTE: cli args take precedence over these
+helmDefaults:
+  wait: true
+  timeout: 600
+  recreatePods: true
+  force: true
+
+releases:
+  - name: media-sort
+    namespace: services
+    chart: ../charts/cronjob
+    values:
+      # Every Weds@3:28
+      - schedule: "28 3 * * 3"
+      - image:
+          repository: rafaelgil83/phockup
+          tag: latest
+      - env:
+          - name: UID
+            value: "1000"
+          - name: GUID
+            value: "1000"
+      - volumes:
+          - name: main-volume
+            persistentVolumeClaim:
+              claimName: main-volume
+      - volumeMounts:
+          - name: main-volume
+            mountPath: "/source"
+            subPath: "public/uploaded_photos"
+          - name: main-volume
+            mountPath: "/destination"
+            subPath: "rafag/photos"
+
+
+    - name: folder-cleaner
+      namespace: services
+      chart: ../charts/cronjob
+      values:
+        # Every Weds@3:28
+        - schedule: "28 2 * * 3"
+        - image:
+            repository: rafaelgil83/folder_clean
+            tag: latest
+        - volumes:
+            - name: main-volume
+              persistentVolumeClaim:
+                claimName: main-volume
+            - name: yasr-volume
+              persistentVolumeClaim:
+                claimName: yasr-volume
+        - volumeMounts:
+            - name: main-volume
+              mountPath: "/data/films"
+              subPath: "public/films"
+            #      - name: main-volume
+            #        mountPath: "/data/shows"
+            #        subPath: "public/shows"
+            - name: yasr-volume
+              mountPath: "/mnt"
+              subPath: "configs/folder_cleaner"
+        - env:
+            - name: size
+              value: "250"
+
+    - name: mejorenvo
+      namespace: services
+      chart: ../charts/cronjob
+      values:
+        # Every Weds@3:28
+        - schedule: "14 3 * * 4"
+        - image:
+            repository: rafaelgil83/mejorenvo_scraper
+            tag: latest
+        - volumes:
+            - name: yasr-volume
+              persistentVolumeClaim:
+                claimName: yasr-volume
+        - volumeMounts:
+            - name: yasr-volume
+              mountPath: "/data/mejorenvo"
+              subPath: "configs/mejorenvo"
+        - env:
+            - name: ENV
+              value: production
+            - name: SITE
+              value: http://www.mejorenvo.net
+            - name: YEARS
+              value: 2015,2016,2017,2018
+            - name: QUALITY
+              value: bluray,dvdrip,hdrip
+            - name: MAX_PAGES
+              value: "5"
+            - name: SEARCH_COUNTER_MAX
+              value: "2"
+            - name: TRANSMISSION_USERNAME
+              value: transmission
+            - name: TRANSMISSION_PASSWORD
+              value: pfvN434ZoC3&
+            - name: TRANSMISSION_SERVER
+              value: 10.1.1.2
+            - name: TRANSMISSION_PORT
+              value: "9091"
+            - name: TRANSMISSION_SAVE_DIR
+              value: /data/mejorenvo
+            - name: TRANSMISSION_DEBUG
+              value: "false"
+            - name: LOGS
+              value: mejorenvo
+            - name: DB_DNS
+              value: mejorenvo/mejorenvo_db.sqlite3
