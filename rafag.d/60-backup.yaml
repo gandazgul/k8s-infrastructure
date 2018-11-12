@@ -53,7 +53,7 @@ releases:
     namespace: services
     chart: ../charts/cronjob
     values:
-      # Every hour
+      # Weds@4:23
       - schedule: "23 4 * * 3"
       - image:
           repository: rafaelgil83/rdiff-backup
@@ -77,5 +77,28 @@ releases:
           - name: yasr-volume
             mountPath: /mnt/yasr
           - name: backup-volume
+            mountPath: /media/backup
+
+  - name: movies-backup
+    namespace: services
+    chart: ../charts/cronjob
+    values:
+      # Thurs@4:23
+      - schedule: "23 4 * * 4"
+      - image:
+          repository: rafaelgil83/rdiff-backup
+          tag: latest
+      - volumes:
+          - name: main-volume
+            persistentVolumeClaim:
+              claimName: main-volume
+          - name: movies-backup-volume
+            persistentVolumeClaim:
+              claimName: movies-backup-volume
+      - volumeMounts:
+          - name: main-volume
+            mountPath: /mnt/public
+            subPath: public
+          - name: movies-backup-volume
             mountPath: /media/backup
 
