@@ -12,9 +12,6 @@ releases:
     namespace: services
     chart: ../charts/resilio
     values:
-    - image:
-        repository: {{ env "RESILIO_REPOSITORY" | default "resilio/sync" }}
-        tag: {{ env "RESILIO_REPOSITORY_TAG" | default "latest" }}
     - volumes:
         - name: yasr-volume
           persistentVolumeClaim:

@@ -14,8 +14,8 @@ releases:
     chart: ../charts/sshd
     values:
       - image:
-          repository: {{ env "REPOSITORY_USERNAME" | default "gandazgul" }}/sshd
-          tag: latest
+          repository: gandazgul/sshd
+          tag: v1
       - volumes:
         - name: main-volume
           persistentVolumeClaim:
