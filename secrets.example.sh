@@ -14,6 +14,3 @@ export REPOSITORY_USERNAME=""
 
 #docker repositories versions
 export SSHD_REPOSITORY_TAG=""
-
-#rdiff-backup variables
-export RDIFF_REPOSITORY_TAG=""

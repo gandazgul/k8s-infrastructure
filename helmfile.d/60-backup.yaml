@@ -62,10 +62,11 @@ releases:
           - name: main-volume
             persistentVolumeClaim:
               claimName: main-volume
-          - name: yasr-volume
-            persistentVolumeClaim:
-              claimName: yasr-volume
           - name: backup-volume
             persistentVolumeClaim:
               claimName: backup-volume
-      - values/incremental-backups.yaml
+      - volumeMounts:
+          - name: main-volume
+            mountPath: /media/main
+          - name: backup-volume
+            mountPath: /media/backup

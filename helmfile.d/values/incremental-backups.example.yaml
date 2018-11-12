@@ -1,9 +1,0 @@
-env:
-  - name: exclude
-    value: "public"
-
-volumeMounts:
-  - name: main-volume
-    mountPath: /media/main
-  - name: backup-volume
-    mountPath: /media/backup
