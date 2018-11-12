@@ -102,3 +102,29 @@ releases:
           - name: movies-backup-volume
             mountPath: /media/backup
 
+  - name: offsite-backup
+    namespace: services
+    chart: ../charts/cronjob
+    values:
+      #Tues@3:43
+    - schedule: "43 3 * * 2"
+    - image:
+        repository: rafaelgil83/rsync-backup
+        tag: latest
+    - env:
+        - name: destination
+          value: "carlos:~/backup/main"
+    - volumes:
+        - name: backup-volume
+          persistentVolumeClaim:
+            claimName: backup-volume
+        - name: yasr-volume
+          persistentVolumeClaim:
+            claimName: yasr-volume
+    - volumeMounts:
+        - name: backup-volume
+          mountPath: /mnt
+          subPath: main
+        - name: yasr-volume
+          mountPath: /root
+          subPath: configs/offsite-backup
