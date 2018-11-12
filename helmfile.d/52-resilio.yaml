@@ -29,27 +29,3 @@ releases:
       - name: main-volume
         mountPath: "/mnt/mounted_folders/"
         subPath: "btsync"
-
-  - name: samba
-    namespace: services
-    chart: ../charts/samba
-    values:
-      - hostNetwork: true
-      - volumes:
-          - name: yasr-volume
-            persistentVolumeClaim:
-              claimName: yasr-volume
-          - name: main-volume
-            persistentVolumeClaim:
-              claimName: main-volume
-      - volumeMounts:
-          - name: yasr-volume
-            mountPath: "/etc/samba/"
-            subPath: "configs/samba/"
-          - name: main-volume
-            mountPath: "/shared"
-      - env:
-          - name: IMPORT
-            value: "/etc/samba/smbpasswd"
-          - name: TZ
-            value: "EST5EDT"
