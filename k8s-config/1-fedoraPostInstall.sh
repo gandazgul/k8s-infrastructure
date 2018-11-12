@@ -24,6 +24,7 @@ sudo mount /media/yasr
 # addgroup public
 # adduser rafag 1004, renepor 1003
 
+# Restore plex backups
 #/media/main/plex_db_backup$ sudo cp com.plexapp.plugins.library.blobs.db-2018-09-28 /media/yasr/configs/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.blobs.db
 #gandazgul@k8s:/media/main/plex_db_backup$ sudo cp com.plexapp.plugins.trakttv.db /media/yasr/configs/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/
 #gandazgul@k8s:/media/main/plex_db_backup$ sudo cp com.plexapp.plugins.library.db-2018-09-28 /media/yasr/configs/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db
