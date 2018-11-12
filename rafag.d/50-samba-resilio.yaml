@@ -13,8 +13,8 @@ releases:
     chart: ../charts/resilio
     values:
     - image:
-        repository: {{ env "RESILIO_REPOSITORY" | default "resilio/sync" }}
-        tag: {{ env "RESILIO_REPOSITORY_TAG" | default "latest" }}
+        repository: linuxserver/resilio-sync
+        tag: 127
     - env:
       - name: PUID
         value: "1000"
@@ -44,14 +44,13 @@ releases:
     chart: ../charts/resilio
     values:
     - image:
-        repository: {{ env "RESILIO_REPOSITORY" | default "resilio/sync" }}
-        tag: {{ env "RESILIO_REPOSITORY_TAG" | default "latest" }}
+        repository: linuxserver/resilio-sync
+        tag: 127
     - env:
       - name: PUID
         value: "1001"
       - name: PGID
         value: "1002"
-
     - volumes:
       - name: yasr-volume
         persistentVolumeClaim:
@@ -74,14 +73,13 @@ releases:
     chart: ../charts/resilio
     values:
     - image:
-        repository: {{ env "RESILIO_REPOSITORY" | default "resilio/sync" }}
-        tag: {{ env "RESILIO_REPOSITORY_TAG" | default "latest" }}
+        repository: linuxserver/resilio-sync
+        tag: 127
     - env:
       - name: PUID
         value: "1002"
       - name: PGID
         value: "1003"
-
     - volumes:
       - name: yasr-volume
         persistentVolumeClaim:
