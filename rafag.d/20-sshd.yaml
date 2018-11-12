@@ -14,7 +14,7 @@ releases:
     chart: ../charts/sshd
     values:
       - image:
-          repository: rafag/sshd
+          repository: rafaelgil83/sshd
           tag: latest
       - volumes:
         - name: main-volume
