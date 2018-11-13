@@ -11,6 +11,3 @@ export MASTER_NODE_NAME=""
 
 #docker repositories
 export REPOSITORY_USERNAME=""
-
-#docker repositories versions
-export SSHD_REPOSITORY_TAG=""
