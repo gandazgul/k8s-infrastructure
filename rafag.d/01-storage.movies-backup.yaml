@@ -1,0 +1,28 @@
+# Movies Backup Storage ===============================================
+# Sets up a volume for movies backup
+
+# NOTE: cli args take precedence over these
+helmDefaults:
+  wait: true
+  timeout: 600
+  recreatePods: true
+  force: true
+
+releases:
+  - name: movies-backup-volume-pv
+    namespace: services
+    chart: ../charts/persistence-volume
+    values:
+      - volumeName: movies-backup-volume
+      - storage: 500Gi
+      - storageClass: hdd
+      - path: /media/movies-backup
+      - nodeHostname: {{ requiredEnv "MASTER_NODE_NAME" }}
+
+  - name: movies-backup-volume
+    namespace: services
+    chart: ../charts/pvc
+    values:
+      - storageClass: hdd
+      - volumeName: movies-backup-volume
+      - storage: 500Gi
