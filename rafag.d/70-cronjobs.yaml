@@ -12,8 +12,8 @@ releases:
     namespace: services
     chart: ../charts/cronjob
     values:
-      # Every Weds@3:28
-      - schedule: "28 3 * * 3"
+      # Every Tues@3:28
+      - schedule: "28 3 * * 2"
       - image:
           repository: rafaelgil83/phockup
           tag: latest
@@ -39,8 +39,8 @@ releases:
       namespace: services
       chart: ../charts/cronjob
       values:
-        # Every Weds@3:28
-        - schedule: "28 2 * * 3"
+        # Every Tues@2:28
+        - schedule: "28 2 * * 2"
         - image:
             repository: rafaelgil83/folder_clean
             tag: latest
@@ -55,9 +55,9 @@ releases:
             - name: main-volume
               mountPath: "/data/films"
               subPath: "public/films"
-            #      - name: main-volume
-            #        mountPath: "/data/shows"
-            #        subPath: "public/shows"
+            - name: main-volume
+              mountPath: "/data/shows"
+              subPath: "public/shows"
             - name: yasr-volume
               mountPath: "/mnt"
               subPath: "configs/folder_cleaner"
@@ -69,8 +69,8 @@ releases:
       namespace: services
       chart: ../charts/cronjob
       values:
-        # Every Weds@3:28
-        - schedule: "14 3 * * 4"
+        # Every Weds@8:14
+        - schedule: "14 8 * * 3"
         - image:
             repository: rafaelgil83/mejorenvo_scraper
             tag: latest

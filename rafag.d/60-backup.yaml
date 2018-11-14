@@ -53,8 +53,8 @@ releases:
     namespace: services
     chart: ../charts/cronjob
     values:
-      # Weds@4:23
-      - schedule: "23 4 * * 3"
+      # Weds@3:23
+      - schedule: "23 3 * * 3"
       - image:
           repository: rafaelgil83/rdiff-backup
           tag: latest
@@ -83,8 +83,8 @@ releases:
     namespace: services
     chart: ../charts/cronjob
     values:
-      # Thurs@4:23
-      - schedule: "23 4 * * 4"
+      # Thurs@3:23
+      - schedule: "23 3 * * 4"
       - image:
           repository: rafaelgil83/rdiff-backup
           tag: latest
@@ -107,7 +107,7 @@ releases:
     chart: ../charts/cronjob
     values:
       #Tues@3:43
-    - schedule: "43 3 * * 2"
+    - schedule: "21 2 * * 0"
     - image:
         repository: rafaelgil83/rsync-backup
         tag: latest
