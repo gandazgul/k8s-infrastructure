@@ -11,8 +11,11 @@ spec:
     spec:
       template:
         spec:
-          {{- if .Values.volumes }}
           volumes:
+            - name: tz-config
+              hostPath:
+                path: /usr/share/zoneinfo/America/New_York
+          {{- if .Values.volumes }}
 {{ toYaml .Values.volumes | indent 12 }}
           {{- end}}
           {{- if .Values.initContainer.enabled }}
@@ -27,8 +30,10 @@ spec:
               args:
 {{ toYaml .Values.initContainer.args | indent 16 }}
               {{- end }}
-              {{- if .Values.volumeMounts }}
               volumeMounts:
+                - name: tz-config
+                  mountPath: /etc/localtime
+              {{- if .Values.volumeMounts }}
 {{ toYaml .Values.initContainer.volumeMounts | indent 16 }}
               {{- end }}
           {{- end }}
