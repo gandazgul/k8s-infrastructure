@@ -8,32 +8,31 @@ helmDefaults:
   force: true
 
 releases:
-  - name: media-sort
-    namespace: services
-    chart: ../charts/cronjob
-    values:
-      # Every Tues@3:28
-      - schedule: "28 3 * * 2"
-      - image:
-          repository: rafaelgil83/phockup
-          tag: latest
-      - env:
-          - name: UID
-            value: "1000"
-          - name: GUID
-            value: "1000"
-      - volumes:
-          - name: main-volume
-            persistentVolumeClaim:
-              claimName: main-volume
-      - volumeMounts:
-          - name: main-volume
-            mountPath: "/source"
-            subPath: "public/uploaded_photos"
-          - name: main-volume
-            mountPath: "/destination"
-            subPath: "rafag/photos"
-
+    - name: media-sort
+      namespace: services
+      chart: ../charts/cronjob
+      values:
+        # Every Tues@3:28
+        - schedule: "28 3 * * 2"
+        - image:
+            repository: rafaelgil83/phockup
+            tag: latest
+        - env:
+            - name: UID
+              value: "1000"
+            - name: GUID
+              value: "1000"
+        - volumes:
+            - name: main-volume
+              persistentVolumeClaim:
+                claimName: main-volume
+        - volumeMounts:
+            - name: main-volume
+              mountPath: "/source"
+              subPath: "public/uploaded_photos"
+            - name: main-volume
+              mountPath: "/destination"
+              subPath: "rafag/photos"
 
     - name: folder-cleaner
       namespace: services
