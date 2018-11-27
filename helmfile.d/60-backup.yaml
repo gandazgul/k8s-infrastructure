@@ -53,11 +53,41 @@ releases:
     namespace: services
     chart: ../charts/cronjob
     values:
-      # Every hour
-      - schedule: "0 */1 * * *"
+      # Twice a day at midnight and midday
+      - schedule: "0 0,12 * * *"
       - image:
           repository: gandazgul/rdiff-backup
-          tag: v3
+          tag: v7
+          args:
+            - /media/main
+            - /media/backup
+      - volumes:
+          - name: main-volume
+            persistentVolumeClaim:
+              claimName: main-volume
+          - name: backup-volume
+            persistentVolumeClaim:
+              claimName: backup-volume
+      - volumeMounts:
+          - name: main-volume
+            mountPath: /media/main
+          - name: backup-volume
+            mountPath: /media/backup
+
+  - name: clean-incremental-backups
+    namespace: services
+    chart: ../charts/cronjob
+    values:
+      # Every day at midnight
+      - schedule: "0 0 * * *"
+      - image:
+          repository: gandazgul/rdiff-backup
+          tag: v7
+          args:
+            - --remove-older-than
+            - 4W
+            - --force
+            - /media/backup
       - volumes:
           - name: main-volume
             persistentVolumeClaim:
