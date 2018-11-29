@@ -52,6 +52,12 @@ releases:
           value: "120"
         - name: TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED
           value: "true"
+        - name: TRANSMISSION_PEER_LIMIT_GLOBAL
+          value: "500"
+        - name: TRANSMISSION_PEER_LIMIT_PER_TORRENT
+          value: "100"
+        - name: TRANSMISSION_PORT_FORWARDING_ENABLED
+          value: "true"
 #         fix container so that these are not needed
         - name: TRANSMISSION_PEER_CONGESTION_ALGORITHM
           value: "\"\""
