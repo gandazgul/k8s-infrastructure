@@ -26,8 +26,8 @@ releases:
     namespace: services
     chart: ../charts/cronjob
     values:
-      # Sunday at 1:00am
-      - schedule: "0 1 * * 0"
+      # Sunday at 1:00am EST
+      - schedule: "0 6 * * 0"
       - image:
           repository: gandazgul/size-checker
           tag: v3
@@ -53,14 +53,17 @@ releases:
     namespace: services
     chart: ../charts/cronjob
     values:
-      # Weds@3:23
-      - schedule: "23 3 * * 3"
+      # Weds@3:23 EST
+      - schedule: "23 8 * * 3"
       - image:
-          repository: rafaelgil83/rdiff-backup
-          tag: latest
-      - env:
-        - name: exclude
-          value: "public"
+          repository: gandazgul/rdiff-backup
+          tag: v7
+          args:
+            - --force
+            - --exclude
+            - /mnt/main/public
+            - /mnt
+            - /media/backup
       - volumes:
           - name: main-volume
             persistentVolumeClaim:
@@ -79,15 +82,40 @@ releases:
           - name: backup-volume
             mountPath: /media/backup
 
+  - name: clean-incremental-backups
+    namespace: services
+    chart: ../charts/cronjob
+    values:
+    #Mondays@1:13 EST
+    - schedule: "13 6 * * 1"
+    - image:
+        repository: gandazgul/rdiff-backup
+        tag: v7
+        args:
+        - --remove-older-than
+        - 4W
+        - --force
+        - /media/backup
+    - volumes:
+      - name: backup-volume
+        persistentVolumeClaim:
+          claimName: backup-volume
+    - volumeMounts:
+      - name: backup-volume
+        mountPath: /media/backup
+
   - name: movies-backup
     namespace: services
     chart: ../charts/cronjob
     values:
-      # Thurs@3:23
-      - schedule: "23 3 * * 4"
+      # Thurs@3:23 EST
+      - schedule: "23 8 * * 4"
       - image:
-          repository: rafaelgil83/rdiff-backup
-          tag: latest
+          repository: gandazgul/rdiff-backup
+          tag: v7
+          args:
+            - /mnt
+            - /media/backup
       - volumes:
           - name: main-volume
             persistentVolumeClaim:
@@ -102,12 +130,35 @@ releases:
           - name: movies-backup-volume
             mountPath: /media/backup
 
+  - name: clean-movies-backup
+    namespace: services
+    chart: ../charts/cronjob
+    values:
+    #Mondays@3:13 EST
+    - schedule: "13 8 * * 1"
+    - image:
+        repository: gandazgul/rdiff-backup
+        tag: v7
+        args:
+        - --remove-older-than
+        - 4W
+        - --force
+        - /media/backup
+    - volumes:
+      - name: backup-volume
+        persistentVolumeClaim:
+          claimName: backup-volume
+    - volumeMounts:
+      - name: backup-volume
+        mountPath: /media/backup
+
+
   - name: offsite-backup
     namespace: services
     chart: ../charts/cronjob
     values:
-      #Tues@3:43
-    - schedule: "21 2 * * 0"
+      #Sun@2:21 EST
+    - schedule: "21 7 * * 0"
     - image:
         repository: rafaelgil83/rsync-backup
         tag: latest
