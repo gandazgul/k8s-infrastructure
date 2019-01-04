@@ -1,0 +1,56 @@
+# Gogs, Resilio Sync and Samba ===========================================================
+
+# NOTE: cli args take precedence over these
+helmDefaults:
+  wait: true
+  timeout: 600
+  recreatePods: true
+  force: true
+
+releases:
+  - name: mqtt-mosca
+    namespace: services
+    chart: ../charts/mosca
+    values:
+      - image:
+          tag: "v2.8.3"
+#      - volumes:
+#          - name: yasr-volume
+#            persistentVolumeClaim:
+#              claimName: yasr-volume
+#      - volumeMounts:
+#          - name: yasr-volume
+#            mountPath: "/db"
+#            subPath: "configs/mosca"
+
+  - name: smartthings-mqtt-bridge
+    namespace: services
+    chart: ../charts/smartthings-mqtt-bridge
+    values:
+      - image:
+          tag: "v3.0.0"
+      - service:
+          port: 8081
+      - volumes:
+          - name: yasr-volume
+            persistentVolumeClaim:
+              claimName: yasr-volume
+      - volumeMounts:
+          - name: yasr-volume
+            mountPath: "/config"
+            subPath: "configs/smartthings-mqtt-bridge"
+
+  - name: nest-mqtt-bridge
+    namespace: services
+    chart: ../charts/nest-mqtt-bridge
+    values:
+      - image:
+          tag: "v1"
+      - volumes:
+          - name: yasr-volume
+            persistentVolumeClaim:
+              claimName: yasr-volume
+      - volumeMounts:
+          - name: yasr-volume
+            mountPath: "/config"
+            subPath: "configs/nest-mqtt-bridge"
