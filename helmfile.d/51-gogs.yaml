@@ -18,6 +18,6 @@ releases:
           subPath: "configs/gogs/site_data"
       - postgresql:
           persistence:
-              existingClaim: yasr-volume
-              subPath: "configs/gogs/db"
+            existingClaim: yasr-volume
+            subPath: "configs/gogs/db"
       - values/gogs.yaml
