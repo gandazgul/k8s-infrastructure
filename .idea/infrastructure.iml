@@ -2,9 +2,9 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/.tmp" />
-      <excludeFolder url="file://$MODULE_DIR$/temp" />
-      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/../infrastructure/.tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/../infrastructure/temp" />
+      <excludeFolder url="file://$MODULE_DIR$/../infrastructure/tmp" />
     </content>
     <content url="file://$MODULE_DIR$/../kube-plex">
       <excludeFolder url="file://$MODULE_DIR$/../kube-plex/vendor" />
