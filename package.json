@@ -1,0 +1,16 @@
+{
+    "name": "k8s-infrastructure",
+    "version": "1.0.0",
+    "main": "index.js",
+    "repository": "git@github.com:gandazgul/my-infrastructure.git",
+    "author": "Carlos Ravelo <ravelo.carlos@gmail.com>",
+    "license": "MIT",
+    "private": true,
+    "scripts": {
+        "docker:build": "node ./docker/docker-build.js",
+        "docker:run": "node ./docker/docker-run.js"
+    },
+    "dependencies": {
+        "minimist": "^1.2.0"
+    }
+}
