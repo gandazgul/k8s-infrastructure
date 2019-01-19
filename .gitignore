@@ -11,9 +11,13 @@ helmfile.d/70-cronjobs.carlos.yaml
 helmfile.d/values/ipaddress.yaml
 helmfile.d/values/gogs.yaml
 secondary-master.d/values/ipaddress.yaml
+helmfile.d/70-cronjobs.yaml
 
 # chart deps
 charts/gogs/charts/
 
 # secrets and private files
 secrets.sh
+
+#node
+node_modules/
