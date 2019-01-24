@@ -14,7 +14,7 @@ spec:
           volumes:
             - name: tz-config
               hostPath:
-                path: /usr/share/zoneinfo/America/New_York
+                path: /etc/localtime
           {{- if .Values.volumes }}
 {{ toYaml .Values.volumes | indent 12 }}
           {{- end}}
@@ -33,6 +33,7 @@ spec:
               volumeMounts:
                 - name: tz-config
                   mountPath: /etc/localtime
+                  readOnly: true
               {{- if .Values.volumeMounts }}
 {{ toYaml .Values.initContainer.volumeMounts | indent 16 }}
               {{- end }}

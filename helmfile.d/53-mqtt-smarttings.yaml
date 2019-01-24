@@ -45,7 +45,7 @@ releases:
     chart: ../charts/nest-mqtt-bridge
     values:
       - image:
-          tag: "v5cd8cb"
+          tag: "vfdfc7cb"
       - volumes:
           - name: yasr-volume
             persistentVolumeClaim:
