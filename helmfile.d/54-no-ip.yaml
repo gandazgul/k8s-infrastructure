@@ -1,0 +1,31 @@
+# Gogs, Resilio Sync and Samba ===========================================================
+
+# NOTE: cli args take precedence over these
+helmDefaults:
+  wait: true
+  timeout: 600
+  recreatePods: true
+  force: true
+
+releases:
+  - name: no-ip
+    namespace: services
+    chart: ../charts/generic-deployment
+    values:
+      - image:
+          repository: coppit/no-ip
+          tag: "latest"
+      - volumes:
+          - name: tz-config
+            hostPath:
+              path: /etc/localtime
+          - name: yasr-volume
+            persistentVolumeClaim:
+              claimName: yasr-volume
+      - volumeMounts:
+          - name: tz-config
+            mountPath: /etc/localtime
+            readOnly: true
+          - name: yasr-volume
+            mountPath: "/config"
+            subPath: "configs/noip"
