@@ -79,7 +79,7 @@ releases:
             path: "/dev/net/tun"
         - name: tz-config
           hostPath:
-            path: /usr/share/zoneinfo/America/New_York
+            path: /etc/localtime
       - volumeMounts:
         - name: main-volume
           mountPath: "/main"
@@ -96,3 +96,4 @@ releases:
           subPath: "configs/ssmtp"
         - name: tz-config
           mountPath: /etc/localtime
+          readOnly: true
