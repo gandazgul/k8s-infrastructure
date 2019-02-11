@@ -1,0 +1,101 @@
+# Monitoring with Prometheus and Grafana ===============================================
+#Part 1: https://sysdig.com/blog/kubernetes-monitoring-prometheus/
+#Part 2: https://sysdig.com/blog/kubernetes-monitoring-with-prometheus-alertmanager-grafana-pushgateway-part-2/
+
+
+# NOTE: cli args take precedence over these
+helmDefaults:
+  wait: true
+  timeout: 600
+  recreatePods: true
+  force: true
+
+releases:
+  - name: prometheus
+    namespace: monitoring
+    chart: stable/prometheus
+    values:
+      - alertmanagerFiles:
+          alertmanager.yml:
+            global:
+              resolve_timeout: 5m
+            route:
+              group_by: ['alertname']
+              group_wait: 10s
+              group_interval: 10s
+              repeat_interval: 1h
+              receiver: 'webhook-test'
+            receivers:
+              - name: 'webhook-test'
+                webhook_configs:
+                - url: 'https://webhook.site/1f4b9de0-8053-4b49-ba64-b6b245c2bcee'
+#      - serverFiles:
+#          alerts: ""
+#          prometheus.yml: ""
+#          rules:
+#            groups:
+#            - name: example
+#              rules:
+#              - alert: DeadMansSwitch
+#                annotations:
+#                  description: This is a DeadMansSwitch meant to ensure that the entire Alerting
+#                    pipeline is functional.
+#                  summary: Alerting DeadMansSwitch
+#                expr: vector(1)
+#                labels:
+#                  severity: none
+
+  # Contains the settings, secrets and a dashboard for grafana
+  - name: grafana-prometheus
+    namespace: monitoring
+    chart: ../charts/grafana-prometheus
+    values:
+      - adminPassword: {{ requiredEnv "ADMIN_PASSWORD" }}
+      - smtp:
+          user: {{ requiredEnv "MAIL_TO" }}
+          password: {{ requiredEnv "SMTP_PASSWORD" }}
+
+  - name: grafana
+    namespace: monitoring
+    chart: stable/grafana
+    values:
+      - sidecar:
+          datasources:
+            enabled: true
+            label: grafana_datasource
+          dashboards:
+            enabled: true
+            label: grafana_dashboard
+      - smtp:
+          existingSecret: grafana
+          userKey: smtp-user
+          passwordKey: smtp-password
+      - admin:
+          existingSecret: grafana
+#          userKey: user
+#          passwordKey: password
+      - plugins:
+          - grafana-kubernetes-app
+#          https://github.com/grafana/kubernetes-app/issues/35
+      - env:
+         - name: GF_SERVER_ROOT_URL
+           value: http://k8s.sytes.net:8082/
+      - service:
+          type: NodePort
+          port: 8082
+      - values/ipaddress.yaml
+
+#// monitor kubernetes components via services
+#kind: Service
+#apiVersion: v1
+#metadata:
+#  name: scheduler-service
+#  namespace: kube-system
+#spec:
+#  selector:
+#    component: kube-scheduler
+#  ports:
+#    - name: scheduler
+#      protocol: TCP
+#      port: 10251
+#      targetPort: 10251
