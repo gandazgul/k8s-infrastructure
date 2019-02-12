@@ -15,6 +15,7 @@ releases:
     values:
       - image:
           tag: plexpass
+          pullPolicy: Always
       - timezone: America/New_York
       - kubePlex:
           enabled: false
