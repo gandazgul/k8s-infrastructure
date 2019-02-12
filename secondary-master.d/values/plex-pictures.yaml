@@ -1,0 +1,5 @@
+persistence:
+  customVolumeMounts:
+    - name: data
+      mountPath: "/pictures"
+      subPath: "renepor/PICTURES"
