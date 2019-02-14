@@ -28,5 +28,8 @@ releases:
           data:
             claimName: main-volume
             subPath: "public"
+      - service:
+          type: NodePort
+          externalIPs:
+            - {{ requiredEnv "MASTER_IP" }}
       - values/plex-pictures.yaml
-      - values/ipaddress.yaml

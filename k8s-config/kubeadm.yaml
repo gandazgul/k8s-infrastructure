@@ -9,4 +9,3 @@ networking:
   podSubnet: "10.244.0.0/16"
 nodeRegistration:
   taints: []
-#  criSocket: /var/run/crio/crio.sock

@@ -1,4 +1,4 @@
-    #!/bin/bash
+#!/bin/bash
 
 echo "Installing helm with the tiller plugin ========================================================================="
 if [ ! -f ~/.helm/plugins ]; then

@@ -30,7 +30,6 @@ releases:
             mountPath: "/srv/main"
           - name: backup-volume
             mountPath: "/srv/backup"
-#      - service:
-#          type: NodePort
-#          port: 8080
-      - values/filebrowser-ingress.yaml
+      - service:
+          type: NodePort
+#      - values/filebrowser-ingress.yaml
