@@ -1,0 +1,14 @@
+service:
+  sshDomain: gogs.carlosandamanda.com
+  ingress:
+    enabled: true
+    hosts:
+      - gogs.carlosandamanda.com
+    tls:
+      - hosts:
+          - gogs.carlosandamanda.com
+        secretName: gogs-cert
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+#      certmanager.k8s.io/cluster-issuer: "letsencrypt-staging"
+      certmanager.k8s.io/cluster-issuer: "letsencrypt-prod"

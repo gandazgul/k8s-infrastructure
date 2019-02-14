@@ -1,4 +1,4 @@
-# Gogs, Resilio Sync and Samba ===========================================================
+# MQTT and Smartthings related services ===========================================================
 
 # NOTE: cli args take precedence over these
 helmDefaults:
@@ -8,21 +8,15 @@ helmDefaults:
   force: true
 
 releases:
+  # MQTT Broker
   - name: mqtt-mosca
     namespace: services
     chart: ../charts/mosca
     values:
       - image:
           tag: "v2.8.3"
-#      - volumes:
-#          - name: yasr-volume
-#            persistentVolumeClaim:
-#              claimName: yasr-volume
-#      - volumeMounts:
-#          - name: yasr-volume
-#            mountPath: "/db"
-#            subPath: "configs/mosca"
 
+  # This allows you to send MQTT messages to trigger commands in smartthings devices
   - name: smartthings-mqtt-bridge
     namespace: services
     chart: ../charts/smartthings-mqtt-bridge
@@ -40,6 +34,7 @@ releases:
             mountPath: "/config"
             subPath: "configs/smartthings-mqtt-bridge"
 
+  # This is the same as the above but to bridge with the Nest API
   - name: nest-mqtt-bridge
     namespace: services
     chart: ../charts/nest-mqtt-bridge
