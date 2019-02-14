@@ -1,4 +1,0 @@
-service:
-  type: NodePort
-  externalIPs:
-    - x.x.x.x

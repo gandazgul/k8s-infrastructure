@@ -32,4 +32,4 @@ releases:
             mountPath: "/srv/backup"
       - service:
           type: NodePort
-          port: 8080
+#      - values/filebrowser-ingress.yaml

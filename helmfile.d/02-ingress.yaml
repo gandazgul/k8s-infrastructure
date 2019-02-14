@@ -1,0 +1,68 @@
+# Ingress, Cert Manager and Cert Issuers ====================================================================
+# Cert manager automates getting TLS certs from local CA or Letsencrypt
+
+# NOTE: cli args take precedence over these
+helmDefaults:
+  wait: true
+  timeout: 600
+  recreatePods: true
+  force: true
+
+releases:
+  - name: ingress-nginx
+    namespace: ingress
+    chart: stable/nginx-ingress
+    values:
+      - controller:
+          stats:
+            enabled: true
+          metrics:
+            enabled: true
+          service:
+            type: NodePort
+            labels:
+              app.kubernetes.io/name: default-http-backend
+              app.kubernetes.io/part-of: ingress-nginx
+            externalIPs:
+              - {{ requiredEnv "MASTER_IP" }}
+
+  - name: cert-manager
+    namespace: ingress
+    chart: stable/cert-manager
+    hooks:
+      # Install the custom CRDs
+      - events: ["prepare"]
+        command: "kubectl"
+        args: ["apply", "-f", "https://raw.githubusercontent.com/jetstack/cert-manager/release-0.6/deploy/manifests/00-crds.yaml"]
+      # Make sure that the namespace doesn't have tls validation enabled to allow cert manager to install itself
+      - events: ["prepare"]
+        command: "kubectl"
+        args: ["label", "namespace", "ingress", "certmanager.k8s.io/disable-validation=true", "--overwrite"]
+
+  - name: ca-issuer
+    namespace: ingress
+    chart: ../charts/cert-manager-setup
+    values:
+      - letsencrypt:
+          enabled: true
+          email: {{ requiredEnv "MAIL_TO" }}
+
+#To manually get a cert use this:
+#apiVersion: certmanager.k8s.io/v1alpha1
+#kind: Certificate
+#metadata:
+#  name: test-cert-manager-certificate
+#  namespace: services
+#spec:
+#  acme:
+#    config:
+#      - domains:
+#          - cert-manager.k8s.sytes.net
+#        http01: {}
+#  issuerRef:
+#    kind: ClusterIssuer
+#    # Use one of these
+#    name: ca-issuer
+#    #name: letsencrypt-staging
+#    #name: letsencrypt-prod
+#  secretName: test-cert-manager-secret
