@@ -1,19 +1,14 @@
 #!/bin/bash
 
 printf "\nLetting the master node run pods ==========================================================================\n"
-MASTER_HOSTNAME=`kubectl get nodes -o jsonpath='{.items[0].metadata.name}'`
+MASTER_HOSTNAME=`kubectl get nodes --selector=node-role.kubernetes.io/master -o=jsonpath='{.items[0].metadata.name}'`
 kubectl taint node $MASTER_HOSTNAME node-role.kubernetes.io/master:NoSchedule-
 
 printf "\nInstalling Hostpath Provisioner ===========================================================================\n"
 kubectl apply -f ./hostpath.yaml || exit 1
 
-MASTER_SERVER=`kubectl config view -o jsonpath='{.clusters[0].cluster.server}'`;
-MASTER_IP=`printf "${MASTER_SERVER}" | awk -F: '{print $2}' | awk -F/ '{print $3}'`
-
-printf "\nInstalling Ingress controller =============================================================================\n"
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/mandatory.yaml
-kubectl apply -f ./ingress.yaml
-kubectl patch service ingress-nginx --namespace=ingress-nginx --patch '{"spec": {"externalIPs": ["'${MASTER_IP}'"]}}'
+printf "\nCreating CA TLS secret =======================================================================================\n"
+sudo -E kubectl --namespace=default create secret tls ca-key-pair --key=/etc/kubernetes/pki/ca.key --cert=/etc/kubernetes/pki/ca.crt
 
 printf "\nInstalling the dashboard ==================================================================================\n"
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
@@ -27,6 +22,9 @@ else
 fi;
 
 ./installHelm.sh
+
+MASTER_SERVER=`kubectl config view -o jsonpath='{.clusters[0].cluster.server}'`;
+MASTER_IP=`printf "${MASTER_SERVER}" | awk -F: '{print $2}' | awk -F/ '{print $3}'`
 
 printf "\n"
 printf "\n"
