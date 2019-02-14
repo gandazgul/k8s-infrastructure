@@ -1,4 +1,6 @@
 ---
 # Default values for cert-manager-setup
 
-
+letsencrypt:
+  enabled: false
+  email: ""
