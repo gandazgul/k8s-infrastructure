@@ -1,4 +1,4 @@
-# Gogs, Resilio Sync and Samba ===========================================================
+# Resilio Sync ===========================================================
 
 # NOTE: cli args take precedence over these
 helmDefaults:
