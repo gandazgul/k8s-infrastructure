@@ -20,10 +20,10 @@ releases:
       - ingress:
           enabled: true
           hosts:
-            - dashboard.k8s.sytes.net
+            - dashboard.{{ requiredEnv "MASTER_NODE_NAME" }}
           tls:
             - hosts:
-                - dashboard.k8s.sytes.net
+                - dashboard.{{ requiredEnv "MASTER_NODE_NAME" }}
               secretName: dashboard-k8s-cert
           annotations:
             kubernetes.io/ingress.class: "nginx"

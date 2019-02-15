@@ -26,8 +26,8 @@ releases:
           value: "transmission"
         - name: TRANSMISSION_RPC_PASSWORD
           value: {{ requiredEnv "TRANSMISSION_RPC_PASSWORD" }}
-#        - name: TRANSMISSION_PEER_PORT
-#          value: "44444"
+        - name: TRANSMISSION_PEER_PORT
+          value: "44444"
         - name: TRANSMISSION_RPC_AUTHENTICATION_REQUIRED
           value: "true"
         - name: TRANSMISSION_BLOCKLIST_ENABLED
@@ -42,6 +42,8 @@ releases:
           value: "/data"
         - name: TRANSMISSION_DOWNLOAD_DIR
           value: "/data/downloads"
+        - name: TRANSMISSION_RPC_URL
+          value: "/"
         - name: PUID
           value: "1000"
         - name: PGID
@@ -49,7 +51,7 @@ releases:
         - name: TRANSMISSION_ENCRYPTION
           value: "2"
         - name: TRANSMISSION_IDLE_SEEDING_LIMIT
-          value: "120"
+          value: "180"
         - name: TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED
           value: "true"
         - name: TRANSMISSION_PEER_LIMIT_GLOBAL
@@ -97,3 +99,14 @@ releases:
         - name: tz-config
           mountPath: /etc/localtime
           readOnly: true
+      - ingress:
+          enabled: true
+          hosts:
+            - transmission.{{ requiredEnv "MASTER_NODE_NAME" }}
+          tls:
+            - hosts:
+                - transmission.{{ requiredEnv "MASTER_NODE_NAME" }}
+              secretName: transmission-k8s-cert
+          annotations:
+            kubernetes.io/ingress.class: "nginx"
+            certmanager.k8s.io/cluster-issuer: "ca-issuer"

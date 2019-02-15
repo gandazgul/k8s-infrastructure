@@ -1,4 +1,4 @@
-# Default values for resilio.
+# Default values for resilio
 
 replicaCount: 1
 
@@ -10,7 +10,7 @@ image:
 nameOverride: "resilio"
 
 service:
-  type: NodePort
+  type: ClusterIP
   port: 8888
 
 ingress:

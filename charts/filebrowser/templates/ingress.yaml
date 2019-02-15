@@ -1,13 +1,13 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "filebrowser.fullname" . -}}
+{{- $fullName := include "helpers.fullname" . -}}
 {{- $ingressPath := .Values.ingress.path -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    app: {{ template "filebrowser.name" . }}
-    chart: {{ template "filebrowser.chart" . }}
+    app: {{ template "helpers.name" . }}
+    chart: {{ template "helpers.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 {{- with .Values.ingress.annotations }}
