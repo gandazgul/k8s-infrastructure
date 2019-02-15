@@ -1,4 +1,4 @@
-# Backup and size checked ===========================================================
+# Backup and size checker ===========================================================
 
 # NOTE: cli args take precedence over these
 helmDefaults:
