@@ -1,5 +1,0 @@
-service:
-  sshDomain: "x.x.x.x"
-  gogs:
-    serviceDisableRegistration: true
-    serviceRequireSignInView: true
