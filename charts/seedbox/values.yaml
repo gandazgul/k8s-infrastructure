@@ -1,4 +1,4 @@
-# Default values for seedbox.
+# Default values for seedbox
 
 replicaCount: 1
 
@@ -17,7 +17,7 @@ dnsConfig:
     - 8.8.4.4
 
 service:
-  type: NodePort
+  type: ClusterIP
   port: 9091
 
 ingress:
