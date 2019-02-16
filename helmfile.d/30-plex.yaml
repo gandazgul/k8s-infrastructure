@@ -5,7 +5,7 @@
 helmDefaults:
   wait: true
   timeout: 600
-  recreatePods: true
+  #recreatePods: true
   force: true
 
 releases:
@@ -28,15 +28,8 @@ releases:
           data:
             claimName: main-volume
             subPath: "public"
-      - ingress:
-          enabled: true
-          hosts:
-            - files.{{ requiredEnv "MASTER_NODE_NAME" }}
-          tls:
-            - hosts:
-                - files.{{ requiredEnv "MASTER_NODE_NAME" }}
-              secretName: files-k8s-cert
-          annotations:
-            kubernetes.io/ingress.class: "nginx"
-            certmanager.k8s.io/cluster-issuer: "ca-issuer"
+      - service:
+          type: NodePort
+          externalIPs:
+            - {{ requiredEnv "MASTER_IP" }}
       - values/plex-pictures.yaml
