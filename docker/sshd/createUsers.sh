@@ -33,7 +33,7 @@ do
 #            chmod 700 /home/${username}/.ssh
 #            chmod 600 /home/${username}/.ssh/authorized_keys
 #        fi;
-        passwd -u ${username}
+        passwd -d ${username}
         addgroup ${username} wheel
     fi;
 done

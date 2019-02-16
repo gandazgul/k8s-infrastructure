@@ -23,14 +23,6 @@ service:
 ingress:
   enabled: false
 
-env:
-  - name: TRANSMISSION_PEER_CONGESTION_ALGORITHM
-    value: "\"\""
-  - name: TRANSMISSION_RPC_HOST_WHITELIST
-    value: "\"\""
-  - name: TRANSMISSION_SCRIPT_TORRENT_DONE_FILENAME
-    value: "\"\""
-
 volumes:
   - name: main-volume
     persistentVolumeClaim:
