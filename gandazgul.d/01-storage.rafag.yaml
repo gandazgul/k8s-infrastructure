@@ -5,7 +5,7 @@
 helmDefaults:
   wait: true
   timeout: 600
-  recreatePods: true
+  #recreatePods: true
   force: true
 
 releases:

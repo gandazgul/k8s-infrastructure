@@ -1,4 +1,4 @@
-# Default values for seedbox.
+# Default values for seedbox
 
 replicaCount: 1
 
@@ -17,19 +17,11 @@ dnsConfig:
     - 8.8.4.4
 
 service:
-  type: NodePort
+  type: ClusterIP
   port: 9091
 
 ingress:
   enabled: false
-
-env:
-  - name: TRANSMISSION_PEER_CONGESTION_ALGORITHM
-    value: "\"\""
-  - name: TRANSMISSION_RPC_HOST_WHITELIST
-    value: "\"\""
-  - name: TRANSMISSION_SCRIPT_TORRENT_DONE_FILENAME
-    value: "\"\""
 
 volumes:
   - name: main-volume
