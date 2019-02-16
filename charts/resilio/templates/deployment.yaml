@@ -1,22 +1,22 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: {{ include "resilio.fullname" . }}
+  name: {{ include "helpers.fullname" . }}
   labels:
-    app: {{ include "resilio.name" . }}
-    chart: {{ include "resilio.chart" . }}
+    app: {{ include "helpers.name" . }}
+    chart: {{ include "helpers.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "resilio.name" . }}
+      app: {{ include "helpers.name" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ include "resilio.name" . }}
+        app: {{ include "helpers.name" . }}
         release: {{ .Release.Name }}
     spec:
       {{- with .Values.volumes }}

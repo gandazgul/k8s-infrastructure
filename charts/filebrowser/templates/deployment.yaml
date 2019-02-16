@@ -1,22 +1,22 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: {{ template "filebrowser.fullname" . }}
+  name: {{ template "helpers.fullname" . }}
   labels:
-    app: {{ template "filebrowser.name" . }}
-    chart: {{ template "filebrowser.chart" . }}
+    app: {{ template "helpers.name" . }}
+    chart: {{ template "helpers.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "filebrowser.name" . }}
+      app: {{ template "helpers.name" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "filebrowser.name" . }}
+        app: {{ template "helpers.name" . }}
         release: {{ .Release.Name }}
     spec:
       volumes:
