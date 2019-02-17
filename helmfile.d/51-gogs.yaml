@@ -1,10 +1,10 @@
-# Gogs, Resilio Sync and Samba ===========================================================
+# Gogs ===========================================================
 
 # NOTE: cli args take precedence over these
 helmDefaults:
   wait: true
   timeout: 600
-  recreatePods: true
+  #recreatePods: true
   force: true
 
 releases:
@@ -20,4 +20,8 @@ releases:
           persistence:
             existingClaim: yasr-volume
             subPath: "configs/gogs/db"
-      - values/gogs.yaml
+      - service:
+          gogs:
+            serviceDisableRegistration: true
+            serviceRequireSignInView: true
+      - values/gogs.yaml.gotmpl

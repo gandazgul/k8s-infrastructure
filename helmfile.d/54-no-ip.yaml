@@ -1,10 +1,11 @@
-# Gogs, Resilio Sync and Samba ===========================================================
+# No-ip client for DDNS update ===========================================================
+# The first time it runs it will generate the folder and a config file. Fill out the config file and delete the pod.
 
 # NOTE: cli args take precedence over these
 helmDefaults:
   wait: true
   timeout: 600
-  recreatePods: true
+  #recreatePods: true
   force: true
 
 releases:

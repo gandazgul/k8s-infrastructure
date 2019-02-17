@@ -24,13 +24,8 @@ fi
 echo "Updating TRANSMISSION_BIND_ADDRESS_IPV4 to the ip of $1 : $4"
 export TRANSMISSION_BIND_ADDRESS_IPV4=$4
 
-echo "Generating transmission settings.json from env variables"
 # Ensure TRANSMISSION_HOME is created
 mkdir -p ${TRANSMISSION_HOME}
-dockerize -template /etc/transmission/settings.tmpl:${TRANSMISSION_HOME}/settings.json
-
-echo "sed'ing True to true"
-sed -i 's/True/true/g' ${TRANSMISSION_HOME}/settings.json
 
 if [ ! -e "/dev/random" ]; then
   # Avoid "Fatal: no entropy gathering module detected" error
@@ -38,15 +33,13 @@ if [ ! -e "/dev/random" ]; then
   ln -s /dev/urandom /dev/random
 fi
 
-. /etc/transmission/userSetup.sh
-
 if [ "true" = "$DROP_DEFAULT_ROUTE" ]; then
   echo "DROPPING DEFAULT ROUTE"
   ip r del default || exit 1
 fi
 
 echo "STARTING TRANSMISSION"
-exec su --preserve-environment ${RUN_AS} -s /bin/bash -c "/usr/bin/transmission-daemon -g ${TRANSMISSION_HOME} --logfile ${TRANSMISSION_HOME}/transmission.log" &
+exec su --preserve-environment abc -s /bin/bash -c "/usr/bin/transmission-daemon -g ${TRANSMISSION_HOME} --logfile ${TRANSMISSION_HOME}/transmission.log" &
 
 # If transmission-post-start.sh exists, run it
 if [ -x /scripts/transmission-post-start.sh ]
