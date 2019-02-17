@@ -1,10 +1,22 @@
-# My Infrastructure Config
+# K8s Infrastructure Config
 
-My setup right now is a pretty good small business server running as a master node. I plan to add at least one other node to learn to manager a "cluster" and to try and automate node onboarding.
+This is a collection of scripts to deploy kubernetes on Fedora. Tested on Fedora 28. 
 
-Mostly each service will have its own container with the exception of the seedbox which is flexget and transmission running together with OpenVPN.
+It's also a collection of helm charts that I developed or customized, as well as helmfiles 
+(https://github.com/roboll/helmfile/) to deploy all of the supported applications.
 
-The storage right now is local PersistenceVolumes mapped to the mount points on the host and pre-existing claims created that pods can use as volumes. I have a k8s cron job to make a differential backup to another HDD.
+My setup right now is a pretty good small business server running as a master node. I plan to add at least one other 
+node to learn to manager a "cluster" and to try and automate node onboarding.
+
+Each service has its own container with the exception of the seedbox which is flexget and transmission running together 
+with OpenVPN.
+
+The storage right now is local PersistenceVolumes mapped to the mount points on the host and pre-existing claims 
+created that pods can use as volumes. I have a k8s cron job to make a differential backup to another HDD.
+
+## Helm repo
+
+I publish my charts as a helm repo here: https://gandazgul.github.io/k8s-infrastructure/charts/.
 
 ## Getting started
 

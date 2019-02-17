@@ -1,0 +1,127 @@
+apiVersion: v1
+entries:
+  cronjob:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2019-02-16T21:59:51.503125-05:00
+    description: A Helm chart for creating cron jobs
+    digest: b53f3975ff8dabeb150b6c9581edf39329a245369e448d117de9bcec9aa84631
+    name: cronjob
+    urls:
+    - cronjob-0.1.0.tgz
+    version: 0.1.0
+  filebrowser:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2019-02-16T21:59:51.50347-05:00
+    description: A chart for filebrowser
+    digest: 1a572d86e4f8643e4028f5a773957e07ac494f6e79ab0b41a7b31cbf605c8384
+    name: filebrowser
+    urls:
+    - filebrowser-0.1.0.tgz
+    version: 0.1.0
+  generic-deployment:
+  - apiVersion: v1
+    appVersion: 1.0.0
+    created: 2019-02-16T21:59:51.503709-05:00
+    description: A generic deployment chart
+    digest: a29f8b9bdd722cf9cc2b5d9567365b8581c6998dfa88b00be22bb6e7705e4640
+    name: generic-deployment
+    urls:
+    - generic-deployment-0.1.0.tgz
+    version: 0.1.0
+  gogs:
+  - apiVersion: v1
+    appVersion: 0.11.29
+    created: 2019-02-16T21:59:51.504584-05:00
+    description: 'Gogs: Go Git Service'
+    digest: 328cbd95930da62be9952e0e90cd8de3b14b8bae6b09585e4b6707e12e53960d
+    home: https://gogs.io/
+    icon: https://gogs.io/img/favicon.ico
+    keywords:
+    - git
+    name: gogs
+    urls:
+    - gogs-0.6.0.tgz
+    version: 0.6.0
+  mosca:
+  - apiVersion: v1
+    appVersion: 2.8.3
+    created: 2019-02-16T21:59:51.504885-05:00
+    description: A Helm chart for the Mosca.io MQTT Broker
+    digest: 5c330cd221589afe7c9669448bb41b2fe27552760bbedc674a2575c2c6655c04
+    name: mosca
+    urls:
+    - mosca-0.1.0.tgz
+    version: 0.1.0
+  nest-mqtt-bridge:
+  - apiVersion: v1
+    appVersion: 1.0.0
+    created: 2019-02-16T21:59:51.505137-05:00
+    description: A Helm chart for the nest-mqtt-bridge
+    digest: 8ec4fddc7add5fe6f7554f783511f899895c1c6b1dc2476d94a38dfbf012b658
+    name: nest-mqtt-bridge
+    urls:
+    - nest-mqtt-bridge-0.1.0.tgz
+    version: 0.1.0
+  persistence-volume:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2019-02-16T21:59:51.505369-05:00
+    description: A Helm chart to install my data volumes
+    digest: 38e19b5216d0d99253f88830b14c90e37f53e33b697019e2ca8e4cfbe8b9f52e
+    name: persistence-volume
+    urls:
+    - persistence-volume-0.1.0.tgz
+    version: 0.1.0
+  pvc:
+  - apiVersion: v1
+    created: 2019-02-16T21:59:51.50558-05:00
+    description: PVC ReadWriteMany
+    digest: ec53c382c310910f4ada8c4040800ab72f592e39ca8184e97b5f700a888d7cec
+    name: pvc
+    urls:
+    - pvc-0.1.0.tgz
+    version: 0.1.0
+  resilio:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2019-02-16T21:59:51.505893-05:00
+    description: A Helm chart for resilio sync
+    digest: a5efd29231b117d37b0686524e85c3e24856e288736897220da0ecc83985861f
+    name: resilio
+    urls:
+    - resilio-0.1.0.tgz
+    version: 0.1.0
+  samba:
+  - apiVersion: v1
+    created: 2019-02-16T21:59:51.50621-05:00
+    description: Chart to deploy a simple Samba server on K8s available on hostNetwork
+      or just inside the cluster
+    digest: cf8dedb08af54c0a89044f42fe894cbf6f64dcd0e92c59a06da4711207b86be5
+    name: samba
+    urls:
+    - samba-0.1.0.tgz
+    version: 0.1.0
+  seedbox:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2019-02-16T21:59:51.506512-05:00
+    description: A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission
+      and Flexget
+    digest: af97585a37d92f3cfa8989c658c80f569b5b42e9f5e8eafe360e6991d0b345a4
+    name: seedbox
+    urls:
+    - seedbox-0.1.0.tgz
+    version: 0.1.0
+  smartthings-mqtt-bridge:
+  - apiVersion: v1
+    appVersion: 3.0.0
+    created: 2019-02-16T21:59:51.506809-05:00
+    description: A Helm chart for the smartthings-mqtt-bridge
+    digest: cec124cb75c6bd03ff36ab4cbd21963246d9ca3af3ba25444f289c25a0f36de9
+    name: smartthings-mqtt-bridge
+    urls:
+    - smartthings-mqtt-bridge-0.1.0.tgz
+    version: 0.1.0
+generated: 2019-02-16T21:59:51.502731-05:00
