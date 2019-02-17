@@ -1,4 +1,4 @@
-#Helm (https://helm.sh) Charts
+# Helm (https://helm.sh) Charts
 
 Most of these I created because I couldn't find them or were super specific.
 
