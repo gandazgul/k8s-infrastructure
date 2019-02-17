@@ -3,5 +3,5 @@ description: K8s deployment scripts for Fedora 28 and a collection of helm chart
 remote_theme: pmarsceill/just-the-docs
 # Aux links for the upper right navigation
 aux_links:
-  "K8S Infrastructure on GitHub":
+  "K8s Infrastructure on GitHub":
     - "https://github.com/gandazgul/k8s-infrastructure"
