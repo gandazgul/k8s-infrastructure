@@ -20,7 +20,7 @@ spec:
     - name: peer
 {{- if contains "NodePort" .Values.service.type }}
       nodePort: {{ .Values.service.peerPort }}
-  {{- end }}
+{{- end }}
       port: {{ .Values.service.peerPort }}
       protocol: TCP
       targetPort: peer
