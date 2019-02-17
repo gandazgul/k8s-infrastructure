@@ -2,8 +2,8 @@
 
 This is a collection of scripts to deploy kubernetes on Fedora. Tested on Fedora 28. 
 
-It's also a collection of helm charts that I developed or customized, as well as [helmfiles]
-(https://github.com/roboll/helmfile/) to deploy all of the supported applications.
+It's also a collection of helm charts that I developed or customized, as well as [helmfiles](https://github.com/roboll/helmfile/) 
+to deploy all of the supported applications.
 
 My setup right now is a pretty good small business server running as a master node. I plan to add at least one other 
 node to learn to manager a "cluster" and to try and automate node onboarding.
@@ -16,7 +16,7 @@ created that pods can use as volumes. I have a k8s cron job to make a differenti
 
 ## Helm repo
 
-I publish my charts as a helm repo here: https://gandazgul.github.io/k8s-infrastructure/charts/.
+I publish my charts as a helm repo here: [Helm Repo](https://gandazgul.github.io/k8s-infrastructure/helmrepo/).
 
 ## Getting started
 
@@ -27,21 +27,26 @@ This will install a fully functioning kubernetes master where you can run all of
     2. Create a user, kubectl doesn't like running as root
     3. Remove the swap, kubernetes is not compatible with swap at the moment and will complain about it. 
 2. Check out this repo on another machine
-3. Customize this file: `~/k8s-config/1-fedoraPostInstall.sh` - it will install some packages and setup the mount points as I like them
+3. Customize this file: `~/k8s-config/1-fedoraPostInstall.sh` - it will install some packages and setup the mount 
+points as I like them
 4. Copy the scripts over `scp -r ./k8s-config fedora-ip:~/`
 5. `ssh fedora-ip`
-6. `~/k8s-config/2-configK8SMaster` - This will install K8s and configure the master to run pods, it will also install Flannel network plugin
-7. If something fails, you can reset with `sudo kubeadm reset`, delete kubeadminit.lock and try again, the other commands are repeatable
+6. `~/k8s-config/2-configK8SMaster` - This will install K8s and configure the master to run pods, it will also install 
+Flannel network plugin
+7. If something fails, you can reset with `sudo kubeadm reset`, delete kubeadminit.lock and try again, the other 
+commands are repeatable
 
 Verify Kubelet that is running with `sudo systemctl status kubelet`
 
-Verify that Flannel is finished setting up with: `kubectl get ds --namespace=kube-system`, look for the flannel for your architecture and it should have `1` in all the columns.
+Verify that Flannel is finished setting up with: `kubectl get ds --namespace=kube-system`, look for the flannel for 
+your architecture and it should have `1` in all the columns.
 
 Once flannel is working:
 
 ### Install Storage, Helm, etc
 
-This will install a hostpath auto provisioner for quick testing of new pod configs, it will also install the helm client with the tiller and diff plugins.
+This will install a hostpath auto provisioner for quick testing of new pod configs, it will also install the helm 
+client with the tiller and diff plugins.
 
 1. Run `3-installStorageAndHelm.sh`
 
@@ -55,15 +60,18 @@ NOTE: Kubectl does not need sudo, it will fail with sudo
 ### Setting up your local machine for using k8s
 
 On your local machine (NOTE: Only works on your local network):
-1. Install kubectl (`brew install kubernetes-cli` or find the package for your linux distro that install kubectl, kubernetes-client in Fedora)
+1. Install kubectl (`brew install kubernetes-cli` or find the package for your linux distro that install kubectl, 
+kubernetes-client in Fedora)
 2. `scp fedora-ip:~/.kube/config ~/.kube/config` <-- configuration file for connecting to the cluster
-3. Test with `kubectl get nodes` you should see your node listed, if not check the permissions on the config file (should be owned by your user/group).
-4. Install helm with ./k8s-config/installHelm.sh. This installs helm without tiller, instead it uses the tiller plugin to run tiller locally :)
+3. Test with `kubectl get nodes` you should see your node listed, if not check the permissions on the config file 
+(should be owned by your user/group).
+4. Install helm with ./k8s-config/installHelm.sh. This installs helm without tiller, instead it uses the tiller plugin 
+to run tiller locally :)
     1. Test helm with:
     2. `helm tiller start` <-- starts bash with tiller enabled
     3. `helm list` <-- You should see no output, if error then something went wrong
     4. `exit`
-5. Install helmfile: `brew install helmfile` (for linux see helmfile's releases: https://github.com/roboll/helmfile/releases)
+5. Install helmfile: `brew install helmfile` (for linux see [helmfile's releases](https://github.com/roboll/helmfile/releases))
 6. Set default namespace for kubectl `kubectl config set-context $(kubectl config current-context) --namespace=services`
     * Check that the namespace was set: `kubectl config view | grep namespace:`
 
@@ -93,13 +101,13 @@ On your local machine (NOTE: Only works on your local network):
 * Ingress with TLS enabled
 * cert-manager with cluster cert issuers for the CA setup by kubeadmn and letsencrypt (staging and prod)
 * FileBrowser (default credentials admin:admin, port 8080)
-* Plex (Port 32400, needs extra configuration, see readme @ https://github.com/munnerz/kube-plex)
+* Plex (Port 32400, needs extra configuration, see the [README](https://github.com/munnerz/kube-plex))
 * Seedbox  - transmission - 9091, flexget, OpenVPN - [README](/charts/seedbox/README.md)
-* SSHD - for tunneling, etc - Port 22222 - [README](/docker/sshd/README.md))
+* SSHD - for tunneling, etc - Port 22222 - [README](/docker/sshd/README.md)
 * Gogs - Port 3000
 * Resilio Sync (Port 8888)
 * Samba - Opens the default ports on the node directly - [README](/charts/samba/README.md)
-* CronJob to take a differential backup of main-volume into backup-volume (Docs: https://www.nongnu.org/rdiff-backup/docs.html)
+* CronJob to take a differential backup of main-volume into backup-volume - [Docs](https://www.nongnu.org/rdiff-backup/docs.html)
 
 ## Access
 
