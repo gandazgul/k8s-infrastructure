@@ -14,9 +14,16 @@ with OpenVPN.
 The storage right now is local PersistenceVolumes mapped to the mount points on the host and pre-existing claims 
 created that pods can use as volumes. I have a k8s cron job to make a differential backup to another HDD.
 
+[Get started now](#getting-started){: .btn .btn-primary } 
+[View it on GitHub](https://github.com/gandazgul/k8s-infrastructure){: .btn }
+
+---
+
 ## Helm repo
 
 I publish my charts as a helm repo here: [Helm Repo](https://gandazgul.github.io/k8s-infrastructure/helmrepo/).
+
+---
 
 ## Getting started
 
