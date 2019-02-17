@@ -68,5 +68,5 @@ RUN chmod -v +x /etc/cont-init.d/*
 # Web UI and rpc port
 EXPOSE 9091
 # Peer port
-EXPOSE   30000
+EXPOSE 30000
 CMD ["dumb-init", "/etc/openvpn/start.sh"]

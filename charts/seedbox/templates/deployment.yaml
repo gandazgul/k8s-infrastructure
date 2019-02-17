@@ -35,7 +35,7 @@ spec:
               containerPort: 9091
               protocol: TCP
             - name: peer
-              containerPort:   30000
+              containerPort: 30000
               protocol: TCP
           securityContext:
 {{ toYaml .Values.securityContext | indent 12 }}
