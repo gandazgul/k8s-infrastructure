@@ -17,6 +17,13 @@ spec:
       port: {{ .Values.service.port }}
       protocol: TCP
       targetPort: http
+    - name: peer
+{{- if contains "NodePort" .Values.service.type }}
+      nodePort: {{ .Values.service.peerPort }}
+  {{- end }}
+      port: {{ .Values.service.peerPort }}
+      protocol: TCP
+      targetPort: peer
   selector:
     app: {{ include "helpers.name" . }}
     release: {{ .Release.Name }}
