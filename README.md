@@ -2,7 +2,7 @@
 
 This is a collection of scripts to deploy kubernetes on Fedora. Tested on Fedora 28. 
 
-It's also a collection of helm charts that I developed or customized, as well as helmfiles 
+It's also a collection of helm charts that I developed or customized, as well as [helmfiles]
 (https://github.com/roboll/helmfile/) to deploy all of the supported applications.
 
 My setup right now is a pretty good small business server running as a master node. I plan to add at least one other 
