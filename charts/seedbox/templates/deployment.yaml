@@ -1,22 +1,22 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: {{ include "seedbox.fullname" . }}
+  name: {{ include "helpers.fullname" . }}
   labels:
-    app: {{ include "seedbox.name" . }}
-    chart: {{ include "seedbox.chart" . }}
+    app: {{ include "helpers.name" . }}
+    chart: {{ include "helpers.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "seedbox.name" . }}
+      app: {{ include "helpers.name" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ include "seedbox.name" . }}
+        app: {{ include "helpers.name" . }}
         release: {{ .Release.Name }}
     spec:
       volumes:

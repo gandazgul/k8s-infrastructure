@@ -1,0 +1,36 @@
+# SSHD ===============================================
+# For tunneling and accessing files
+
+# NOTE: cli args take precedence over these
+helmDefaults:
+  wait: true
+  timeout: 600
+  #recreatePods: true
+  force: true
+
+releases:
+  - name: sshd
+    namespace: services
+    chart: ../charts/sshd
+    values:
+      - image:
+          repository: {{ env "REPOSITORY_USERNAME" | default "gandazgul" }}/sshd
+          tag: latest
+      - volumes:
+        - name: main-volume
+          persistentVolumeClaim:
+            claimName: main-volume
+        - name: rafag-volume
+          persistentVolumeClaim:
+            claimName: rafag-volume
+        - name: yasr-volume
+          persistentVolumeClaim:
+            claimName: yasr-volume
+      - volumeMounts:
+        - name: main-volume
+          mountPath: "/home"
+        - name: rafag-volume
+          mountPath: "/home/rafag/backup"
+        - name: yasr-volume
+          mountPath: "/etc/ssh"
+          subPath: "configs/sshd"

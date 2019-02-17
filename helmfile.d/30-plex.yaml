@@ -5,7 +5,7 @@
 helmDefaults:
   wait: true
   timeout: 600
-  recreatePods: true
+  #recreatePods: true
   force: true
 
 releases:
@@ -15,6 +15,7 @@ releases:
     values:
       - image:
           tag: plexpass
+          pullPolicy: Always
       - timezone: America/New_York
       - kubePlex:
           enabled: false
@@ -27,5 +28,8 @@ releases:
           data:
             claimName: main-volume
             subPath: "public"
+      - service:
+          type: NodePort
+          externalIPs:
+            - {{ requiredEnv "MASTER_IP" }}
       - values/plex-pictures.yaml
-      - values/ipaddress.yaml

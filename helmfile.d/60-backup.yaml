@@ -1,10 +1,10 @@
-# Backup and size checked ===========================================================
+# Backup and size checker ===========================================================
 
 # NOTE: cli args take precedence over these
 helmDefaults:
   wait: true
   timeout: 600
-  recreatePods: true
+  #recreatePods: true
   force: true
 
 releases:

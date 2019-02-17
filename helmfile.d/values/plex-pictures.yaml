@@ -1,5 +1,0 @@
-persistence:
-  customVolumeMounts:
-    - name: data
-      mountPath: "/pictures"
-      subPath: "gandazgul/Pictures"
