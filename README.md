@@ -132,3 +132,9 @@ volume it gets deleted, is just a warning.
 3. Run this to allow pods to be started on this node again.
 
     `kubectl uncordon [node-name]`
+    
+## How to upgrade the kubernetes master and nodes
+
+It's fairly easy and I've done it before successfully.
+
+Follow these instructions https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade-1-13/
