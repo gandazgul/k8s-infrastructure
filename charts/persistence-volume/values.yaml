@@ -9,6 +9,6 @@ storageClass: hdd
 
 path: /media/main
 
-volumeMode: filesystem
+volumeMode: Filesystem
 
 nodeHostname: localhost.localdomain
