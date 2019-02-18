@@ -138,3 +138,12 @@ volume it gets deleted, is just a warning.
 It's fairly easy and I've done it before successfully.
 
 Follow these instructions https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade-1-13/
+
+### License
+
+Everything in this repo is distributed by an [MIT license](LICENSE.md).
+
+### Contributing
+
+Contributions are more than welcome. Please open a PR with a good title and description of the change you are making. 
+Links to docs or examples are great.
