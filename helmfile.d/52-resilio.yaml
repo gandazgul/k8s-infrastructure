@@ -29,10 +29,10 @@ releases:
     - ingress:
         enabled: true
         hosts:
-          - resilio.{{ requiredEnv "MASTER_NODE_NAME" }}
+          - resilio.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
         tls:
           - hosts:
-              - resilio.{{ requiredEnv "MASTER_NODE_NAME" }}
+              - resilio.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
             secretName: resilio-k8s-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"

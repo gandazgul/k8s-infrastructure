@@ -61,10 +61,10 @@ releases:
       - ingress:
           enabled: true
           hosts:
-            - transmission.{{ requiredEnv "MASTER_NODE_NAME" }}
+            - transmission.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
           tls:
             - hosts:
-                - transmission.{{ requiredEnv "MASTER_NODE_NAME" }}
+                - transmission.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
               secretName: transmission-k8s-cert
           annotations:
             kubernetes.io/ingress.class: "nginx"
