@@ -15,10 +15,11 @@ kubectl create namespace ingress
 sudo -E kubectl --namespace=ingress create secret tls ca-key-pair --key=/etc/kubernetes/pki/ca.key --cert=/etc/kubernetes/pki/ca.crt
 
 printf "\nCreating a certificate for cockpit ========================================================================\n"
-sudo -E ./createCertificateForDomain.sh $1
-cat $1.crt > 1-$1.cert
-echo "" >> 1-$1.cert
-cat device.key >> 1-$1.cert
-sudo -E mv 1-$1.cert /etc/cockpit/ws-certs.d/
+DOMAIN=$1
+sudo -E ./createCertificateForDomain.sh $DOMAIN
+cat $DOMAIN.crt > 1-$DOMAIN.cert
+echo "" >> 1-$DOMAIN.cert
+cat device.key >> 1-$DOMAIN.cert
+sudo -E mv 1-$DOMAIN.cert /etc/cockpit/ws-certs.d/
 
 ./installHelm.sh
