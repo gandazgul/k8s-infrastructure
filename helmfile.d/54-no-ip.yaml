@@ -10,7 +10,7 @@ helmDefaults:
 
 releases:
   - name: no-ip
-    namespace: services
+    namespace: default
     chart: ../charts/generic-deployment
     values:
       - image:

@@ -10,7 +10,7 @@ helmDefaults:
 
 releases:
   - name: seedbox
-    namespace: services
+    namespace: default
     chart: ../charts/seedbox
     values:
       - image:

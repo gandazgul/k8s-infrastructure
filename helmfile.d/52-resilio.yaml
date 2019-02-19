@@ -9,7 +9,7 @@ helmDefaults:
 
 releases:
   - name: resilio
-    namespace: services
+    namespace: default
     chart: ../charts/resilio
     values:
     - volumes:

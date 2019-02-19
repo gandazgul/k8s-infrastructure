@@ -9,7 +9,7 @@ helmDefaults:
 
 releases:
   - name: resilio-rafag
-    namespace: services
+    namespace: default
     chart: ../charts/resilio
     values:
     - image:
@@ -37,10 +37,20 @@ releases:
         - name: main-volume
           mountPath: "/sync"
           subPath: "rafag"
-
+    - ingress:
+        enabled: true
+        hosts:
+          - resilio.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+        tls:
+          - hosts:
+              - resilio.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+            secretName: resilio-k8s-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          certmanager.k8s.io/cluster-issuer: "ca-issuer"
 
   - name: resilio-angela
-    namespace: services
+    namespace: default
     chart: ../charts/resilio
     values:
     - image:
@@ -67,9 +77,20 @@ releases:
         subPath: "angela"
     - service:
         port: 8881
+    - ingress:
+        enabled: true
+        hosts:
+          - angela-rsl.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+        tls:
+          - hosts:
+              - angela-rsl.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+            secretName: angela-rsl-k8s-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          certmanager.k8s.io/cluster-issuer: "ca-issuer"
 
   - name: resilio-haycel
-    namespace: services
+    namespace: default
     chart: ../charts/resilio
     values:
     - image:
@@ -96,3 +117,14 @@ releases:
         subPath: "haycel"
     - service:
         port: 8882
+    - ingress:
+        enabled: true
+        hosts:
+          - haycel-rsl.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+        tls:
+          - hosts:
+              - haycel-rsl.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+            secretName: haycel-rsl-k8s-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          certmanager.k8s.io/cluster-issuer: "ca-issuer"

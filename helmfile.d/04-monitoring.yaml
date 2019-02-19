@@ -11,7 +11,7 @@ helmDefaults:
 
 releases:
   - name: prometheus
-    namespace: services
+    namespace: default
     chart: stable/prometheus
     values:
       - alertmanager:
@@ -81,7 +81,7 @@ releases:
 
   # Contains the settings, secrets and a dashboard for grafana
   - name: grafana-prometheus
-    namespace: services
+    namespace: default
     chart: ../charts/grafana-prometheus
     values:
       - adminPassword: {{ requiredEnv "ADMIN_PASSWORD" }}
@@ -91,7 +91,7 @@ releases:
 
   # Check out the README for information on the kubernetes plugin
   - name: grafana
-    namespace: services
+    namespace: default
     chart: stable/grafana
     values:
       - persistence:

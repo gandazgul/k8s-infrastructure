@@ -10,7 +10,7 @@ helmDefaults:
 releases:
 #  EXAMPLE: Every minute output the date
 #  - name: example
-#    namespace: services
+#    namespace: default
 #    chart: ../charts/cronjob
 #    values:
 #      - schedule: "*/1 * * * *"
@@ -24,7 +24,7 @@ releases:
 
   # Docs: https://www.nongnu.org/rdiff-backup/docs.htmls
   - name: incremental-backups
-    namespace: services
+    namespace: default
     chart: ../charts/cronjob
     values:
       # Twice a day at midnight and midday
@@ -49,7 +49,7 @@ releases:
             mountPath: /media/backup
 
   - name: clean-incremental-backups
-    namespace: services
+    namespace: default
     chart: ../charts/cronjob
     values:
       # Every day at midnight
