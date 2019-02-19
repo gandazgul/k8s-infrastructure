@@ -457,7 +457,7 @@ data:
           },
           "gridPos": {
             "h": 7,
-            "w": 18,
+            "w": 24,
             "x": 0,
             "y": 14
           },
@@ -504,6 +504,7 @@ data:
           "targets": [
             {
               "expr": "sum(rate(node_disk_read_bytes_total[5m]))",
+              "format": "time_series",
               "hide": false,
               "intervalFactor": 4,
               "legendFormat": "read",
@@ -513,6 +514,7 @@ data:
             },
             {
               "expr": "sum(rate(node_disk_written_bytes_total[5m]))",
+              "format": "time_series",
               "intervalFactor": 4,
               "legendFormat": "written",
               "refId": "B",
@@ -520,6 +522,7 @@ data:
             },
             {
               "expr": "sum(rate(node_disk_io_time_seconds_total[5m]))",
+              "format": "time_series",
               "intervalFactor": 4,
               "legendFormat": "io time",
               "refId": "C",
@@ -584,8 +587,8 @@ data:
           "gridPos": {
             "h": 7,
             "w": 6,
-            "x": 18,
-            "y": 14
+            "x": 0,
+            "y": 21
           },
           "hideTimeOverride": false,
           "id": 14,
@@ -669,7 +672,7 @@ data:
           "gridPos": {
             "h": 7,
             "w": 6,
-            "x": 0,
+            "x": 6,
             "y": 21
           },
           "hideTimeOverride": false,
@@ -757,7 +760,7 @@ data:
           "gridPos": {
             "h": 7,
             "w": 6,
-            "x": 6,
+            "x": 12,
             "y": 21
           },
           "hideTimeOverride": false,
@@ -843,7 +846,7 @@ data:
           "gridPos": {
             "h": 7,
             "w": 6,
-            "x": 12,
+            "x": 18,
             "y": 21
           },
           "hideTimeOverride": false,

@@ -2,7 +2,6 @@
 #Part 1: https://sysdig.com/blog/kubernetes-monitoring-prometheus/
 #Part 2: https://sysdig.com/blog/kubernetes-monitoring-with-prometheus-alertmanager-grafana-pushgateway-part-2/
 
-
 # NOTE: cli args take precedence over these
 helmDefaults:
   wait: true
@@ -13,51 +12,52 @@ helmDefaults:
 releases:
   - name: prometheus
     namespace: services
-#    chart: stable/prometheus
-    chart: ../../helm-charts/stable/prometheus
+    chart: stable/prometheus
     values:
-#      - alertmanager:
-#          dnsPolicy: "None"
-#          dnsConfig:
-#            nameservers:
-#              - 8.8.8.8
-#              - 8.8.4.4
+      - alertmanager:
+          ingress:
+            enabled: true
+            hosts:
+              - alerts.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+            tls:
+              - hosts:
+                  - alerts.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+                secretName: alerts-k8s-cert
+            annotations:
+              kubernetes.io/ingress.class: "nginx"
+              certmanager.k8s.io/cluster-issuer: "ca-issuer"
       - alertmanagerFiles:
+          # https://github.com/prometheus/alertmanager/blob/master/doc/examples/simple.yml
           alertmanager.yml:
             global:
               resolve_timeout: 5m
-              # The smarthost and SMTP sender used for mail notifications.
+              # The host and SMTP sender used for mail notifications.
               smtp_smarthost: 'smtp.gmail.com:587'
-              smtp_hello: 'k8s.sytes.net'
-              smtp_from: 'ravelo.carlos@gmail.com'
-              smtp_auth_username: 'ravelo.carlos@gmail.com'
-              smtp_auth_password: 'ixmcivnavdahhpxj'
+              smtp_from: {{ requiredEnv "MAIL_TO" }}
+              smtp_auth_username: {{ requiredEnv "MAIL_TO" }}
+              smtp_auth_password: {{ requiredEnv "SMTP_PASSWORD" }}
             route:
               group_by: ['alertname']
-              group_wait: 10s
-              group_interval: 10s
+              group_wait: 30s
+              group_interval: 5m
               repeat_interval: 1h
-              receiver: 'emails'
+              receiver: 'email-me'
+            # Inhibition rules allow to mute a set of alerts given that another alert is
+            # firing.
+            # We use this to mute any warning-level notifications if the same alert is
+            # already critical.
+            inhibit_rules:
+              - source_match:
+                  severity: 'critical'
+                target_match:
+                  severity: 'warning'
+                # Apply inhibition if the alertname is the same.
+                equal: ['alertname', 'cluster', 'service']
             receivers:
-              - name: 'emails'
+              - name: 'email-me'
                 email_configs:
-                  - to: 'ravelo.carlos@gmail.com'
-              - name: 'webhook-test'
-                webhook_configs:
-                - url: 'https://webhook.site/c0b2c690-8c1e-4b4d-bded-a2bab92e0f63'
-      - serverFiles:
-          rules:
-            groups:
-            - name: example1
-              rules:
-              - alert: DeadMansSwitch1
-                annotations:
-                  description: This is a DeadMansSwitch meant to ensure that the entire Alerting pipeline is functional.
-                  summary: Alerting DeadMansSwitch
-                expr: vector(1)
-                labels:
-                  severity: none
-#          alerts:
+                  - to: {{ requiredEnv "MAIL_TO" }}
+      - values/prometheus.rules.yaml
       - nodeExporter:
           extraHostPathMounts:
             - name: hostroot
@@ -111,11 +111,6 @@ releases:
           passwordKey: smtp-password
       - admin:
           existingSecret: grafana
-      - dnsPolicy: "None"
-      - dnsConfig:
-          nameservers:
-            - 8.8.8.8
-            - 8.8.4.4
       - env:
           GF_SERVER_ROOT_URL: https://grafana.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}/
           GF_SMTP_ENABLED: true
