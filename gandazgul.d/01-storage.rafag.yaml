@@ -11,7 +11,7 @@ helmDefaults:
 releases:
   # Rafa's docs
   - name: rafag-volume-pv
-    namespace: services
+    namespace: default
     chart: ../charts/persistence-volume
     values:
       - volumeName: rafag-volume
@@ -21,7 +21,7 @@ releases:
       - nodeHostname: {{ requiredEnv "MASTER_NODE_NAME" }}
 
   - name: rafag-volume
-    namespace: services
+    namespace: default
     chart: ../charts/pvc
     values:
       - storageClass: hdd

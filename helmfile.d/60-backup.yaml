@@ -10,7 +10,7 @@ helmDefaults:
 releases:
 #  EXAMPLE: Every minute output the date
 #  - name: example
-#    namespace: services
+#    namespace: default
 #    chart: ../charts/cronjob
 #    values:
 #      - schedule: "*/1 * * * *"
@@ -22,35 +22,9 @@ releases:
 #          args:
 #            - date
 
-  - name: size-checker
-    namespace: services
-    chart: ../charts/cronjob
-    values:
-      # Sunday at 1:00am
-      - schedule: "0 1 * * 0"
-      - image:
-          repository: gandazgul/size-checker
-          tag: v3
-      - volumes:
-          - name: yasr-volume
-            persistentVolumeClaim:
-              claimName: yasr-volume
-          - name: main-volume
-            persistentVolumeClaim:
-              claimName: main-volume
-      - volumeMounts:
-          - name: yasr-volume
-            mountPath: "/etc/ssmtp/"
-            subPath: "configs/ssmtp/"
-          - name: main-volume
-            mountPath: "/hdd"
-      - env:
-          - name: MAIL_TO
-            value: {{ requiredEnv "MAIL_TO" }}
-
   # Docs: https://www.nongnu.org/rdiff-backup/docs.htmls
   - name: incremental-backups
-    namespace: services
+    namespace: default
     chart: ../charts/cronjob
     values:
       # Twice a day at midnight and midday
@@ -75,7 +49,7 @@ releases:
             mountPath: /media/backup
 
   - name: clean-incremental-backups
-    namespace: services
+    namespace: default
     chart: ../charts/cronjob
     values:
       # Every day at midnight

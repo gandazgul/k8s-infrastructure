@@ -14,7 +14,7 @@ releases:
     chart: ../charts/sshd
     values:
       - image:
-          repository: {{ env "REPOSITORY_USERNAME" | default "gandazgul" }}/sshd
+          repository: {{ env "REPOSITORY_USERNAME" }}/sshd
           tag: latest
       - volumes:
         - name: main-volume

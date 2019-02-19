@@ -9,7 +9,7 @@ helmDefaults:
 
 releases:
   - name: samba
-    namespace: services
+    namespace: default
     chart: ../charts/samba
     values:
       - hostNetwork: true
