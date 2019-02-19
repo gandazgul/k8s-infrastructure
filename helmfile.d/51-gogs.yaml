@@ -9,7 +9,7 @@ helmDefaults:
 
 releases:
   - name: gogs
-    namespace: services
+    namespace: default
     chart: ../charts/gogs
     version: 0.6.0
     values:

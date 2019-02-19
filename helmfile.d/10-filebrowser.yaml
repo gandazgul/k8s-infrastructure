@@ -10,7 +10,7 @@ helmDefaults:
 
 releases:
   - name: filebrowser
-    namespace: services
+    namespace: default
     chart: ../charts/filebrowser
     values:
       - volumes:

@@ -56,7 +56,7 @@ releases:
 #kind: Certificate
 #metadata:
 #  name: test-cert-manager-certificate
-#  namespace: services
+#  namespace: default
 #spec:
 #  acme:
 #    config:

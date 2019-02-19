@@ -10,7 +10,7 @@ helmDefaults:
 
 releases:
   - name: sshd
-    namespace: services
+    namespace: default
     chart: ../charts/sshd
     values:
       - image:

@@ -1,13 +1,13 @@
 service:
-  sshDomain: gogs.{{ requiredEnv "INGRESS_EXTERNAL_NAME" }}
+  sshDomain: git.redirectme.net
   ingress:
     enabled: true
     hosts:
-      - gogs.{{ requiredEnv "INGRESS_EXTERNAL_NAME" }}
+      - git.redirectme.net
     tls:
       - hosts:
-          - gogs.{{ requiredEnv "INGRESS_EXTERNAL_NAME" }}
-        secretName: gogs-cert
+          - git.redirectme.net
+        secretName: gogs-rafag-cert
     annotations:
       kubernetes.io/ingress.class: "nginx"
       #certmanager.k8s.io/cluster-issuer: "letsencrypt-staging"
