@@ -17,9 +17,9 @@ sudo -E kubectl --namespace=ingress create secret tls ca-key-pair --key=/etc/kub
 printf "\nCreating a certificate for cockpit ========================================================================\n"
 DOMAIN=$1
 sudo -E ./createCertificateForDomain.sh $DOMAIN
-cat $DOMAIN.crt > 1-$DOMAIN.cert
-echo "" >> 1-$DOMAIN.cert
-cat device.key >> 1-$DOMAIN.cert
+sudo -E cat $DOMAIN.crt > 1-$DOMAIN.cert
+sudo -E echo "" >> 1-$DOMAIN.cert
+sudo -E cat device.key >> 1-$DOMAIN.cert
 sudo -E mv 1-$DOMAIN.cert /etc/cockpit/ws-certs.d/
 
 ./installHelm.sh
