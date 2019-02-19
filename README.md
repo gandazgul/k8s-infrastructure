@@ -140,7 +140,7 @@ Follow these instructions https://kubernetes.io/docs/tasks/administer-cluster/ku
 
 ## License
 
-Everything in this repo is distributed by an [MIT license](LICENSE.md).
+Everything in this repo is distributed under the [MIT license](https://github.com/gandazgul/k8s-infrastructure/blob/master/LICENSE.md).
 
 ## Contributing
 
