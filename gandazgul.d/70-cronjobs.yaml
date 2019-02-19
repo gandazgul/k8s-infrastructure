@@ -3,7 +3,7 @@
 
 releases:
   - name: rsync-renepor
-    namespace: services
+    namespace: default
     chart: ../charts/cronjob
     values:
       # Every day at 5am
@@ -29,7 +29,7 @@ releases:
             mountPath: /media/main
 
   - name: rsync-movies-rene
-    namespace: services
+    namespace: default
     chart: ../charts/cronjob
     values:
       # Every day at 3am
@@ -55,7 +55,7 @@ releases:
             mountPath: /media/main
 
   - name: rsync-gandazgul-rene
-    namespace: services
+    namespace: default
     chart: ../charts/cronjob
     values:
       # Every day at 4am

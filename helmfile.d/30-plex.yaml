@@ -10,7 +10,7 @@ helmDefaults:
 
 releases:
   - name: plex
-    namespace: services
+    namespace: default
     chart: ../../kube-plex/charts/kube-plex
     values:
       - image:

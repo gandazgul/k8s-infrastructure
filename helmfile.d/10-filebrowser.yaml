@@ -10,7 +10,7 @@ helmDefaults:
 
 releases:
   - name: filebrowser
-    namespace: services
+    namespace: default
     chart: ../charts/filebrowser
     values:
       - volumes:
@@ -35,10 +35,10 @@ releases:
       - ingress:
           enabled: true
           hosts:
-            - files.{{ requiredEnv "MASTER_NODE_NAME" }}
+            - files.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
           tls:
             - hosts:
-                - files.{{ requiredEnv "MASTER_NODE_NAME" }}
+                - files.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
               secretName: files-k8s-cert
           annotations:
             kubernetes.io/ingress.class: "nginx"

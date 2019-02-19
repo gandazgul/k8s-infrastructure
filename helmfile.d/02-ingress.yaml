@@ -18,6 +18,10 @@ releases:
             enabled: true
           metrics:
             enabled: true
+            service:
+              annotations:
+                prometheus.io/scrape: "true"
+                prometheus.io/port: "10254"
           service:
             type: NodePort
             labels:
@@ -52,7 +56,7 @@ releases:
 #kind: Certificate
 #metadata:
 #  name: test-cert-manager-certificate
-#  namespace: services
+#  namespace: default
 #spec:
 #  acme:
 #    config:
