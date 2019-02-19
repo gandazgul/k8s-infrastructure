@@ -10,7 +10,7 @@ helmDefaults:
 
 releases:
   - name: movies-backup-volume-pv
-    namespace: services
+    namespace: default
     chart: ../charts/persistence-volume
     values:
       - volumeName: movies-backup-volume
@@ -20,7 +20,7 @@ releases:
       - nodeHostname: {{ requiredEnv "MASTER_NODE_NAME" }}
 
   - name: movies-backup-volume
-    namespace: services
+    namespace: default
     chart: ../charts/pvc
     values:
       - storageClass: hdd

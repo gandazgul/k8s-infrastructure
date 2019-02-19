@@ -10,6 +10,12 @@ export ADMIN_PASSWORD=""
 export MAIL_TO=""
 export SMTP_PASSWORD=""
 
+# required - ingress config
+# Services will use this name for their ingresses
+export INGRESS_INTERNAL_NAME="example.org"
+# Gogs and any other services exposed to the outside world will use this name
+export INGRESS_EXTERNAL_NAME="example.com"
+
 #docker repositories
 export REPOSITORY_USERNAME=""
 
@@ -20,3 +26,5 @@ export MASTER_NODE_NAME=`kubectl get nodes --selector=node-role.kubernetes.io/ma
 
 echo "Using MASTER_IP=$MASTER_IP"
 echo "Using MASTER_NODE_NAME=$MASTER_NODE_NAME"
+echo "Using INGRESS_INTERNAL_NAME=$INGRESS_INTERNAL_NAME"
+echo "Using INGRESS_EXTERNAL_NAME=$INGRESS_EXTERNAL_NAME"

@@ -10,11 +10,11 @@ helmDefaults:
 
 releases:
   - name: seedbox
-    namespace: services
+    namespace: default
     chart: ../charts/seedbox
     values:
       - image:
-          tag: v10
+          tag: v2
       - env:
         - name: LOCAL_NETWORK
           value: "10.244.0.0/16"
@@ -56,15 +56,15 @@ releases:
         - name: tz-config
           mountPath: /etc/localtime
           readOnly: true
-#      - service:
-#          type: NodePort
+      - service:
+          type: NodePort
       - ingress:
           enabled: true
           hosts:
-            - transmission.{{ requiredEnv "MASTER_NODE_NAME" }}
+            - transmission.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
           tls:
             - hosts:
-                - transmission.{{ requiredEnv "MASTER_NODE_NAME" }}
+                - transmission.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
               secretName: transmission-k8s-cert
           annotations:
             kubernetes.io/ingress.class: "nginx"

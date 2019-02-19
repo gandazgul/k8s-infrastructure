@@ -1,2 +1,14 @@
 service:
-  sshDomain: {{ requiredEnv "MASTER_IP" }}
+  sshDomain: git.redirectme.net
+  ingress:
+    enabled: true
+    hosts:
+      - git.redirectme.net
+    tls:
+      - hosts:
+          - git.redirectme.net
+        secretName: gogs-rafag-cert
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+      #certmanager.k8s.io/cluster-issuer: "letsencrypt-staging"
+      certmanager.k8s.io/cluster-issuer: "letsencrypt-prod"

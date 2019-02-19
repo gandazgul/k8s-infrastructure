@@ -1,14 +1,10 @@
-#Injellij
+# Injellij
 .idea/workspace.xml
 
 # docker
 docker/sshd/users.conf
 docker/size-checker/ssmtp.conf
 docker/openvpn-transmission-flexget/bash_history
-
-# helmfile values
-helmfile.d/values/gogs.yaml
-helmfile.d/70-cronjobs.yaml
 
 # chart deps
 charts/gogs/charts/
