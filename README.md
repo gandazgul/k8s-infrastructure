@@ -38,17 +38,15 @@ This will install a fully functioning kubernetes master where you can run all of
 points as I like them
 4. Copy the scripts over `scp -r ./k8s-config fedora-ip:~/`
 5. `ssh fedora-ip`
-6. `~/k8s-config/2-configK8SMaster` - This will install K8s and configure the master to run pods, it will also install 
+6. Run `~/k8s-config/2-configK8SMaster` - This will install K8s and configure the master to run pods, it will also install 
 Flannel network plugin
-7. If something fails, you can reset with `sudo kubeadm reset`, delete kubeadminit.lock and try again, the other 
-commands are repeatable
+    * Wait for the flannel for your architecture to show `1` in all columns then press ctrl+c
+7. If something fails, you can reset with `sudo kubeadm reset`, delete kubeadminit.lock and try again, all of the 
+scripts are safe to re-run.
 
 Verify Kubelet that is running with `sudo systemctl status kubelet`
 
-Verify that Flannel is finished setting up with: `kubectl get ds --namespace=kube-system`, look for the flannel for 
-your architecture and it should have `1` in all the columns.
-
-Once flannel is working:
+Once Flannel is working:
 
 ### Install Storage, Helm, etc
 
@@ -61,7 +59,7 @@ client with the tiller and diff plugins.
 
 NOTE: Kubectl does not need sudo, it will fail with sudo
 
-* `kubectl get nodes` ← gets all nodes
+* `kubectl get nodes` ← gets all nodes, you should see your node listed and `Ready`
 * `kubectl get all --all-namespaces` ← shows everything that’s running in kubernetes
 
 ### Setting up your local machine for using k8s
@@ -75,16 +73,15 @@ kubernetes-client in Fedora)
 4. Install helm with ./k8s-config/installHelm.sh. This installs helm without tiller, instead it uses the tiller plugin 
 to run tiller locally :)
     1. Test helm with:
-    2. `helm tiller start` <-- starts bash with tiller enabled
+    2. `helm tiller start` <-- Installs Tiller locally the first time then starts it
     3. `helm list` <-- You should see no output, if error then something went wrong
-    4. `exit`
-5. Install helmfile: `brew install helmfile` (for linux see [helmfile's releases](https://github.com/roboll/helmfile/releases))
-6. Set default namespace for kubectl `kubectl config set-context $(kubectl config current-context) --namespace=services`
+5. Install helmfile. For the most up to date version download from the [helmfile's releases](https://github.com/roboll/helmfile/releases))
+6. Set default namespace for kubectl `kubectl config set-context $(kubectl config current-context) --namespace=default`
     * Check that the namespace was set: `kubectl config view | grep namespace:`
 
-### To Install the services
+### To Install the applications
 
-1. On the root of infrastructure `cp ./secrets.example.sh ./secrets.sh`
+1. On the root of project run `cp ./secrets.example.sh ./secrets.sh`
 2. Fill in secrets with your passwords and other settings
 3. Run `helm tiller start`
 4. Run `source ./secrets.sh` to set up the passwords/settings
@@ -96,16 +93,16 @@ to run tiller locally :)
     1. You can create a new folder like I've done with my other setups (see gandazgul.d and secondary-master.d)
     2. Then symlink the files that you want to include or copy them and customize them
     3. Then run `helmfile -f your-dir.d sync` 
-5. Afterwards when you make changes run `helmfile apply`
-6. You can also run individual files with: `helmfile apply -f helmfile.d/00-storage.yaml`
+5. Afterwards when you make changes run `helmfile -f helmfile.d apply`
+6. You can also run individual files with: `helmfile -f helmfile.d/00-storage.yaml apply`
 8. Run `helm list` to see what is installed
 9. Run `helm delete --purge [NAME]` to remove one particular service if you need to retry/stop it 
 
 ## Services Included:
 
 * Volumes for service configs and data
-* K8s Dashboard (Port 8443, https required)
 * Ingress with TLS enabled
+* K8s Dashboard (Port 8443)
 * cert-manager with cluster cert issuers for the CA setup by kubeadmn and letsencrypt (staging and prod)
 * FileBrowser (default credentials admin:admin, port 8080)
 * Plex (Port 32400, needs extra configuration, see the [README](https://github.com/munnerz/kube-plex))
@@ -119,9 +116,11 @@ to run tiller locally :)
 ## Access
 
 Each service will be accessed a little different depending on what it is. The dashboard sets up an ingress to 
-https://dashboard.[node-name]/ other just open their ports on the machine they are on.
+https://dashboard.[INGRESS_INTERNAL_NAME]/ others like sshd just open their ports on the machine they are on.
 
-## How to reboot a node
+## Node maintenance
+
+### How to reboot a node
 
 1. Run this to stop all pods, delete-local-data doesnt actually delete anything, if any pods are using emptyDir as a 
 volume it gets deleted, is just a warning.
@@ -133,17 +132,17 @@ volume it gets deleted, is just a warning.
 
     `kubectl uncordon [node-name]`
     
-## How to upgrade the kubernetes master and nodes
+### How to upgrade the kubernetes master and nodes
 
 It's fairly easy and I've done it before successfully.
 
 Follow these instructions https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade-1-13/
 
-### License
+## License
 
 Everything in this repo is distributed by an [MIT license](LICENSE.md).
 
-### Contributing
+## Contributing
 
 Contributions are more than welcome. Please open a PR with a good title and description of the change you are making. 
 Links to docs or examples are great.
