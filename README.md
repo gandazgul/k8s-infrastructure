@@ -27,7 +27,7 @@ I publish my charts as a helm repo here: [Helm Repo](https://gandazgul.github.io
 
 ## Getting started
 
-This will install a fully functioning kubernetes master where you can run all of your services.
+By following these steps you will install a fully functioning kubernetes master where you can run all of your applications.
 
 1. Install Fedora 28
     1. During install set the hostname, this will be the name of this node, you can do this after install
@@ -43,24 +43,14 @@ Flannel network plugin
     * Wait for the flannel for your architecture to show `1` in all columns then press ctrl+c
 7. If something fails, you can reset with `sudo kubeadm reset`, delete kubeadminit.lock and try again, all of the 
 scripts are safe to re-run.
-
 Verify Kubelet that is running with `sudo systemctl status kubelet`
-
 Once Flannel is working:
-
-### Install Storage, Helm, etc
-
+8. Install Storage, Helm, etc. run `3-installStorageAndHelm.sh`
 This will install a hostpath auto provisioner for quick testing of new pod configs, it will also install the helm 
 client with the tiller and diff plugins.
-
-1. Run `3-installStorageAndHelm.sh`
-
-### Verify kubectl works:
-
-NOTE: Kubectl does not need sudo, it will fail with sudo
-
-* `kubectl get nodes` ← gets all nodes, you should see your node listed and `Ready`
-* `kubectl get all --all-namespaces` ← shows everything that’s running in kubernetes
+9. Verify kubectl works: (NOTE: Kubectl does not need sudo, it will fail with sudo)
+    * `kubectl get nodes` ← gets all nodes, you should see your node listed and `Ready`
+    * `kubectl get all --all-namespaces` ← shows everything that’s running in kubernetes
 
 ### Setting up your local machine for using k8s
 
@@ -98,7 +88,11 @@ to run tiller locally :)
 8. Run `helm list` to see what is installed
 9. Run `helm delete --purge [NAME]` to remove one particular service if you need to retry/stop it 
 
-## Services Included:
+### To delete all applications
+
+`helm ls --all --short | xargs -L1 helm delete --purge`
+
+## Services/Applications Included:
 
 * Volumes for service configs and data
 * Ingress with TLS enabled
@@ -112,6 +106,8 @@ to run tiller locally :)
 * Resilio Sync (Port 8888)
 * Samba - Opens the default ports on the node directly - [README](/charts/samba/README.md)
 * CronJob to take a differential backup of main-volume into backup-volume - [Docs](https://www.nongnu.org/rdiff-backup/docs.html)
+* Prometheus & Grafana with several dashboards displaying the status of your system and kubernetes.
+This also includes alerts for several metrics like low disk space.
 
 ## Access
 
@@ -140,7 +136,7 @@ Follow these instructions https://kubernetes.io/docs/tasks/administer-cluster/ku
 
 ## License
 
-Everything in this repo is distributed under the [MIT license](https://github.com/gandazgul/k8s-infrastructure/blob/master/LICENSE.md).
+Unless specifically noted, all parts of this project are licensed under the [MIT license](https://github.com/gandazgul/k8s-infrastructure/blob/master/LICENSE.md).
 
 ## Contributing
 
