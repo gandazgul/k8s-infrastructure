@@ -10,7 +10,7 @@ helmDefaults:
 releases:
 #  EXAMPLE: Every minute output the date
 #  - name: example
-#    namespace: services
+#    namespace: default
 #    chart: ../charts/cronjob
 #    values:
 #      - schedule: "*/1 * * * *"
@@ -23,7 +23,7 @@ releases:
 #            - date
 
   - name: size-checker
-    namespace: services
+    namespace: default
     chart: ../charts/cronjob
     values:
       # Sunday at 1:00am EST
@@ -50,7 +50,7 @@ releases:
 
   # Docs: https://www.nongnu.org/rdiff-backup/docs.htmls
   - name: incremental-backups
-    namespace: services
+    namespace: default
     chart: ../charts/cronjob
     values:
       # Weds@3:23 EST
@@ -83,7 +83,7 @@ releases:
             mountPath: /media/backup
 
   - name: clean-incremental-backups
-    namespace: services
+    namespace: default
     chart: ../charts/cronjob
     values:
     #Mondays@1:13 EST
@@ -105,7 +105,7 @@ releases:
         mountPath: /media/backup
 
   - name: movies-backup
-    namespace: services
+    namespace: default
     chart: ../charts/cronjob
     values:
       # Thurs@3:23 EST
@@ -131,7 +131,7 @@ releases:
             mountPath: /media/backup
 
   - name: clean-movies-backup
-    namespace: services
+    namespace: default
     chart: ../charts/cronjob
     values:
     #Mondays@3:13 EST
@@ -154,7 +154,7 @@ releases:
 
 
   - name: offsite-backup
-    namespace: services
+    namespace: default
     chart: ../charts/cronjob
     values:
       #Sun@2:21 EST

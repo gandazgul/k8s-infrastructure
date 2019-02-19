@@ -1,5 +1,0 @@
-ingress:
-  enabled: true
-  hosts:
-    - files.carlosandamanda.com
-  path: /

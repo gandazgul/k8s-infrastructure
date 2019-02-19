@@ -9,7 +9,7 @@ helmDefaults:
 
 releases:
     - name: media-sort
-      namespace: services
+      namespace: default
       chart: ../charts/cronjob
       values:
         # Every Tues@3:28 EST
@@ -35,7 +35,7 @@ releases:
               subPath: "rafag/photos"
 
     - name: folder-cleaner
-      namespace: services
+      namespace: default
       chart: ../charts/cronjob
       values:
         # Every Tues@2:28 EST
@@ -65,7 +65,7 @@ releases:
               value: "250"
 
     - name: mejorenvo
-      namespace: services
+      namespace: default
       chart: ../charts/cronjob
       values:
         # Every 2 days@8:14 EST

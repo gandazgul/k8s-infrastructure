@@ -1,0 +1,145 @@
+# Monitoring with Prometheus and Grafana ===============================================
+#Part 1: https://sysdig.com/blog/kubernetes-monitoring-prometheus/
+#Part 2: https://sysdig.com/blog/kubernetes-monitoring-with-prometheus-alertmanager-grafana-pushgateway-part-2/
+
+# NOTE: cli args take precedence over these
+helmDefaults:
+  wait: true
+  timeout: 600
+  recreatePods: true
+  force: true
+
+releases:
+  - name: prometheus
+    namespace: default
+    chart: stable/prometheus
+    values:
+      - alertmanager:
+          ingress:
+            enabled: true
+            hosts:
+              - alerts.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+            tls:
+              - hosts:
+                  - alerts.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+                secretName: alerts-k8s-cert
+            annotations:
+              kubernetes.io/ingress.class: "nginx"
+              certmanager.k8s.io/cluster-issuer: "ca-issuer"
+      - alertmanagerFiles:
+          # https://github.com/prometheus/alertmanager/blob/master/doc/examples/simple.yml
+          alertmanager.yml:
+            global:
+              resolve_timeout: 5m
+              # The host and SMTP sender used for mail notifications.
+              smtp_smarthost: 'smtp.gmail.com:587'
+              smtp_from: {{ requiredEnv "MAIL_TO" }}
+              smtp_auth_username: {{ requiredEnv "MAIL_TO" }}
+              smtp_auth_password: {{ requiredEnv "SMTP_PASSWORD" }}
+            route:
+              group_by: ['alertname']
+              group_wait: 30s
+              group_interval: 5m
+              repeat_interval: 1h
+              receiver: 'email-me'
+            # Inhibition rules allow to mute a set of alerts given that another alert is
+            # firing.
+            # We use this to mute any warning-level notifications if the same alert is
+            # already critical.
+            inhibit_rules:
+              - source_match:
+                  severity: 'critical'
+                target_match:
+                  severity: 'warning'
+                # Apply inhibition if the alertname is the same.
+                equal: ['alertname', 'cluster', 'service']
+            receivers:
+              - name: 'email-me'
+                email_configs:
+                  - to: {{ requiredEnv "MAIL_TO" }}
+      - values/prometheus.rules.yaml
+      - nodeExporter:
+          extraHostPathMounts:
+            - name: hostroot
+              hostPath: /
+              mountPath: /rootfs
+              readOnly: true
+          extraArgs:
+            path.rootfs: /rootfs
+      - server:
+          ingress:
+            enabled: true
+            hosts:
+              - prometheus.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+            tls:
+              - hosts:
+                  - prometheus.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+                secretName: prometheus-k8s-cert
+            annotations:
+              kubernetes.io/ingress.class: "nginx"
+              certmanager.k8s.io/cluster-issuer: "ca-issuer"
+
+  # Contains the settings, secrets and a dashboard for grafana
+  - name: grafana-prometheus
+    namespace: default
+    chart: ../charts/grafana-prometheus
+    values:
+      - adminPassword: {{ requiredEnv "ADMIN_PASSWORD" }}
+      - smtp:
+          user: {{ requiredEnv "MAIL_TO" }}
+          password: {{ requiredEnv "SMTP_PASSWORD" }}
+
+  # Check out the README for information on the kubernetes plugin
+  - name: grafana
+    namespace: default
+    chart: stable/grafana
+    values:
+      - persistence:
+          enabled: true
+          existingClaim: yasr-volume
+          subPath: 'configs/grafana'
+      - sidecar:
+          datasources:
+            enabled: true
+            label: grafana_datasource
+          dashboards:
+            enabled: true
+            label: grafana_dashboard
+      - smtp:
+          existingSecret: grafana
+          userKey: smtp-user
+          passwordKey: smtp-password
+      - admin:
+          existingSecret: grafana
+      - env:
+          GF_SERVER_ROOT_URL: https://grafana.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}/
+          GF_SMTP_ENABLED: true
+          GF_SMTP_HOST: smtp.gmail.com:587
+          GF_SMTP_FROM_ADDRESS: {{ env "MAIL_TO" }}
+          GF_SMTP_FROM_NAME: {{ env "REPOSITORY_USERNAME" }}
+      - ingress:
+          enabled: true
+          hosts:
+            - grafana.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+          tls:
+            - hosts:
+                - grafana.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+              secretName: grafana-k8s-cert
+          annotations:
+            kubernetes.io/ingress.class: "nginx"
+            certmanager.k8s.io/cluster-issuer: "ca-issuer"
+
+#// monitor kubernetes components via services
+#kind: Service
+#apiVersion: v1
+#metadata:
+#  name: scheduler-service
+#  namespace: kube-system
+#spec:
+#  selector:
+#    component: kube-scheduler
+#  ports:
+#    - name: scheduler
+#      protocol: TCP
+#      port: 10251
+#      targetPort: 10251
