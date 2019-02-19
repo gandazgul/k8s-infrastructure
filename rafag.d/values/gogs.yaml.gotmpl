@@ -1,2 +1,14 @@
 service:
-  sshDomain: {{ requiredEnv "MASTER_IP" }}
+  sshDomain: gogs.{{ requiredEnv "INGRESS_EXTERNAL_NAME" }}
+  ingress:
+    enabled: true
+    hosts:
+      - gogs.{{ requiredEnv "INGRESS_EXTERNAL_NAME" }}
+    tls:
+      - hosts:
+          - gogs.{{ requiredEnv "INGRESS_EXTERNAL_NAME" }}
+        secretName: gogs-cert
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+      #certmanager.k8s.io/cluster-issuer: "letsencrypt-staging"
+      certmanager.k8s.io/cluster-issuer: "letsencrypt-prod"
