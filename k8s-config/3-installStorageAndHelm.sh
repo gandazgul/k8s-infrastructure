@@ -7,9 +7,6 @@ then
   exit;
 fi
 
-printf "\nInstalling Hostpath Provisioner ===========================================================================\n"
-kubectl apply -f ./hostpath.yaml || exit 1
-
 printf "\nCreating CA TLS secret ====================================================================================\n"
 kubectl create namespace ingress
 sudo -E kubectl --namespace=ingress create secret tls ca-key-pair --key=/etc/kubernetes/pki/ca.key --cert=/etc/kubernetes/pki/ca.crt

@@ -65,3 +65,6 @@ releases:
       - storageClass: hdd
       - volumeName: backup-volume
       - storage: 4Ti
+
+  - name: hostpath-provisioner
+    chart: ../charts/hostpath-provisioner
