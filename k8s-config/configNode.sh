@@ -7,6 +7,10 @@ fi
 
 printf "\nGet docker ===============================================================================================\n"
 if [ ! -f docker-ce-17.03.2.ce-1.fc25.x86_64.rpm ]; then
+    # TODO: try new docker versions now supported in Kubernetes 1.13.1
+    # https://download.docker.com/linux/fedora/28/x86_64/stable/Packages/
+    # https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.13.md#external-dependencies
+
     wget https://download.docker.com/linux/fedora/25/x86_64/stable/Packages/docker-ce-17.03.2.ce-1.fc25.x86_64.rpm || exit 1
     wget https://download.docker.com/linux/fedora/25/x86_64/stable/Packages/docker-ce-selinux-17.03.2.ce-1.fc25.noarch.rpm || exit 1
 
