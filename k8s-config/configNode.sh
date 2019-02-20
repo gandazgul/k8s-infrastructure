@@ -64,7 +64,7 @@ sudo systemctl enable --now cockpit.socket || exit 1
 printf "\nDisabling swap ===========================================================================================\n"
 sudo swapoff -a || exit 1
 
-if yum list installed firewalld >/dev/null 2>&1; then
+if dnf list installed firewalld >/dev/null 2>&1; then
     printf "\nDisabling the firewall ===================================================================================\n"
     sudo systemctl stop firewalld
     sudo systemctl disable firewalld
