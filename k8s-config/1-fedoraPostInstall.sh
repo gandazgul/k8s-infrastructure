@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Might as well ask for password up-front, right?
+sudo -v
+
+# Keep-alive: update existing sudo time stamp if set, otherwise do nothing.
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
 printf "Upgrade =====================================================================================================\n"
 sudo dnf -y update || exit 1
 
@@ -8,23 +14,30 @@ sudo dnf -y install screen htop git p7zip rdiff-backup
 # unrar is not on the repos
 sudo dnf install http://download1.rpmfusion.org/nonfree/fedora/releases/28/Everything/x86_64/os/Packages/u/unrar-5.6.2-1.fc28.x86_64.rpm
 
-sudo mkdir /media/main
-sudo mkdir /media/backup
-sudo mkdir /media/yasr
+echo -n "Do you wish to setup the HDD mounts? (y/n)? "
+read answer
+if [ "$answer" != "${answer#[Yy]}" ] ;then
+    sudo mkdir /media/main
+    sudo mkdir /media/backup
+    sudo mkdir /media/yasr
 
-printf '\n# **** My Mounts ****' | sudo tee -a /etc/fstab
-printf "\n\nLABEL=MAINDISK /media/main auto defaults 0 3" | sudo tee -a /etc/fstab
-printf "\nLABEL=BACKUPDISK /media/backup auto defaults 0 3" | sudo tee -a /etc/fstab
-printf "\nLABEL=YASRDISK /media/yasr auto defaults 0 3" | sudo tee -a /etc/fstab
+    printf '\n# **** My Mounts ****' | sudo tee -a /etc/fstab
+    printf "\n\nLABEL=MAINDISK /media/main auto defaults 0 3" | sudo tee -a /etc/fstab
+    printf "\nLABEL=BACKUPDISK /media/backup auto defaults 0 3" | sudo tee -a /etc/fstab
+    printf "\nLABEL=YASRDISK /media/yasr auto defaults 0 3" | sudo tee -a /etc/fstab
 
-sudo mount /media/main
-sudo mount /media/backup
-sudo mount /media/yasr
+    sudo mount /media/main
+    sudo mount /media/backup
+    sudo mount /media/yasr
+else
+    echo No
+fi
 
+# TODO:
 # addgroup public
 # adduser rafag 1004, renepor 1003
 
-# Restore plex backups
+# TODO Restore plex backups
 #/media/main/plex_db_backup$ sudo cp com.plexapp.plugins.library.blobs.db-2018-09-28 /media/yasr/configs/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.blobs.db
 #gandazgul@k8s:/media/main/plex_db_backup$ sudo cp com.plexapp.plugins.trakttv.db /media/yasr/configs/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/
 #gandazgul@k8s:/media/main/plex_db_backup$ sudo cp com.plexapp.plugins.library.db-2018-09-28 /media/yasr/configs/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db
