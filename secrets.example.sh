@@ -16,6 +16,9 @@ export INGRESS_INTERNAL_NAME="example.org"
 # Gogs and any other services exposed to the outside world will use this name
 export INGRESS_EXTERNAL_NAME="example.com"
 
+# to secure the gogs install
+export GOGS_SECRET_KEY="changeme"
+
 #docker repositories
 export REPOSITORY_USERNAME=""
 
