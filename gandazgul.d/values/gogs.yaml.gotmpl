@@ -1,5 +1,9 @@
 service:
   sshDomain: gogs.{{ requiredEnv "INGRESS_EXTERNAL_NAME" }}
+  gogs:
+    serverDomain: gogs.{{ requiredEnv "INGRESS_EXTERNAL_NAME" }}
+    serverRootUrl: https://gogs.{{ requiredEnv "INGRESS_EXTERNAL_NAME" }}
+    securitySecretKey: {{ requiredEnv "GOGS_SECRET_KEY" }}
   ingress:
     enabled: true
     hosts:
