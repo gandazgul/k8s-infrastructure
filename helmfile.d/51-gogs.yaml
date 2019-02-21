@@ -21,6 +21,7 @@ releases:
             existingClaim: yasr-volume
             subPath: "configs/gogs/db"
       - service:
+          sshPort: 2222
           gogs:
             serviceDisableRegistration: true
             serviceRequireSignInView: true

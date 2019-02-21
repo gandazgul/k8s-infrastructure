@@ -13,6 +13,8 @@ releases:
     namespace: ingress
     chart: stable/nginx-ingress
     values:
+      - tcp:
+          2222: "default/gogs-gogs:gogs-ssh" # for gogs find a better way to do this
       - controller:
           stats:
             enabled: true

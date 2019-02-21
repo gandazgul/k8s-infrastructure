@@ -1,5 +1,9 @@
 service:
   sshDomain: git.redirectme.net
+  gogs:
+    serverDomain: git.redirectme.net
+    serverRootUrl: https://git.redirectme.net
+    securitySecretKey: {{ requiredEnv "GOGS_SECRET_KEY" }}
   ingress:
     enabled: true
     hosts:
