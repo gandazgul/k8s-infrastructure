@@ -2,21 +2,20 @@
 
 This is a collection of scripts to deploy kubernetes on Fedora. Tested on Fedora 28. 
 
-It's also a collection of helm charts that I developed or customized, as well as [helmfiles](https://github.com/roboll/helmfile/) 
+It's also a collection of helm charts that I developed or customized  (See [Repo](#helm-repo)), as well as [helmfiles](https://github.com/roboll/helmfile/) 
 to deploy all of the supported applications.
 
-My setup right now is a pretty good small business server running as a master node. I plan to add at least one other 
-node to learn to manager a "cluster" and to try and automate node onboarding.
-
-Each service has its own container with the exception of the seedbox which is flexget and transmission running together 
-with OpenVPN.
-
-The storage right now is local PersistenceVolumes mapped to the mount points on the host and pre-existing claims 
-created that pods can use as volumes. I have a k8s cron job to make a differential backup to another HDD.
+The storage is handled with PersistenceVolumes mapped to mount points on the host and pre-existing claims 
+created that pods can use as volumes. There's a k8s cron job included to make differential backups between the main mount point and the backup one.
 
 [Documentation](https://gandazgul.github.io/k8s-infrastructure/)
 
 ---
+
+## My Home Setup
+
+A small business server running as a master node and worker. I plan to add at least one other 
+node to learn to manage a "cluster" and to try and automate node onboarding. I've tested the manual node onboarding with VMs and it works well. Look at this script [https://github.com/gandazgul/k8s-infrastructure/blob/master/k8s-config/2-configK8SNode.sh]()
 
 ## Helm repo
 
@@ -24,7 +23,7 @@ I publish my charts as a helm repo here: [Helm Repo](https://gandazgul.github.io
 
 ## License
 
-Everything in this repo is distributed by an [MIT license](LICENSE.md).
+Unless specifically noted, all parts of this project are licensed under the [MIT license](https://github.com/gandazgul/k8s-infrastructure/blob/master/LICENSE.md).
 
 ## Contributing
 
