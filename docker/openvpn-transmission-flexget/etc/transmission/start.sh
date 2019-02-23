@@ -39,7 +39,7 @@ if [ "true" = "$DROP_DEFAULT_ROUTE" ]; then
 fi
 
 echo "STARTING TRANSMISSION"
-exec su --preserve-environment abc -s /bin/bash -c "/usr/bin/transmission-daemon -g ${TRANSMISSION_HOME} --logfile ${TRANSMISSION_HOME}/transmission.log" &
+exec su --preserve-environment abc -s /bin/bash -c "/usr/bin/transmission-daemon -i TRANSMISSION_BIND_ADDRESS_IPV4 -g ${TRANSMISSION_HOME} --logfile ${TRANSMISSION_HOME}/transmission.log" &
 
 # If transmission-post-start.sh exists, run it
 if [ -x /scripts/transmission-post-start.sh ]
