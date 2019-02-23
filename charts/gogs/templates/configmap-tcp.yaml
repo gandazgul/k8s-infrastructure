@@ -9,5 +9,4 @@ metadata:
     release: "{{ .Release.Name }}"
   name: tcp-{{ template "gogs.gogs.fullname" . }}-ssh
 data:
-  2222: default/{{ template "gogs.fullname" . }}:ssh
-
+  {{ .Values.service.sshPort }}: {{ .Release.Namespace }}/{{ template "gogs.fullname" . }}:ssh
