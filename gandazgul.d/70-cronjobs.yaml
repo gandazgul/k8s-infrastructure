@@ -1,5 +1,5 @@
 # Run this first:
-# kubectl create secret --namespace=services generic ssh-private-key --from-file=/Users/gandazgul/.ssh/id_rsa
+# kubectl create secret generic ssh-private-key --from-file=/Users/gandazgul/.ssh/id_rsa
 
 releases:
   - name: rsync-renepor
