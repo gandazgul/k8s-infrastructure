@@ -2,22 +2,21 @@
 
 This is a collection of scripts to deploy kubernetes on Fedora. Tested on Fedora 28. 
 
-It's also a collection of helm charts that I developed or customized, as well as [helmfiles](https://github.com/roboll/helmfile/) 
+It's also a collection of helm charts that I developed or customized  (See [Repo](#helm-repo)), as well as [helmfiles](https://github.com/roboll/helmfile/) 
 to deploy all of the supported applications.
 
-My setup right now is a pretty good small business server running as a master node. I plan to add at least one other 
-node to learn to manager a "cluster" and to try and automate node onboarding.
-
-Each service has its own container with the exception of the seedbox which is flexget and transmission running together 
-with OpenVPN.
-
-The storage right now is local PersistenceVolumes mapped to the mount points on the host and pre-existing claims 
-created that pods can use as volumes. I have a k8s cron job to make a differential backup to another HDD.
+The storage is handled with PersistenceVolumes mapped to mount points on the host and pre-existing claims 
+created that pods can use as volumes. There's a k8s cron job included to make differential backups between the main mount point and the backup one.
 
 [Get started now](#getting-started){: .btn .btn-primary } 
 [View it on GitHub](https://github.com/gandazgul/k8s-infrastructure){: .btn }
 
 ---
+
+## My Home Setup
+
+A small business server running as a master node and worker. I plan to add at least one other 
+node to learn to manage a "cluster" and to try and automate node onboarding. I've tested the manual node onboarding with VMs and it works well. Look at this script [https://github.com/gandazgul/k8s-infrastructure/blob/master/k8s-config/2-configK8SNode.sh]()
 
 ## Helm repo
 
@@ -27,7 +26,7 @@ I publish my charts as a helm repo here: [Helm Repo](https://gandazgul.github.io
 
 ## Getting started
 
-This will install a fully functioning kubernetes master where you can run all of your services.
+By following these steps you will install a fully functioning kubernetes master where you can run all of your applications.
 
 1. Install Fedora 28
     1. During install set the hostname, this will be the name of this node, you can do this after install
@@ -43,24 +42,14 @@ Flannel network plugin
     * Wait for the flannel for your architecture to show `1` in all columns then press ctrl+c
 7. If something fails, you can reset with `sudo kubeadm reset`, delete kubeadminit.lock and try again, all of the 
 scripts are safe to re-run.
-
 Verify Kubelet that is running with `sudo systemctl status kubelet`
-
 Once Flannel is working:
-
-### Install Storage, Helm, etc
-
+8. Install Storage, Helm, etc. run `3-installStorageAndHelm.sh`
 This will install a hostpath auto provisioner for quick testing of new pod configs, it will also install the helm 
 client with the tiller and diff plugins.
-
-1. Run `3-installStorageAndHelm.sh`
-
-### Verify kubectl works:
-
-NOTE: Kubectl does not need sudo, it will fail with sudo
-
-* `kubectl get nodes` ← gets all nodes, you should see your node listed and `Ready`
-* `kubectl get all --all-namespaces` ← shows everything that’s running in kubernetes
+9. Verify kubectl works: (NOTE: Kubectl does not need sudo, it will fail with sudo)
+    * `kubectl get nodes` ← gets all nodes, you should see your node listed and `Ready`
+    * `kubectl get all --all-namespaces` ← shows everything that’s running in kubernetes
 
 ### Setting up your local machine for using k8s
 
@@ -79,7 +68,7 @@ to run tiller locally :)
 6. Set default namespace for kubectl `kubectl config set-context $(kubectl config current-context) --namespace=default`
     * Check that the namespace was set: `kubectl config view | grep namespace:`
 
-### To Install the applications
+### To install the applications
 
 1. On the root of project run `cp ./secrets.example.sh ./secrets.sh`
 2. Fill in secrets with your passwords and other settings
@@ -97,6 +86,10 @@ to run tiller locally :)
 6. You can also run individual files with: `helmfile -f helmfile.d/00-storage.yaml apply`
 8. Run `helm list` to see what is installed
 9. Run `helm delete --purge [NAME]` to remove one particular service if you need to retry/stop it 
+
+### To delete all applications
+
+`helm ls --all --short | xargs -L1 helm delete --purge`
 
 ## Services Included:
 
@@ -143,7 +136,7 @@ Follow these instructions https://kubernetes.io/docs/tasks/administer-cluster/ku
 
 ## License
 
-Everything in this repo is distributed by an [MIT license](LICENSE.md).
+Unless specifically noted, all parts of this project are licensed under the [MIT license](https://github.com/gandazgul/k8s-infrastructure/blob/master/LICENSE.md).
 
 ## Contributing
 
