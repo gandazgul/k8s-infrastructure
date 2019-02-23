@@ -7,6 +7,10 @@ fi
 
 printf "\nGet docker ===============================================================================================\n"
 if [ ! -f docker-ce-17.03.2.ce-1.fc25.x86_64.rpm ]; then
+    # TODO: try new docker versions now supported in Kubernetes 1.13.1
+    # https://download.docker.com/linux/fedora/28/x86_64/stable/Packages/
+    # https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.13.md#external-dependencies
+
     wget https://download.docker.com/linux/fedora/25/x86_64/stable/Packages/docker-ce-17.03.2.ce-1.fc25.x86_64.rpm || exit 1
     wget https://download.docker.com/linux/fedora/25/x86_64/stable/Packages/docker-ce-selinux-17.03.2.ce-1.fc25.noarch.rpm || exit 1
 
@@ -60,7 +64,9 @@ sudo systemctl enable --now cockpit.socket || exit 1
 printf "\nDisabling swap ===========================================================================================\n"
 sudo swapoff -a || exit 1
 
-printf "\nDisabling the firewall ===================================================================================\n"
-sudo systemctl stop firewalld
-sudo systemctl disable firewalld
-sudo dnf -y remove firewalld
+if dnf list installed firewalld >/dev/null 2>&1; then
+    printf "\nDisabling the firewall ===================================================================================\n"
+    sudo systemctl stop firewalld
+    sudo systemctl disable firewalld
+    sudo dnf -y remove firewalld
+fi
