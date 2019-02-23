@@ -3,6 +3,7 @@
 #/usr/bin/with-contenv bash
 
 /etc/transmission/start.sh "$@"
+
 [ ! -f /opt/tinyproxy/start.sh ] || /opt/tinyproxy/start.sh
 
 # `--autoreload-config` reloads the config *before* running the tasks, not
