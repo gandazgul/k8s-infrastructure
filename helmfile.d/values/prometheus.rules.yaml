@@ -26,3 +26,5 @@ serverFiles:
             labels:
               severity: warning
   #alerts:
+
+#  https://github.com/cloudposse/charts/blob/master/incubator/prometheus-alerts/templates/configmap.yaml

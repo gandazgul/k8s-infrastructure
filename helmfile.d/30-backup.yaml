@@ -1,0 +1,76 @@
+# Backup and size checker ===========================================================
+
+# NOTE: cli args take precedence over these
+helmDefaults:
+  wait: true
+  timeout: 600
+  #recreatePods: true
+  force: true
+
+releases:
+  #  EXAMPLE: Every minute output the date
+  #  - name: example
+  #    namespace: default
+  #    chart: ../charts/cronjob
+  #    values:
+  #      - schedule: "*/1 * * * *"
+  #      - image:
+  #          repository: busybox
+  #          tag: latest
+  #          pullPolicy: IfNotPresent
+  #          command: ["/bin/sh", "-c"]
+  #          args:
+  #            - date
+
+  # Docs: https://www.nongnu.org/rdiff-backup/docs.htmls
+  - name: incremental-backups
+    namespace: default
+    chart: ../charts/cronjob
+    values:
+      # Twice a day at midnight and midday
+      - schedule: "0 0,12 * * *"
+      - image:
+          repository: gandazgul/rdiff-backup
+          tag: v7
+          args:
+            - /media/main
+            - /media/backup
+      - volumes:
+          - name: main-volume
+            persistentVolumeClaim:
+              claimName: main-volume
+          - name: backup-volume
+            persistentVolumeClaim:
+              claimName: backup-volume
+      - volumeMounts:
+          - name: main-volume
+            mountPath: /media/main
+          - name: backup-volume
+            mountPath: /media/backup
+
+  - name: clean-incremental-backups
+    namespace: default
+    chart: ../charts/cronjob
+    values:
+      # Every day at midnight
+      - schedule: "0 0 * * *"
+      - image:
+          repository: gandazgul/rdiff-backup
+          tag: v7
+          args:
+            - --remove-older-than
+            - 4W
+            - --force
+            - /media/backup
+      - volumes:
+          - name: main-volume
+            persistentVolumeClaim:
+              claimName: main-volume
+          - name: backup-volume
+            persistentVolumeClaim:
+              claimName: backup-volume
+      - volumeMounts:
+          - name: main-volume
+            mountPath: /media/main
+          - name: backup-volume
+            mountPath: /media/backup
