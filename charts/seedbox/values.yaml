@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   repository: gandazgul/openvpn-transmission-flexget
-  tag: v13
+  tag: latest
   pullPolicy: IfNotPresent
 
 nameOverride: "seedbox"

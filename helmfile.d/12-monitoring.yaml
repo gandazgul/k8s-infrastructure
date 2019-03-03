@@ -90,6 +90,7 @@ releases:
           password: {{ requiredEnv "SMTP_PASSWORD" }}
 
   # Check out the README for information on the kubernetes plugin
+  # grafana gets stuck to get it going again run: chmod -R 472:472 /media/yasr/configs/grafana
   - name: grafana
     namespace: default
     chart: stable/grafana
