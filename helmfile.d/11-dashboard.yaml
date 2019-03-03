@@ -1,5 +1,5 @@
-# Cert Manager ====================================================================
-# Automates getting TLS certs from local CA or Letsencrypt
+# K8s dashboard ====================================================================
+# The official K8s Dashboard https://github.com/kubernetes/dashboard
 
 # NOTE: cli args take precedence over these
 helmDefaults:
