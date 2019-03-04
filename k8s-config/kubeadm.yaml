@@ -7,6 +7,10 @@ nodeRegistration:
   criSocket: /var/run/dockershim.sock
   # Remove all taints from the master to allow it to schedule pods since we are running a single machine/home lab
   taints: []
+# when crio-o is ready:
+#  criSocket: /var/run/crio/crio.sock
+#  kubeletExtraArgs:
+#    cgroup-driver: systemd
 ---
 apiVersion: kubeadm.k8s.io/v1beta1
 kind: ClusterConfiguration
@@ -14,17 +18,6 @@ apiServer:
   extraArgs:
     # This is important to allow any non-root ports to be used for NodePort
     service-node-port-range: 1025-32767
-certificatesDir: /etc/kubernetes/pki
-clusterName: kubernetes
-controlPlaneEndpoint: ""
-controllerManager: {}
-dns:
-  type: CoreDNS
-etcd:
-  local:
-    dataDir: /var/lib/etcd
-imageRepository: k8s.gcr.io
-kubernetesVersion: v1.13.3
 # This is super important, without this setting networking wont work
 networking:
   dnsDomain: cluster.local
