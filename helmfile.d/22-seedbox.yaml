@@ -56,8 +56,6 @@ releases:
           - name: tz-config
             mountPath: /etc/localtime
             readOnly: true
-      - service:
-          type: NodePort
       - ingress:
           enabled: true
           hosts:

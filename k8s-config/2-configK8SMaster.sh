@@ -2,14 +2,14 @@
 
 ./configNode.sh || exit 1
 
-printf "\nInstalling kubernetes ====================================================================================\n"
-if [ ! -f "kubeadminit.lock" ]; then
+printf "\nInstalling kubernetes ===================================================================================\n"
+# Check if kubeadm already ran, do kubeadm reset to re-run
+if [[ ! -f "/etc/kubernetes/kubelet.conf" ]]; then
     sudo systemctl enable kubelet.service
     sudo kubeadm config images pull
     sudo kubeadm init --config=./kubeadm.yaml || exit 1
-    touch kubeadminit.lock
 else
-    printf "\nNOTE: Looks like kubeadm init already ran. If you want to run it again, delete kubeadminit.lock ======\n"
+    printf "\nNOTE: Looks like kubeadm init already ran. If you want to run it again, run kubeadm reset ===============\n"
 fi;
 
 printf "\nCopy kubectl config ======================================================================================\n"
