@@ -11,8 +11,6 @@ sudo dnf -y update || exit 1
 
 printf "Install screen, and other tools =============================================================================\n"
 sudo dnf -y install screen htop git p7zip rdiff-backup
-# unrar is not on the repos
-sudo dnf install http://download1.rpmfusion.org/nonfree/fedora/releases/28/Everything/x86_64/os/Packages/u/unrar-5.6.2-1.fc28.x86_64.rpm
 
 echo -n "Do you wish to setup the HDD mounts? (y/n)? "
 read answer
@@ -32,6 +30,8 @@ if [ "$answer" != "${answer#[Yy]}" ] ;then
 else
     echo No
 fi
+
+echo "%wheel ALL=(ALL) NOPASSWD:ALL" | sudo tee --append /etc/sudoers
 
 # TODO:
 # addgroup public
