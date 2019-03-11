@@ -100,7 +100,8 @@ if dnf list installed firewalld >/dev/null 2>&1; then
     echo 1 | sudo tee --append /proc/sys/net/ipv4/ip_forward
     # fedora 29 doesnt support bridges out of the box?
 #    sudo modprobe overlay # do I need this?
+    # enable iptables in the kernel
     sudo modprobe br_netfilter
-    # Need to research what this does, without it kubeadm complains
+    # This ensured all network traffic goes through iptables
     echo 1 | sudo tee --append /proc/sys/net/bridge/bridge-nf-call-iptables
 fi;
