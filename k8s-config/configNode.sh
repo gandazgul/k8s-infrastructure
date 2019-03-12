@@ -5,22 +5,6 @@ if [[ $EUID = 0 ]]; then
    exit 1
 fi
 
-#printf "\nGet docker ===============================================================================================\n"
-#if [ ! -f docker-ce-17.03.2.ce-1.fc25.x86_64.rpm ]; then
-#    # TODO: try new docker versions now supported in Kubernetes 1.13.1
-#    # https://download.docker.com/linux/fedora/28/x86_64/stable/Packages/
-#    # https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.13.md#external-dependencies
-#
-#    wget https://download.docker.com/linux/fedora/25/x86_64/stable/Packages/docker-ce-17.03.2.ce-1.fc25.x86_64.rpm || exit 1
-#    wget https://download.docker.com/linux/fedora/25/x86_64/stable/Packages/docker-ce-selinux-17.03.2.ce-1.fc25.noarch.rpm || exit 1
-#
-#    printf "\nInstall docker & deps ====================================================================================\n"
-#    sudo dnf -y install policycoreutils-python || exit 1
-#    sudo mkdir -p /var/lib/docker || exit 1
-#    sudo rpm -i docker-ce-selinux-17.03.2.ce-1.fc25.noarch.rpm || exit 1
-#    sudo rpm -i docker-ce-17.03.2.ce-1.fc25.x86_64.rpm || exit 1
-#fi;
-
 if dnf list installed docker >/dev/null 2>&1; then
     printf "\nInstall docker & deps ====================================================================================\n"
     sudo dnf -y install docker-1.13.1*
@@ -33,17 +17,25 @@ if dnf list installed docker >/dev/null 2>&1; then
     sudo docker run --rm hello-world || exit 1
 fi;
 
-# There are no good cri-o RPMs
+# There are no cri-o rpms yet in the regular repos
 #if ! dnf list installed cri-o > /dev/null 2>&1; then
+#if [[ ! -f cri-o-1.13.0-1.gite8a2525.module_f29+3066+eba77a73.x86_64.rpm ]]; then
+#    printf "\nDownload cri-o ===========================================================================================\n"
+#    wget https://dl.fedoraproject.org/pub/fedora/linux/updates/testing/29/Modular/x86_64/Packages/c/cri-o-1.13.0-1.gite8a2525.module_f29+3066+eba77a73.x86_64.rpm
+#    wget https://dl.fedoraproject.org/pub/fedora/linux/updates/testing/29/Modular/x86_64/Packages/c/cri-tools-1.13.0-1.gitc06001f.module_f29+3066+eba77a73.x86_64.rpm
+#    sudo dnf update --exclude="cri-*"
+#
+#    printf "\nInstall cri-o ============================================================================================\n"
+#    sudo dnf install -y ./cri-o-1.13.0-1.gite8a2525.module_f29+3066+eba77a73.x86_64.rpm ./cri-tools-1.13.0-1.gitc06001f.module_f29+3066+eba77a73.x86_64.rpm
+#
 #    printf "\nInstall cri-o ===========================================================================================\n"
-#    sudo dnf config-manager --add-repo=https://cbs.centos.org/repos/paas7-crio-113-candidate/x86_64/os/
-#
-#    sudo dnf -y install --nogpgcheck cri-o cri-tools || exit 1
-#
-#    printf "\nEnable cri-o ============================================================================================\n"
+#    sudo dnf -y install cri-o-1.13* cri-tools-1.13* || exit 1
+#    sudo dnf update --exclude="cri-*"
+
+#    printf "\nEnable cri-o =============================================================================================\n"
 #    sudo systemctl enable --now cri-o || exit 1
 #
-#    printf "\nVerify cri-o is working by running hello-world ==========================================================\n"
+#    printf "\nVerify cri-o is running ==========================================================\n"
 #    if ! systemctl is-active --quiet cri-o >/dev/null 2>&1; then
 #        printf "\nSomething failed while installing cri-o please verify that is running and run this script again"
 #        exit 1
@@ -98,8 +90,8 @@ if dnf list installed firewalld >/dev/null 2>&1; then
 
     # Enable ipv4 forwarding
     echo 1 | sudo tee --append /proc/sys/net/ipv4/ip_forward
-    # fedora 29 doesnt support bridges out of the box?
-#    sudo modprobe overlay # do I need this?
+    # needed for cri-o
+#    sudo modprobe overlay
     # enable iptables in the kernel
     sudo modprobe br_netfilter
     # This ensured all network traffic goes through iptables
