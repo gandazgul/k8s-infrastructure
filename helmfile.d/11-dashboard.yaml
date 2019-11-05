@@ -11,7 +11,8 @@ helmDefaults:
 releases:
   - name: k8s-dashboard
     namespace: kube-system
-    chart: stable/kubernetes-dashboard
+    #    chart: stable/kubernetes-dashboard
+    chart: ../charts/kubernetes-dashboard
     values:
       - rbac:
           # without this the dashboard doesnt have access to anything
@@ -28,4 +29,4 @@ releases:
               secretName: dashboard-k8s-cert
           annotations:
             kubernetes.io/ingress.class: "nginx"
-            certmanager.k8s.io/cluster-issuer: "ca-issuer"
+            cert-manager.io/cluster-issuer: "ca-issuer"
