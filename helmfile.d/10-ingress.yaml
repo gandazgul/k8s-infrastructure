@@ -8,6 +8,11 @@ helmDefaults:
   #recreatePods: true
   force: true
 
+repositories:
+  #  official repo for cert-manager
+  - name: jetstack
+    url: https://charts.jetstack.io
+
 releases:
   - name: ingress-nginx
     namespace: ingress
@@ -34,23 +39,23 @@ releases:
 
   - name: cert-manager
     namespace: ingress
-    chart: stable/cert-manager
+    chart: jetstack/cert-manager
     hooks:
       # Install the custom CRDs
-      # kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.6/deploy/manifests/00-crds.yaml
+      # kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.11/deploy/manifests/00-crds.yaml
       - events: ["prepare"]
         command: "kubectl"
-        args: ["apply", "-f", "https://raw.githubusercontent.com/jetstack/cert-manager/release-0.6/deploy/manifests/00-crds.yaml"]
+        args: ["apply", "-f", "https://raw.githubusercontent.com/jetstack/cert-manager/release-0.11/deploy/manifests/00-crds.yaml"]
       # create the ingress namespace
       # kubectl create namespace ingress
       - events: ["prepare"]
         command: "bash"
         args: ["-c", "kubectl create namespace ingress || exit 0"]
       # Make sure that the namespace doesn't have tls validation enabled to allow cert manager to install itself
-      # kubectl label namespace ingress certmanager.k8s.io/disable-validation=true --overwrite
-      - events: ["prepare"]
-        command: "kubectl"
-        args: ["label", "namespace", "ingress", "certmanager.k8s.io/disable-validation=true", "--overwrite"]
+      # kubectl label namespace ingress cert-manager.io/disable-validation=true --overwrite
+  #      - events: ["prepare"]
+  #        command: "kubectl"
+  #        args: ["label", "namespace", "ingress", "cert-manager.io/disable-validation=true", "--overwrite"]
 
   - name: ca-issuer
     namespace: ingress
@@ -61,7 +66,7 @@ releases:
           email: {{ requiredEnv "MAIL_TO" }}
 
 #To manually get a cert use this:
-#apiVersion: certmanager.k8s.io/v1alpha1
+#apiVersion: cert-manager.io/v1alpha2
 #kind: Certificate
 #metadata:
 #  name: test-cert-manager-certificate
