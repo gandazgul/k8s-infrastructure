@@ -5,33 +5,38 @@ if [[ $EUID = 0 ]]; then
    exit 1
 fi
 
-#printf "\nGet docker ===============================================================================================\n"
-#if [ ! -f docker-ce-17.03.2.ce-1.fc25.x86_64.rpm ]; then
-#    # TODO: try new docker versions now supported in Kubernetes 1.13.1
-#    # https://download.docker.com/linux/fedora/28/x86_64/stable/Packages/
-#    # https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.13.md#external-dependencies
-#
-#    wget https://download.docker.com/linux/fedora/25/x86_64/stable/Packages/docker-ce-17.03.2.ce-1.fc25.x86_64.rpm || exit 1
-#    wget https://download.docker.com/linux/fedora/25/x86_64/stable/Packages/docker-ce-selinux-17.03.2.ce-1.fc25.noarch.rpm || exit 1
+printf "\nGet docker ===============================================================================================\n"
+if [ ! -f docker-ce-18.06.2.ce-3.fc28.x86_64.rpm ]; then
+    wget https://download.docker.com/linux/fedora/28/x86_64/stable/Packages/docker-ce-18.06.2.ce-3.fc28.x86_64.rpm || exit 1
+
+    printf "\nInstall docker & deps ====================================================================================\n"
+    sudo mkdir -p /var/lib/docker || exit 1
+    sudo sudo dnf install -y docker-ce-18.06.2.ce-3.fc28.x86_64.rpm || exit 1
+    sudo sed -i 's/rhgb quiet"/rhgb quiet systemd.unified_cgroup_hierarchy=0"/' /etc/default/grub || exit 1
+    sudo sh -c 'grub2-mkconfig > /boot/efi/EFI/fedora/grub.cfg'  || exit 1
+
+    echo -n "I have to restart in order to finish installing Docker. After reboot, re-run this script. Reboot? (y/n)? "
+    read answer
+    if [ "$answer" != "${answer#[Yy]}" ] ;then
+        sudo reboot
+    fi;
+fi;
+
+# only 19 is available
+#if ! dnf list installed docker >/dev/null 2>&1; then
+#    sudo dnf -y install dnf-plugins-core
+#    sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
 #
 #    printf "\nInstall docker & deps ====================================================================================\n"
-#    sudo dnf -y install policycoreutils-python || exit 1
-#    sudo mkdir -p /var/lib/docker || exit 1
-#    sudo rpm -i docker-ce-selinux-17.03.2.ce-1.fc25.noarch.rpm || exit 1
-#    sudo rpm -i docker-ce-17.03.2.ce-1.fc25.x86_64.rpm || exit 1
+#    sudo dnf -y install docker-1.13.1*
+#    sudo dnf update --exclude="docker"
 #fi;
 
-if dnf list installed docker >/dev/null 2>&1; then
-    printf "\nInstall docker & deps ====================================================================================\n"
-    sudo dnf -y install docker-1.13.1*
-    sudo dnf update --exclude="docker"
+printf "\nEnable docker ============================================================================================\n"
+sudo systemctl enable --now docker || exit 1
 
-    printf "\nEnable docker ============================================================================================\n"
-    sudo systemctl enable --now docker || exit 1
-
-    printf "\nVerify docker is working by running hello-world ==========================================================\n"
-    sudo docker run --rm hello-world || exit 1
-fi;
+printf "\nVerify docker is working by running hello-world ==========================================================\n"
+sudo docker run --rm hello-world || exit 1
 
 # There are no good cri-o RPMs
 #if ! dnf list installed cri-o > /dev/null 2>&1; then
@@ -78,7 +83,11 @@ exclude=kube*
 EOF'
 
     sudo dnf -y install --enablerepo=kubernetes kubelet kubectl kubeadm --disableexcludes=kubernetes || exit 1
-    sudo dnf -y install cockpit-kubernetes cockpit-pcp || exit 1
+    sudo dnf -y install cockpit-pcp || exit 1
+
+    # enable cni plugins
+    sudo mkdir -p /opt/cni/
+    sudo ln -s /usr/libexec/cni/ /opt/cni/bin
 fi;
 
 printf "\nEnabling cockpit =========================================================================================\n"
