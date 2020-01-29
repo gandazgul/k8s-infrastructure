@@ -30,3 +30,7 @@ Create chart name and version as used by the chart label.
 {{- define "helpers.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{- define "helpers.peer-port-service" -}}
+{{- printf "%s-%s" (include "helpers.name" .) "peer-service" | trunc 63 -}}
+{{- end -}}
