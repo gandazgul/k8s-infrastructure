@@ -15,6 +15,8 @@ releases:
     values:
       - image:
           tag: "v2.8.3"
+      - service:
+          type: NodePort
 
   # This allows you to send MQTT messages to trigger commands in smartthings devices
   - name: smartthings-mqtt-bridge
@@ -49,3 +51,24 @@ releases:
           - name: yasr-volume
             mountPath: "/config"
             subPath: "configs/nest-mqtt-bridge"
+
+  - name: mqtt-node-red
+    namespace: default
+    chart: stable/node-red
+    values:
+      - timezone: America/New_York
+      - persistence:
+          enabled: true
+          existingClaim: yasr-volume
+          subPath: 'configs/node-red'
+      - ingress:
+          enabled: true
+          hosts:
+            - nodered.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+          tls:
+            - hosts:
+                - nodered.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+              secretName: nodered-k8s-cert
+          annotations:
+            kubernetes.io/ingress.class: "nginx"
+            cert-manager.io/cluster-issuer: "ca-issuer"

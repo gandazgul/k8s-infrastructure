@@ -14,7 +14,12 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-prod
     # Enable the HTTP-01 challenge provider
-    http01: {}
+    solvers:
+      # An empty 'selector' means that this solver matches all domains
+      - selector: {}
+        http01:
+          ingress:
+            class: nginx
 
 ---
 apiVersion: cert-manager.io/v1alpha2
@@ -31,5 +36,10 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-staging
     # Enable the HTTP-01 challenge provider
-    http01: {}
+    solvers:
+      # An empty 'selector' means that this solver matches all domains
+      - selector: {}
+        http01:
+          ingress:
+            class: nginx
 {{ end }}
