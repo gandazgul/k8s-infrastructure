@@ -20,4 +20,4 @@ spec:
   selector:
     matchLabels:
       app: {{ template "kubernetes-dashboard.name" . }}
-  {{- end -}}
+{{- end -}}

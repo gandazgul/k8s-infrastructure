@@ -16,26 +16,52 @@ spec:
       labels:
         app: {{ template "gogs.fullname" . }}
     spec:
-      containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - containerPort: 3000
-            - containerPort: 22
-#          livenessProbe:
-#            httpGet:
-#              path: /
-#              port: 3000
-#          readinessProbe:
-#            httpGet:
-#              path: /
-#              port: 3000
-          env:
-            # https://github.com/gogits/gogs/tree/master/docker#container-options
-            - name: SOCAT_LINK
-              value: "false"
-          resources:
+      {{- with .Values.securityContext }}
+      securityContext:
+  {{ toYaml . | indent 8 }}
+  {{- end }}
+  {{- if .Values.nodeSelector }}
+nodeSelector:
+  {{ toYaml .Values.nodeSelector | indent 8 }}
+  {{- end }}
+  {{- if .Values.affinity }}
+affinity:
+  {{ toYaml .Values.affinity | indent 8 }}
+  {{- end }}
+  {{- if .Values.tolerations }}
+tolerations:
+  {{ toYaml .Values.tolerations | indent 8 }}
+  {{- end }}
+containers:
+  - name: {{ .Chart.Name }}
+    image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+    imagePullPolicy: {{ .Values.image.pullPolicy }}
+    ports:
+      - containerPort: 3000
+      - containerPort: 22
+    #          livenessProbe:
+    #            initialDelaySeconds: 180
+    #            httpGet:
+    #              {{- if .Values.service.gogs.serviceRequireSignInView }}
+    #              path: /user/login
+    #              {{- else }}
+    #              path: /
+    #              {{- end }}
+    #              port: 3000
+    #          readinessProbe:
+    #            initialDelaySeconds: 180
+    #            httpGet:
+    #              {{- if .Values.service.gogs.serviceRequireSignInView }}
+    #              path: /user/login
+    #              {{- else }}
+    #              path: /
+    #              {{- end }}
+    #              port: 3000
+    env:
+      # https://github.com/gogits/gogs/tree/master/docker#container-options
+      - name: SOCAT_LINK
+        value: "false"
+    resources:
 {{ toYaml .Values.resources | indent 12 }}
           volumeMounts:
             - name: data
@@ -52,12 +78,12 @@ spec:
             name: {{ template "gogs.fullname" . }}-config
         - name: data
       {{- if .Values.persistence.enabled }}
-          persistentVolumeClaim:
-          {{- if .Values.persistence.claimName }}
-            claimName: "{{ .Values.persistence.claimName }}"
-          {{- else }}
-            claimName: {{ template "gogs.fullname" . }}
-          {{- end }}
+persistentVolumeClaim:
+  {{- if .Values.persistence.existingClaim }}
+  claimName: {{ .Values.persistence.existingClaim }}
+  {{- else }}
+  claimName: {{ template "gogs.fullname" . }}
+  {{- end -}}
       {{- else }}
           emptyDir: {}
       {{- end -}}

@@ -11,7 +11,7 @@ helmDefaults:
 releases:
   - name: k8s-dashboard
     namespace: kube-system
-    #    chart: stable/kubernetes-dashboard
+#    chart: stable/kubernetes-dashboard
     chart: ../charts/kubernetes-dashboard
     values:
       - rbac:
