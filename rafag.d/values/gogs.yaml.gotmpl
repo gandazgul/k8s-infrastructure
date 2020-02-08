@@ -14,5 +14,5 @@ service:
         secretName: gogs-rafag-cert
     annotations:
       kubernetes.io/ingress.class: "nginx"
-      #certmanager.k8s.io/cluster-issuer: "letsencrypt-staging"
-      certmanager.k8s.io/cluster-issuer: "letsencrypt-prod"
+      #cert-manager.io/cluster-issuer: "letsencrypt-staging"
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
