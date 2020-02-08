@@ -157,4 +157,4 @@ rules:
       - get
       - list
       - watch
-  {{- end -}}
+{{- end -}}

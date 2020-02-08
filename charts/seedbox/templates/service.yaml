@@ -11,17 +11,17 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - name: http
-  {{- if contains "NodePort" .Values.service.type }}
-nodePort: {{ .Values.service.port }}
-  {{- end }}
-port: {{ .Values.service.port }}
-protocol: TCP
-targetPort: http
-#    - name: peer-port
-#      nodePort: {{ .Values.service.peerPort }}
-#      port: {{ .Values.service.peerPort }}
-#      protocol: TCP
-#      targetPort: {{ .Values.service.peerPort }}
-selector:
-  app: {{ include "helpers.name" . }}
-  release: {{ .Release.Name }}
+      {{- if contains "NodePort" .Values.service.type }}
+      nodePort: {{ .Values.service.port }}
+      {{- end }}
+      port: {{ .Values.service.port }}
+      protocol: TCP
+      targetPort: http
+    #    - name: peer-port
+    #      nodePort: {{ .Values.service.peerPort }}
+    #      port: {{ .Values.service.peerPort }}
+    #      protocol: TCP
+    #      targetPort: {{ .Values.service.peerPort }}
+  selector:
+    app: {{ include "helpers.name" . }}
+    release: {{ .Release.Name }}
