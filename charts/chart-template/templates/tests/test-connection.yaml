@@ -1,12 +1,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ .Release.Name }}-test-connection"
+  name: "{{ include "chart.fullname" . }}-test-connection"
   labels:
-    app.kubernetes.io/name: {{ include "helpers.name" . }}
-    helm.sh/chart: {{ include "helpers.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  {{ include "chart.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test-success
 spec:
@@ -14,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args:  ['{{ .Release.Name }}:{{ .Values.service.port }}']
+      args:  ['{{ include "chart.fullname" . }}:{{ .Values.service.port }}']
   restartPolicy: Never

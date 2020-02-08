@@ -1,6 +1,6 @@
 # K8s Infrastructure Config
 
-This is a collection of scripts to deploy kubernetes on Fedora. Tested on Fedora 28. 
+This is a collection of scripts to deploy kubernetes on Fedora. Tested on Fedora 31. 
 
 It's also a collection of helm charts that I developed or customized 
 (See the [Helm Repo](https://gandazgul.github.io/k8s-infrastructure/helmrepo/)), as well as 
