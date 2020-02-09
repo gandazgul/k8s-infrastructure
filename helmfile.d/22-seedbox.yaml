@@ -9,23 +9,116 @@ helmDefaults:
   force: true
 
 releases:
-  - name: seedbox
+#  - name: seedbox
+  #    namespace: default
+  #    chart: ../charts/seedbox
+  #    values:
+  #      - image:
+  #          tag: v2b598e4
+  #      - env:
+  #          - name: LOCAL_NETWORK
+  #            value: "10.244.0.0/16"
+  #          - name: OPENVPN_USERNAME
+  #            value: {{ env "OPENVPN_USERNAME" | default "" }}
+  #          - name: OPENVPN_PASSWORD
+  #            value: {{ env "OPENVPN_PASSWORD" | default "" }}
+  #          - name: TRANSMISSION_HOME
+  #            value: "/data"
+  #          - name: MAIL_TO
+  #            value: {{ requiredEnv "MAIL_TO" }}
+  #      - volumes:
+  #          - name: yasr-volume
+  #            persistentVolumeClaim:
+  #              claimName: yasr-volume
+  #          - name: main-volume
+  #            persistentVolumeClaim:
+  #              claimName: main-volume
+  #          - name: dev-tun
+  #            hostPath:
+  #              path: "/dev/net/tun"
+  #          - name: tz-config
+  #            hostPath:
+  #              path: /etc/localtime
+  #      - volumeMounts:
+  #          - name: main-volume
+  #            mountPath: "/main"
+  #          - name: yasr-volume
+  #            mountPath: "/data"
+  #            subPath: "transmission"
+  #          - name: yasr-volume
+  #            mountPath: "/config"
+  #            subPath: "configs/"
+  #          - name: dev-tun
+  #            mountPath: "/dev/net/tun"
+  #          - name: yasr-volume
+  #            mountPath: "/etc/ssmtp/"
+  #            subPath: "configs/ssmtp"
+  #          - name: tz-config
+  #            mountPath: /etc/localtime
+  #            readOnly: true
+  #      - ingress:
+  #          enabled: true
+  #          hosts:
+  #            - transmission.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+  #          tls:
+  #            - hosts:
+  #                - transmission.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+  #              secretName: transmission-k8s-cert
+  #          annotations:
+  #            kubernetes.io/ingress.class: "nginx"
+  #            cert-manager.io/cluster-issuer: "ca-issuer"
+  #            nginx.ingress.kubernetes.io/app-root: "/web/"
+
+  - name: seedbox-2
     namespace: default
-    chart: ../charts/seedbox
+    chart: ../charts/seedbox-2
     values:
-      - image:
-          tag: v2b598e4
-      - env:
-          - name: LOCAL_NETWORK
-            value: "10.244.0.0/16"
-          - name: OPENVPN_USERNAME
-            value: {{ env "OPENVPN_USERNAME" | default "" }}
-          - name: OPENVPN_PASSWORD
-            value: {{ env "OPENVPN_PASSWORD" | default "" }}
-          - name: TRANSMISSION_HOME
-            value: "/data"
-          - name: MAIL_TO
-            value: {{ requiredEnv "MAIL_TO" }}
+      - vpn:
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: "/vpn"
+              subPath: "configs/openvpn"
+            - name: dev-tun
+              mountPath: "/dev/net/tun"
+            - name: yasr-volume
+              mountPath: "/etc/ssmtp/"
+              subPath: "configs/ssmtp"
+            - name: tz-config
+              mountPath: /etc/localtime
+              readOnly: true
+      - transmission:
+          env:
+            - name: UID
+              value: "1001"
+            - name: GID
+              value: "1001"
+            - name: MAIL_TO
+              value: {{ requiredEnv "MAIL_TO" }}
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: "/var/log"
+              subPath: "logs/seedbox"
+            - name: yasr-volume
+              mountPath: "/data"
+              subPath: "configs/transmission"
+      - flexget:
+          env:
+            - name: MAIL_TO
+              value: {{ requiredEnv "MAIL_TO" }}
+            - name: FG_WEBUI_PASSWD
+              value: {{ requiredEnv "ADMIN_PASSWORD" }}
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: "/config"
+              subPath: "configs/flexget"
+            - name: main-volume
+              mountPath: "/main"
+            - name: yasr-volume
+              mountPath: "/data"
+              subPath: "configs/transmission"
+            - name: tz-config
+              mountPath: /etc/localtime
+              readOnly: true
       - volumes:
           - name: yasr-volume
             persistentVolumeClaim:
@@ -39,32 +132,20 @@ releases:
           - name: tz-config
             hostPath:
               path: /etc/localtime
-      - volumeMounts:
-          - name: main-volume
-            mountPath: "/main"
-          - name: yasr-volume
-            mountPath: "/data"
-            subPath: "transmission"
-          - name: yasr-volume
-            mountPath: "/config"
-            subPath: "configs/"
-          - name: dev-tun
-            mountPath: "/dev/net/tun"
-          - name: yasr-volume
-            mountPath: "/etc/ssmtp/"
-            subPath: "configs/ssmtp"
-          - name: tz-config
-            mountPath: /etc/localtime
-            readOnly: true
       - ingress:
           enabled: true
           hosts:
-            - transmission.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+            #            - host: transmission2.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+            #              servicePort: http
+            - host: flexget.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+              servicePort: flexget-http
           tls:
             - hosts:
-                - transmission.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
-              secretName: transmission-k8s-cert
+                #                - transmission2.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+                - flexget.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+              #              secretName: transmission2-k8s-cert
+              secretName: flexget-k8s-cert
           annotations:
             kubernetes.io/ingress.class: "nginx"
             cert-manager.io/cluster-issuer: "ca-issuer"
-            nginx.ingress.kubernetes.io/app-root: "/web/"
+#            nginx.ingress.kubernetes.io/app-root: "/web/"
