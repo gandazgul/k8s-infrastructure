@@ -1,22 +1,16 @@
+{{- if .Values.flexget.service }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "helpers.fullname" . }}
+  name: {{ include "helpers.flexget-service" . }}
   labels:
     app: {{ include "helpers.name" . }}
     chart: {{ include "helpers.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.flexget.service.type }}
   ports:
-    - name: http
-      {{- if contains "NodePort" .Values.service.type }}
-      nodePort: {{ .Values.service.port }}
-      {{- end }}
-      port: {{ .Values.service.port }}
-      protocol: TCP
-      targetPort: http
     - name: flexget-http
       {{- if contains "NodePort" .Values.flexget.service.type }}
       nodePort: {{ .Values.flexget.service.port }}
@@ -24,11 +18,7 @@ spec:
       port: {{ .Values.flexget.service.port }}
       protocol: TCP
       targetPort: flexget-http
-    #    - name: peer-port
-    #      nodePort: {{ .Values.service.peerPort }}
-    #      port: {{ .Values.service.peerPort }}
-    #      protocol: TCP
-    #      targetPort: {{ .Values.service.peerPort }}
   selector:
     app: {{ include "helpers.name" . }}
     release: {{ .Release.Name }}
+  {{- end }}
