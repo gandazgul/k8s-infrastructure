@@ -9,69 +9,9 @@ helmDefaults:
   force: true
 
 releases:
-#  - name: seedbox
-  #    namespace: default
-  #    chart: ../charts/seedbox
-  #    values:
-  #      - image:
-  #          tag: v2b598e4
-  #      - env:
-  #          - name: LOCAL_NETWORK
-  #            value: "10.244.0.0/16"
-  #          - name: OPENVPN_USERNAME
-  #            value: {{ env "OPENVPN_USERNAME" | default "" }}
-  #          - name: OPENVPN_PASSWORD
-  #            value: {{ env "OPENVPN_PASSWORD" | default "" }}
-  #          - name: TRANSMISSION_HOME
-  #            value: "/data"
-  #          - name: MAIL_TO
-  #            value: {{ requiredEnv "MAIL_TO" }}
-  #      - volumes:
-  #          - name: yasr-volume
-  #            persistentVolumeClaim:
-  #              claimName: yasr-volume
-  #          - name: main-volume
-  #            persistentVolumeClaim:
-  #              claimName: main-volume
-  #          - name: dev-tun
-  #            hostPath:
-  #              path: "/dev/net/tun"
-  #          - name: tz-config
-  #            hostPath:
-  #              path: /etc/localtime
-  #      - volumeMounts:
-  #          - name: main-volume
-  #            mountPath: "/main"
-  #          - name: yasr-volume
-  #            mountPath: "/data"
-  #            subPath: "transmission"
-  #          - name: yasr-volume
-  #            mountPath: "/config"
-  #            subPath: "configs/"
-  #          - name: dev-tun
-  #            mountPath: "/dev/net/tun"
-  #          - name: yasr-volume
-  #            mountPath: "/etc/ssmtp/"
-  #            subPath: "configs/ssmtp"
-  #          - name: tz-config
-  #            mountPath: /etc/localtime
-  #            readOnly: true
-  #      - ingress:
-  #          enabled: true
-  #          hosts:
-  #            - transmission.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
-  #          tls:
-  #            - hosts:
-  #                - transmission.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
-  #              secretName: transmission-k8s-cert
-  #          annotations:
-  #            kubernetes.io/ingress.class: "nginx"
-  #            cert-manager.io/cluster-issuer: "ca-issuer"
-  #            nginx.ingress.kubernetes.io/app-root: "/web/"
-
-  - name: seedbox-2
+  - name: seedbox
     namespace: default
-    chart: ../charts/seedbox-2
+    chart: ../charts/seedbox
     values:
       - vpn:
           volumeMounts:
@@ -101,6 +41,19 @@ releases:
             - name: yasr-volume
               mountPath: "/data"
               subPath: "configs/transmission"
+          ingress:
+            enabled: true
+            hosts:
+              - host: transmission.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+                servicePort: trans-http
+            tls:
+              - hosts:
+                  - transmission.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+                secretName: transmission-k8s-cert
+            annotations:
+              kubernetes.io/ingress.class: "nginx"
+              cert-manager.io/cluster-issuer: "ca-issuer"
+              nginx.ingress.kubernetes.io/app-root: "/web/"
       - flexget:
           env:
             - name: MAIL_TO
@@ -119,6 +72,18 @@ releases:
             - name: tz-config
               mountPath: /etc/localtime
               readOnly: true
+          ingress:
+            enabled: true
+            hosts:
+              - host: flexget.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+                servicePort: flexget-http
+            tls:
+              - hosts:
+                  - flexget.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+                secretName: flexget-k8s-cert
+            annotations:
+              kubernetes.io/ingress.class: "nginx"
+              cert-manager.io/cluster-issuer: "ca-issuer"
       - volumes:
           - name: yasr-volume
             persistentVolumeClaim:
@@ -132,20 +97,3 @@ releases:
           - name: tz-config
             hostPath:
               path: /etc/localtime
-      - ingress:
-          enabled: true
-          hosts:
-            #            - host: transmission2.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
-            #              servicePort: http
-            - host: flexget.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
-              servicePort: flexget-http
-          tls:
-            - hosts:
-                #                - transmission2.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
-                - flexget.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
-              #              secretName: transmission2-k8s-cert
-              secretName: flexget-k8s-cert
-          annotations:
-            kubernetes.io/ingress.class: "nginx"
-            cert-manager.io/cluster-issuer: "ca-issuer"
-#            nginx.ingress.kubernetes.io/app-root: "/web/"

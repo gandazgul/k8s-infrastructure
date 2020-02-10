@@ -2,12 +2,92 @@
 
 replicaCount: 1
 
-image:
-  repository: gandazgul/openvpn-transmission-flexget
-  tag: latest
-  pullPolicy: IfNotPresent
+vpn:
+  name: vpn
+  image:
+    name: "dperson/openvpn-client"
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "100Mi"
+    limits:
+      cpu: "500m"
+      memory: "100Mi"
+  volumeMounts:
+    - name: yasr-volume
+      mountPath: "/vpn"
+      subPath: "configs/openvpn"
+    - name: dev-tun
+      mountPath: "/dev/net/tun"
+    - name: yasr-volume
+      mountPath: "/etc/ssmtp/"
+      subPath: "configs/ssmtp"
+    - name: tz-config
+      mountPath: /etc/localtime
+      readOnly: true
 
-nameOverride: "seedbox"
+transmission:
+  name: transmission
+  image:
+    name: gandazgul/transmission
+    tag: v29845e1
+    pullPolicy: IfNotPresent
+  #    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 9091
+    peerPort: 29091
+  ingress:
+    enabled: false
+  env:
+    - name: UID
+      value: 1001
+    - name: GID
+      value: 1001
+  volumeMounts:
+    - name: yasr-volume
+      mountPath: "/var/log"
+      subPath: "logs/seedbox"
+    - name: yasr-volume
+      mountPath: "/data"
+      subPath: "configs/transmission"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "100Mi"
+    limits:
+      cpu: "500m"
+      memory: "100Mi"
+
+flexget:
+  name: flexget
+  image:
+    name: wiserain/flexget
+    tag: 3.1.21
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 3539
+  ingress:
+    enabled: false
+  volumeMounts:
+    - name: yasr-volume
+      mountPath: "/config"
+      subPath: "configs/flexget"
+    - name: main-volume
+      mountPath: "/main"
+    - name: yasr-volume
+      mountPath: "/data"
+      subPath: "configs/transmission"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "100Mi"
+    limits:
+      cpu: "500m"
+      memory: "300Mi"
 
 # Without this you can't dns resolve anything inside the container
 dnsPolicy: "None"
@@ -16,43 +96,19 @@ dnsConfig:
     - 8.8.8.8
     - 8.8.4.4
 
-service:
-  type: ClusterIP
-  port: 9091
-  peerPort: 29091
-
-ingress:
-  enabled: false
-
 volumes:
+  - name: yasr-volume
+    persistentVolumeClaim:
+      claimName: yasr-volume
   - name: main-volume
     persistentVolumeClaim:
       claimName: main-volume
   - name: dev-tun
     hostPath:
       path: "/dev/net/tun"
-
-volumeMounts:
-  - name: main-volume
-    mountPath: "/var/log"
-    subPath: "logs/seedbox"
-  - name: main-volume
-    mountPath: "/data"
-    subPath: "transmission"
-  - name: main-volume
-    mountPath: "/main"
-  - name: main-volume
-    mountPath: "/config"
-    subPath: "configs/"
-  - name: dev-tun
-    mountPath: "/dev/net/tun"
-
-securityContext:
-  capabilities:
-    add:
-      - NET_ADMIN
-
-resources: {}
+  - name: tz-config
+    hostPath:
+      path: /etc/localtime
 
 nodeSelector: {}
 

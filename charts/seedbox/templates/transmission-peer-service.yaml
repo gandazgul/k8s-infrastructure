@@ -1,4 +1,4 @@
-{{- if .Values.service.peerPort }}
+{{- if .Values.transmission.service.peerPort }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -12,10 +12,10 @@ spec:
   type: NodePort
   ports:
     - name: peer-port
-      nodePort: {{ .Values.service.peerPort }}
-      port: {{ .Values.service.peerPort }}
+      nodePort: {{ .Values.transmission.service.peerPort }}
+      port: {{ .Values.transmission.service.peerPort }}
       protocol: TCP
-      targetPort: {{ .Values.service.peerPort }}
+      targetPort: peer-port
   selector:
     app: {{ include "helpers.name" . }}
     release: {{ .Release.Name }}
