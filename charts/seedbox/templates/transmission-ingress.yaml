@@ -12,8 +12,8 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   {{- with .Values.transmission.ingress.annotations }}
-annotations:
-  {{ toYaml . | indent 4 }}
+  annotations:
+{{ toYaml . | indent 4 }}
   {{- end }}
 spec:
   {{- if .Values.transmission.ingress.tls }}
@@ -36,4 +36,4 @@ spec:
               serviceName: {{ $serviceName }}
               servicePort: {{ .servicePort }}
     {{- end }}
-  {{- end }}
+{{- end }}

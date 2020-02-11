@@ -21,4 +21,4 @@ spec:
   selector:
     app: {{ include "helpers.name" . }}
     release: {{ .Release.Name }}
-  {{- end }}
+{{- end }}
