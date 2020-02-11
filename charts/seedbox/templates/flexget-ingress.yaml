@@ -1,7 +1,7 @@
 {{- if .Values.flexget.ingress.enabled -}}
-  {{- $fullName := include "helpers.flexget-ingress" . -}}
-  {{- $serviceName := include "helpers.flexget-service" . -}}
-  {{- $ingressPath := .Values.flexget.ingress.path -}}
+{{- $fullName := include "helpers.flexget-ingress" . -}}
+{{- $serviceName := include "helpers.flexget-service" . -}}
+{{- $ingressPath := .Values.flexget.ingress.path -}}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -11,10 +11,10 @@ metadata:
     chart: {{ template "helpers.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-  {{- with .Values.flexget.ingress.annotations }}
-annotations:
-  {{ toYaml . | indent 4 }}
-  {{- end }}
+{{- with .Values.flexget.ingress.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
 spec:
   {{- if .Values.flexget.ingress.tls }}
   tls:
@@ -36,4 +36,4 @@ spec:
               serviceName: {{ $serviceName }}
               servicePort: {{ .servicePort }}
     {{- end }}
-  {{- end }}
+{{- end }}
