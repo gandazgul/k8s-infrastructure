@@ -55,11 +55,11 @@ transmission:
       subPath: "configs/transmission"
   resources:
     requests:
-      cpu: "100m"
-      memory: "100Mi"
+      cpu: 100m
+      memory: 100Mi
     limits:
-      cpu: "500m"
-      memory: "100Mi"
+      cpu: 1000m
+      memory: 2000Mi
 
 flexget:
   name: flexget
