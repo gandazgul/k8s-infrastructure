@@ -41,6 +41,22 @@ spec:
             requests:
               cpu: {{ default "50m" .Values.transmission.resources.requests.cpu | quote }}
               memory: {{ default "50Mi" .Values.transmission.resources.requests.memory | quote }}
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 2
+            successThreshold: 1
+            tcpSocket:
+              port: 9091
+            timeoutSeconds: 2
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 2
+            successThreshold: 2
+            tcpSocket:
+              port: 9091
+            timeoutSeconds: 2
           volumeMounts:
 {{ toYaml .Values.transmission.volumeMounts | indent 12 }}
           ports:
