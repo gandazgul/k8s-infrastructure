@@ -41,6 +41,9 @@ releases:
             - name: yasr-volume
               mountPath: "/data"
               subPath: "configs/transmission"
+            - name: tz-config
+              mountPath: /etc/localtime
+              readOnly: true
           ingress:
             enabled: true
             hosts:
