@@ -53,6 +53,9 @@ transmission:
     - name: yasr-volume
       mountPath: "/data"
       subPath: "configs/transmission"
+    - name: tz-config
+      mountPath: /etc/localtime
+      readOnly: true
   resources:
     requests:
       cpu: 100m
@@ -81,6 +84,9 @@ flexget:
     - name: yasr-volume
       mountPath: "/data"
       subPath: "configs/transmission"
+    - name: tz-config
+      mountPath: /etc/localtime
+      readOnly: true
   resources:
     requests:
       cpu: "100m"
