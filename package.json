@@ -11,6 +11,6 @@
         "docker:run": "node ./docker/docker-run.js"
     },
     "dependencies": {
-        "minimist": "^1.2.0"
+        "minimist": "^1.2.3"
     }
 }
