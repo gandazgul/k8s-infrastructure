@@ -90,6 +90,11 @@ releases:
 
   # Check out the README for information on the kubernetes plugin
   # grafana gets stuck to get it going again run: sudo chown -R 472:472 /media/yasr/configs/grafana
+  # login to your cluster in grafana using client cert and CA cert and check skip TLS verify
+  ### the certs can be obtained from your config:
+  ### CA Cert: kubectl config view --raw -o jsonpath='{.clusters[0].cluster.certificate-authority-data}' | base64 -D
+  ### Client Cert: kubectl config view --raw -o jsonpath='{.users[0].user.client-certificate-data}' | base64 -D
+  ### Client Key: kubectl config view --raw -o jsonpath='{.users[0].user.client-key-data}' | base64 -D
   - name: grafana
     namespace: default
     chart: stable/grafana

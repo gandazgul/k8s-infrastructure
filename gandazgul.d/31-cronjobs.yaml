@@ -1,6 +1,12 @@
 # Run this first:
 # kubectl create secret generic ssh-private-key --from-file=/Users/gandazgul/.ssh/id_rsa
 
+helmDefaults:
+  wait: true
+  timeout: 600
+  #recreatePods: true
+  force: true
+
 releases:
   - name: rsync-renepor
     namespace: default
