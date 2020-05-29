@@ -27,6 +27,7 @@ spec:
       dnsConfig:
 {{ toYaml .Values.dnsConfig | indent 8 }}
       containers:
+        # Transmission
         - name: {{ .Values.transmission.name }}
           image: "{{ .Values.transmission.image.name }}:{{ .Values.transmission.image.tag }}"
           imagePullPolicy: {{ .Values.transmission.image.pullPolicy | quote }}
@@ -66,6 +67,7 @@ spec:
             - name: peer-port
               containerPort: 29091
               protocol: TCP
+        # VPN
         - name: {{ .Values.vpn.name | quote }}
           image: "{{ .Values.vpn.image.name }}:{{ .Values.vpn.image.tag }}"
           imagePullPolicy: {{ .Values.vpn.image.pullPolicy | quote }}
@@ -85,26 +87,90 @@ spec:
               memory: {{ default "50Mi" .Values.vpn.resources.requests.memory | quote }}
           volumeMounts:
 {{ toYaml .Values.vpn.volumeMounts | indent 12 }}
-        - name: {{ .Values.flexget.name | quote }}
-          image: "{{ .Values.flexget.image.name }}:{{ .Values.flexget.image.tag }}"
-          imagePullPolicy: {{ .Values.flexget.image.pullPolicy | quote }}
-          {{- with .Values.flexget.env }}
+        # flexget
+{{/*        - name: {{ .Values.flexget.name | quote }}*/}}
+{{/*          image: "{{ .Values.flexget.image.name }}:{{ .Values.flexget.image.tag }}"*/}}
+{{/*          imagePullPolicy: {{ .Values.flexget.image.pullPolicy | quote }}*/}}
+{{/*          {{- with .Values.flexget.env }}*/}}
+{{/*          env:*/}}
+{{/*{{ toYaml . | nindent 12 }}*/}}
+{{/*          {{- end}}*/}}
+{{/*          resources:*/}}
+{{/*            limits:*/}}
+{{/*              cpu: {{ default "50m" .Values.flexget.resources.limits.cpu | quote }}*/}}
+{{/*              memory: {{ default "50Mi" .Values.flexget.resources.limits.memory | quote }}*/}}
+{{/*            requests:*/}}
+{{/*              cpu: {{ default "50m" .Values.flexget.resources.requests.cpu | quote }}*/}}
+{{/*              memory: {{ default "50Mi" .Values.flexget.resources.requests.memory | quote }}*/}}
+{{/*          volumeMounts:*/}}
+{{/*{{ toYaml .Values.flexget.volumeMounts | indent 12 }}*/}}
+{{/*          ports:*/}}
+{{/*            - name: flexget-http*/}}
+{{/*              containerPort: 3539*/}}
+{{/*              protocol: TCP*/}}
+        # Jackett
+        - name: {{ .Values.jackett.name | quote }}
+          image: "{{ .Values.jackett.image.name }}:{{ .Values.jackett.image.tag }}"
+          imagePullPolicy: {{ .Values.jackett.image.pullPolicy | quote }}
+          {{- with .Values.jackett.env }}
           env:
 {{ toYaml . | nindent 12 }}
           {{- end}}
           resources:
             limits:
-              cpu: {{ default "50m" .Values.flexget.resources.limits.cpu | quote }}
-              memory: {{ default "50Mi" .Values.flexget.resources.limits.memory | quote }}
+              cpu: {{ default "50m" .Values.jackett.resources.limits.cpu | quote }}
+              memory: {{ default "50Mi" .Values.jackett.resources.limits.memory | quote }}
             requests:
-              cpu: {{ default "50m" .Values.flexget.resources.requests.cpu | quote }}
-              memory: {{ default "50Mi" .Values.flexget.resources.requests.memory | quote }}
+              cpu: {{ default "50m" .Values.jackett.resources.requests.cpu | quote }}
+              memory: {{ default "50Mi" .Values.jackett.resources.requests.memory | quote }}
           volumeMounts:
-{{ toYaml .Values.flexget.volumeMounts | indent 12 }}
+{{ toYaml .Values.jackett.volumeMounts | indent 12 }}
           ports:
-            - name: flexget-http
-              containerPort: 3539
-              protocol: TCP
+          - name: jackett-http
+            containerPort: 9117
+            protocol: TCP
+        # Sonarr
+        - name: {{ .Values.sonarr.name | quote }}
+          image: "{{ .Values.sonarr.image.name }}:{{ .Values.sonarr.image.tag }}"
+          imagePullPolicy: {{ .Values.sonarr.image.pullPolicy | quote }}
+          {{- with .Values.sonarr.env }}
+          env:
+{{ toYaml . | nindent 12 }}
+          {{- end}}
+          resources:
+            limits:
+              cpu: {{ default "50m" .Values.sonarr.resources.limits.cpu | quote }}
+              memory: {{ default "50Mi" .Values.sonarr.resources.limits.memory | quote }}
+            requests:
+              cpu: {{ default "50m" .Values.sonarr.resources.requests.cpu | quote }}
+              memory: {{ default "50Mi" .Values.sonarr.resources.requests.memory | quote }}
+          volumeMounts:
+{{ toYaml .Values.sonarr.volumeMounts | indent 12 }}
+          ports:
+          - name: sonarr-http
+            containerPort: 8989
+            protocol: TCP
+        # radarr
+        - name: {{ .Values.radarr.name | quote }}
+          image: "{{ .Values.radarr.image.name }}:{{ .Values.radarr.image.tag }}"
+          imagePullPolicy: {{ .Values.radarr.image.pullPolicy | quote }}
+          {{- with .Values.radarr.env }}
+          env:
+{{ toYaml . | nindent 12 }}
+          {{- end}}
+          resources:
+            limits:
+              cpu: {{ default "50m" .Values.radarr.resources.limits.cpu | quote }}
+              memory: {{ default "50Mi" .Values.radarr.resources.limits.memory | quote }}
+            requests:
+              cpu: {{ default "50m" .Values.radarr.resources.requests.cpu | quote }}
+              memory: {{ default "50Mi" .Values.radarr.resources.requests.memory | quote }}
+          volumeMounts:
+{{ toYaml .Values.radarr.volumeMounts | indent 12 }}
+          ports:
+          - name: radarr-http
+            containerPort: 7878
+            protocol: TCP
     {{- with .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}

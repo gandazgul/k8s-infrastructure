@@ -1,0 +1,24 @@
+{{- if .Values.sonarr.service }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "helpers.sonarr-service" . }}
+  labels:
+    app: {{ include "helpers.name" . }}
+    chart: {{ include "helpers.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.sonarr.service.type }}
+  ports:
+    - name: sonarr-http
+      {{- if contains "NodePort" .Values.sonarr.service.type }}
+      nodePort: {{ .Values.sonarr.service.port }}
+      {{- end }}
+      port: {{ .Values.sonarr.service.port }}
+      protocol: TCP
+      targetPort: sonarr-http
+  selector:
+    app: {{ include "helpers.name" . }}
+    release: {{ .Release.Name }}
+{{- end }}

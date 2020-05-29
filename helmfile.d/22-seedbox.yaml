@@ -87,6 +87,45 @@ releases:
             annotations:
               kubernetes.io/ingress.class: "nginx"
               cert-manager.io/cluster-issuer: "ca-issuer"
+      - jackett:
+          ingress:
+            enabled: true
+            hosts:
+            - host: jackett.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+              servicePort: jackett-http
+            tls:
+            - hosts:
+              - jackett.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+              secretName: jackett-k8s-cert
+            annotations:
+              kubernetes.io/ingress.class: "nginx"
+              cert-manager.io/cluster-issuer: "ca-issuer"
+      - sonarr:
+          ingress:
+            enabled: true
+            hosts:
+            - host: sonarr.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+              servicePort: sonarr-http
+            tls:
+            - hosts:
+              - sonarr.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+              secretName: sonarr-k8s-cert
+            annotations:
+              kubernetes.io/ingress.class: "nginx"
+              cert-manager.io/cluster-issuer: "ca-issuer"
+      - radarr:
+          ingress:
+            enabled: true
+            hosts:
+            - host: radarr.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+              servicePort: radarr-http
+            tls:
+            - hosts:
+              - radarr.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+              secretName: radarr-k8s-cert
+            annotations:
+              kubernetes.io/ingress.class: "nginx"
+              cert-manager.io/cluster-issuer: "ca-issuer"
       - volumes:
           - name: yasr-volume
             persistentVolumeClaim:

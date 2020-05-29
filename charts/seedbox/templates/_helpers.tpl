@@ -39,12 +39,36 @@ Create chart name and version as used by the chart label.
     {{- printf "%s-%s" .Release.Name "flexget-ingress" | trunc 63 -}}
 {{- end -}}
 
+{{- define "helpers.jackett-ingress" -}}
+    {{- printf "%s-%s" .Release.Name "jackett-ingress" | trunc 63 -}}
+{{- end -}}
+
+{{- define "helpers.sonarr-ingress" -}}
+    {{- printf "%s-%s" .Release.Name "sonarr-ingress" | trunc 63 -}}
+{{- end -}}
+
+{{- define "helpers.radarr-ingress" -}}
+    {{- printf "%s-%s" .Release.Name "radarr-ingress" | trunc 63 -}}
+{{- end -}}
+
 {{- define "helpers.peer-port-service" -}}
     {{- printf "%s-%s" .Release.Name "peer-service" | trunc 63 -}}
 {{- end -}}
 
 {{- define "helpers.flexget-service" -}}
     {{- printf "%s-%s" .Release.Name "flexget-service" | trunc 63 -}}
+{{- end -}}
+
+{{- define "helpers.jackett-service" -}}
+    {{- printf "%s-%s" .Release.Name "jackett-service" | trunc 63 -}}
+{{- end -}}
+
+{{- define "helpers.sonarr-service" -}}
+    {{- printf "%s-%s" .Release.Name "sonarr-service" | trunc 63 -}}
+{{- end -}}
+
+{{- define "helpers.radarr-service" -}}
+    {{- printf "%s-%s" .Release.Name "radarr-service" | trunc 63 -}}
 {{- end -}}
 
 {{- define "helpers.transmission-service" -}}

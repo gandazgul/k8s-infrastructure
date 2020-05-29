@@ -9,6 +9,21 @@ Application URLs:
     http{{ if $.Values.flexget.ingress.tls }}s{{ end }}://{{ .host }}{{ $.Values.flexget.ingress.path }}
     {{- end }}
 {{- end }}
+{{- if .Values.jackett.ingress.enabled }}
+    {{- range .Values.jackett.ingress.hosts }}
+    http{{ if $.Values.jackett.ingress.tls }}s{{ end }}://{{ .host }}{{ $.Values.jackett.ingress.path }}
+    {{- end }}
+{{- end }}
+{{- if .Values.sonarr.ingress.enabled }}
+    {{- range .Values.sonarr.ingress.hosts }}
+    http{{ if $.Values.sonarr.ingress.tls }}s{{ end }}://{{ .host }}{{ $.Values.sonarr.ingress.path }}
+    {{- end }}
+{{- end }}
+{{- if .Values.radarr.ingress.enabled }}
+    {{- range .Values.radarr.ingress.hosts }}
+    http{{ if $.Values.radarr.ingress.tls }}s{{ end }}://{{ .host }}{{ $.Values.radarr.ingress.path }}
+    {{- end }}
+{{- end }}
 
 {{- if contains "NodePort" .Values.transmission.service.type }}
     export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "helpers.fullname" . }})
