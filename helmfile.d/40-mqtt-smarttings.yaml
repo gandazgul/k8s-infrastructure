@@ -37,20 +37,20 @@ releases:
             subPath: "configs/smartthings-mqtt-bridge"
 
   # This is the same as the above but to bridge with the Nest API
-  - name: nest-mqtt-bridge
-    namespace: default
-    chart: ../charts/nest-mqtt-bridge
-    values:
-      - image:
-          tag: "vfdfc7cb"
-      - volumes:
-          - name: yasr-volume
-            persistentVolumeClaim:
-              claimName: yasr-volume
-      - volumeMounts:
-          - name: yasr-volume
-            mountPath: "/config"
-            subPath: "configs/nest-mqtt-bridge"
+#  - name: nest-mqtt-bridge
+#    namespace: default
+#    chart: ../charts/nest-mqtt-bridge
+#    values:
+#      - image:
+#          tag: "vfdfc7cb"
+#      - volumes:
+#          - name: yasr-volume
+#            persistentVolumeClaim:
+#              claimName: yasr-volume
+#      - volumeMounts:
+#          - name: yasr-volume
+#            mountPath: "/config"
+#            subPath: "configs/nest-mqtt-bridge"
 
   - name: mqtt-node-red
     namespace: default
