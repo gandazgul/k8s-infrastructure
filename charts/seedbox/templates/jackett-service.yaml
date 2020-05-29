@@ -1,0 +1,24 @@
+{{- if .Values.jackett.service }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "helpers.jackett-service" . }}
+  labels:
+    app: {{ include "helpers.name" . }}
+    chart: {{ include "helpers.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.jackett.service.type }}
+  ports:
+    - name: jackett-http
+      {{- if contains "NodePort" .Values.jackett.service.type }}
+      nodePort: {{ .Values.jackett.service.port }}
+      {{- end }}
+      port: {{ .Values.jackett.service.port }}
+      protocol: TCP
+      targetPort: jackett-http
+  selector:
+    app: {{ include "helpers.name" . }}
+    release: {{ .Release.Name }}
+{{- end }}

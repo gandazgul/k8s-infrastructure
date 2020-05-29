@@ -8,6 +8,13 @@ vpn:
     name: "dperson/openvpn-client"
     tag: "latest"
     pullPolicy: IfNotPresent
+  env:
+    - name: VPNPORT
+      value: "29091"
+    - name: TZ
+      value: "EST5EDT"
+    - name: FIREWALL
+      value: ""
   resources:
     requests:
       cpu: "100m"
@@ -87,6 +94,109 @@ flexget:
     - name: tz-config
       mountPath: /etc/localtime
       readOnly: true
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "100Mi"
+    limits:
+      cpu: "500m"
+      memory: "300Mi"
+
+jackett:
+  name: jackett
+  image:
+    name: linuxserver/jackett
+    tag: amd64-latest
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 9117
+  ingress:
+    enabled: false
+  volumeMounts:
+  - name: yasr-volume
+    mountPath: "/config"
+    subPath: "configs/jackett"
+  - name: yasr-volume
+    mountPath: "/downloads"
+    subPath: "configs/jackett/downloads"
+  - name: tz-config
+    mountPath: /etc/localtime
+    readOnly: true
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "100Mi"
+    limits:
+      cpu: "500m"
+      memory: "300Mi"
+
+sonarr:
+  name: sonarr
+  image:
+    name: linuxserver/sonarr
+    tag: amd64-latest
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 8989
+  env:
+  - name: PUID
+    value: "1000"
+  - name: PGID
+    value: "1000"
+  ingress:
+    enabled: false
+  volumeMounts:
+  - name: yasr-volume
+    mountPath: "/config"
+    subPath: "configs/sonarr"
+  - name: yasr-volume
+    mountPath: "/downloads/transmission"
+    subPath: "configs/transmission/downloads"
+  - name: main-volume
+    mountPath: "/tv"
+    subPath: "public/TV"
+  - name: tz-config
+    mountPath: /etc/localtime
+    readOnly: true
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "100Mi"
+    limits:
+      cpu: "500m"
+      memory: "300Mi"
+
+radarr:
+  name: radarr
+  image:
+    name: linuxserver/radarr
+    tag: amd64-latest
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 7878
+  env:
+  - name: PUID
+    value: "1000"
+  - name: PGID
+    value: "1000"
+  ingress:
+    enabled: false
+  volumeMounts:
+  - name: yasr-volume
+    mountPath: "/config"
+    subPath: "configs/radarr"
+  - name: yasr-volume
+    mountPath: "/downloads/transmission"
+    subPath: "configs/transmission/downloads"
+  - name: main-volume
+    mountPath: "/movies"
+    subPath: "public/Movies"
+  - name: tz-config
+    mountPath: /etc/localtime
+    readOnly: true
   resources:
     requests:
       cpu: "100m"
