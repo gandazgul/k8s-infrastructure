@@ -5,26 +5,28 @@ export OPENVPN_USERNAME=""
 export OPENVPN_PASSWORD=""
 
 # required
-export TRANSMISSION_RPC_PASSWORD=""
+# A username used in several places
+export REPOSITORY_USERNAME=""
+# An admins password also used for a couple of services
 export ADMIN_PASSWORD=""
+# An email address for notifications
 export MAIL_TO=""
+# The smtp password to authenticate with gmail for sending notifications (application passwords on your google account)
 export SMTP_PASSWORD=""
+# The password for Transmission's webUI
+export TRANSMISSION_RPC_PASSWORD=""
 
 # required - ingress config
-# Services will use this name for their ingresses
-export INGRESS_INTERNAL_NAME="example.org"
+# Services will use this name for their ingresses (get one free at https://noip.com)
+export INGRESS_INTERNAL_NAME="example.sytes.net"
 # Gogs and any other services exposed to the outside world will use this name
 export INGRESS_EXTERNAL_NAME="example.com"
 
 # to secure the gogs install
 export GOGS_SECRET_KEY="changeme"
 
-#docker repositories
-export REPOSITORY_USERNAME=""
-
 # Master node information
-MASTER_SERVER=`kubectl config view -o jsonpath='{.clusters[0].cluster.server}'`;
-export MASTER_IP=`printf "${MASTER_SERVER}" | awk -F: '{print $2}' | awk -F/ '{print $3}'`
+export MASTER_IP=`kubectl get nodes --selector=node-role.kubernetes.io/master -o=jsonpath='{.items[0].metadata.annotations.flannel\.alpha\.coreos\.com\/public-ip}'`
 export MASTER_NODE_NAME=`kubectl get nodes --selector=node-role.kubernetes.io/master -o=jsonpath='{.items[0].metadata.labels.kubernetes\.io/hostname}'`
 
 echo "Using MASTER_IP=$MASTER_IP"

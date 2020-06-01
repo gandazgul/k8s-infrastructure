@@ -1,19 +1,58 @@
-1. Get the application URL by running these commands:
-{{- if .Values.ingress.enabled }}
-{{- range .Values.ingress.hosts }}
-  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ . }}{{ $.Values.ingress.path }}
+Application URLs:
+{{- if .Values.transmission.ingress.enabled }}
+    {{- range .Values.transmission.ingress.hosts }}
+    http{{ if $.Values.transmission.ingress.tls }}s{{ end }}://{{ .host }}{{ $.Values.transmission.ingress.path }}
+    {{- end }}
 {{- end }}
-{{- else if contains "NodePort" .Values.service.type }}
-  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "helpers.fullname" . }})
-  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
-  echo http://$NODE_IP:$NODE_PORT
-{{- else if contains "LoadBalancer" .Values.service.type }}
+{{- if .Values.flexget.ingress.enabled }}
+    {{- range .Values.flexget.ingress.hosts }}
+    http{{ if $.Values.flexget.ingress.tls }}s{{ end }}://{{ .host }}{{ $.Values.flexget.ingress.path }}
+    {{- end }}
+{{- end }}
+{{- if .Values.jackett.ingress.enabled }}
+    {{- range .Values.jackett.ingress.hosts }}
+    http{{ if $.Values.jackett.ingress.tls }}s{{ end }}://{{ .host }}{{ $.Values.jackett.ingress.path }}
+    {{- end }}
+{{- end }}
+{{- if .Values.sonarr.ingress.enabled }}
+    {{- range .Values.sonarr.ingress.hosts }}
+    http{{ if $.Values.sonarr.ingress.tls }}s{{ end }}://{{ .host }}{{ $.Values.sonarr.ingress.path }}
+    {{- end }}
+{{- end }}
+{{- if .Values.radarr.ingress.enabled }}
+    {{- range .Values.radarr.ingress.hosts }}
+    http{{ if $.Values.radarr.ingress.tls }}s{{ end }}://{{ .host }}{{ $.Values.radarr.ingress.path }}
+    {{- end }}
+{{- end }}
+
+{{- if contains "NodePort" .Values.transmission.service.type }}
+    export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "helpers.fullname" . }})
+    export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+    echo http://$NODE_IP:$NODE_PORT
+{{- else if contains "LoadBalancer" .Values.transmission.service.type }}
      NOTE: It may take a few minutes for the LoadBalancer IP to be available.
            You can watch the status of by running 'kubectl get svc -w {{ include "helpers.fullname" . }}'
   export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "helpers.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-  echo http://$SERVICE_IP:{{ .Values.service.port }}
-{{- else if contains "ClusterIP" .Values.service.type }}
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ include "helpers.name" . }},release={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
-  kubectl port-forward --namespace {{ .Release.Namespace }} $POD_NAME 9091:9091
-  echo "Visit http://127.0.0.1:9091 to use your application"
+  echo http://$SERVICE_IP:{{ .Values.transmission.service.port }}
+{{- else if (and (contains "ClusterIP" .Values.transmission.service.type) (not .Values.transmission.ingress.enabled)) }}
+    To get the application URL run these commands:
+    export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ include "helpers.name" . }},release={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+    kubectl port-forward --namespace {{ .Release.Namespace }} $POD_NAME {{ .Values.transmission.service.port }}:{{ .Values.transmission.service.port }}
+    echo "Visit http://127.0.0.1:{{ .Values.transmission.service.port }} to use your application"
+{{- end }}
+
+{{- if contains "NodePort" .Values.flexget.service.type }}
+    export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "helpers.fullname" . }})
+    export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+    echo http://$NODE_IP:$NODE_PORT
+{{- else if contains "LoadBalancer" .Values.flexget.service.type }}
+     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+           You can watch the status of by running 'kubectl get svc -w {{ include "helpers.fullname" . }}'
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "helpers.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  echo http://$SERVICE_IP:{{ .Values.flexget.service.port }}
+{{- else if (and (contains "ClusterIP" .Values.flexget.service.type) (not .Values.flexget.ingress.enabled)) }}
+    To get the application URL run these commands:
+    export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ include "helpers.name" . }},release={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+    kubectl port-forward --namespace {{ .Release.Namespace }} $POD_NAME {{ .Values.flexget.service.port }}:{{ .Values.flexget.service.port }}
+    echo "Visit http://127.0.0.1:{{ .Values.flexget.service.port }} to use your application"
 {{- end }}
