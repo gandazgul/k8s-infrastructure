@@ -4,7 +4,7 @@
 # docker
 docker/sshd/users.conf
 docker/size-checker/ssmtp.conf
-docker/openvpn-transmission-flexget/bash_history
+docker/transmission/bash_history
 
 # chart deps
 charts/gogs/charts/
