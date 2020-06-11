@@ -50,9 +50,9 @@ transmission:
     enabled: false
   env:
     - name: UID
-      value: 1001
+      value: "1000"
     - name: GID
-      value: 1001
+      value: "1000"
   volumeMounts:
     - name: yasr-volume
       mountPath: "/var/log"
@@ -114,15 +114,15 @@ jackett:
   ingress:
     enabled: false
   volumeMounts:
-  - name: yasr-volume
-    mountPath: "/config"
-    subPath: "configs/jackett"
-  - name: yasr-volume
-    mountPath: "/downloads"
-    subPath: "configs/jackett/downloads"
-  - name: tz-config
-    mountPath: /etc/localtime
-    readOnly: true
+    - name: yasr-volume
+      mountPath: "/config"
+      subPath: "configs/jackett"
+    - name: yasr-volume
+      mountPath: "/downloads"
+      subPath: "configs/jackett/downloads"
+    - name: tz-config
+      mountPath: /etc/localtime
+      readOnly: true
   resources:
     requests:
       cpu: "100m"
@@ -141,25 +141,12 @@ sonarr:
     type: ClusterIP
     port: 8989
   env:
-  - name: PUID
-    value: "1000"
-  - name: PGID
-    value: "1000"
+    - name: PUID
+      value: "1000"
+    - name: PGID
+      value: "1000"
   ingress:
     enabled: false
-  volumeMounts:
-  - name: yasr-volume
-    mountPath: "/config"
-    subPath: "configs/sonarr"
-  - name: yasr-volume
-    mountPath: "/data"
-    subPath: "configs/transmission"
-  - name: main-volume
-    mountPath: "/tv"
-    subPath: "public/TV"
-  - name: tz-config
-    mountPath: /etc/localtime
-    readOnly: true
   resources:
     requests:
       cpu: "100m"
@@ -178,25 +165,12 @@ radarr:
     type: ClusterIP
     port: 7878
   env:
-  - name: PUID
-    value: "1000"
-  - name: PGID
-    value: "1000"
+    - name: PUID
+      value: "1000"
+    - name: PGID
+      value: "1000"
   ingress:
     enabled: false
-  volumeMounts:
-  - name: yasr-volume
-    mountPath: "/config"
-    subPath: "configs/radarr"
-  - name: yasr-volume
-    mountPath: "/data"
-    subPath: "configs/transmission"
-  - name: main-volume
-    mountPath: "/movies"
-    subPath: "public/Movies"
-  - name: tz-config
-    mountPath: /etc/localtime
-    readOnly: true
   resources:
     requests:
       cpu: "100m"

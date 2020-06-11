@@ -13,11 +13,16 @@ releases:
     chart: ../../kube-plex/charts/kube-plex
     values:
       - image:
+#          repository: linuxserver/plex
+#          tag: latest
           tag: plexpass
           pullPolicy: Always
       - timezone: America/New_York
       - kubePlex:
           enabled: false
+#          enabled: true
+#          image:
+#            repository: docker.io/gandazgul/kube-plex
       - persistence:
           transcode:
             enabled: true
