@@ -12,37 +12,7 @@ releases:
     namespace: default
     chart: ../charts/seedbox
     values:
-      - vpn:
-          volumeMounts:
-            - name: yasr-volume
-              mountPath: "/vpn"
-              subPath: "configs/openvpn"
-            - name: dev-tun
-              mountPath: "/dev/net/tun"
-            - name: yasr-volume
-              mountPath: "/etc/ssmtp/"
-              subPath: "configs/ssmtp"
-            - name: tz-config
-              mountPath: /etc/localtime
-              readOnly: true
       - transmission:
-          env:
-            - name: UID
-              value: "1001"
-            - name: GID
-              value: "1001"
-            - name: MAIL_TO
-              value: {{ requiredEnv "MAIL_TO" }}
-          volumeMounts:
-            - name: yasr-volume
-              mountPath: "/var/log"
-              subPath: "logs/seedbox"
-            - name: yasr-volume
-              mountPath: "/data"
-              subPath: "configs/transmission"
-            - name: tz-config
-              mountPath: /etc/localtime
-              readOnly: true
           ingress:
             enabled: true
             hosts:
@@ -125,16 +95,4 @@ releases:
             annotations:
               kubernetes.io/ingress.class: "nginx"
               cert-manager.io/cluster-issuer: "ca-issuer"
-      - volumes:
-          - name: yasr-volume
-            persistentVolumeClaim:
-              claimName: yasr-volume
-          - name: main-volume
-            persistentVolumeClaim:
-              claimName: main-volume
-          - name: dev-tun
-            hostPath:
-              path: "/dev/net/tun"
-          - name: tz-config
-            hostPath:
-              path: /etc/localtime
+      - values/seedbox.yaml
