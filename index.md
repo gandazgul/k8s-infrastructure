@@ -1,6 +1,6 @@
 # K8s Infrastructure Config
 
-This is a collection of scripts to deploy kubernetes on Fedora. Tested on Fedora 28. 
+This is a collection of scripts to deploy kubernetes on Fedora. Tested on Fedora 31. 
 
 It's also a collection of helm charts that I developed or customized (See [Repo](#helm-repo)), as well as [helmfiles](https://github.com/roboll/helmfile/) 
 to deploy all of the supported applications.
@@ -28,7 +28,7 @@ I publish my charts as a helm repo here: [Helm Repo](https://gandazgul.github.io
 
 By following these steps you will install a fully functioning kubernetes master where you can run all of your applications.
 
-1. Install Fedora 28
+1. Install Fedora 31
     1. During install set the hostname, this will be the name of this node, you can do this after install
     2. Create a user, kubectl doesn't like running as root
     3. Remove the swap, kubernetes is not compatible with swap at the moment and will complain about it. 
