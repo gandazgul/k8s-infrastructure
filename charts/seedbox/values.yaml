@@ -152,8 +152,8 @@ sonarr:
     mountPath: "/config"
     subPath: "configs/sonarr"
   - name: yasr-volume
-    mountPath: "/downloads/transmission"
-    subPath: "configs/transmission/downloads"
+    mountPath: "/data"
+    subPath: "configs/transmission"
   - name: main-volume
     mountPath: "/tv"
     subPath: "public/TV"
@@ -189,8 +189,8 @@ radarr:
     mountPath: "/config"
     subPath: "configs/radarr"
   - name: yasr-volume
-    mountPath: "/downloads/transmission"
-    subPath: "configs/transmission/downloads"
+    mountPath: "/data"
+    subPath: "configs/transmission"
   - name: main-volume
     mountPath: "/movies"
     subPath: "public/Movies"
