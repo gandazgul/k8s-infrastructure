@@ -9,12 +9,8 @@ vpn:
     tag: "latest"
     pullPolicy: IfNotPresent
   env:
-    - name: VPNPORT
-      value: "29091"
     - name: TZ
       value: "EST5EDT"
-    - name: FIREWALL
-      value: ""
   resources:
     requests:
       cpu: "100m"
@@ -41,7 +37,6 @@ transmission:
     name: gandazgul/transmission
     tag: v29845e1
     pullPolicy: IfNotPresent
-  #    pullPolicy: Always
   service:
     type: ClusterIP
     port: 9091
