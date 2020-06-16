@@ -8,6 +8,9 @@ helmDefaults:
   force: true
 
 releases:
+  - name: hostpath-provisioner
+    chart: ../charts/hostpath-provisioner
+
   # Yet Another SR, this is a volume for all configs
   - name: yasr-volume-pv
     namespace: default
@@ -64,6 +67,3 @@ releases:
       - storageClass: hdd
       - volumeName: backup-volume
       - storage: 4Ti
-
-  - name: hostpath-provisioner
-    chart: ../charts/hostpath-provisioner
