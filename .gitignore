@@ -4,7 +4,6 @@
 # docker
 docker/sshd/users.conf
 docker/size-checker/ssmtp.conf
-docker/transmission/bash_history
 
 # chart deps
 charts/gogs/charts/
