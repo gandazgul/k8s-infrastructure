@@ -5,8 +5,8 @@ replicaCount: 1
 vpn:
   name: vpn
   image:
-    name: "dperson/openvpn-client"
-    tag: "latest"
+    name: gandazgul/openvpn-client
+    tag: vf23eee4
     pullPolicy: IfNotPresent
   env:
     - name: TZ
@@ -92,11 +92,11 @@ flexget:
       readOnly: true
   resources:
     requests:
-      cpu: "100m"
-      memory: "100Mi"
+      cpu: 100m
+      memory: 100Mi
     limits:
-      cpu: "500m"
-      memory: "300Mi"
+      cpu: 500m
+      memory: 1000Mi
 
 jackett:
   enabled: true
@@ -122,11 +122,11 @@ jackett:
       readOnly: true
   resources:
     requests:
-      cpu: "100m"
-      memory: "100Mi"
+      cpu: 100m
+      memory: 100Mi
     limits:
-      cpu: "500m"
-      memory: "300Mi"
+      cpu: 500m
+      memory: 1000Mi
 
 sonarr:
   enabled: true
@@ -147,11 +147,11 @@ sonarr:
     enabled: false
   resources:
     requests:
-      cpu: "100m"
-      memory: "100Mi"
+      cpu: 100m
+      memory: 100Mi
     limits:
-      cpu: "500m"
-      memory: "300Mi"
+      cpu: 1000m
+      memory: 2000Mi
 
 radarr:
   enabled: true
@@ -172,11 +172,11 @@ radarr:
     enabled: false
   resources:
     requests:
-      cpu: "100m"
-      memory: "100Mi"
+      cpu: 100m
+      memory: 100Mi
     limits:
-      cpu: "500m"
-      memory: "300Mi"
+      cpu: 1000m
+      memory: 2000Mi
 
 # Without this you can't dns resolve anything inside the container
 dnsPolicy: "None"
