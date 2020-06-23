@@ -1,4 +1,4 @@
-{{- if .Values.radarr.ingress.enabled -}}
+{{- if (and .Values.radarr.enabled .Values.radarr.ingress.enabled) -}}
 {{- $fullName := include "helpers.radarr-ingress" . -}}
 {{- $serviceName := include "helpers.radarr-service" . -}}
 {{- $ingressPath := .Values.radarr.ingress.path -}}

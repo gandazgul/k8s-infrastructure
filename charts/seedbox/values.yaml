@@ -67,6 +67,7 @@ transmission:
       memory: 2000Mi
 
 flexget:
+  enabled: false
   name: flexget
   image:
     name: wiserain/flexget
@@ -98,6 +99,7 @@ flexget:
       memory: "300Mi"
 
 jackett:
+  enabled: true
   name: jackett
   image:
     name: linuxserver/jackett
@@ -127,6 +129,7 @@ jackett:
       memory: "300Mi"
 
 sonarr:
+  enabled: true
   name: sonarr
   image:
     name: linuxserver/sonarr
@@ -151,6 +154,7 @@ sonarr:
       memory: "300Mi"
 
 radarr:
+  enabled: true
   name: radarr
   image:
     name: linuxserver/radarr
