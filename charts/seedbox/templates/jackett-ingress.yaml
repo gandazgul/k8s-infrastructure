@@ -1,4 +1,4 @@
-{{- if .Values.jackett.ingress.enabled -}}
+{{- if (and .Values.jackett.enabled .Values.jackett.ingress.enabled) -}}
 {{- $fullName := include "helpers.jackett-ingress" . -}}
 {{- $serviceName := include "helpers.jackett-service" . -}}
 {{- $ingressPath := .Values.jackett.ingress.path -}}

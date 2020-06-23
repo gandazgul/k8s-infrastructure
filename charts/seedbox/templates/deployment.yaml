@@ -48,7 +48,7 @@ spec:
             periodSeconds: 2
             successThreshold: 1
             tcpSocket:
-              port: 9091
+              port: trans-http
             timeoutSeconds: 2
           readinessProbe:
             failureThreshold: 3
@@ -56,16 +56,13 @@ spec:
             periodSeconds: 2
             successThreshold: 2
             tcpSocket:
-              port: 9091
+              port: trans-http
             timeoutSeconds: 2
           volumeMounts:
 {{ toYaml .Values.transmission.volumeMounts | indent 12 }}
           ports:
             - name: trans-http
               containerPort: 9091
-              protocol: TCP
-            - name: peer-port
-              containerPort: 29091
               protocol: TCP
         # VPN
         - name: {{ .Values.vpn.name | quote }}
@@ -88,27 +85,46 @@ spec:
           volumeMounts:
 {{ toYaml .Values.vpn.volumeMounts | indent 12 }}
         # flexget
-{{/*        - name: {{ .Values.flexget.name | quote }}*/}}
-{{/*          image: "{{ .Values.flexget.image.name }}:{{ .Values.flexget.image.tag }}"*/}}
-{{/*          imagePullPolicy: {{ .Values.flexget.image.pullPolicy | quote }}*/}}
-{{/*          {{- with .Values.flexget.env }}*/}}
-{{/*          env:*/}}
-{{/*{{ toYaml . | nindent 12 }}*/}}
-{{/*          {{- end}}*/}}
-{{/*          resources:*/}}
-{{/*            limits:*/}}
-{{/*              cpu: {{ default "50m" .Values.flexget.resources.limits.cpu | quote }}*/}}
-{{/*              memory: {{ default "50Mi" .Values.flexget.resources.limits.memory | quote }}*/}}
-{{/*            requests:*/}}
-{{/*              cpu: {{ default "50m" .Values.flexget.resources.requests.cpu | quote }}*/}}
-{{/*              memory: {{ default "50Mi" .Values.flexget.resources.requests.memory | quote }}*/}}
-{{/*          volumeMounts:*/}}
-{{/*{{ toYaml .Values.flexget.volumeMounts | indent 12 }}*/}}
-{{/*          ports:*/}}
-{{/*            - name: flexget-http*/}}
-{{/*              containerPort: 3539*/}}
-{{/*              protocol: TCP*/}}
+{{- if .Values.flexget.enabled }}
+        - name: {{ .Values.flexget.name | quote }}
+          image: "{{ .Values.flexget.image.name }}:{{ .Values.flexget.image.tag }}"
+          imagePullPolicy: {{ .Values.flexget.image.pullPolicy | quote }}
+          {{- with .Values.flexget.env }}
+          env:
+{{ toYaml . | nindent 12 }}
+          {{- end}}
+          resources:
+            limits:
+              cpu: {{ default "50m" .Values.flexget.resources.limits.cpu | quote }}
+              memory: {{ default "50Mi" .Values.flexget.resources.limits.memory | quote }}
+            requests:
+              cpu: {{ default "50m" .Values.flexget.resources.requests.cpu | quote }}
+              memory: {{ default "50Mi" .Values.flexget.resources.requests.memory | quote }}
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 2
+            successThreshold: 1
+            tcpSocket:
+              port: flexget-http
+            timeoutSeconds: 2
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 2
+            successThreshold: 2
+            tcpSocket:
+              port: flexget-http
+            timeoutSeconds: 2
+          volumeMounts:
+{{ toYaml .Values.flexget.volumeMounts | indent 12 }}
+          ports:
+            - name: flexget-http
+              containerPort: 3539
+              protocol: TCP
+{{- end}}
         # Jackett
+{{- if .Values.jackett.enabled }}
         - name: {{ .Values.jackett.name | quote }}
           image: "{{ .Values.jackett.image.name }}:{{ .Values.jackett.image.tag }}"
           imagePullPolicy: {{ .Values.jackett.image.pullPolicy | quote }}
@@ -123,13 +139,31 @@ spec:
             requests:
               cpu: {{ default "50m" .Values.jackett.resources.requests.cpu | quote }}
               memory: {{ default "50Mi" .Values.jackett.resources.requests.memory | quote }}
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 2
+            successThreshold: 1
+            tcpSocket:
+              port: jackett-http
+            timeoutSeconds: 2
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 2
+            successThreshold: 2
+            tcpSocket:
+              port: jackett-http
+            timeoutSeconds: 2
           volumeMounts:
 {{ toYaml .Values.jackett.volumeMounts | indent 12 }}
           ports:
           - name: jackett-http
             containerPort: 9117
             protocol: TCP
+{{- end}}
         # Sonarr
+{{- if .Values.sonarr.enabled }}
         - name: {{ .Values.sonarr.name | quote }}
           image: "{{ .Values.sonarr.image.name }}:{{ .Values.sonarr.image.tag }}"
           imagePullPolicy: {{ .Values.sonarr.image.pullPolicy | quote }}
@@ -144,13 +178,31 @@ spec:
             requests:
               cpu: {{ default "50m" .Values.sonarr.resources.requests.cpu | quote }}
               memory: {{ default "50Mi" .Values.sonarr.resources.requests.memory | quote }}
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 2
+            successThreshold: 1
+            tcpSocket:
+              port: sonarr-http
+            timeoutSeconds: 2
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 2
+            successThreshold: 2
+            tcpSocket:
+              port: sonarr-http
+            timeoutSeconds: 2
           volumeMounts:
 {{ toYaml .Values.sonarr.volumeMounts | indent 12 }}
           ports:
           - name: sonarr-http
             containerPort: 8989
             protocol: TCP
+{{- end}}
         # radarr
+{{- if .Values.radarr.enabled }}
         - name: {{ .Values.radarr.name | quote }}
           image: "{{ .Values.radarr.image.name }}:{{ .Values.radarr.image.tag }}"
           imagePullPolicy: {{ .Values.radarr.image.pullPolicy | quote }}
@@ -165,21 +217,38 @@ spec:
             requests:
               cpu: {{ default "50m" .Values.radarr.resources.requests.cpu | quote }}
               memory: {{ default "50Mi" .Values.radarr.resources.requests.memory | quote }}
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 2
+            successThreshold: 1
+            tcpSocket:
+              port: radarr-http
+            timeoutSeconds: 2
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 2
+            successThreshold: 2
+            tcpSocket:
+              port: radarr-http
+            timeoutSeconds: 2
           volumeMounts:
 {{ toYaml .Values.radarr.volumeMounts | indent 12 }}
           ports:
           - name: radarr-http
             containerPort: 7878
             protocol: TCP
-    {{- with .Values.nodeSelector }}
+{{- end}}
+{{- with .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.affinity }}
+{{- end }}
+{{- with .Values.affinity }}
       affinity:
 {{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
+{{- end }}
+{{- with .Values.tolerations }}
       tolerations:
 {{ toYaml . | indent 8 }}
-    {{- end }}
+{{- end }}

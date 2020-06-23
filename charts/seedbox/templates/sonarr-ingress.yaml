@@ -1,4 +1,4 @@
-{{- if .Values.sonarr.ingress.enabled -}}
+{{- if (and .Values.sonarr.enabled .Values.sonarr.ingress.enabled) -}}
 {{- $fullName := include "helpers.sonarr-ingress" . -}}
 {{- $serviceName := include "helpers.sonarr-service" . -}}
 {{- $ingressPath := .Values.sonarr.ingress.path -}}
