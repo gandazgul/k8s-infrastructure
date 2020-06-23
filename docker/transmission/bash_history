@@ -1,7 +1,0 @@
-flexget -c /config/flexget/config.yml execute --task sort-shows
-flexget -c /config/flexget/config.yml execute --task movie-queue --no-cache
-flexget -c /config/flexget/config.yml execute --task download-movies --discover-now
-flexget -c /config/flexget/config.yml execute --task download-shows
-flexget -c /config/flexget/config.yml execute --task sort-movies
-flexget -c /config/flexget/config.yml execute --task sort-shows | grep -v seen
-rsync -havur /data/downloads/ /main/public/Downloads/
