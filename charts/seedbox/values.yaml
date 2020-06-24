@@ -6,7 +6,7 @@ vpn:
   name: vpn
   image:
     name: gandazgul/openvpn-client
-    tag: vf23eee4
+    tag: va93e3ed
     pullPolicy: IfNotPresent
   env:
     - name: TZ
