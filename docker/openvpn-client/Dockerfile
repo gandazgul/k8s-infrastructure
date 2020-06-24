@@ -2,11 +2,11 @@ FROM dperson/openvpn-client
 
 RUN \
     echo "**** Adding cronjob to keep the transmission port open *****" \
-    && echo '@reboot sleep 120 && /vpn/port-forwarding.sh | while IFS= read -r line; do echo "$(date) $line"; done >> /var/log/pia_portforward.log 2>&1 #PIA Port Forward' >> /etc/crontabs/root \
-    && echo '0 */2 * * * /vpn/port-forwarding.sh | while IFS= read -r line; do echo "$(date) $line"; done >> /var/log/pia_portforward.log 2>&1 #PIA Port Forward' >> /etc/crontabs/root
+    && echo '@reboot sleep 60 && /usr/bin/port-forwarding.sh | while IFS= read -r line; do echo "$(date) $line"; done >> /var/log/pia_portforward.log 2>&1 #PIA Port Forward' >> /etc/crontabs/root \
+    && echo '0 */2 * * * /usr/bin/port-forwarding.sh | while IFS= read -r line; do echo "$(date) $line"; done >> /var/log/pia_portforward.log 2>&1 #PIA Port Forward' >> /etc/crontabs/root
 
-COPY ./port-forward-cron.sh /usr/bin/port-forward-cron.sh
-RUN chmod ug+x /usr/bin/port-forward-cron.sh
+COPY ./port-forwarding.sh /usr/bin/port-forwarding.sh
+RUN chmod ug+x /usr/bin/port-forwarding.sh
 COPY ./entrypoint.sh /usr/bin/entrypoint.sh
 RUN chmod ug+x /usr/bin/entrypoint.sh
 

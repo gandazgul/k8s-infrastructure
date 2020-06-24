@@ -26,7 +26,7 @@ VPNLOCALIP=$(ifconfig $VPNINTERFACE | awk '/inet / {print $2}' | awk 'BEGIN { FS
 CURL_TIMEOUT=5
 CLIENT_ID=$(uname -v | sha1sum | awk '{ print $1 }')
 TRANSUSER=transmission
-TRANSPASS="Winter is coming!"
+#TRANSPASS=Pass this variable in with your password when running the container
 TRANSHOST=localhost
 
 #request new port
