@@ -6,11 +6,8 @@ vpn:
   name: vpn
   image:
     name: gandazgul/openvpn-client
-    tag: v80d0193
+    tag: v455bb07
     pullPolicy: IfNotPresent
-  env:
-    - name: TZ
-      value: "EST5EDT"
   resources:
     requests:
       cpu: 100m

@@ -7,19 +7,17 @@ helmDefaults:
   timeout: 600
   force: true
 
-# For the VPN port forward and transmission automation to work add this to the conf
-# run up.sh when the connection is set up
-#script-security 2
-#up /vpn/up.sh
-#
-# The scripts for up.sh and port-forward.sh are in this repo along with the Dockerfile for the vpn container
-# Copy these scripts to configs/openvpn on yasr.
-
 releases:
   - name: seedbox
     namespace: default
     chart: ../charts/seedbox
     values:
+      - vpn:
+          env:
+          - name: TZ
+            value: "EST5EDT"
+          - name: TRANSPASS
+            value: {{ requiredEnv "TRANSMISSION_RPC_PASSWORD" }}
       - transmission:
           ingress:
             enabled: true
