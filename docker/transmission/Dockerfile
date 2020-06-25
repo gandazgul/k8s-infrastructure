@@ -2,8 +2,7 @@ FROM alpine:3.11
 
 ENV UID=1000 \
     GID=1000 \
-    RPC_PORT=9091 \
-    PEER_PORT=29091
+    RPC_PORT=9091
 
 RUN \
 echo "**** Creating user to run transmission *****" \
@@ -15,7 +14,7 @@ echo "**** Creating user to run transmission *****" \
 
 VOLUME /data
 
-EXPOSE $RPC_PORT $PEER_PORT $PEER_PORT/UDP
+EXPOSE $RPC_PORT
 
 CMD su -s /bin/bash abc -c \
-        "/usr/bin/transmission-daemon --foreground -g /data --port ${RPC_PORT} --peerport ${PEER_PORT}"
+        "/usr/bin/transmission-daemon --foreground -g /data --port ${RPC_PORT}"

@@ -1,4 +1,4 @@
-{{- if .Values.flexget.ingress.enabled -}}
+{{- if (and .Values.flexget.enabled .Values.flexget.ingress.enabled) -}}
 {{- $fullName := include "helpers.flexget-ingress" . -}}
 {{- $serviceName := include "helpers.flexget-service" . -}}
 {{- $ingressPath := .Values.flexget.ingress.path -}}

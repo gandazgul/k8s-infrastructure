@@ -12,6 +12,12 @@ releases:
     namespace: default
     chart: ../charts/seedbox
     values:
+      - vpn:
+          env:
+          - name: TZ
+            value: "EST5EDT"
+          - name: TRANSPASS
+            value: {{ requiredEnv "TRANSMISSION_RPC_PASSWORD" }}
       - transmission:
           ingress:
             enabled: true
@@ -26,36 +32,6 @@ releases:
               kubernetes.io/ingress.class: "nginx"
               cert-manager.io/cluster-issuer: "ca-issuer"
               nginx.ingress.kubernetes.io/app-root: "/web/"
-      - flexget:
-          env:
-            - name: MAIL_TO
-              value: {{ requiredEnv "MAIL_TO" }}
-            - name: FG_WEBUI_PASSWD
-              value: {{ requiredEnv "ADMIN_PASSWORD" }}
-          volumeMounts:
-            - name: yasr-volume
-              mountPath: "/config"
-              subPath: "configs/flexget"
-            - name: main-volume
-              mountPath: "/main"
-            - name: yasr-volume
-              mountPath: "/data"
-              subPath: "configs/transmission"
-            - name: tz-config
-              mountPath: /etc/localtime
-              readOnly: true
-          ingress:
-            enabled: true
-            hosts:
-              - host: flexget.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
-                servicePort: flexget-http
-            tls:
-              - hosts:
-                  - flexget.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
-                secretName: flexget-k8s-cert
-            annotations:
-              kubernetes.io/ingress.class: "nginx"
-              cert-manager.io/cluster-issuer: "ca-issuer"
       - jackett:
           ingress:
             enabled: true

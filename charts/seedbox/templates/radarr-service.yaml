@@ -1,4 +1,4 @@
-{{- if .Values.radarr.service }}
+{{- if (and .Values.radarr.enabled .Values.radarr.service) -}}
 apiVersion: v1
 kind: Service
 metadata:
