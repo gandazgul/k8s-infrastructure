@@ -1,7 +1,7 @@
 {{- if .Values.transmission.ingress.enabled -}}
-  {{- $fullName := include "helpers.transmission-ingress" . -}}
-  {{- $serviceName := include "helpers.transmission-service" . -}}
-  {{- $ingressPath := .Values.transmission.ingress.path -}}
+{{- $fullName := include "helpers.transmission-ingress" . -}}
+{{- $serviceName := include "helpers.transmission-service" . -}}
+{{- $ingressPath := .Values.transmission.ingress.path -}}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:

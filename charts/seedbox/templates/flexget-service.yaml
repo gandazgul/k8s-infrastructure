@@ -1,4 +1,4 @@
-{{- if .Values.flexget.service }}
+{{- if (and .Values.flexget.enabled .Values.flexget.service) -}}
 apiVersion: v1
 kind: Service
 metadata:
