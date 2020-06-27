@@ -25,5 +25,6 @@ printf "\n\n====================================================================
 printf "Kubernetes is now installed. Please check the status of flannel and kubelet to make sure the network is ready before we proceed to the next step."
 printf "\nVerify that is running:\n"
 kubectl get nodes
+printf "\n"
 kubectl get ds --watch --namespace=kube-system
 printf "Run 'sudo systemctl status kubelet' to see how kubelet is doing\n\n"

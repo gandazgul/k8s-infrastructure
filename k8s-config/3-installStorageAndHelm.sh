@@ -9,7 +9,7 @@ fi
 
 printf "\nCreating CA TLS secret ====================================================================================\n"
 kubectl create namespace ingress
-sudo -E kubectl --namespace=ingress create secret tls ca-key-pair --key=/etc/kubernetes/pki/ca.key --cert=/etc/kubernetes/pki/ca.crt
+sudo -E kubectl --kubeconfig=~/.kube/config --namespace=ingress create secret tls ca-key-pair --key=/etc/kubernetes/pki/ca.key --cert=/etc/kubernetes/pki/ca.crt
 
 printf "\nCreating a certificate for cockpit ========================================================================\n"
 DOMAIN=$1

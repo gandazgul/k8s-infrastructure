@@ -1,5 +1,5 @@
 title: K8s Infrastucture
-description: K8s deployment scripts for Fedora 28 and a collection of helm charts and release configs for several apps and services.
+description: K8s deployment scripts for Fedora 31 and a collection of helm charts and release configs for several apps and services.
 remote_theme: pmarsceill/just-the-docs
 # Aux links for the upper right navigation
 aux_links:

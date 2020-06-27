@@ -1,6 +1,11 @@
 # Run this first:
 # kubectl create secret generic ssh-private-key --from-file=/Users/gandazgul/.ssh/id_rsa
 
+helmDefaults:
+  wait: true
+  timeout: 600
+  force: true
+
 releases:
   - name: rsync-renepor
     namespace: default
@@ -39,7 +44,7 @@ releases:
           tag: latest
           command: ["/bin/sh", "-c"]
           args:
-            - rsync -havurz -e 'ssh -l gandazgul -p 22222 -i /mnt/config/id_rsa -o StrictHostKeyChecking=no' --delete --progress /media/main/public/Movies/ tonydel.sytes.net:/media/main/public/Movies/
+            - find /media/main/public/Movies/ -mtime -100 -type f | sed 's/\/media\/main\/public\/Movies\///' | rsync -havurz --files-from=- -e 'ssh -l gandazgul -p 22222 -i /mnt/config/id_rsa -o StrictHostKeyChecking=no' --delete --progress /media/main/public/Movies/ tonydel.sytes.net:/media/main/public/Movies/
       - volumes:
         - name: ssh-private-key
           secret:

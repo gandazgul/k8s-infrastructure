@@ -4,24 +4,30 @@
 helmDefaults:
   wait: true
   timeout: 600
-  #recreatePods: true
   force: true
 
 releases:
   - name: gogs
     namespace: default
     chart: ../charts/gogs
-    version: 0.6.0
+    #    chart: incubator/gogs
+    version: 0.7.11
     values:
       - persistence:
-          claimName: yasr-volume
+          existingClaim: yasr-volume
           subPath: "configs/gogs/site_data"
       - postgresql:
           persistence:
             existingClaim: yasr-volume
             subPath: "configs/gogs/db"
+          volumePermissions:
+            enabled: false
+          securityContext:
+            enabled: true
+            fsGroup: 1000
+            runAsUser: 1000
       - service:
-          sshPort: 2222
+          sshNodePort: 2222
           gogs:
             serviceDisableRegistration: true
             serviceRequireSignInView: true
