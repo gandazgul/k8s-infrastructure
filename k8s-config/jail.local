@@ -1,0 +1,11 @@
+[DEFAULT]
+# Ban hosts for one hour:
+bantime = 3600
+ignoreip = 127.0.0.1/8 10.1.1.0/24 192.168.1.0/24
+
+# Override /etc/fail2ban/jail.d/00-firewalld.conf:
+banaction = iptables-multiport
+
+[sshd]
+enabled = true
+mode = aggressive

@@ -1,10 +1,13 @@
----
 kind: PersistentVolume
 apiVersion: v1
 metadata:
   name: "{{ .Values.volumeName }}"
   labels:
     name: "{{ .Values.volumeName }}"
+    app: {{ include "helpers.name" . }}
+    chart: {{ include "helpers.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
   capacity:
     storage: "{{ .Values.storage }}"

@@ -1,0 +1,24 @@
+{{- if (and .Values.radarr.enabled .Values.radarr.service) -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "helpers.radarr-service" . }}
+  labels:
+    app: {{ include "helpers.name" . }}
+    chart: {{ include "helpers.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.radarr.service.type }}
+  ports:
+    - name: radarr-http
+      {{- if contains "NodePort" .Values.radarr.service.type }}
+      nodePort: {{ .Values.radarr.service.port }}
+      {{- end }}
+      port: {{ .Values.radarr.service.port }}
+      protocol: TCP
+      targetPort: radarr-http
+  selector:
+    app: {{ include "helpers.name" . }}
+    release: {{ .Release.Name }}
+{{- end }}
