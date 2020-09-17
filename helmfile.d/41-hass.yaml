@@ -1,0 +1,66 @@
+# Config for Home Assistant ====================================================================
+# Home assistant is the command center for the smart home
+
+# NOTE: cli args take precedence over these
+helmDefaults:
+  wait: true
+  timeout: 600
+  force: true
+
+repositories:
+- name: k8s-at-home
+  url: https://k8s-at-home.com/charts/
+
+releases:
+- name: hass
+  namespace: default
+  chart: k8s-at-home/home-assistant
+  values:
+  - ingress:
+      enabled: true
+      hosts:
+      - hass.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+      tls:
+      - hosts:
+        - hass.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+        secretName: hass-k8s-cert
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+        cert-manager.io/cluster-issuer: "ca-issuer"
+  - vscode:
+      ingress:
+        enabled: true
+        hosts:
+        - hass-config.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+        tls:
+        - hosts:
+          - hass-config.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+          secretName: hass-config-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "ca-issuer"
+  - configurator:
+      ingress:
+        enabled: true
+        hosts:
+        - hass-configurator.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+        tls:
+        - hosts:
+          - hass-configurator.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+          secretName: hass-configurator-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "ca-issuer"
+  - appdaemon:
+      ingress:
+        enabled: true
+        hosts:
+        - hass-appdaemon.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+        tls:
+        - hosts:
+          - hass-appdaemon.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+          secretName: hass-appdaemon-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "ca-issuer"
+
