@@ -1,0 +1,63 @@
+sonarr:
+  volumeMounts:
+  - name: yasr-volume
+    mountPath: "/config"
+    subPath: "configs/sonarr"
+  - name: yasr-volume
+    mountPath: "/data"
+    subPath: "transmission"
+  - name: main-volume
+    mountPath: "/tv"
+    subPath: "public/shows"
+  - name: tz-config
+    mountPath: /etc/localtime
+    readOnly: true
+
+radarr:
+  volumeMounts:
+  - name: yasr-volume
+    mountPath: "/config"
+    subPath: "configs/radarr"
+  - name: yasr-volume
+    mountPath: "/data"
+    subPath: "configs/transmission"
+  - name: main-volume
+    mountPath: "/movies"
+    subPath: "public/films"
+  - name: tz-config
+    mountPath: /etc/localtime
+    readOnly: true
+
+# enabled flexget for you configure it how you want it
+flexget:
+  enabled: true
+#  env:
+#  - name: FG_WEBUI_PASSWD
+#    value: {{ requiredEnv "ADMIN_PASSWORD" }}
+  volumeMounts:
+  - name: yasr-volume
+    mountPath: "/config"
+    subPath: "configs/flexget"
+  - name: main-volume
+    mountPath: "/main"
+  - name: yasr-volume
+    mountPath: "/data"
+    subPath: "configs/transmission"
+  - name: tz-config
+    mountPath: /etc/timezone
+    readOnly: true
+  - name: tz-config
+    mountPath: /etc/localtime
+    readOnly: true
+  ingress:
+    enabled: true
+    hosts:
+    - host: flexget.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+      servicePort: flexget-http
+    tls:
+    - hosts:
+      - flexget.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+      secretName: flexget-k8s-cert
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+      cert-manager.io/cluster-issuer: "ca-issuer"
