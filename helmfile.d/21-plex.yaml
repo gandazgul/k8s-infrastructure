@@ -36,4 +36,11 @@ releases:
           type: NodePort
           externalIPs:
             - {{ requiredEnv "MASTER_IP" }}
+      - resources:
+          limits:
+            cpu: 4000m
+            memory: 2Gi
+          requests:
+            cpu: 4000m
+            memory: 2Gi
       - values/plex-pictures.yaml
