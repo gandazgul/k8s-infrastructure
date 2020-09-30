@@ -6,7 +6,7 @@ vpn:
   name: vpn
   image:
     name: gandazgul/openvpn-client
-    tag: vfd16758
+    tag: v5657b91
     pullPolicy: IfNotPresent
   resources:
     requests:

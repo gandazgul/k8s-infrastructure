@@ -47,7 +47,7 @@ port_forward_assignment() {
   fi
 
   PORTFORWARDJSON=$(curl -m ${CURL_TIMEOUT} "http://209.222.18.222:2000/?client_id=${CLIENT_ID}" 2>/dev/null)
-  if [ "$json" == "" ]; then
+  if [ "$PORTFORWARDJSON" == "" ]; then
     PORTFORWARDJSON='Port forwarding is already activated on this connection, has expired, or you are not connected to a PIA region that supports port forwarding'
   fi
 
@@ -67,5 +67,27 @@ port_forward_assignment() {
 
   curl -u "$TRANSUSER:$TRANSPASS" http://${TRANSHOST}:9091/transmission/rpc -d "$DATA" -H "X-Transmission-Session-Id: $SESSIONID"
 }
+
+PROGRAM=`basename $0`
+VERSION=2.1
+
+while test $# -gt 0
+do
+  case $1 in
+  --usage | --help | -h )
+    usage_and_exit 0
+    ;;
+  --version | -v )
+    version
+    exit 0
+    ;;
+  *)
+    error_and_usage "Unrecognized option: $1"
+    ;;
+  esac
+  shift
+done
+
+port_forward_assignment
 
 exit 0
