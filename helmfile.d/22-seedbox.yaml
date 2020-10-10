@@ -71,4 +71,4 @@ releases:
             annotations:
               kubernetes.io/ingress.class: "nginx"
               cert-manager.io/cluster-issuer: "ca-issuer"
-      - values/seedbox.yaml
+      - values/seedbox.yaml.gotmpl
