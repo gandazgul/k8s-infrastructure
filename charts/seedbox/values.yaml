@@ -25,14 +25,14 @@ vpn:
       mountPath: /etc/localtime
       readOnly: true
     - name: yasr-volume
-      mountPath: /tmp/gluetun/forwarded_port
-      subPath: configs/transmission/seed-port
+      mountPath: /tmp/gluetun/
+      subPath: configs/transmission/
 
 transmission:
   name: transmission
   image:
     name: gandazgul/transmission
-    tag: v29845e1
+    tag: v805e17f
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -55,9 +55,6 @@ transmission:
     - name: tz-config
       mountPath: /etc/localtime
       readOnly: true
-    - name: yasr-volume
-      mountPath: /seed-port
-      subPath: configs/transmission/seed-port
   resources:
     requests:
       cpu: 100m

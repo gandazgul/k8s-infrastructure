@@ -36,7 +36,7 @@ port_forward_assignment() {
   TRANSHOST=localhost
 
   echo 'Loading port forward assignment information...'
-  PORT=`cat /peer-port`
+  PORT=`cat /data/forwarded_port`
 
   #change transmission port on the fly
   echo "Changing transmission's port..."
