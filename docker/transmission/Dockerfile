@@ -14,8 +14,9 @@ echo "**** Creating user to run transmission *****" \
 
 # transmission complains about these on startup
 RUN \
-  echo "net.core.rmem_max = 4194304" >> /etc/sysctl.conf \
-  && "net.core.wmem_max = 1048576" >> /etc/sysctl.conf
+  echo "**** Configuring system values for transmission *****" \
+  && echo "net.core.rmem_max = 4194304" >> /etc/sysctl.conf \
+  && echo "net.core.wmem_max = 1048576" >> /etc/sysctl.conf
 
 # Configure the port-forward script
 RUN \
