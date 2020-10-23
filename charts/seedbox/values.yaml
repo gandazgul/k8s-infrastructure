@@ -32,7 +32,7 @@ transmission:
   name: transmission
   image:
     name: gandazgul/transmission
-    tag: v805e17f
+    tag: v3dc1b1d
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
