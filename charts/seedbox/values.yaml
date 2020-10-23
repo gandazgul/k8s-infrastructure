@@ -6,10 +6,8 @@ vpn:
   name: vpn
   image:
     name: qmcgaw/private-internet-access
-#    tag: v3.4.0
-    tag: latest
-#    pullPolicy: IfNotPresent
-    pullPolicy: Always
+    tag: v3.4.0
+    pullPolicy: IfNotPresent
   resources:
     requests:
       cpu: 100m
@@ -34,7 +32,7 @@ transmission:
   name: transmission
   image:
     name: gandazgul/transmission
-    tag: vb7e68b5
+    tag: vf6b0c5b
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -48,9 +46,6 @@ transmission:
     - name: GID
       value: "1000"
   volumeMounts:
-    - name: yasr-volume
-      mountPath: /var/log
-      subPath: logs/seedbox
     - name: yasr-volume
       mountPath: /data
       subPath: configs/transmission

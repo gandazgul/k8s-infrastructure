@@ -28,7 +28,6 @@ RUN \
     && echo '@reboot sleep 60s && /usr/bin/port-forwarding.sh | while IFS= read -r line; do echo "$(date) $line"; done >> /var/log/pia_portforward.log 2>&1 #PIA Port Forward' >> /etc/crontabs/root \
     && echo '0 */2 * * * /usr/bin/port-forwarding.sh | while IFS= read -r line; do echo "$(date) $line"; done >> /var/log/pia_portforward.log 2>&1 #PIA Port Forward' >> /etc/crontabs/root
 
-COPY ./peer-port /peer-port
 COPY ./port-forwarding.sh /usr/bin/port-forwarding.sh
 RUN chmod +x /usr/bin/port-forwarding.sh
 RUN touch /var/log/pia_portforward.log
