@@ -30,11 +30,11 @@ RUN \
 
 COPY ./peer-port /peer-port
 COPY ./port-forwarding.sh /usr/bin/port-forwarding.sh
-RUN chmod ug+x /usr/bin/port-forwarding.sh
+RUN chmod +x /usr/bin/port-forwarding.sh
 RUN touch /var/log/pia_portforward.log
 
 COPY ./entrypoint.sh /usr/bin/entrypoint.sh
-RUN chmod ug+x /usr/bin/entrypoint.sh
+RUN chmod +x /usr/bin/entrypoint.sh
 
 CMD su -s /bin/bash abc -c \
         "/usr/bin/entrypoint.sh"

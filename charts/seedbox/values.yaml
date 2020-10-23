@@ -6,8 +6,10 @@ vpn:
   name: vpn
   image:
     name: qmcgaw/private-internet-access
-    tag: v3.4.0
-    pullPolicy: IfNotPresent
+#    tag: v3.4.0
+    tag: latest
+#    pullPolicy: IfNotPresent
+    pullPolicy: Always
   resources:
     requests:
       cpu: 100m
@@ -32,7 +34,7 @@ transmission:
   name: transmission
   image:
     name: gandazgul/transmission
-    tag: v3dc1b1d
+    tag: vb7e68b5
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
