@@ -7,9 +7,9 @@ RUN \
 
 COPY ./port-forwarding.sh /usr/bin/port-forwarding.sh
 RUN chmod ug+x /usr/bin/port-forwarding.sh
+RUN touch /var/log/pia_portforward.log
+
 COPY ./entrypoint.sh /usr/bin/entrypoint.sh
 RUN chmod ug+x /usr/bin/entrypoint.sh
-
-RUN touch /var/log/pia_portforward.log
 
 ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/entrypoint.sh"]

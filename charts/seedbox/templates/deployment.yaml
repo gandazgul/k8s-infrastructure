@@ -27,6 +27,28 @@ spec:
       dnsConfig:
 {{ toYaml .Values.dnsConfig | indent 8 }}
       containers:
+        # VPN
+        - name: {{ .Values.vpn.name | quote }}
+          image: "{{ .Values.vpn.image.name }}:{{ .Values.vpn.image.tag }}"
+          imagePullPolicy: {{ .Values.vpn.image.pullPolicy | quote }}
+          env:
+            {{- with .Values.vpn.env }}
+{{ toYaml . | nindent 12 }}
+            {{- end}}
+            - name: PORT_FORWARDING
+              value: "on"
+          securityContext:
+            capabilities:
+              add: ["NET_ADMIN"]
+          resources:
+            limits:
+              cpu: {{ default "50m" .Values.vpn.resources.limits.cpu | quote }}
+              memory: {{ default "50Mi" .Values.vpn.resources.limits.memory | quote }}
+            requests:
+              cpu: {{ default "50m" .Values.vpn.resources.requests.cpu | quote }}
+              memory: {{ default "50Mi" .Values.vpn.resources.requests.memory | quote }}
+          volumeMounts:
+{{ toYaml .Values.vpn.volumeMounts | indent 12 }}
         # Transmission
         - name: {{ .Values.transmission.name }}
           image: "{{ .Values.transmission.image.name }}:{{ .Values.transmission.image.tag }}"
@@ -64,26 +86,6 @@ spec:
             - name: trans-http
               containerPort: 9091
               protocol: TCP
-        # VPN
-        - name: {{ .Values.vpn.name | quote }}
-          image: "{{ .Values.vpn.image.name }}:{{ .Values.vpn.image.tag }}"
-          imagePullPolicy: {{ .Values.vpn.image.pullPolicy | quote }}
-          {{- with .Values.vpn.env }}
-          env:
-{{ toYaml . | nindent 12 }}
-          {{- end}}
-          securityContext:
-            capabilities:
-              add: ["NET_ADMIN"]
-          resources:
-            limits:
-              cpu: {{ default "50m" .Values.vpn.resources.limits.cpu | quote }}
-              memory: {{ default "50Mi" .Values.vpn.resources.limits.memory | quote }}
-            requests:
-              cpu: {{ default "50m" .Values.vpn.resources.requests.cpu | quote }}
-              memory: {{ default "50Mi" .Values.vpn.resources.requests.memory | quote }}
-          volumeMounts:
-{{ toYaml .Values.vpn.volumeMounts | indent 12 }}
         # flexget
 {{- if .Values.flexget.enabled }}
         - name: {{ .Values.flexget.name | quote }}

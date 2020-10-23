@@ -33,34 +33,15 @@ version() {
 }
 
 port_forward_assignment() {
-  CURL_TIMEOUT=5
-  TRANSUSER=transmission
-  #TRANSPASS=Pass this variable in with your password when running the container
   TRANSHOST=localhost
 
   echo 'Loading port forward assignment information...'
-  if [ "$(uname)" == "Linux" ]; then
-    CLIENT_ID=$(head -n 100 /dev/urandom | sha256sum | tr -d " -")
-  fi
-  if [ "$(uname)" == "Darwin" ]; then
-    CLIENT_ID=$(head -n 100 /dev/urandom | shasum -a 256 | tr -d " -")
-  fi
-
-  PORTFORWARDJSON=$(curl -m ${CURL_TIMEOUT} "http://209.222.18.222:2000/?client_id=${CLIENT_ID}" 2>/dev/null)
-  if [ "$PORTFORWARDJSON" == "" ]; then
-    PORTFORWARDJSON='Port forwarding is already activated on this connection, has expired, or you are not connected to a PIA region that supports port forwarding'
-  fi
-
-  echo $PORTFORWARDJSON
-
-  #trim VPN forwarded port from JSON
-  PORT=$(echo $PORTFORWARDJSON | grep -oE '[0-9]+')
-  # echo $PORT
+  PORT=`cat /peer-port`
 
   #change transmission port on the fly
   echo "Changing transmission's port..."
 
-  SESSIONID=$(curl -u "${TRANSUSER}:${TRANSPASS}" ${TRANSHOST}:9091/transmission/rpc --silent | grep -oE "X-Transmission-Session-Id: ([^<]+)" | awk -F:\  '{print $2}')
+  SESSIONID=$(curl ${TRANSHOST}:9091/transmission/rpc --silent | grep -oE "X-Transmission-Session-Id: ([^<]+)" | awk -F:\  '{print $2}')
   echo "SessionID: ${SESSIONID}"
 
   DATA='{"method": "session-set", "arguments": { "peer-port" :'$PORT' } }'
