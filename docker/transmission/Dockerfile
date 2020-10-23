@@ -4,6 +4,10 @@ ENV UID=1000 \
     GID=1000 \
     RPC_PORT=9091
 
+VOLUME /data
+
+EXPOSE $RPC_PORT
+
 RUN \
 echo "**** Creating user to run transmission *****" \
     && addgroup -g ${GID} abc \
@@ -29,9 +33,8 @@ COPY ./port-forwarding.sh /usr/bin/port-forwarding.sh
 RUN chmod ug+x /usr/bin/port-forwarding.sh
 RUN touch /var/log/pia_portforward.log
 
-VOLUME /data
-
-EXPOSE $RPC_PORT
+COPY ./entrypoint.sh /usr/bin/entrypoint.sh
+RUN chmod ug+x /usr/bin/entrypoint.sh
 
 CMD su -s /bin/bash abc -c \
-        "/usr/bin/transmission-daemon --foreground -g /data --port ${RPC_PORT}"
+        "/usr/bin/entrypoint.sh"
