@@ -16,8 +16,12 @@ releases:
           env:
           - name: TZ
             value: "EST5EDT"
-          - name: TRANSPASS
-            value: {{ requiredEnv "TRANSMISSION_RPC_PASSWORD" }}
+          - name: REGION
+            value: "CA Montreal"
+          - name: USER
+            value: {{ requiredEnv "VPN_USER" }}
+          - name: PASSWORD
+            value: {{ requiredEnv "VPN_PASSWORD" }}
       - transmission:
           ingress:
             enabled: true

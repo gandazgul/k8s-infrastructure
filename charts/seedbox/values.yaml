@@ -5,8 +5,8 @@ replicaCount: 1
 vpn:
   name: vpn
   image:
-    name: gandazgul/openvpn-client
-    tag: v5657b91
+    name: qmcgaw/private-internet-access
+    tag: v3.4.0
     pullPolicy: IfNotPresent
   resources:
     requests:
@@ -21,12 +21,12 @@ vpn:
       subPath: configs/openvpn
     - name: dev-tun
       mountPath: /dev/net/tun
-    - name: yasr-volume
-      mountPath: /etc/ssmtp/
-      subPath: configs/ssmtp
     - name: tz-config
       mountPath: /etc/localtime
       readOnly: true
+    - name: yasr-volume
+      mountPath: /tmp/gluetun/forwarded_port
+      subPath: configs/transmission/seed-port
 
 transmission:
   name: transmission
@@ -55,6 +55,9 @@ transmission:
     - name: tz-config
       mountPath: /etc/localtime
       readOnly: true
+    - name: yasr-volume
+      mountPath: /seed-port
+      subPath: configs/transmission/seed-port
   resources:
     requests:
       cpu: 100m

@@ -12,6 +12,22 @@ echo "**** Creating user to run transmission *****" \
     && addgroup abc wheel \
     && apk add --no-cache bash curl nano transmission-daemon
 
+# transmission complains about these on startup
+RUN \
+  echo "net.core.rmem_max = 4194304" >> /etc/sysctl.conf \
+  && "net.core.wmem_max = 1048576" >> /etc/sysctl.conf
+
+# Configure the port-forward script
+RUN \
+    echo "**** Adding cronjob to keep the transmission port open *****" \
+    && echo '@reboot sleep 60s && /usr/bin/port-forwarding.sh | while IFS= read -r line; do echo "$(date) $line"; done >> /var/log/pia_portforward.log 2>&1 #PIA Port Forward' >> /etc/crontabs/root \
+    && echo '0 */2 * * * /usr/bin/port-forwarding.sh | while IFS= read -r line; do echo "$(date) $line"; done >> /var/log/pia_portforward.log 2>&1 #PIA Port Forward' >> /etc/crontabs/root
+
+COPY ./peer-port /peer-port
+COPY ./port-forwarding.sh /usr/bin/port-forwarding.sh
+RUN chmod ug+x /usr/bin/port-forwarding.sh
+RUN touch /var/log/pia_portforward.log
+
 VOLUME /data
 
 EXPOSE $RPC_PORT
