@@ -25,7 +25,9 @@ RUN \
 # Configure the port-forward script
 RUN \
     echo "**** Adding cronjob to keep the transmission port open *****" \
+    # at reboot wait 60s for VPN to initialize then set the port
     && echo '@reboot sleep 60s && /usr/bin/port-forwarding.sh | while IFS= read -r line; do echo "$(date) $line"; done >> /var/log/pia_portforward.log 2>&1 #PIA Port Forward' >> /etc/crontabs/root \
+    # refresh port every 2 hours
     && echo '0 */2 * * * /usr/bin/port-forwarding.sh | while IFS= read -r line; do echo "$(date) $line"; done >> /var/log/pia_portforward.log 2>&1 #PIA Port Forward' >> /etc/crontabs/root
 
 COPY ./port-forwarding.sh /usr/bin/port-forwarding.sh
@@ -35,5 +37,4 @@ RUN touch /var/log/pia_portforward.log
 COPY ./entrypoint.sh /usr/bin/entrypoint.sh
 RUN chmod +x /usr/bin/entrypoint.sh
 
-CMD su -s /bin/bash abc -c \
-        "/usr/bin/entrypoint.sh"
+CMD /usr/bin/entrypoint.sh
