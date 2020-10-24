@@ -53,7 +53,7 @@ releases:
           ingress:
             enabled: true
             hosts:
-            - host: sonarr.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+            - host: tv.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
               servicePort: sonarr-http
             tls:
             - hosts:
@@ -66,7 +66,7 @@ releases:
           ingress:
             enabled: true
             hosts:
-            - host: radarr.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+            - host: movies.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
               servicePort: radarr-http
             tls:
             - hosts:

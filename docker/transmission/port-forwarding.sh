@@ -39,7 +39,7 @@ port_forward_assignment() {
   PORT=`cat /data/forwarded_port`
 
   #change transmission port on the fly
-  echo "Changing transmission's port..."
+  echo "Changing transmission's port to ${PORT}..."
 
   SESSIONID=$(curl ${TRANSHOST}:9091/transmission/rpc --silent | grep -oE "X-Transmission-Session-Id: ([^<]+)" | awk -F:\  '{print $2}')
   echo "SessionID: ${SESSIONID}"
