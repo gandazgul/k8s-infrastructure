@@ -16,8 +16,12 @@ releases:
           env:
           - name: TZ
             value: "EST5EDT"
-          - name: TRANSPASS
-            value: {{ requiredEnv "TRANSMISSION_RPC_PASSWORD" }}
+          - name: REGION
+            value: "CA Montreal"
+          - name: USER
+            value: {{ requiredEnv "VPN_USER" }}
+          - name: PASSWORD
+            value: {{ requiredEnv "VPN_PASSWORD" }}
       - transmission:
           ingress:
             enabled: true
@@ -49,11 +53,11 @@ releases:
           ingress:
             enabled: true
             hosts:
-            - host: sonarr.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+            - host: tv.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
               servicePort: sonarr-http
             tls:
             - hosts:
-              - sonarr.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+              - tv.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
               secretName: sonarr-k8s-cert
             annotations:
               kubernetes.io/ingress.class: "nginx"
@@ -62,11 +66,11 @@ releases:
           ingress:
             enabled: true
             hosts:
-            - host: radarr.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+            - host: movies.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
               servicePort: radarr-http
             tls:
             - hosts:
-              - radarr.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+              - movies.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
               secretName: radarr-k8s-cert
             annotations:
               kubernetes.io/ingress.class: "nginx"

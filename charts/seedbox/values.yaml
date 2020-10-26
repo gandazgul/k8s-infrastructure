@@ -5,8 +5,8 @@ replicaCount: 1
 vpn:
   name: vpn
   image:
-    name: gandazgul/openvpn-client
-    tag: v455bb07
+    name: qmcgaw/private-internet-access
+    tag: v3.4.0
     pullPolicy: IfNotPresent
   resources:
     requests:
@@ -21,18 +21,18 @@ vpn:
       subPath: configs/openvpn
     - name: dev-tun
       mountPath: /dev/net/tun
-    - name: yasr-volume
-      mountPath: /etc/ssmtp/
-      subPath: configs/ssmtp
     - name: tz-config
       mountPath: /etc/localtime
       readOnly: true
+    - name: yasr-volume
+      mountPath: /tmp/gluetun/
+      subPath: configs/transmission/
 
 transmission:
   name: transmission
   image:
     name: gandazgul/transmission
-    tag: v29845e1
+    tag: v29a5586
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -46,9 +46,6 @@ transmission:
     - name: GID
       value: "1000"
   volumeMounts:
-    - name: yasr-volume
-      mountPath: /var/log
-      subPath: logs/seedbox
     - name: yasr-volume
       mountPath: /data
       subPath: configs/transmission
