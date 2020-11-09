@@ -44,7 +44,7 @@ releases:
       # kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.11/deploy/manifests/00-crds.yaml
       - events: ["prepare"]
         command: "kubectl"
-        args: ["apply", "-f", "https://github.com/jetstack/cert-manager/releases/download/v1.0.4/cert-manager.crds.yaml"]
+        args: ["apply", "--validate=false", "-f", "https://github.com/jetstack/cert-manager/releases/download/v1.0.4/cert-manager.crds.yaml"]
       # create the ingress namespace
       # kubectl create namespace ingress
       - events: ["prepare"]
