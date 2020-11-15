@@ -6,7 +6,7 @@ vpn:
   name: vpn
   image:
     name: qmcgaw/private-internet-access
-    tag: v3.4.0
+    tag: v3.5.1
     pullPolicy: IfNotPresent
   resources:
     requests:

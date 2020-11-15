@@ -1,5 +1,5 @@
 persistence:
-  customVolumeMounts:
-    - name: data
-      mountPath: "/pictures"
-      subPath: "gandazgul/Pictures"
+  extraData:
+  - name: pictures
+    claimName: main-volume
+    subPath: "gandazgul/Pictures"
