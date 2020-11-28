@@ -9,13 +9,12 @@ helmDefaults:
 
 repositories:
 - name: k8s-at-home
-#  url: https://k8s-at-home.com/charts/
-  url: git+https://github.com/gandazgul/charts-1@charts?ref=patch-1
+  url: https://k8s-at-home.com/charts/
+#  url: git+https://github.com/gandazgul/charts-1@charts?ref=patch-1
 
 releases:
   - name: plex
     namespace: default
-#    chart: k8s-at-home/plex
     chart: k8s-at-home/plex
     values:
       - image:
@@ -26,8 +25,6 @@ releases:
       - serviceTCP:
           type: NodePort
           nodePort: 32400
-#          externalIPs:
-#            - {{ requiredEnv "MASTER_IP" }}
       - serviceUDP:
           type: NodePort
       - persistence:
