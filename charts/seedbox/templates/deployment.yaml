@@ -50,6 +50,18 @@ spec:
           volumeMounts:
 {{ toYaml .Values.vpn.volumeMounts | indent 12 }}
         # Transmission
+        - name: transmission-pia-port-forward
+          image: "gandazgul/transmission-pia-port-forward:v318a599"
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: 50m
+              memory: 50Mi
+            requests:
+              cpu: 50m
+              memory: 50Mi
+          volumeMounts:
+{{ toYaml .Values.transmission.volumeMounts | indent 12 }}
         - name: {{ .Values.transmission.name }}
           image: "{{ .Values.transmission.image.name }}:{{ .Values.transmission.image.tag }}"
           imagePullPolicy: {{ .Values.transmission.image.pullPolicy | quote }}
@@ -70,7 +82,7 @@ spec:
             periodSeconds: 2
             successThreshold: 1
             tcpSocket:
-              port: trans-http
+              port: {{ .Values.transmission.service.port }}
             timeoutSeconds: 2
           readinessProbe:
             failureThreshold: 3
@@ -78,14 +90,19 @@ spec:
             periodSeconds: 2
             successThreshold: 2
             tcpSocket:
-              port: trans-http
+              port: {{ .Values.transmission.service.port }}
             timeoutSeconds: 2
           volumeMounts:
 {{ toYaml .Values.transmission.volumeMounts | indent 12 }}
           ports:
-            - name: trans-http
-              containerPort: 9091
-              protocol: TCP
+          - name: {{ .Values.transmission.service.portName }}
+            containerPort: {{ .Values.transmission.service.port }}
+            protocol: {{ .Values.transmission.service.protocol }}
+{{- range .Values.transmission.service.additionalPorts }}
+          - name: {{ .name }}
+            containerPort: {{ .port }}
+            protocol: {{ .protocol }}
+{{- end }}
         # flexget
 {{- if .Values.flexget.enabled }}
         - name: {{ .Values.flexget.name | quote }}

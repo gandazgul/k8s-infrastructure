@@ -1,26 +1,6 @@
 FROM alpine:3.11
 
-ENV UID=1000 \
-    GID=1000 \
-    RPC_PORT=9091
-
-VOLUME /data
-
-EXPOSE $RPC_PORT
-
-RUN \
-echo "**** Creating user to run transmission *****" \
-    && addgroup -g ${GID} abc \
-    && adduser -D -H -s /bin/bash -u ${UID} -G abc abc \
-    && passwd -d abc \
-    && addgroup abc wheel \
-    && apk add --no-cache bash curl nano transmission-daemon
-
-# transmission complains about these on startup
-RUN \
-  echo "**** Configuring system values for transmission *****" \
-  && echo "net.core.rmem_max = 4194304" >> /etc/sysctl.conf \
-  && echo "net.core.wmem_max = 1048576" >> /etc/sysctl.conf
+RUN apk add --no-cache bash curl nano
 
 # Configure the port-forward script
 RUN \
@@ -34,7 +14,7 @@ COPY ./port-forwarding.sh /usr/bin/port-forwarding.sh
 RUN chmod +x /usr/bin/port-forwarding.sh
 RUN touch /var/log/pia_portforward.log
 
-COPY ./entrypoint.sh /usr/bin/entrypoint.sh
-RUN chmod +x /usr/bin/entrypoint.sh
+RUN touch /var/log/crond.log
 
-CMD /usr/bin/entrypoint.sh
+# start crond to run the transmission port cronjob
+CMD ["crond", "-f", "-L", "/var/log/crond.log"]

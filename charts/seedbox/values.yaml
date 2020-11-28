@@ -6,7 +6,7 @@ vpn:
   name: vpn
   image:
     name: qmcgaw/private-internet-access
-    tag: v3.5.1
+    tag: v3.8.0
     pullPolicy: IfNotPresent
   resources:
     requests:
@@ -31,24 +31,42 @@ vpn:
 transmission:
   name: transmission
   image:
-    name: gandazgul/transmission
-    tag: v29a5586
-    pullPolicy: IfNotPresent
+    name: linuxserver/transmission
+    tag: latest
+    pullPolicy: Always
   service:
-    type: ClusterIP
+    portName: "9091-tcp"
+    type: "ClusterIP"
     port: 9091
-    peerPort: 29091
+    protocol: TCP
+    additionalPorts:
+    - name: "51413-tcp"
+      port: 51413
+      protocol: TCP
+    - name: "51412-udp"
+      port: 51413
+      protocol: UDP
+  env:
+  - name: PGID
+    value: "1000"
+  - name: PUID
+    value: "1000"
+  - name: TRANSMISSION_WEB_HOME
+    value: "/combustion-release/"
+  - name: TZ
+    value: "America/New_York"
   ingress:
     enabled: false
-  env:
-    - name: UID
-      value: "1000"
-    - name: GID
-      value: "1000"
   volumeMounts:
     - name: yasr-volume
       mountPath: /data
       subPath: configs/transmission
+    - name: yasr-volume
+      mountPath: /config
+      subPath: configs/transmission
+    - name: yasr-volume
+      mountPath: /watch
+      subPath: configs/transmission/watch
     - name: tz-config
       mountPath: /etc/localtime
       readOnly: true
