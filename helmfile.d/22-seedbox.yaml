@@ -27,7 +27,6 @@ releases:
             enabled: true
             hosts:
               - host: transmission.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
-                servicePort: trans-http
             tls:
               - hosts:
                   - transmission.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}

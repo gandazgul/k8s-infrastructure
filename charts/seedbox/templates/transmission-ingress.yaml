@@ -2,6 +2,7 @@
 {{- $fullName := include "helpers.transmission-ingress" . -}}
 {{- $serviceName := include "helpers.transmission-service" . -}}
 {{- $ingressPath := .Values.transmission.ingress.path -}}
+{{- $svcPort := .Values.transmission.service.port -}}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -34,6 +35,6 @@ spec:
           - path: {{ $ingressPath }}
             backend:
               serviceName: {{ $serviceName }}
-              servicePort: {{ .servicePort }}
+              servicePort: {{ $svcPort }}
     {{- end }}
 {{- end }}
