@@ -22,6 +22,10 @@ node to learn to manage a "cluster" and to try and automate node onboarding. I'v
 
 I publish my charts as a helm repo here: [Helm Repo](https://gandazgul.github.io/k8s-infrastructure/helmrepo/).
 
+## What is YASR? I see it mentioned everywhere
+
+YASR is an in-joke, it stands for Yet Another Storage Repository (https://encyclopedia.thefreedictionary.com/Yet+Another) - SR is the name of storage volumes in Xenserver which we migrated from. YASR is the volume we use to store all application settings. MAIN and BACKUP have all the app data and personal files, backed up to backup with rdiff-backup. 
+
 ## License
 
 Unless specifically noted, all parts of this project are licensed under the [MIT license](https://github.com/gandazgul/k8s-infrastructure/blob/master/LICENSE.md).
