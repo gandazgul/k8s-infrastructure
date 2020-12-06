@@ -37,10 +37,7 @@ releases:
             claimName: yasr-volume
             subPath: "configs/plex"
       - resources:
-          limits:
-            cpu: 4000m
-            memory: 2Gi
           requests:
-            cpu: 4000m
+            cpu: 2000m
             memory: 2Gi
       - values/plex-pictures.yaml
