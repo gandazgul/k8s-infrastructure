@@ -11,13 +11,19 @@ metadata:
 spec:
   type: {{ .Values.transmission.service.type }}
   ports:
-    - name: trans-http
-      {{- if contains "NodePort" .Values.transmission.service.type }}
-      nodePort: {{ .Values.transmission.service.port }}
-      {{- end }}
-      port: {{ .Values.transmission.service.port }}
-      protocol: TCP
-      targetPort: trans-http
+  - name: {{ .Values.transmission.service.portName | quote }}
+    port: {{ .Values.transmission.service.port }}
+    targetPort: {{ .Values.transmission.service.port }}
+    protocol: {{ .Values.transmission.service.protocol }}
+    {{ if (and (eq .Values.transmission.service.type "NodePort") (not (empty .Values.transmission.service.nodePort))) }}
+    nodePort: {{.Values.transmission.service.nodePort}}
+    {{- end }}
+{{- range .Values.transmission.service.additionalPorts }}
+  - name: {{ .name | quote }}
+    port: {{ .port }}
+    targetPort: {{ .port }}
+    protocol: {{ .protocol }}
+{{- end }}
   selector:
     app: {{ include "helpers.name" . }}
     release: {{ .Release.Name }}

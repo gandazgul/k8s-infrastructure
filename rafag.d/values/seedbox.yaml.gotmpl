@@ -5,7 +5,7 @@ sonarr:
     subPath: "configs/sonarr"
   - name: yasr-volume
     mountPath: "/data"
-    subPath: "transmission"
+    subPath: "configs/transmission"
   - name: main-volume
     mountPath: "/tv"
     subPath: "public/shows"
@@ -20,7 +20,7 @@ radarr:
     subPath: "configs/radarr"
   - name: yasr-volume
     mountPath: "/data"
-    subPath: "transmission"
+    subPath: "configs/transmission"
   - name: main-volume
     mountPath: "/movies"
     subPath: "public/films"
@@ -31,9 +31,9 @@ radarr:
 # enabled flexget for you configure it how you want it
 flexget:
   enabled: true
-  env:
-  - name: FG_WEBUI_PASSWD
-    value: {{ requiredEnv "ADMIN_PASSWORD" }}
+#  env:
+#  - name: FG_WEBUI_PASSWD
+#    value: {{ requiredEnv "ADMIN_PASSWORD" }}
   volumeMounts:
   - name: yasr-volume
     mountPath: "/config"
@@ -43,6 +43,9 @@ flexget:
   - name: yasr-volume
     mountPath: "/data"
     subPath: "configs/transmission"
+  - name: tz-config
+    mountPath: /etc/timezone
+    readOnly: true
   - name: tz-config
     mountPath: /etc/localtime
     readOnly: true
