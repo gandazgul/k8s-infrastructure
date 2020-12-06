@@ -51,8 +51,8 @@ transmission:
     value: "1000"
   - name: PUID
     value: "1000"
-  - name: TRANSMISSION_WEB_HOME
-    value: "/combustion-release/"
+#  - name: TRANSMISSION_WEB_HOME
+#    value: "/combustion-release/"
   - name: TZ
     value: "America/New_York"
   ingress:
