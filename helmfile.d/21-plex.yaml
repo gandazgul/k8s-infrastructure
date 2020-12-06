@@ -7,33 +7,37 @@ helmDefaults:
   timeout: 600
   force: true
 
+repositories:
+- name: k8s-at-home
+  url: https://k8s-at-home.com/charts/
+#  url: git+https://github.com/gandazgul/charts-1@charts?ref=patch-1
+
 releases:
   - name: plex
     namespace: default
-    chart: ../../kube-plex/charts/kube-plex
+    chart: k8s-at-home/plex
     values:
       - image:
-#          repository: linuxserver/plex
-#          tag: latest
           tag: plexpass
           pullPolicy: Always
       - timezone: America/New_York
-      - kubePlex:
-          enabled: false
-#          enabled: true
-#          image:
-#            repository: docker.io/gandazgul/kube-plex
+      - plexUid: 1000
+      - serviceTCP:
+          type: NodePort
+          nodePort: 32400
+      - serviceUDP:
+          type: NodePort
       - persistence:
           transcode:
             enabled: true
-          config:
-            claimName: yasr-volume
-            subPath: "configs/plex"
           data:
             claimName: main-volume
             subPath: "public"
-      - service:
-          type: NodePort
-          externalIPs:
-            - {{ requiredEnv "MASTER_IP" }}
+          config:
+            claimName: yasr-volume
+            subPath: "configs/plex"
+      - resources:
+          requests:
+            cpu: 2000m
+            memory: 2Gi
       - values/plex-pictures.yaml
