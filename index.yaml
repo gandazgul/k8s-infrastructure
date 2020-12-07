@@ -1,0 +1,172 @@
+apiVersion: v1
+entries:
+  cert-manager-setup:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2020-12-07T06:44:28.676554734Z"
+    description: A Helm chart for creating my cert-manager setup
+    digest: 9bf33373588c2a3fb9401802ac6184e09b801b57d634cbc002eb5e2da069d43d
+    name: cert-manager-setup
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/cert-manager-setup-0.1.0/cert-manager-setup-0.1.0.tgz
+    version: 0.1.0
+  chart-template:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2020-12-07T06:44:29.11710431Z"
+    description: A Helm chart for Kubernetes
+    digest: 9f910775000af9241c1b0b6c499c7a847288bebbb0b1f0dc8dbf528666328d24
+    name: chart-template
+    type: application
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/chart-template-0.1.0/chart-template-0.1.0.tgz
+    version: 0.1.0
+  cronjob:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2020-12-07T06:44:29.600902477Z"
+    description: A Helm chart for creating cron jobs
+    digest: 6bdef537c4e82286858c6f05de41de8e170caaf0f4aeca812dee26295bd59b01
+    name: cronjob
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/cronjob-0.1.0/cronjob-0.1.0.tgz
+    version: 0.1.0
+  filebrowser:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2020-12-07T06:44:30.065719709Z"
+    description: A chart for filebrowser
+    digest: 47f80da127c170a8739a99a665fb15573248d551e808eaf431ee40b779f77825
+    name: filebrowser
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/filebrowser-0.2.0/filebrowser-0.2.0.tgz
+    version: 0.2.0
+  generic-deployment:
+  - apiVersion: v1
+    appVersion: 1.0.0
+    created: "2020-12-07T06:44:30.510968228Z"
+    description: A generic deployment chart
+    digest: d601402ebb34de7bd2bf7d996ca890d5c3b661b9a36327a0b9b6f2de54c397c7
+    name: generic-deployment
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/generic-deployment-0.1.0/generic-deployment-0.1.0.tgz
+    version: 0.1.0
+  grafana-prometheus:
+  - apiVersion: v1
+    appVersion: 1.0.0
+    created: "2020-12-07T06:44:30.988323348Z"
+    description: A chart for installing grafana config maps
+    digest: 165028b8b05de506aa72e47e55dc0372b31ad8d106cea9d6b421a3bb3ef9035d
+    name: grafana-prometheus
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/grafana-prometheus-0.1.0/grafana-prometheus-0.1.0.tgz
+    version: 0.1.0
+  hostpath-provisioner:
+  - apiVersion: v1
+    appVersion: 1.0.0
+    created: "2020-12-07T06:44:31.438192682Z"
+    description: A chart to install a storage provisioner for single node installs.
+    digest: 5c9067b9058855fa3b4037a5cbcca898fa25fa85e6ba2b8ccfb49ce89558acd5
+    name: hostpath-provisioner
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/hostpath-provisioner-0.1.0/hostpath-provisioner-0.1.0.tgz
+    version: 0.1.0
+  kubernetes-dashboard:
+  - apiVersion: v1
+    appVersion: 2.0.5
+    created: "2020-12-07T06:44:31.901783476Z"
+    description: Based on the official k8s dashboard chart. General-purpose web UI for Kubernetes clusters
+    digest: b1ee3d3fcf5c0d5666e1abbe762eecd18d12a55bc83f2df5653beffe8e71844a
+    home: https://github.com/gandazgul/k8s-infrastructure/tree/master/charts/kubernetes-dashboard
+    icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.svg
+    keywords:
+    - kubernetes
+    - dashboard
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: kubernetes-dashboard
+    sources:
+    - https://github.com/gandazgul/k8s-infrastructure/tree/master/charts/kubernetes-dashboard
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/kubernetes-dashboard-0.1.0/kubernetes-dashboard-0.1.0.tgz
+    version: 0.1.0
+  mosca:
+  - apiVersion: v1
+    appVersion: 2.8.3
+    created: "2020-12-07T06:44:32.354240825Z"
+    description: A Helm chart for the Mosca.io MQTT Broker
+    digest: e6f2073110a2c2065e2e94f25916be2ab0f87b058f6d0068053797aee828627b
+    name: mosca
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/mosca-0.2.0/mosca-0.2.0.tgz
+    version: 0.2.0
+  nest-mqtt-bridge:
+  - apiVersion: v1
+    appVersion: 1.0.0
+    created: "2020-12-07T06:44:32.81733445Z"
+    description: A Helm chart for the nest-mqtt-bridge
+    digest: f14342fa2fe40a4f246d6472d04b0303f6ff21bcd38ce855a016b7b14638d007
+    name: nest-mqtt-bridge
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/nest-mqtt-bridge-0.2.0/nest-mqtt-bridge-0.2.0.tgz
+    version: 0.2.0
+  persistence-volume:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2020-12-07T06:44:33.261685447Z"
+    description: A Helm chart to install my data volumes
+    digest: 7ce18dfe3bee05d33f1944836837b9ebc0754da98992a13ec2a4c306c51f8531
+    name: persistence-volume
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/persistence-volume-0.1.0/persistence-volume-0.1.0.tgz
+    version: 0.1.0
+  pvc:
+  - apiVersion: v1
+    created: "2020-12-07T06:44:33.708221648Z"
+    description: PVC ReadWriteMany
+    digest: 13d86b14ff0b164698373738021fa3d9e7eef66708e0c9994af1cba75c8dda35
+    name: pvc
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/pvc-0.1.0/pvc-0.1.0.tgz
+    version: 0.1.0
+  resilio:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2020-12-07T06:44:34.157968549Z"
+    description: A Helm chart for resilio sync
+    digest: e1d44678a8a71343d022ad0939c10abea8b5e1ca6cef39a2389ad087e349fbfc
+    name: resilio
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/resilio-0.2.0/resilio-0.2.0.tgz
+    version: 0.2.0
+  samba:
+  - apiVersion: v1
+    created: "2020-12-07T06:44:34.596086601Z"
+    description: Chart to deploy a simple Samba server on K8s available on hostNetwork or just inside the cluster
+    digest: 0111c3f980f0e184cc3db7c67014a3f5b48d6e108299c71d9834bed265dec77f
+    name: samba
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/samba-0.2.0/samba-0.2.0.tgz
+    version: 0.2.0
+  seedbox:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2020-12-07T06:44:35.044692124Z"
+    description: A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission, Flexget, jackett, sonarr, radarr
+    digest: d6e8ac8553f923b3260c5147730d3f468c4b23de926ed95d9dd059ab864334d6
+    name: seedbox
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/seedbox-0.3.2/seedbox-0.3.2.tgz
+    version: 0.3.2
+  smartthings-mqtt-bridge:
+  - apiVersion: v1
+    appVersion: 3.0.0
+    created: "2020-12-07T06:44:35.558111693Z"
+    description: A Helm chart for the smartthings-mqtt-bridge
+    digest: 51ea4baf9bb69f3ccc344ba1ba8d3d7a85475a431cdd91ff3912d828fdb7cc3c
+    name: smartthings-mqtt-bridge
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/smartthings-mqtt-bridge-0.2.0/smartthings-mqtt-bridge-0.2.0.tgz
+    version: 0.2.0
+generated: "2020-12-07T06:44:27.859446593Z"
