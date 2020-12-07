@@ -1,17 +1,15 @@
 apiVersion: v1
 name: kubernetes-dashboard
-version: 1.10.1
-appVersion: 1.10.1
-description: General-purpose web UI for Kubernetes clusters
+version: 0.1.0
+appVersion: 2.0.5
+description: Based on the official k8s dashboard chart. General-purpose web UI for Kubernetes clusters
 keywords:
 - kubernetes
 - dashboard
-home: https://github.com/kubernetes/dashboard
+home: https://github.com/gandazgul/k8s-infrastructure/tree/master/charts/kubernetes-dashboard
 sources:
-  - https://github.com/kubernetes/dashboard
+  - https://github.com/gandazgul/k8s-infrastructure/tree/master/charts/kubernetes-dashboard
 maintainers:
-  - name: kfox1111
-    email: Kevin.Fox@pnnl.gov
-  - name: desaintmartin
-    email: cdesaintmartin@wiremind.fr
+  - name: gandazgul
+    email: ravelo.carlos@gmail.com
 icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.svg
