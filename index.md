@@ -34,7 +34,6 @@ helm repo add gandazgul https://gandazgul.github.io/k8s-infrastructure/
 
 Here is the [index.yaml](./index.yaml)
 
-
 ---
 
 ## Getting started
