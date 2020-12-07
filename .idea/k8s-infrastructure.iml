@@ -6,9 +6,6 @@
       <excludeFolder url="file://$MODULE_DIR$/../infrastructure/temp" />
       <excludeFolder url="file://$MODULE_DIR$/../infrastructure/tmp" />
     </content>
-    <content url="file://$MODULE_DIR$/../kube-plex">
-      <excludeFolder url="file://$MODULE_DIR$/../kube-plex/vendor" />
-    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
