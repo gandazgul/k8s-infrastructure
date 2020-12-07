@@ -42,7 +42,7 @@ jobs:
     - name: Run chart-releaser
       uses: helm/chart-releaser-action@v1.1.0
       with:
-        charts_repo_url: https://gandazgul.github.io/k8s-infrastructure/helmrepo/
+        charts_repo_url: https://gandazgul.github.io/k8s-infrastructure/
       env:
         CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
@@ -67,7 +67,7 @@ jobs:
     - name: Commit and push timestamp updates
       run: |
         export generated_date=$(date --utc +%FT%T.%9NZ)
-        sed -i -e "s/^generated:.*/generated: \"$generated_date\"/" helmrepo/index.yaml
-        git add helmrepo/index.yaml
+        sed -i -e "s/^generated:.*/generated: \"$generated_date\"/" index.yaml
+        git add index.yaml
         git commit -sm "Update generated timestamp [ci-skip]" || exit 0
         git push
