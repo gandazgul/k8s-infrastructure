@@ -1,0 +1,189 @@
+apiVersion: v1
+entries:
+  cert-manager-setup:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2020-02-07T23:12:00.381679-05:00"
+    description: A Helm chart for creating my cert-manager setup
+    digest: 0b8933905901ee2cc91fd5d2a1eb6f8fd8fbb0e9b6b547c1a41f3c6b07960911
+    name: cert-manager-setup
+    urls:
+    - cert-manager-setup-0.1.0.tgz
+    version: 0.1.0
+  cronjob:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2020-02-07T23:12:00.382247-05:00"
+    description: A Helm chart for creating cron jobs
+    digest: b53f3975ff8dabeb150b6c9581edf39329a245369e448d117de9bcec9aa84631
+    name: cronjob
+    urls:
+    - cronjob-0.1.0.tgz
+    version: 0.1.0
+  filebrowser:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2020-02-07T23:12:00.382699-05:00"
+    description: A chart for filebrowser
+    digest: 6ac35ec4e7e4f10c471f3546cf1cd5206faf8fb1494ac24fe64877919a1fb71e
+    name: filebrowser
+    urls:
+    - filebrowser-0.2.0.tgz
+    version: 0.2.0
+  generic-deployment:
+  - apiVersion: v1
+    appVersion: 1.0.0
+    created: "2020-02-07T23:12:00.38324-05:00"
+    description: A generic deployment chart
+    digest: a29f8b9bdd722cf9cc2b5d9567365b8581c6998dfa88b00be22bb6e7705e4640
+    name: generic-deployment
+    urls:
+    - generic-deployment-0.1.0.tgz
+    version: 0.1.0
+  gogs:
+  - apiVersion: v1
+    appVersion: 0.11.86
+    created: "2020-02-07T23:12:00.387755-05:00"
+    description: 'Gogs: Go Git Service'
+    digest: 61f48ffc517b6e60a3a9de7f7a5083006def13fbf8cb949d83acc1dd3435185f
+    home: https://gogs.io/
+    icon: https://gogs.io/img/favicon.ico
+    keywords:
+    - git
+    maintainers:
+    - name: obeyler
+    - name: poblin-orange
+    name: gogs
+    urls:
+    - gogs-0.7.11.tgz
+    version: 0.7.11
+  hostpath-provisioner:
+  - apiVersion: v1
+    appVersion: 1.0.0
+    created: "2020-02-07T23:12:00.388356-05:00"
+    description: A chart to install a storage provisioner for single node installs.
+    digest: 494532338cb11d66b13283bfd0bf52fba77bbf242c81ac127645f3fb58e322ee
+    name: hostpath-provisioner
+    urls:
+    - hostpath-provisioner-0.1.0.tgz
+    version: 0.1.0
+  kubernetes-dashboard:
+  - apiVersion: v1
+    appVersion: 1.10.1
+    created: "2020-02-07T23:12:00.389321-05:00"
+    description: General-purpose web UI for Kubernetes clusters
+    digest: 06f26c5b9d77afc79d08ff1a1f5a8f3568844bd537defe867acf4bc73e664d6a
+    home: https://github.com/kubernetes/dashboard
+    icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.svg
+    keywords:
+    - kubernetes
+    - dashboard
+    maintainers:
+    - email: Kevin.Fox@pnnl.gov
+      name: kfox1111
+    - email: cdesaintmartin@wiremind.fr
+      name: desaintmartin
+    name: kubernetes-dashboard
+    sources:
+    - https://github.com/kubernetes/dashboard
+    urls:
+    - kubernetes-dashboard-1.10.1.tgz
+    version: 1.10.1
+  - apiVersion: v1
+    appVersion: 2.0.5
+    created: "2020-12-07T05:49:21.765637435Z"
+    description: Based on the official k8s dashboard chart. General-purpose web UI for Kubernetes clusters
+    digest: 9c166f77302e348dfc2e4e3df291f4155c78f94a7e81f9313b761f974c11c02a
+    home: https://github.com/gandazgul/k8s-infrastructure/tree/master/charts/kubernetes-dashboard
+    icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.svg
+    keywords:
+    - kubernetes
+    - dashboard
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: kubernetes-dashboard
+    sources:
+    - https://github.com/gandazgul/k8s-infrastructure/tree/master/charts/kubernetes-dashboard
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/kubernetes-dashboard-0.1.0/kubernetes-dashboard-0.1.0.tgz
+    version: 0.1.0
+  mosca:
+  - apiVersion: v1
+    appVersion: 2.8.3
+    created: "2020-02-07T23:12:00.389728-05:00"
+    description: A Helm chart for the Mosca.io MQTT Broker
+    digest: 3079321a5b685cd04632a8a649865330ab6dc736fcc7630955283c9f3b728e75
+    name: mosca
+    urls:
+    - mosca-0.2.0.tgz
+    version: 0.2.0
+  nest-mqtt-bridge:
+  - apiVersion: v1
+    appVersion: 1.0.0
+    created: "2020-02-07T23:12:00.390906-05:00"
+    description: A Helm chart for the nest-mqtt-bridge
+    digest: 2b0b22a2223869747036191546f3d19b01198b1dd547e152e469003aeace61b4
+    name: nest-mqtt-bridge
+    urls:
+    - nest-mqtt-bridge-0.2.0.tgz
+    version: 0.2.0
+  persistence-volume:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2020-02-07T23:12:00.391464-05:00"
+    description: A Helm chart to install my data volumes
+    digest: 38e19b5216d0d99253f88830b14c90e37f53e33b697019e2ca8e4cfbe8b9f52e
+    name: persistence-volume
+    urls:
+    - persistence-volume-0.1.0.tgz
+    version: 0.1.0
+  pvc:
+  - apiVersion: v1
+    created: "2020-02-07T23:12:00.391934-05:00"
+    description: PVC ReadWriteMany
+    digest: ec53c382c310910f4ada8c4040800ab72f592e39ca8184e97b5f700a888d7cec
+    name: pvc
+    urls:
+    - pvc-0.1.0.tgz
+    version: 0.1.0
+  resilio:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2020-02-07T23:12:00.39229-05:00"
+    description: A Helm chart for resilio sync
+    digest: 369887c44bbf114e85496a781b31190ed9d5b36e90133b46e805498d7bfb652e
+    name: resilio
+    urls:
+    - resilio-0.2.0.tgz
+    version: 0.2.0
+  samba:
+  - apiVersion: v1
+    created: "2020-02-07T23:12:00.392821-05:00"
+    description: Chart to deploy a simple Samba server on K8s available on hostNetwork or just inside the cluster
+    digest: 52de23906c6518d484e4e44cef2ceedb92f8a4afb8e9c5a47c6c66b2a4cd9022
+    name: samba
+    urls:
+    - samba-0.2.0.tgz
+    version: 0.2.0
+  seedbox:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2020-02-07T23:12:00.393374-05:00"
+    description: A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission and Flexget
+    digest: 0a53cebd06a26c80bb1e42360cb8ba93559c7fff807cd18da18d6f334c8b3678
+    name: seedbox
+    urls:
+    - seedbox-0.2.0.tgz
+    version: 0.2.0
+  smartthings-mqtt-bridge:
+  - apiVersion: v1
+    appVersion: 3.0.0
+    created: "2020-02-07T23:12:00.393784-05:00"
+    description: A Helm chart for the smartthings-mqtt-bridge
+    digest: 401ac37a993cb29c85b46b112ffd4a8026394321fb1aaee4bae527f153efa254
+    name: smartthings-mqtt-bridge
+    urls:
+    - smartthings-mqtt-bridge-0.2.0.tgz
+    version: 0.2.0
+generated: "2020-02-07T23:12:00.380201-05:00"
