@@ -16,7 +16,7 @@ created that pods can use as volumes. There's a k8s cron job included to make di
 ## My Home Setup
 
 A small business server running as a master node and worker. I plan to add at least one other 
-node to learn to manage a "cluster" and to try and automate node onboarding. I've tested the manual node onboarding with VMs and it works well. Look at this script [https://github.com/gandazgul/k8s-infrastructure/blob/master/k8s-config/2-configK8SNode.sh]()
+node to learn to manage a "cluster" and to try to automate node on-boarding. I've tested the manual node on-boarding with VMs, and it works well. Look at this script [https://github.com/gandazgul/k8s-infrastructure/blob/master/k8s-config/2-configK8SNode.sh]()
 
 ## Helm repo
 
