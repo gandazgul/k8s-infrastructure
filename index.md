@@ -3,7 +3,7 @@
 This is a collection of scripts to deploy kubernetes on Fedora. Tested on Fedora 31. 
 
 It's also a collection of helm charts that I developed or customized (See [Repo](#helm-repo)), as well as [helmfiles](https://github.com/roboll/helmfile/) 
-to deploy all of the supported applications.
+to deploy all the supported applications.
 
 The storage is handled with PersistenceVolumes mapped to mount points on the host and pre-existing claims 
 created that pods can use as volumes. There's a k8s cron job included to make differential backups between the main mount point and the backup one.
@@ -16,11 +16,23 @@ created that pods can use as volumes. There's a k8s cron job included to make di
 ## My Home Setup
 
 A small business server running as a master node and worker. I plan to add at least one other 
-node to learn to manage a "cluster" and to try and automate node onboarding. I've tested the manual node onboarding with VMs and it works well. Look at this script [https://github.com/gandazgul/k8s-infrastructure/blob/master/k8s-config/2-configK8SNode.sh]()
+node to learn to manage a "cluster" and to try to automate node on-boarding. I've tested the 
+manual node on-boarding with VMs, and it works well. 
+Look at this script [https://github.com/gandazgul/k8s-infrastructure/blob/master/k8s-config/2-configK8SNode.sh]()
 
-## Helm repo
+# [Helm](https://helm.sh) Charts
 
-I publish my charts as a helm repo here: [Helm Repo](https://gandazgul.github.io/k8s-infrastructure/helmrepo/).
+I publish my charts as a helm repo here: [Helm Repo](https://gandazgul.github.io/k8s-infrastructure/).
+
+Most of these I created because I couldn't find them or were super specific. Some are based on official charts I need to modify.
+
+To use them add this url to helm as a repo and run update. 
+
+```bash
+helm repo add gandazgul https://gandazgul.github.io/k8s-infrastructure/
+``` 
+
+Here is the [index.yaml](./index.yaml)
 
 ---
 
@@ -37,16 +49,17 @@ By following these steps you will install a fully functioning kubernetes master 
 points as I like them
 4. Copy the scripts over `scp -r ./k8s-config fedora-ip:~/`
 5. `ssh fedora-ip`
-6. Run `~/k8s-config/2-configK8SMaster` - This will install K8s and configure the master to run pods, it will also install 
+6. Run your modified `~/k8s-config/1-fedoraPostInstall.sh`
+7. Then run `~/k8s-config/2-configK8SMaster` - This will install K8s and configure the master to run pods, it will also install 
 Flannel network plugin
     * Wait for the flannel for your architecture to show `1` in all columns then press ctrl+c
-7. If something fails, you can reset with `sudo kubeadm reset`, delete kubeadminit.lock and try again, all of the 
+8. If something fails, you can reset with `sudo kubeadm reset`, delete kubeadminit.lock and try again, all the 
 scripts are safe to re-run.
-Verify Kubelet that is running with `sudo systemctl status kubelet`
-Once Flannel is working:
-8. Install Storage, Helm, etc. run `3-installStorageAndHelm.sh`
+9. Verify Kubelet that is running with `sudo systemctl status kubelet`
+Once Flannel is working, and you verified kubelet:
+10. Install Storage, Helm, etc. run `3-installStorageAndHelm.sh`
 This will install a hostpath auto provisioner for quick testing of new pod configs, it will also install the helm 
-client with the tiller and diff plugins.
+client with the plugins.
 9. Verify kubectl works: (NOTE: Kubectl does not need sudo, it will fail with sudo)
     * `kubectl get nodes` ← gets all nodes, you should see your node listed and `Ready`
     * `kubectl get all --all-namespaces` ← shows everything that’s running in kubernetes
