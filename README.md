@@ -19,17 +19,15 @@ node to learn to manage a "cluster" and to try to automate node on-boarding. I'v
 
 # [Helm](https://helm.sh) Charts
 
-I publish my charts as a helm repo here: [Helm Repo](https://gandazgul.github.io/k8s-infrastructure/).
-
 Most of these I created because I couldn't find them or were super specific. Some are based on official charts I need to modify.
 
-To use them add this url to helm as a repo and run update. 
+I publish my charts as a helm repo. To use them add this url to helm and run update. 
 
 ```bash
 helm repo add gandazgul https://gandazgul.github.io/k8s-infrastructure/
 ``` 
 
-Here is the [index.yaml](./index.yaml)
+Here is the [index.yaml](https://gandazgul.github.io/k8s-infrastructure/index.yaml)
 
 ## What is YASR? I see it mentioned everywhere
 

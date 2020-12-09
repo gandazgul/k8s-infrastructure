@@ -14,6 +14,7 @@ sudo dnf -y install screen htop git p7zip rdiff-backup fail2ban
 
 printf "Setting up fail2ban for sshd ================================================================================\n"
 sudo cp ./jail.local /etc/fail2ban/jail.local
+sudo systemctl enable fail2ban
 sudo systemctl restart fail2ban
 sudo fail2ban-client status sshd
 

@@ -8,9 +8,12 @@
     "private": true,
     "scripts": {
         "docker:build": "node ./docker/docker-build.js",
-        "docker:run": "node ./docker/docker-run.js"
+        "docker:run": "node ./docker/docker-run.js",
+        "docs": "helm-docs"
     },
     "dependencies": {
-        "minimist": "^1.2.3"
-    }
+        "minimist": "^1.2.3",
+        "pre-commit": "^1.2.2"
+    },
+    "pre-commit": ["docs"]
 }
