@@ -1,8 +1,22 @@
 # seedbox
 
+A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission, Flexget, jackett, sonarr, radarr
+
 ![Version: 0.3.2](https://img.shields.io/badge/Version-0.3.2-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
 
-A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission, Flexget, jackett, sonarr, radarr
+# Seedbox Config
+
+This will install a seedbox into k8s using a container that runs OpenVPN, Transmission, Sonarr, Radarr and flexget.
+
+OpenVPN needs a config and credentials, put your ovpn file in `yasr-volume/configs/openvpn/vpn.conf` and create
+a `credentials.conf` file with the first line being your username and the second line your password.
+
+The config for transmission is generated automatically the first time and then can be customized from Transmission UI.
+If you need to modify settings.json manually remember to scale the deployment to 0 first (to delete the pod)
+then scale back to 1 after modifying settings otherwise transmission oveerides your changes when it shuts down.
+
+The config for flexget should be in: `yasr-volume/configs/flexget/config.yaml` flexget will also store it's DB there.
+For my flexget config you can take a look at: https://github.com/gandazgul/flexget_config
 
 ## Values
 
