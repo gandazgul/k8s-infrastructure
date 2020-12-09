@@ -3,7 +3,7 @@ name: Verify charts against k8s API Schema
 kubeval-chart:
   runs-on: ubuntu-latest
   needs:
-  - helm-lint
+  - lint-test
   strategy:
     matrix:
       k8s:
