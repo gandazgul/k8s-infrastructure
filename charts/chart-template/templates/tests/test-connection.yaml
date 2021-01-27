@@ -3,13 +3,13 @@ kind: Pod
 metadata:
   name: "{{ include "chart.fullname" . }}-test-connection"
   labels:
-  {{ include "chart.labels" . | nindent 4 }}
+    {{- include "chart.labels" . | nindent 4 }}
   annotations:
-    "helm.sh/hook": test-success
+    "helm.sh/hook": test
 spec:
   containers:
     - name: wget
       image: busybox
       command: ['wget']
-      args:  ['{{ include "chart.fullname" . }}:{{ .Values.service.port }}']
+      args: ['{{ include "chart.fullname" . }}:{{ .Values.service.port }}']
   restartPolicy: Never
