@@ -7,6 +7,8 @@ replicaCount: 1
 image:
   repository:
   pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
@@ -15,12 +17,16 @@ fullnameOverride: ""
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
+  # Annotations to add to the service account
+  annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name:
+  name: ""
+
+podAnnotations: {}
 
 podSecurityContext: {}
-# fsGroup: 2000
+  # fsGroup: 2000
 
 securityContext: {}
   # capabilities:
@@ -28,7 +34,7 @@ securityContext: {}
   #   - ALL
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
-# runAsUser: 1000
+  # runAsUser: 1000
 
 service:
   type: ClusterIP
@@ -57,7 +63,14 @@ resources: {}
   #   memory: 128Mi
   # requests:
   #   cpu: 100m
-#   memory: 128Mi
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}
 
