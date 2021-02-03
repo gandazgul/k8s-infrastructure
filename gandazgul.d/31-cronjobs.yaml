@@ -1,5 +1,5 @@
 # Run this first:
-# kubectl create secret generic ssh-private-key --from-file=/Users/gandazgul/.ssh/id_rsa
+# kubectl create secret generic ssh-private-key --from-file=/Users/gandazgul/.ssh/carlos_rsa
 
 helmDefaults:
   wait: true
@@ -18,7 +18,7 @@ releases:
           tag: latest
           command: ["/bin/sh", "-c"]
           args:
-            - rsync -havurz -e 'ssh -l renepor -p 22222 -i /mnt/config/id_rsa -o StrictHostKeyChecking=no' --delete tonydel.sytes.net:/media/main/renepor/ /media/main/renepor/
+            - rsync -havurz -e 'ssh -l renepor -p 22222 -i /tmp/carlos_rsa -o StrictHostKeyChecking=no' --delete tonydel.sytes.net:/media/main/renepor/ /media/main/renepor/
       - volumes:
           - name: ssh-private-key
             secret:
@@ -29,7 +29,7 @@ releases:
               claimName: main-volume
       - volumeMounts:
           - name: ssh-private-key
-            mountPath: /mnt/config
+            mountPath: /tmp
           - name: main-volume
             mountPath: /media/main
 
@@ -44,7 +44,7 @@ releases:
           tag: latest
           command: ["/bin/sh", "-c"]
           args:
-            - find /media/main/public/Movies/ -mtime -100 -type f | sed 's/\/media\/main\/public\/Movies\///' | rsync -havurz --files-from=- -e 'ssh -l gandazgul -p 22222 -i /mnt/config/id_rsa -o StrictHostKeyChecking=no' --delete --progress /media/main/public/Movies/ tonydel.sytes.net:/media/main/public/Movies/
+            - find /media/main/public/Movies/ -mtime -100 -type f | sed 's/\/media\/main\/public\/Movies\///' | rsync -havurz --files-from=- -e 'ssh -l gandazgul -p 22222 -i /tmp/carlos_rsa -o StrictHostKeyChecking=no' --delete --progress /media/main/public/Movies/ tonydel.sytes.net:/media/main/public/Movies/
       - volumes:
         - name: ssh-private-key
           secret:
@@ -55,7 +55,7 @@ releases:
             claimName: main-volume
       - volumeMounts:
           - name: ssh-private-key
-            mountPath: /mnt/config
+            mountPath: /tmp
           - name: main-volume
             mountPath: /media/main
 
@@ -70,7 +70,7 @@ releases:
           tag: latest
           command: ["/bin/sh", "-c"]
           args:
-            - rsync -havurz -e 'ssh -l gandazgul -p 22222 -i /mnt/config/id_rsa -o StrictHostKeyChecking=no' --delete /media/main/gandazgul/ tonydel.sytes.net:/media/main/gandazgul/
+            - rsync -havurz -e 'ssh -l gandazgul -p 22222 -i /tmp/carlos_rsa -o StrictHostKeyChecking=no' --delete /media/main/gandazgul/ tonydel.sytes.net:/media/main/gandazgul/
       - volumes:
           - name: ssh-private-key
             secret:
@@ -81,7 +81,7 @@ releases:
               claimName: main-volume
       - volumeMounts:
           - name: ssh-private-key
-            mountPath: /mnt/config
+            mountPath: /tmp
           - name: main-volume
             mountPath: /media/main
 

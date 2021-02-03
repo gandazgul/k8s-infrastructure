@@ -22,6 +22,8 @@ releases:
             value: {{ requiredEnv "VPN_USER" }}
           - name: PASSWORD
             value: {{ requiredEnv "VPN_PASSWORD" }}
+          - name: FIREWALL
+            value: "off"
       - transmission:
           ingress:
             enabled: true
