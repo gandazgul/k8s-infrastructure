@@ -5,8 +5,8 @@ replicaCount: 1
 vpn:
   name: vpn
   image:
-    name: qmcgaw/private-internet-access
-    tag: v3.8.0
+    name: qmcgaw/gluetun
+    tag: v3.13.1
     pullPolicy: IfNotPresent
   resources:
     requests:
