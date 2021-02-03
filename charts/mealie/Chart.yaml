@@ -1,5 +1,5 @@
 apiVersion: v2
-name: Mealie
+name: mealie
 description: A Helm chart for the Mealie app. A recipe management system.
 
 # A chart can be either an 'application' or a 'library' chart.
