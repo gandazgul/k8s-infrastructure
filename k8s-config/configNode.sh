@@ -5,63 +5,47 @@ if [[ $EUID = 0 ]]; then
    exit 1
 fi
 
-printf "\nGet docker ===============================================================================================\n"
-if [ ! -f docker-ce-18.06.2.ce-3.fc28.x86_64.rpm ]; then
-    wget https://download.docker.com/linux/fedora/28/x86_64/stable/Packages/docker-ce-18.06.2.ce-3.fc28.x86_64.rpm || exit 1
-
-    printf "\nInstall docker & deps ====================================================================================\n"
-    sudo mkdir -p /var/lib/docker || exit 1
-    sudo sudo dnf install -y docker-ce-18.06.2.ce-3.fc28.x86_64.rpm || exit 1
-    sudo sed -i 's/rhgb quiet"/rhgb quiet systemd.unified_cgroup_hierarchy=0"/' /etc/default/grub || exit 1
-    sudo sh -c 'grub2-mkconfig > /boot/efi/EFI/fedora/grub.cfg'  || exit 1
-
-    echo -n "I have to restart in order to finish installing Docker. After reboot, re-run this script. Reboot? (y/n)? "
-    read answer
-    if [ "$answer" != "${answer#[Yy]}" ] ;then
-        sudo reboot
-    fi;
-fi;
-
-# only 19 is available
-#if ! dnf list installed docker >/dev/null 2>&1; then
-#    sudo dnf -y install dnf-plugins-core
-#    sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+#printf "\nGet docker ===============================================================================================\n"
+#if [ ! -f docker-ce-18.06.2.ce-3.fc28.x86_64.rpm ]; then
+#    wget https://download.docker.com/linux/fedora/28/x86_64/stable/Packages/docker-ce-18.06.2.ce-3.fc28.x86_64.rpm || exit 1
 #
 #    printf "\nInstall docker & deps ====================================================================================\n"
-#    sudo dnf -y install docker-1.13.1*
-#    sudo dnf update --exclude="docker"
-#fi;
-
-printf "\nEnable docker ============================================================================================\n"
-sudo systemctl enable --now docker || exit 1
-
-printf "\nVerify docker is working by running hello-world ==========================================================\n"
-sudo docker run --rm hello-world || exit 1
-
-# There are no cri-o rpms yet in the regular repos
-#if ! dnf list installed cri-o > /dev/null 2>&1; then
-#if [[ ! -f cri-o-1.13.0-1.gite8a2525.module_f29+3066+eba77a73.x86_64.rpm ]]; then
-#    printf "\nDownload cri-o ===========================================================================================\n"
-#    wget https://dl.fedoraproject.org/pub/fedora/linux/updates/testing/29/Modular/x86_64/Packages/c/cri-o-1.13.0-1.gite8a2525.module_f29+3066+eba77a73.x86_64.rpm
-#    wget https://dl.fedoraproject.org/pub/fedora/linux/updates/testing/29/Modular/x86_64/Packages/c/cri-tools-1.13.0-1.gitc06001f.module_f29+3066+eba77a73.x86_64.rpm
-#    sudo dnf update --exclude="cri-*"
+#    sudo mkdir -p /var/lib/docker || exit 1
+#    sudo sudo dnf install -y docker-ce-18.06.2.ce-3.fc28.x86_64.rpm || exit 1
+#    sudo sed -i 's/rhgb quiet"/rhgb quiet systemd.unified_cgroup_hierarchy=0"/' /etc/default/grub || exit 1
+#    sudo sh -c 'grub2-mkconfig > /boot/efi/EFI/fedora/grub.cfg'  || exit 1
 #
-#    printf "\nInstall cri-o ============================================================================================\n"
-#    sudo dnf install -y ./cri-o-1.13.0-1.gite8a2525.module_f29+3066+eba77a73.x86_64.rpm ./cri-tools-1.13.0-1.gitc06001f.module_f29+3066+eba77a73.x86_64.rpm
-#
-#    printf "\nInstall cri-o ===========================================================================================\n"
-#    sudo dnf -y install cri-o-1.13* cri-tools-1.13* || exit 1
-#    sudo dnf update --exclude="cri-*"
-
-#    printf "\nEnable cri-o =============================================================================================\n"
-#    sudo systemctl enable --now cri-o || exit 1
-#
-#    printf "\nVerify cri-o is running ==========================================================\n"
-#    if ! systemctl is-active --quiet cri-o >/dev/null 2>&1; then
-#        printf "\nSomething failed while installing cri-o please verify that is running and run this script again"
-#        exit 1
+#    echo -n "I have to restart in order to finish installing Docker. After reboot, re-run this script. Reboot? (y/n)? "
+#    read answer
+#    if [ "$answer" != "${answer#[Yy]}" ] ;then
+#        sudo reboot
 #    fi;
 #fi;
+
+#printf "\nEnable docker ============================================================================================\n"
+#sudo systemctl enable --now docker || exit 1
+#
+#printf "\nVerify docker is working by running hello-world ==========================================================\n"
+#sudo docker run --rm hello-world || exit 1
+
+if ! dnf list installed cri-o > /dev/null 2>&1; then
+    printf "\nInstall cri-o ===========================================================================================\n"
+    sudo dnf module enable cri-o:1.18 || exit 1
+    sudo dnf install cri-o || exit 1
+    sudo dnf update --exclude="cri-*" || exit 1
+    echo fs.inotify.max_user_watches=1048576 | sudo tee --append /etc/sysctl.conf
+
+    printf "\nEnable cri-o =============================================================================================\n"
+    sudo systemctl daemon-reload || exit 1
+    sudo systemctl enable --now cri-o || exit 1
+    sudo systemctl start cri-o || exit 1
+
+    printf "\nVerify cri-o is running ==========================================================\n"
+    if ! systemctl is-active --quiet cri-o >/dev/null 2>&1; then
+        printf "\nSomething failed while installing cri-o please verify that is running and run this script again"
+        exit 1
+    fi;
+fi;
 
 printf "\nDisable SELINUX because kubelet doesnt support it ========================================================\n"
 sudo setenforce 0
@@ -104,21 +88,37 @@ sudo systemctl enable --now cockpit.socket || exit 1
 printf "\nDisabling swap ===========================================================================================\n"
 sudo swapoff -a || exit 1
 
-if dnf list installed firewalld >/dev/null 2>&1; then
+if systemctl is-active --quiet firewalld >/dev/null 2>&1; then
     printf "\nDisabling the firewall ===================================================================================\n"
     sudo systemctl stop firewalld
     sudo systemctl disable firewalld
+    KUBELET_KUBEADM_ARGS="--cgroup-driver=cgroupfs --network-plugin=cni --pod-infra-container-image=k8s.gcr.io/pause:3.2"
     # fedora 29 complained that uninstalling firewalld would uninstall kernel-core
     # sudo dnf -y remove firewalld
     # Masking prevents the service from ever being started
     sudo systemctl mask firewalld.service
 
-    # Enable ipv4 forwarding
-    echo 1 | sudo tee --append /proc/sys/net/ipv4/ip_forward
     # needed for cri-o
-#    sudo modprobe overlay
+    sudo modprobe overlay
     # enable iptables in the kernel
     sudo modprobe br_netfilter
-    # This ensured all network traffic goes through iptables
+    cat <<EOF | sudo tee /etc/modules-load.d/crio.conf
+overlay
+br_netfilter
+EOF
+
+    # Enable ipv4 forwarding
+    echo 1 | sudo tee --append /proc/sys/net/ipv4/ip_forward
+    # This ensures all network traffic goes through iptables
     echo 1 | sudo tee --append /proc/sys/net/bridge/bridge-nf-call-iptables
+
+    # same as above?
+    cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.ipv4.ip_forward                 = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+EOF
+
+# make the above settings take effect now
+sudo sysctl --system
 fi;

@@ -4,13 +4,12 @@
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: InitConfiguration
 nodeRegistration:
-  criSocket: /var/run/dockershim.sock
   # Remove all taints from the master to allow it to schedule pods since we are running a single machine/home lab
   taints: []
-# when crio-o is ready:
-#  criSocket: /var/run/crio/crio.sock
-#  kubeletExtraArgs:
-#    cgroup-driver: systemd
+#  criSocket: /var/run/dockershim.sock
+  criSocket: /var/run/crio/crio.sock
+  kubeletExtraArgs:
+    cgroup-driver: systemd
 ---
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
