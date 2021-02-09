@@ -150,9 +150,9 @@ For my flexget config you can take a look at: https://github.com/gandazgul/flexg
 | volumes[2].name | string | `"dev-tun"` |  |
 | volumes[3].hostPath.path | string | `"/etc/localtime"` |  |
 | volumes[3].name | string | `"tz-config"` |  |
-| vpn.image.name | string | `"qmcgaw/private-internet-access"` |  |
+| vpn.image.name | string | `"qmcgaw/gluetun"` |  |
 | vpn.image.pullPolicy | string | `"IfNotPresent"` |  |
-| vpn.image.tag | string | `"v3.8.0"` |  |
+| vpn.image.tag | string | `"v3.13.1"` |  |
 | vpn.name | string | `"vpn"` |  |
 | vpn.resources.limits.cpu | string | `"500m"` |  |
 | vpn.resources.limits.memory | string | `"100Mi"` |  |

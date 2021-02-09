@@ -9,6 +9,7 @@ helmDefaults:
 
 releases:
   - name: hostpath-provisioner
+    namespace: kube-system
     chart: ../charts/hostpath-provisioner
 
   # Yet Another SR, this is a volume for all configs

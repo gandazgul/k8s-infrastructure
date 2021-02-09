@@ -8,7 +8,7 @@
 replicaCount: 1
 
 image:
-  repository: mazdermind/hostpath-provisioner
+  repository: quay.io/kubevirt/hostpath-provisioner
   tag: latest
   pullPolicy: IfNotPresent
 

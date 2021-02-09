@@ -71,11 +71,9 @@ kubernetes-client in Fedora)
 2. `scp fedora-ip:~/.kube/config ~/.kube/config` <-- configuration file for connecting to the cluster
 3. Test with `kubectl get nodes` you should see your node listed, if not check the permissions on the config file 
 (should be owned by your user/group).
-4. Install helm with ./k8s-config/installHelm.sh. This installs helm without tiller, instead it uses the tiller plugin 
-to run tiller locally :)
+4. Install helm with ./k8s-config/installHelm.sh.
     1. Test helm with:
-    2. `helm tiller start` <-- Installs Tiller locally the first time then starts it
-    3. `helm list` <-- You should see no output, if error then something went wrong
+    3. `helm ls` <-- You should see no output, if error then something went wrong
 5. Install helmfile. For the most up to date version download from the [helmfile's releases](https://github.com/roboll/helmfile/releases))
 6. Set default namespace for kubectl `kubectl config set-context $(kubectl config current-context) --namespace=default`
     * Check that the namespace was set: `kubectl config view | grep namespace:`
