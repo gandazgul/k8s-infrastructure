@@ -37,7 +37,12 @@ else
     echo No
 fi
 
+printf "\nDisable sudo asking for password for members of wheel ====================================================\n"
 echo "%wheel ALL=(ALL) NOPASSWD:ALL" | sudo tee --append /etc/sudoers
+
+printf "\nDisable SELINUX because kubelet doesnt support it ========================================================\n"
+sudo setenforce 0
+echo "SELINUX=disabled" | sudo tee /etc/sysconfig/selinux
 
 # TODO:
 # addgroup public
