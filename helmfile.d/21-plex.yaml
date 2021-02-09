@@ -30,6 +30,7 @@ releases:
       - persistence:
           transcode:
             enabled: true
+            size: 40Gi
           data:
             claimName: main-volume
             subPath: "public"
