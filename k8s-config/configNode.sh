@@ -29,29 +29,40 @@ fi
 #sudo docker run --rm hello-world || exit 1
 
 if ! dnf list installed cri-o > /dev/null 2>&1; then
-    printf "\nInstall cri-o ===========================================================================================\n"
-    sudo dnf module enable cri-o:1.18 || exit 1
-    sudo dnf install cri-o || exit 1
+    printf "\nInstall cri-o and crun ================================================================================\n"
+    sudo dnf -y module enable cri-o:1.20 || exit 1
+    sudo dnf -y install crun cri-o || exit 1
     sudo dnf update --exclude="cri-*" || exit 1
+
+    printf "\nRaising user watches to the highest number to allow kubelet to work with lots of containers ===========\n"
     echo fs.inotify.max_user_watches=1048576 | sudo tee --append /etc/sysctl.conf
 
-    printf "\nEnable cri-o =============================================================================================\n"
+    printf "\nChange cri-o's config to work with crun ===============================================================\n"
+    sed -c -i "s/\(default_runtime *= *\).*/\1crun/" /etc/crio/crio.conf
+    echo "[crio.runtime.runtimes.crun]" | sudo tee --append /etc/crio/crio.conf
+    echo "runtime_path = \"/usr/bin/crun\"" | sudo tee --append /etc/crio/crio.conf
+    echo "runtime_type = \"oci\"" | sudo tee --append /etc/crio/crio.conf
+    echo "runtime_root = \"/run/crun\"" | sudo tee --append /etc/crio/crio.conf
+
+    printf "\nEnable cri-o ==========================================================================================\n"
     sudo systemctl daemon-reload || exit 1
     sudo systemctl enable --now cri-o || exit 1
     sudo systemctl start cri-o || exit 1
 
-    printf "\nVerify cri-o is running ==========================================================\n"
+    printf "\nVerify cri-o is running ===============================================================================\n"
     if ! systemctl is-active --quiet cri-o >/dev/null 2>&1; then
         printf "\nSomething failed while installing cri-o please verify that is running and run this script again"
         exit 1
     fi;
+
+    echo -n "I have to restart in order to finish installing Cri-O. After reboot, re-run this script. Reboot? (y/n)? "
+    read answer
+    if [ "$answer" != "${answer#[Yy]}" ] ;then
+        sudo reboot
+    fi;
 fi;
 
-printf "\nDisable SELINUX because kubelet doesnt support it ========================================================\n"
-sudo setenforce 0
-echo "SELINUX=disabled" | sudo tee /etc/sysconfig/selinux
-
-printf "\nInstalling Kubernetes packages from repo =================================================================\n"
+printf "\nInstalling Kubernetes packages from repo ==================================================================\n"
 if [[ ! -f /etc/yum.repos.d/kubernetes.repo ]]; then
     printf "\nInstall kubelet, kubeadm, crictl(needed by kubelet), cockpit (nice fedora dashboard):"
     sudo bash -c 'cat <<EOF > /etc/yum.repos.d/kubernetes.repo
@@ -82,14 +93,18 @@ EOF'
     sudo ln -s /usr/libexec/cni/ /opt/cni/bin
 fi;
 
-printf "\nEnabling cockpit =========================================================================================\n"
+printf "\nEnabling cockpit ==========================================================================================\n"
 sudo systemctl enable --now cockpit.socket || exit 1
 
-printf "\nDisabling swap ===========================================================================================\n"
-sudo swapoff -a || exit 1
+if dnf list installed zram-generator-defaults > /dev/null 2>&1; then
+  printf "\nDisabling swap ==========================================================================================\n"
+  sudo dnf -y remove zram-generator-defaults
+  sudo systemctl stop swap-create@zram0 || exit 1
+  sudo swapoff /dev/zram0 || exit 1
+fi
 
 if systemctl is-active --quiet firewalld >/dev/null 2>&1; then
-    printf "\nDisabling the firewall ===================================================================================\n"
+    printf "\nDisabling the firewall ================================================================================\n"
     sudo systemctl stop firewalld
     sudo systemctl disable firewalld
     KUBELET_KUBEADM_ARGS="--cgroup-driver=cgroupfs --network-plugin=cni --pod-infra-container-image=k8s.gcr.io/pause:3.2"
