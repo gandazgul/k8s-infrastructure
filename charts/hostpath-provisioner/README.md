@@ -11,7 +11,7 @@ A chart to install a storage provisioner for single node installs.
 | affinity | object | `{}` |  |
 | filesystemPath | string | `"/var/kubernetes"` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"mazdermind/hostpath-provisioner"` |  |
+| image.repository | string | `"quay.io/kubevirt/hostpath-provisioner"` |  |
 | image.tag | string | `"latest"` |  |
 | nodeSelector | object | `{}` |  |
 | pvReclaimPolicy | string | `"Retain"` |  |
