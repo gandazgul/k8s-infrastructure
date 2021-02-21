@@ -74,7 +74,7 @@ releases:
           volumeMounts:
           - name: config
             mountPath: /config
-            subPath: "configs/hass"
+#            subPath: "configs/hass"
 
 # do I need this?
 #          - name: deploykey
