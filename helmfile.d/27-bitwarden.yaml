@@ -26,8 +26,8 @@ releases:
       SMTP_PORT: 587
       SMTP_FROM: {{ requiredEnv "MAIL_TO" }}
       SMTP_SSL: true
-      SMTP_USERNAME: { { requiredEnv "MAIL_TO" } }
-      SMTP_PASSWORD: { { requiredEnv "SMTP_PASSWORD" } }
+      SMTP_USERNAME: {{ requiredEnv "MAIL_TO" }}
+      SMTP_PASSWORD: {{ requiredEnv "SMTP_PASSWORD" }}
       SHOW_PASSWORD_HINT: true
       WEB_VAULT_ENABLED: true
       # YUBI key secrets
