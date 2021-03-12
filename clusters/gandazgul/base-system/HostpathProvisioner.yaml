@@ -1,0 +1,18 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: hostpath-provisioner
+  namespace: kube-system
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: hostpath-provisioner
+      version: '0.1.0'
+      sourceRef:
+        kind: HelmRepository
+        name: gandazgul
+        namespace: flux-system
+      interval: 1m
+  values:
+    replicaCount: 1
