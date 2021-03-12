@@ -1,0 +1,8 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: gandazgul
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: https://gandazgul.github.io/k8s-infrastructure/
