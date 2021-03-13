@@ -16,3 +16,7 @@ spec:
       interval: 1m
   values:
     replicaCount: 1
+    image:
+      repository: quay.io/kubevirt/hostpath-provisioner
+      tag: latest
+      pullPolicy: IfNotPresent
