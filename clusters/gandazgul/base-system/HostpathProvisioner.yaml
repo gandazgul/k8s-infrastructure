@@ -4,7 +4,6 @@ metadata:
   name: hostpath-provisioner
   namespace: kube-system
 spec:
-  interval: 5m
   chart:
     spec:
       chart: hostpath-provisioner
@@ -14,6 +13,7 @@ spec:
         name: gandazgul
         namespace: flux-system
       interval: 1m
+  interval: 1h0m0s
   values:
     replicaCount: 1
     image:
