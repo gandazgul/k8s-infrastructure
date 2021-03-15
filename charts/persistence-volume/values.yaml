@@ -1,12 +1,11 @@
 ---
 # Default values for persistence-volume.
-# WARNING !!! removing the package causes the physical removal of the volume
 
 volumeName: main-volume
 
 storage: 512Gi
 
-storageClass:
+storageClass: hdd
 
 path: /media/main
 
