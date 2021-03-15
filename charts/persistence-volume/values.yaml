@@ -1,14 +1,13 @@
 ---
 # Default values for persistence-volume.
+# WARNING !!! removing the package causes the physical removal of the volume
 
 volumeName: main-volume
 
-storage: 1Ti
+storage: 512Gi
 
-storageClass: hdd
+storageClass:
 
 path: /media/main
 
 volumeMode: Filesystem
-
-nodeHostname: localhost.localdomain
