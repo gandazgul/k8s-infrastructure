@@ -1,9 +1,7 @@
+# WARNING !!! removing the package causes the physical removal of the volume
 
 storageClass:
 
 volumeName: main-volume
 
 storage: 512Gi
-
-# WARNING !!! removing the package causes the physical removal of the volume
-
