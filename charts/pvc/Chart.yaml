@@ -1,4 +1,4 @@
 apiVersion: v1
-description: PVC ReadWriteMany
+description: A Helm chart to install my data volumes claims
 name: pvc
-version: 0.1.0
+version: 0.2.0
