@@ -18,10 +18,8 @@ spec:
     required:
       nodeSelectorTerms:
         - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - "{{ .Values.nodeHostname }}"
+            - key: node-role.kubernetes.io/master
+              operator: Exists
   storageClassName: "{{ .Values.storageClass }}"
   accessModes:
     - ReadWriteMany

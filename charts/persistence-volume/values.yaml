@@ -3,12 +3,10 @@
 
 volumeName: main-volume
 
-storage: 1Ti
+storage: 512Gi
 
 storageClass: hdd
 
 path: /media/main
 
 volumeMode: Filesystem
-
-nodeHostname: localhost.localdomain
