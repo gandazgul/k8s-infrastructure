@@ -4,13 +4,18 @@
 
 A Helm chart to install my data volumes
 
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| gandazgul | ravelo.carlos@gmail.com |  |
+
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| nodeHostname | string | `"localhost.localdomain"` |  |
 | path | string | `"/media/main"` |  |
-| storage | string | `"1Ti"` |  |
+| storage | string | `"512Gi"` |  |
 | storageClass | string | `"hdd"` |  |
 | volumeMode | string | `"Filesystem"` |  |
 | volumeName | string | `"main-volume"` |  |
