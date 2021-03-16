@@ -15,7 +15,7 @@ spec:
         namespace: flux-system
       interval: 1m
   values:
-  - volumeName: yasr-volume
-  - storage: 4Ti
-  - storageClass: hdd
-  - path: /media/yasr
+    volumeName: yasr-volume
+    storage: 4Ti
+    storageClass: hdd
+    path: /media/yasr
