@@ -1,4 +1,0 @@
-apiVersion: v1
-description: PVC ReadWriteMany
-name: pvc
-version: 0.1.0
