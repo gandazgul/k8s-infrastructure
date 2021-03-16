@@ -91,6 +91,20 @@ entries:
     urls:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/kubernetes-dashboard-0.1.0/kubernetes-dashboard-0.1.0.tgz
     version: 0.1.0
+  mealie:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2021-03-16T01:38:38.927312906Z"
+    description: A Helm chart for the Mealie app. A recipe management system.
+    digest: 6aee09fc5eafcc2b718a3d8da105d21fde491e8efdca8a9287e0c659a9e8c144
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: mealie
+    type: application
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/mealie-0.1.1/mealie-0.1.1.tgz
+    version: 0.1.1
   mosca:
   - apiVersion: v1
     appVersion: 2.8.3
@@ -112,6 +126,17 @@ entries:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/nest-mqtt-bridge-0.2.0/nest-mqtt-bridge-0.2.0.tgz
     version: 0.2.0
   persistence-volume:
+  - apiVersion: v1
+    created: "2021-03-16T01:38:39.022415498Z"
+    description: A Helm chart to install my data volumes
+    digest: 8426261e02fef3cc1a93da63449ae131b05f9ab9bed817586925111ff6487a90
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: persistence-volume
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/persistence-volume-0.2.0/persistence-volume-0.2.0.tgz
+    version: 0.2.0
   - apiVersion: v1
     appVersion: "1.0"
     created: "2020-12-07T06:44:33.261685447Z"
