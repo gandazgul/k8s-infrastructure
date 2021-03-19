@@ -1,0 +1,34 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: ingress-nginx
+  namespace: ingress
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: stable/nginx-ingress
+      sourceRef:
+        kind: HelmRepository
+        name: stable
+        namespace: flux-system
+      interval: 1h
+  values:
+    tcp:
+      2222: "default/gogs-gogs:gogs-ssh" # for gogs find a better way to do this
+    controller:
+      stats:
+        enabled: true
+      metrics:
+        enabled: true
+        service:
+          annotations:
+            prometheus.io/scrape: "true"
+            prometheus.io/port: "10254"
+      service:
+        type: NodePort
+        labels:
+          app.kubernetes.io/name: default-http-backend
+          app.kubernetes.io/part-of: ingress-nginx
+#        externalIPs:
+#        - {{ requiredEnv "MASTER_IP" }}
