@@ -1,0 +1,44 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: cert-manager
+  namespace: ingress
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: jetstack/cert-manager
+      sourceRef:
+        kind: HelmRepository
+        name: jetstack
+        namespace: flux-systemn
+      interval: 1h
+  values:
+    installCRDs: true
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: ca-issuer
+  namespace: ingress
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: cert-manager-setup
+      sourceRef:
+        kind: HelmRepository
+        name: gandazgul
+        namespace: flux-systemn
+      interval: 1h
+  values:
+    letsencrypt:
+      enabled: true
+      email:
+        valueFrom:
+        - secretKeyRef:
+            name: secrets
+            namespace: default
+            key: EMAIL
+            optional: true
