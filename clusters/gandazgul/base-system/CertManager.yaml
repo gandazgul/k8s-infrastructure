@@ -41,4 +41,3 @@ spec:
             name: secrets
             namespace: default
             key: EMAIL
-            optional: true
