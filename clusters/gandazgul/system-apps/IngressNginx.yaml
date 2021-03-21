@@ -4,18 +4,15 @@ metadata:
   name: ingress-nginx
   namespace: ingress
 spec:
-  interval: 5m
   chart:
     spec:
-      chart: stable/nginx-ingress
+      chart: ingress-nginx
       sourceRef:
         kind: HelmRepository
-        name: stable
+        name: ingress-nginx
         namespace: flux-system
-      interval: 1h
+  interval: 1h0m0s
   values:
-    tcp:
-      2222: "default/gogs-gogs:gogs-ssh" # for gogs find a better way to do this
     controller:
       stats:
         enabled: true
