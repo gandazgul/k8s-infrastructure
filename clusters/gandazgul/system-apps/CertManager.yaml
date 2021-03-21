@@ -8,7 +8,7 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: jetstack/cert-manager
+      chart: cert-manager
       sourceRef:
         kind: HelmRepository
         name: jetstack
