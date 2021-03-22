@@ -1,0 +1,31 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: k8s-dashboard
+  namespace: kube-system
+spec:
+  chart:
+    spec:
+      chart: kubernetes-dashboard
+      sourceRef:
+        kind: HelmRepository
+        name: gandazgul
+        namespace: flux-system
+  interval: 1h0m0s
+  values:
+  - rbac:
+      # without this the dashboard doesnt have access to anything
+      clusterAdminRole: true
+  - enableInsecureLogin: true
+  - enableSkipLogin: true
+  - ingress:
+      enabled: true
+      hosts:
+      - dashboard.${INGRESS_INTERNAL_NAME}
+      tls:
+      - hosts:
+        - dashboard.${INGRESS_INTERNAL_NAME}
+        secretName: dashboard-k8s-cert
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+        cert-manager.io/cluster-issuer: "ca-issuer"

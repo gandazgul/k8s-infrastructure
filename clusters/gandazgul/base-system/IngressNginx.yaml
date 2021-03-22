@@ -28,9 +28,5 @@ spec:
           app.kubernetes.io/name: default-http-backend
           app.kubernetes.io/part-of: ingress-nginx
         externalIPs:
-        - 10.1.1.2
-#        - valueFrom:
-#          - secretKeyRef:
-#              name: secrets
-#              namespace: default
-#              key: MASTER_IP
+#        - 10.1.1.2
+        - ${MASTER_IP}

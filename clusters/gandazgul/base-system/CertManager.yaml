@@ -23,6 +23,8 @@ metadata:
   name: ca-issuer
   namespace: ingress
 spec:
+  dependsOn:
+  - name: sealed-secrets-controller
   interval: 5m
   chart:
     spec:
