@@ -42,5 +42,5 @@ spec:
         valueFrom:
         - secretKeyRef:
             name: secrets
-            namespace: default
+            namespace: flux-system
             key: EMAIL
