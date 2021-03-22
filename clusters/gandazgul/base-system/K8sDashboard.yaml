@@ -13,12 +13,12 @@ spec:
         namespace: flux-system
   interval: 1h0m0s
   values:
-  - rbac:
+    rbac:
       # without this the dashboard doesnt have access to anything
       clusterAdminRole: true
-  - enableInsecureLogin: true
-  - enableSkipLogin: true
-  - ingress:
+    enableInsecureLogin: true
+    enableSkipLogin: true
+    ingress:
       enabled: true
       hosts:
       - dashboard.${INGRESS_INTERNAL_NAME}
