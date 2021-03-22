@@ -11,6 +11,8 @@ spec:
   secretRef:
     name: flux-system
   url: ssh://git@github.com/gandazgul/k8s-infrastructure
+  ignore: |
+    clusters/gandazgul/apps/values/
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
