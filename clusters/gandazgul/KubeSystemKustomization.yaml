@@ -6,15 +6,14 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-  - name: sealed-secrets-controller
-    namespace: kube-system
+  - name: sealed-secrets
   interval: 10m0s
   path: ./clusters/gandagul/kube-system/
   sourceRef:
     kind: GitRepository
     name: flux-system
-  validation: client
   prune: true
+  validation: client
   postBuild:
 # constants can be specified like this:
 #    substitute:
