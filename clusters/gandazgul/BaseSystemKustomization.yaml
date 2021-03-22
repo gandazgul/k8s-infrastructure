@@ -3,8 +3,13 @@ kind: Kustomization
 metadata:
   name: base-system
 spec:
-  interval: 5m
-  path: "./base-system/"
+  interval: 10m0s
+  path: ./clusters/gandagul/base-system/
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  validation: client
+  prune: true
   postBuild:
 #    substitute:
 #      cluster_env: "prod"
