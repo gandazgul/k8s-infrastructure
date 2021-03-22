@@ -1,0 +1,46 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: plex
+  namespace: default
+spec:
+  chart:
+    spec:
+      chart: plex
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux-system
+  interval: 1h0m0s
+  values:
+    image:
+      tag: plexpass
+      pullPolicy: Always
+    timezone: America/New_York
+    plexUid: 1000
+    serviceTCP:
+      type: NodePort
+      nodePort: 32400
+    serviceUDP:
+      type: NodePort
+    persistence:
+      transcode:
+        enabled: true
+        size: 60Gi
+      data:
+        claimName: main-volume
+        subPath: "public"
+      config:
+        claimName: yasr-volume
+        subPath: "configs/plex"
+    resources:
+      requests:
+        cpu: 2000m
+        memory: 2Gi
+    valuesFrom:
+    - secretKeyRef:
+        name: plex-values
+        namespace: default
+        required: false
+#        key: values.yaml # default?
