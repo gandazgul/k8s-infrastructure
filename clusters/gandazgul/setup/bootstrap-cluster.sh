@@ -49,9 +49,10 @@ installFlux() {
     exit 1
   fi
   flux bootstrap github \
-    --owner=billimek \
-    --repository=k8s-gitops \
-    --branch master \
+    --owner="$GITHUB_USER" \
+    --repository=k8s-infrastructure \
+    --branch=feature/gitops \
+    --path=./clusters/gandazgul \
     --personal
 
   FLUX_INSTALLED=$?
@@ -62,6 +63,7 @@ installFlux() {
 }
 
 installFlux
+call ./update-secret.sh
 
 message "all done!"
 kubectl get nodes -o=wide
