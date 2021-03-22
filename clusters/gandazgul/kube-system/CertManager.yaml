@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: cert-manager
-  namespace: ingress
+  namespace: kube-system
 spec:
   interval: 5m
   chart:
@@ -21,7 +21,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: ca-issuer
-  namespace: ingress
+  namespace: kube-system
 spec:
   dependsOn:
   - name: sealed-secrets-controller
