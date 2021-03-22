@@ -8,7 +8,7 @@ spec:
   dependsOn:
   - name: sealed-secrets
   interval: 10m0s
-  path: ./clusters/gandagul/apps/
+  path: ./clusters/gandazgul/apps/
   sourceRef:
     kind: GitRepository
     name: flux-system

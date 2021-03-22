@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # Seal main secrets file
-rm -rf ./clusters/gandazgul/flux-system/SealedSecrets.json
+rm -rf ./clusters/gandazgul/sealed-secrets/SealedSecrets.json
 kubectl create secret generic secrets --dry-run=client --from-env-file=./clusters/gandazgul/setup/secrets.env -o json \
- | kubeseal > ./clusters/gandazgul/flux-system/SealedSecrets.json
+ | kubeseal > ./clusters/gandazgul/sealed-secrets/SealedSecrets.json
 
 # Create value/yaml secrets
 rm -rf ./clusters/gandazgul/apps/secrets/
