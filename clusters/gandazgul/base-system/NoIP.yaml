@@ -2,11 +2,10 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: no-ip
-  namespace: kube-system
+  namespace: default
 spec:
   dependsOn:
   - name: yasr-volume
-    namespace: default
   chart:
     spec:
       chart: generic-deployment
