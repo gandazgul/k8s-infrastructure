@@ -6,12 +6,12 @@ kubectl create secret generic secrets --dry-run=client --from-env-file=./cluster
  | kubeseal > ./clusters/gandazgul/flux-system/SealedSecrets.json
 
 # Create value/yaml secrets
-rm -rf ./clusters/gandazgul/apps/values/secrets/
-mkdir ./clusters/gandazgul/apps/values/secrets/
+rm -rf ./clusters/gandazgul/apps/secrets/
+mkdir ./clusters/gandazgul/apps/secrets/
 
 for f in ./clusters/gandazgul/apps/values/*.yaml
 do
   echo "Processing $f file..."
   basename=$(basename "$f" .yaml)
-  kubectl create secret generic "${basename}" --dry-run=client --from-file=values.yaml="${f}" -o json > "./clusters/gandazgul/apps/values/secrets/${basename}.json"
+  kubectl create secret generic "${basename}" --dry-run=client --from-file=values.yaml="${f}" -o json > "./clusters/gandazgul/apps/secrets/${basename}.json"
 done
