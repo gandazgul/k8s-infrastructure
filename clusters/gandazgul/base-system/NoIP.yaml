@@ -1,0 +1,34 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: no-ip
+  namespace: kube-system
+spec:
+  dependsOn:
+  - name: yasr-volume
+  chart:
+    spec:
+      chart: generic-deployment
+      sourceRef:
+        kind: HelmRepository
+        name: gandazgul
+        namespace: flux-system
+  interval: 1h0m0s
+  values:
+  - image:
+      repository: coppit/no-ip
+      tag: "latest"
+  - volumes:
+    - name: tz-config
+      hostPath:
+        path: /etc/localtime
+    - name: yasr-volume
+      persistentVolumeClaim:
+        claimName: yasr-volume
+  - volumeMounts:
+    - name: tz-config
+      mountPath: /etc/localtime
+      readOnly: true
+    - name: yasr-volume
+      mountPath: "/config"
+      subPath: "configs/noip"
