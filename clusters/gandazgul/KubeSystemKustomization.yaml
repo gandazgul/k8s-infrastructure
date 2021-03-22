@@ -25,6 +25,5 @@ spec:
 #      name: cluster-vars
     - kind: Secret
       name: secrets
-      namespace: flux-system
 
 # use ${var:=default} or ${var} in the files to place variables
