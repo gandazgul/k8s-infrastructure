@@ -25,6 +25,7 @@ metadata:
 spec:
   dependsOn:
   - name: sealed-secrets-controller
+  - name: cert-manager
   interval: 5m
   chart:
     spec:
