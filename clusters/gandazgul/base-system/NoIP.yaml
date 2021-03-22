@@ -16,17 +16,17 @@ spec:
         namespace: flux-system
   interval: 1h0m0s
   values:
-  - image:
+    image:
       repository: coppit/no-ip
-      tag: "latest"
-  - volumes:
+      tag: latest
+    volumes:
     - name: tz-config
       hostPath:
         path: /etc/localtime
     - name: yasr-volume
       persistentVolumeClaim:
         claimName: yasr-volume
-  - volumeMounts:
+    volumeMounts:
     - name: tz-config
       mountPath: /etc/localtime
       readOnly: true
