@@ -1,5 +1,0 @@
-persistence:
-  extraMounts:
-  - name: data
-    mountPath: pictures
-    subPath: "gandazgul/Pictures"
