@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: hostpath-provisioner
-      version: '0.1.0'
+      version: '0.2.1'
       sourceRef:
         kind: HelmRepository
         name: gandazgul
