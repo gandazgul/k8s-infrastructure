@@ -21,7 +21,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./clusters/gandazgul
+  path: ./clusters/gandazgul/flux-system
   prune: true
   sourceRef:
     kind: GitRepository
