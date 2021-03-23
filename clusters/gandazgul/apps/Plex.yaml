@@ -28,6 +28,7 @@ spec:
       transcode:
         enabled: true
         size: 60Gi
+        accessMode: ReadWriteOnce
       data:
         claimName: main-volume
         subPath: "public"
