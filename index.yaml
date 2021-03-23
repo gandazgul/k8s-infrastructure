@@ -63,6 +63,17 @@ entries:
     version: 0.1.0
   hostpath-provisioner:
   - apiVersion: v1
+    created: "2021-03-23T01:46:33.736013236Z"
+    description: A chart to install a storage provisioner for single node installs.
+    digest: bf24c33ee9f0e6903c098e78435da36c876cb9a34860a8e7aa7ac40a219d0b6b
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: hostpath-provisioner
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/hostpath-provisioner-0.2.1/hostpath-provisioner-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v1
     created: "2021-03-23T01:34:57.302129105Z"
     description: A chart to install a storage provisioner for single node installs.
     digest: 53b45af4827227ebc17f2d8a56608d88343ac4e5cc3c00e7311732e89821faba
