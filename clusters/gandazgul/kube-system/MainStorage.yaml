@@ -19,3 +19,4 @@ spec:
     storage: 4Ti
     storageClass: hdd
     path: /media/main
+    createStorageClass: true
