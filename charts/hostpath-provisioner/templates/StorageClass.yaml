@@ -5,15 +5,6 @@ metadata:
   name: hostpath
   annotations:
     storageclass.kubernetes.io/is-default-class: "true"
-#provisioner: hostpath
 provisioner: kubevirt.io/hostpath-provisioner
 reclaimPolicy: {{ .Values.pvReclaimPolicy }}
 volumeBindingMode: WaitForFirstConsumer
-
----
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: hdd
-provisioner: kubernetes.io/no-provisioner
-reclaimPolicy: Retain
