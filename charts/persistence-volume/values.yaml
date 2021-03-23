@@ -6,6 +6,7 @@ volumeName: main-volume
 storage: 512Gi
 
 storageClass: hdd
+createStorageClass: true
 
 path: /media/main
 
