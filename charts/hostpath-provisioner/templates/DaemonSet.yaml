@@ -1,0 +1,41 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: hostpath-provisioner
+  labels:
+    k8s-app: hostpath-provisioner
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      k8s-app: hostpath-provisioner
+  template:
+    metadata:
+      labels:
+        k8s-app: hostpath-provisioner
+    spec:
+      serviceAccountName: hostpath-provisioner
+      containers:
+      - name: hostpath-provisioner
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        # change to true, to have the name of the pvc be part of the directory
+        - name: USE_NAMING_PREFIX
+          value: "true"
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: PV_DIR
+          value: {{ .Values.filesystemPath }}
+        volumeMounts:
+        - name: pv-volume # root dir where your bind mounts will be on the node
+          mountPath: {{ .Values.filesystemPath }}
+          #nodeSelector:
+          #- name: xxxxxx
+      volumes:
+      - name: pv-volume
+        hostPath:
+          path: {{ .Values.filesystemPath }}
