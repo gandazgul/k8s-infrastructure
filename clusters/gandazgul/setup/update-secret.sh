@@ -13,5 +13,5 @@ for f in ./clusters/gandazgul/apps/values/*.yaml
 do
   echo "Processing $f file..."
   basename=$(basename "$f" .yaml)
-  kubectl create secret generic "${basename}" --dry-run=client --from-file=values.yaml="${f}" -o json > "./clusters/gandazgul/apps/secrets/${basename}.json"
+  kubectl create secret generic "${basename}" --dry-run=client --from-file=values.yaml="${f}" -o yaml > "./clusters/gandazgul/apps/secrets/${basename}.yaml"
 done
