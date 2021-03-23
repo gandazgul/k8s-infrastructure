@@ -45,4 +45,4 @@ spec:
     - secretKeyRef:
         name: plex-values
         namespace: default
-        required: false
+        required: true
