@@ -14,9 +14,10 @@ spec:
         namespace: flux-system
   interval: 1h0m0s
   values:
-#    image:
-#      tag: plexpass
-#      pullPolicy: Always
+    image:
+      repository: plexinc/pms-docker
+      tag: plexpass
+      pullPolicy: Always
     timezone: America/New_York
     plexUid: 1000
     serviceTCP:
