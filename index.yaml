@@ -63,6 +63,17 @@ entries:
     version: 0.1.0
   hostpath-provisioner:
   - apiVersion: v1
+    created: "2021-03-23T01:34:57.302129105Z"
+    description: A chart to install a storage provisioner for single node installs.
+    digest: 53b45af4827227ebc17f2d8a56608d88343ac4e5cc3c00e7311732e89821faba
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: hostpath-provisioner
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/hostpath-provisioner-0.2.0/hostpath-provisioner-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v1
     appVersion: 1.0.0
     created: "2020-12-07T06:44:31.438192682Z"
     description: A chart to install a storage provisioner for single node installs.
@@ -126,6 +137,17 @@ entries:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/nest-mqtt-bridge-0.2.0/nest-mqtt-bridge-0.2.0.tgz
     version: 0.2.0
   persistence-volume:
+  - apiVersion: v1
+    created: "2021-03-23T01:34:57.393345814Z"
+    description: A Helm chart to install my data volumes
+    digest: d924807fb3ae072e2f7743f19b0c251baeaecb87a395b72cb929968ef90bd8a5
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: persistence-volume
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/persistence-volume-0.2.1/persistence-volume-0.2.1.tgz
+    version: 0.2.1
   - apiVersion: v1
     created: "2021-03-16T01:38:39.022415498Z"
     description: A Helm chart to install my data volumes
