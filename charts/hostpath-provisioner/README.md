@@ -1,8 +1,14 @@
 # hostpath-provisioner
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square)
 
 A chart to install a storage provisioner for single node installs.
+
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| gandazgul | ravelo.carlos@gmail.com |  |
 
 ## Values
 
@@ -10,7 +16,7 @@ A chart to install a storage provisioner for single node installs.
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
 | filesystemPath | string | `"/var/kubernetes"` |  |
-| image.pullPolicy | string | `"IfNotPresent"` |  |
+| image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"quay.io/kubevirt/hostpath-provisioner"` |  |
 | image.tag | string | `"latest"` |  |
 | nodeSelector | object | `{}` |  |
