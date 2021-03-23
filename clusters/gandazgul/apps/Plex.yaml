@@ -8,6 +8,7 @@ spec:
   chart:
     spec:
       chart: plex
+      version: 2.3.3
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
@@ -27,7 +28,7 @@ spec:
       type: NodePort
     persistence:
       transcode:
-        enabled: false
+        enabled: true
         size: 60Gi
         accessMode: ReadWriteOnce
       data:
@@ -45,4 +46,3 @@ spec:
         name: plex-values
         namespace: default
         required: false
-#        key: values.yaml # default?
