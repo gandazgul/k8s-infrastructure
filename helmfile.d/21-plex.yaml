@@ -16,6 +16,7 @@ releases:
   - name: plex
     namespace: default
     chart: k8s-at-home/plex
+    version: 2.3.3
     values:
       - image:
           tag: plexpass
