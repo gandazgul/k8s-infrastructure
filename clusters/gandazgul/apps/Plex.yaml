@@ -42,9 +42,6 @@ spec:
         cpu: 2000m
         memory: 2Gi
   valuesFrom:
-#  - secretKeyRef:
-#      name: plex-values
-#      namespace: default
-#      optional: false
   - kind: Secret
     name: plex-values
+    optional: false
