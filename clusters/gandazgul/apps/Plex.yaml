@@ -37,14 +37,14 @@ spec:
       config:
         claimName: yasr-volume
         subPath: "configs/plex"
+      extraMounts:
+      - name: data
+        mountPath: pictures
+        subPath: "gandazgul/Pictures"
     resources:
       requests:
         cpu: 2000m
         memory: 2Gi
-    additionalVolumeMounts:
-    - name: data
-      mountPath: /pictures
-      subPath: "gandazgul/Pictures"
     valuesFrom:
     - secretKeyRef:
         name: plex-values

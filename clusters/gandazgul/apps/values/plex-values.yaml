@@ -1,4 +1,5 @@
-additionalVolumeMounts:
-- name: data
-  mountPath: /pictures
-  subPath: "gandazgul/Pictures"
+persistence:
+  extraMounts:
+  - name: data
+    mountPath: pictures
+    subPath: "gandazgul/Pictures"
