@@ -1,0 +1,86 @@
+# Seedbox ===========================================================
+# Transmission, sonarr, radarr, jackett, and optionally flexget running over an OpenVPN connection
+
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: seedbox
+  namespace: default
+spec:
+  chart:
+    spec:
+      chart: seedbox
+      version: 0.3.2
+      sourceRef:
+        kind: HelmRepository
+        name: gandazgul
+        namespace: flux-system
+  interval: 1h0m0s
+  values:
+    vpn:
+      env:
+      - name: TZ
+        value: "EST5EDT"
+      - name: REGION
+        value: "CA Montreal"
+      - name: USER
+        value: { { requiredEnv "VPN_USER" } }
+      - name: PASSWORD
+        value: { { requiredEnv "VPN_PASSWORD" } }
+      - name: FIREWALL
+        value: "off"
+    transmission:
+      ingress:
+        enabled: true
+        hosts:
+        - host: transmission.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+        tls:
+        - hosts: [transmission.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}]
+          secretName: transmission-k8s-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "ca-issuer"
+          nginx.ingress.kubernetes.io/app-root: "/web/"
+    jackett:
+      ingress:
+        enabled: true
+        hosts:
+        - host: jackett.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+          servicePort: jackett-http
+        tls:
+        - hosts: [jackett.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}]
+          secretName: jackett-k8s-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "ca-issuer"
+    sonarr:
+      ingress:
+        enabled: true
+        hosts:
+        - host: tv.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+          servicePort: sonarr-http
+        tls:
+        - hosts: [tv.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}]
+          secretName: sonarr-k8s-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "ca-issuer"
+    radarr:
+      ingress:
+        enabled: true
+        hosts:
+        - host: movies.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+          servicePort: radarr-http
+        tls:
+        - hosts:
+          - movies.{{ requiredEnv "INGRESS_INTERNAL_NAME" }}
+          secretName: radarr-k8s-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "ca-issuer"
+    valuesFrom:
+    - secretKeyRef:
+        name: seedbox-values
+        namespace: default
+        optional: false
