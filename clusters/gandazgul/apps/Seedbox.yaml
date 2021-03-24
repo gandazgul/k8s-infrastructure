@@ -30,7 +30,8 @@ spec:
         hosts:
         - host: transmission.${INGRESS_INTERNAL_NAME}
         tls:
-        - hosts: [transmission.${INGRESS_INTERNAL_NAME}]
+        - hosts:
+          - transmission.${INGRESS_INTERNAL_NAME}
           secretName: transmission-k8s-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
