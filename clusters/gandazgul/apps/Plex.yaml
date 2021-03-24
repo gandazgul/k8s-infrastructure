@@ -14,6 +14,10 @@ spec:
         name: k8s-at-home
         namespace: flux-system
   interval: 1h0m0s
+  valuesFrom:
+  - kind: Secret
+    name: plex-values
+    optional: false
   values:
     image:
       repository: plexinc/pms-docker
@@ -41,7 +45,3 @@ spec:
       requests:
         cpu: 2000m
         memory: 2Gi
-  valuesFrom:
-  - kind: Secret
-    name: plex-values
-    optional: false
