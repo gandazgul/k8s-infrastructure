@@ -9,7 +9,8 @@ helmDefaults:
 releases:
   - name: samba
     namespace: default
-    chart: ../charts/samba
+    chart: gandazgul/samba
+    version: 0.2.0
     values:
       - hostNetwork: true
       - volumes:
