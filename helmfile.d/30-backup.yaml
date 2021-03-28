@@ -24,7 +24,7 @@ releases:
   # Docs: https://www.nongnu.org/rdiff-backup/docs.htmls
   - name: incremental-backups
     namespace: default
-    chart: ../charts/cronjob
+    chart: cronjob
     values:
       # Twice a day at midnight and midday
       - schedule: "0 0,12 * * *"
@@ -49,7 +49,7 @@ releases:
 
   - name: clean-incremental-backups
     namespace: default
-    chart: ../charts/cronjob
+    chart: cronjob
     values:
       # Every day at midnight
       - schedule: "0 0 * * *"
