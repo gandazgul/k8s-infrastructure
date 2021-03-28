@@ -21,13 +21,13 @@ spec:
     env:
       SIGNUPS_ALLOWED: false
       INVITATIONS_ALLOWED: true
-      SERVER_ADMIN_EMAIL: ${MAIL_TO}
+      SERVER_ADMIN_EMAIL: ${EMAIL}
       DOMAIN: https://p.${INGRESS_EXTERNAL_NAME}
       SMTP_HOST: smtp.gmail.com
       SMTP_PORT: 587
-      SMTP_FROM: ${MAIL_TO}
+      SMTP_FROM: ${EMAIL}
       SMTP_SSL: true
-      SMTP_USERNAME: ${MAIL_TO}
+      SMTP_USERNAME: ${EMAIL}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
       SHOW_PASSWORD_HINT: true
       WEB_VAULT_ENABLED: true
