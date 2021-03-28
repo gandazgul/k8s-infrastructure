@@ -15,10 +15,10 @@ spec:
         namespace: flux-system
   interval: 1h0m0s
   values:
-  - image:
+    image:
       tag: latest
       pullPolicy: Always
-  - env:
+    env:
       SIGNUPS_ALLOWED: false
       INVITATIONS_ALLOWED: true
       SERVER_ADMIN_EMAIL: ${MAIL_TO}
@@ -39,11 +39,11 @@ spec:
 #      ROCKET_LIMITS
       # how many threads are spawn to handle requests. Docker image is set to 10
 #      ROCKET_WORKERS
-  - persistence:
+    persistence:
       enabled: true
       existingClaim: yasr-volume
       subPath: "configs/bitwarden"
-  - ingress:
+    ingress:
       enabled: true
       hosts:
       - p.${INGRESS_EXTERNAL_NAME}
