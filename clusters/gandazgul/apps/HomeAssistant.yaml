@@ -64,8 +64,8 @@ spec:
             cert-manager.io/cluster-issuer: "ca-issuer"
           hosts:
           - host: hass-config.${INGRESS_INTERNAL_NAME}
-            paths:
-            - path: /
+#            paths:
+#            - path: /
           tls:
           - hosts:
             - hass-config.${INGRESS_INTERNAL_NAME}
