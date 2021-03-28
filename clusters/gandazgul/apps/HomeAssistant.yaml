@@ -28,8 +28,8 @@ spec:
       enabled: true
       hosts:
       - host: hass.${INGRESS_EXTERNAL_NAME}
-        paths:
-        - path: /
+#        paths:
+#        - path: /
       tls:
       - hosts:
         - hass.${INGRESS_EXTERNAL_NAME}
