@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: home-assistant
-      version: 4.0.0
+      version: 7.1.0
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
@@ -73,22 +73,22 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /config
-  #            subPath: "configs/hass"
+#          subPath: "configs/hass"
 
-  # do I need this?
-  #          - name: deploykey
-  #            mountPath: /root/.ssh/id_rsa
-  #            subPath: id_rsa
-  #    - appdaemon:
-  #        enabled: true
-  #        ingress:
-  #          enabled: true
-  #          hosts:
-  #          - hass-appdaemon.${INGRESS_INTERNAL_NAME}
-  #          tls:
-  #          - hosts:
-  #            - hass-appdaemon.${INGRESS_INTERNAL_NAME}
-  #            secretName: hass-appdaemon-cert
-  #          annotations:
-  #            kubernetes.io/ingress.class: "nginx"
-  #            cert-manager.io/cluster-issuer: "ca-issuer"
+# do I need this?
+#          - name: deploykey
+#            mountPath: /root/.ssh/id_rsa
+#            subPath: id_rsa
+#    - appdaemon:
+#        enabled: true
+#        ingress:
+#          enabled: true
+#          hosts:
+#          - hass-appdaemon.${INGRESS_INTERNAL_NAME}
+#          tls:
+#          - hosts:
+#            - hass-appdaemon.${INGRESS_INTERNAL_NAME}
+#            secretName: hass-appdaemon-cert
+#          annotations:
+#            kubernetes.io/ingress.class: "nginx"
+#            cert-manager.io/cluster-issuer: "ca-issuer"
