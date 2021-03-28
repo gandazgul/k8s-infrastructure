@@ -23,7 +23,7 @@ spec:
       pullPolicy: Always
     env:
       TZ: "America/New_York"
-#    hostNetwork: true
+    hostNetwork: true
     ingress:
       enabled: true
       hosts:
