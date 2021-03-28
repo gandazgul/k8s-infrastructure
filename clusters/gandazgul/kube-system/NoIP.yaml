@@ -4,8 +4,6 @@ metadata:
   name: no-ip
   namespace: default
 spec:
-  dependsOn:
-  - name: yasr-volume
   chart:
     spec:
       chart: generic-deployment
@@ -13,6 +11,8 @@ spec:
         kind: HelmRepository
         name: gandazgul
         namespace: flux-system
+  dependsOn:
+  - name: yasr-volume
   interval: 1h0m0s
   values:
     image:

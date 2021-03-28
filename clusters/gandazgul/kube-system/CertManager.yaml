@@ -38,9 +38,4 @@ spec:
   values:
     letsencrypt:
       enabled: true
-      email:
-        valueFrom:
-        - secretKeyRef:
-            name: secrets
-            namespace: flux-system
-            key: EMAIL
+      email: ${EMAIL}

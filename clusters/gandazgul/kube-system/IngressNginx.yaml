@@ -11,6 +11,8 @@ spec:
         kind: HelmRepository
         name: ingress-nginx
         namespace: flux-system
+  dependsOn:
+  - name: sealed-secrets-controller
   interval: 1h0m0s
   values:
     controller:
@@ -28,5 +30,4 @@ spec:
           app.kubernetes.io/name: default-http-backend
           app.kubernetes.io/part-of: ingress-nginx
         externalIPs:
-#        - 10.1.1.2
         - ${MASTER_IP}

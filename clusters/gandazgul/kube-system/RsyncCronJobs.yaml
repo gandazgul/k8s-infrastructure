@@ -13,6 +13,9 @@ spec:
         kind: HelmRepository
         name: gandazgul
         namespace: flux-system
+  dependsOn:
+  - name: main-volume
+  - name: backup-volume
   interval: 1h0m0s
   values:
   # Twice a day at midnight and midday
