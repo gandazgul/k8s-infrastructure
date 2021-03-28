@@ -15,13 +15,12 @@ spec:
         namespace: flux-system
   dependsOn:
   - name: yasr-volume
-  - name: main-volume
   interval: 1h0m0s
   values:
     controllerType: deployment
     image:
-    tag: stable
-    pullPolicy: Always
+      tag: stable
+      pullPolicy: Always
     env:
       TZ: "America/New_York"
 #    hostNetwork: true
