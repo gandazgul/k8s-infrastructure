@@ -37,29 +37,33 @@ if ! dnf list installed cri-o > /dev/null 2>&1; then
     printf "\nRaising user watches to the highest number to allow kubelet to work with lots of containers ===========\n"
     echo fs.inotify.max_user_watches=1048576 | sudo tee --append /etc/sysctl.conf
 
-    printf "\nChange cri-o's config to work with crun ===============================================================\n"
-    sed -c -i "s/\(default_runtime *= *\).*/\1crun/" /etc/crio/crio.conf
-    echo "[crio.runtime.runtimes.crun]" | sudo tee --append /etc/crio/crio.conf
-    echo "runtime_path = \"/usr/bin/crun\"" | sudo tee --append /etc/crio/crio.conf
-    echo "runtime_type = \"oci\"" | sudo tee --append /etc/crio/crio.conf
-    echo "runtime_root = \"/run/crun\"" | sudo tee --append /etc/crio/crio.conf
-
-    printf "\nEnable cri-o ==========================================================================================\n"
-    sudo systemctl daemon-reload || exit 1
-    sudo systemctl enable --now cri-o || exit 1
-    sudo systemctl start cri-o || exit 1
-
-    printf "\nVerify cri-o is running ===============================================================================\n"
-    if ! systemctl is-active --quiet cri-o >/dev/null 2>&1; then
-        printf "\nSomething failed while installing cri-o please verify that is running and run this script again"
-        exit 1
-    fi;
-
     echo -n "I have to restart in order to finish installing Cri-O. After reboot, re-run this script. Reboot? (y/n)? "
     read answer
     if [ "$answer" != "${answer#[Yy]}" ] ;then
         sudo reboot
     fi;
+fi;
+
+cat /etc/crio/crio.conf | grep default_runtime | grep crun
+GREP_RE=$?
+if [ $GREP_RE != 0 ]; then
+  printf "\nChange cri-o's config to work with crun ===============================================================\n"
+  sudo sed -c -i "s/\(default_runtime *= *\).*/\1\"crun\"/" /etc/crio/crio.conf || exit 1
+  echo "[crio.runtime.runtimes.crun]" | sudo tee --append /etc/crio/crio.conf || exit 1
+  echo "runtime_path = \"/usr/bin/crun\"" | sudo tee --append /etc/crio/crio.conf || exit 1
+  echo "runtime_type = \"oci\"" | sudo tee --append /etc/crio/crio.conf || exit 1
+  echo "runtime_root = \"/run/crun\"" | sudo tee --append /etc/crio/crio.conf || exit 1
+
+  printf "\nEnable cri-o ==========================================================================================\n"
+  sudo systemctl daemon-reload || exit 1
+  sudo systemctl enable --now cri-o || exit 1
+  sudo systemctl start cri-o || exit 1
+
+  printf "\nVerify cri-o is running ===============================================================================\n"
+  if ! systemctl is-active --quiet cri-o >/dev/null 2>&1; then
+      printf "\nSomething failed while installing cri-o please verify that is running and run this script again"
+      exit 1
+  fi;
 fi;
 
 printf "\nInstalling Kubernetes packages from repo ==================================================================\n"
@@ -107,7 +111,6 @@ if systemctl is-active --quiet firewalld >/dev/null 2>&1; then
     printf "\nDisabling the firewall ================================================================================\n"
     sudo systemctl stop firewalld
     sudo systemctl disable firewalld
-    KUBELET_KUBEADM_ARGS="--cgroup-driver=cgroupfs --network-plugin=cni --pod-infra-container-image=k8s.gcr.io/pause:3.2"
     # fedora 29 complained that uninstalling firewalld would uninstall kernel-core
     # sudo dnf -y remove firewalld
     # Masking prevents the service from ever being started
