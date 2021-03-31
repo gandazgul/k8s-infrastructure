@@ -1,12 +1,17 @@
 name: Verify charts against k8s API Schema
 
-on: push
+on:
+  workflow_run:
+    workflows: ["Lint and Test Charts"]
+    types:
+    - completed
 
 jobs:
   kubeval-chart:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    needs:
-    - lint-test
+#    needs:
+#    - lint-test
     strategy:
       matrix:
         k8s:
