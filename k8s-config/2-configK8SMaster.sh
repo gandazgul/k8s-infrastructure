@@ -26,4 +26,9 @@ printf "\nVerify that is running:\n"
 kubectl get nodes
 printf "\n"
 kubectl get ds --watch --namespace=kube-system
-printf "Run 'sudo systemctl status kubelet' to see how kubelet is doing\n\n"
+
+echo -n "I have to restart in order to finish installing K8s. After reboot, run step 3. Reboot? (y/n)? "
+    read answer
+    if [ "$answer" != "${answer#[Yy]}" ] ;then
+        sudo reboot
+    fi;

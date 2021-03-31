@@ -4,6 +4,10 @@
 rm -rf ./clusters/gandazgul/sealed-secrets/SealedSecret.yaml
 kubectl create secret generic secrets --dry-run=client --namespace=flux-system --from-env-file=./clusters/gandazgul/setup/secrets.env -o json \
  | kubeseal -o yaml > ./clusters/gandazgul/sealed-secrets/SealedSecret.yaml
+# apply it
+kubectl apply -f ./clusters/gandazgul/sealed-secrets/SealedSecret.yaml
+flux reconcile kustomization kube-system
+flux reconcile kustomization apps
 
 # Create value/yaml secrets
 rm -rf ./clusters/gandazgul/apps/secrets/

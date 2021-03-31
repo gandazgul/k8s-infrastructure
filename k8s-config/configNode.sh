@@ -36,12 +36,6 @@ if ! dnf list installed cri-o > /dev/null 2>&1; then
 
     printf "\nRaising user watches to the highest number to allow kubelet to work with lots of containers ===========\n"
     echo fs.inotify.max_user_watches=1048576 | sudo tee --append /etc/sysctl.conf
-
-    echo -n "I have to restart in order to finish installing Cri-O. After reboot, re-run this script. Reboot? (y/n)? "
-    read answer
-    if [ "$answer" != "${answer#[Yy]}" ] ;then
-        sudo reboot
-    fi;
 fi;
 
 cat /etc/crio/crio.conf | grep default_runtime | grep crun

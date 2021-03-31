@@ -48,16 +48,17 @@ installFlux() {
     flux check --pre
     exit 1
   fi
-  if [ -z "$GITHUB_TOKEN" ]; then
-    echo "GITHUB_TOKEN is not set! Check $REPO_ROOT/clusters/gandazgul/setup/secrets.env"
-    exit 1
-  fi
-  flux bootstrap github \
-    --owner="$GITHUB_USER" \
-    --repository=k8s-infrastructure \
-    --branch=feature/gitops \
-    --path=.clusters/gandazgul/flux/ \
-    --personal
+#  if [ -z "$GITHUB_TOKEN" ]; then
+#    echo "GITHUB_TOKEN is not set! Check $REPO_ROOT/clusters/gandazgul/setup/secrets.env"
+#    exit 1
+#  fi
+#  flux bootstrap github \
+#    --owner="$GITHUB_USER" \
+#    --repository=k8s-infrastructure \
+#    --branch=feature/gitops \
+#    --path=./clusters/gandazgul/flux-system/ \
+#    --personal
+  kubectl apply -k ./clusters/gandazgul/flux-system/components/
 
   FLUX_INSTALLED=$?
   if [ $FLUX_INSTALLED != 0 ]; then
@@ -67,7 +68,12 @@ installFlux() {
 }
 
 installFlux
-call ./update-secret.sh
+# wait for secrets controller to be available
+while : ; do
+  kubectl get svc sealed-secrets-controller -n kube-system && break
+  sleep 5
+done
+"$REPO_ROOT"/clusters/gandazgul/setup/update-secret.sh
 
 message "all done!"
 kubectl get nodes -o=wide
