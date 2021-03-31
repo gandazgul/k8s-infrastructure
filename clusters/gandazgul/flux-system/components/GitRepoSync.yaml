@@ -8,9 +8,7 @@ spec:
   interval: 1m0s
   ref:
     branch: feature/gitops
-  secretRef:
-    name: flux-system
-  url: ssh://git@github.com/gandazgul/k8s-infrastructure
+  url: https://github.com/gandazgul/k8s-infrastructure.git
   ignore: |
     clusters/gandazgul/apps/values/
 ---

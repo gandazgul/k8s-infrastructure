@@ -1,9 +1,9 @@
 {{- if .Values.transmission.ingress.enabled -}}
 {{- $fullName := include "helpers.transmission-ingress" . -}}
 {{- $serviceName := include "helpers.transmission-service" . -}}
-{{- $ingressPath := .Values.transmission.ingress.path -}}
+{{- $ingressPath := .Values.transmission.ingress.path | default '/' -}}
 {{- $svcPort := .Values.transmission.service.port -}}
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -14,22 +14,22 @@ metadata:
     heritage: {{ .Release.Service }}
   {{- with .Values.transmission.ingress.annotations }}
   annotations:
-{{ toYaml . | indent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   {{- if .Values.transmission.ingress.tls }}
   tls:
     {{- range .Values.transmission.ingress.tls }}
     - hosts:
-      {{- range .hosts }}
-      - {{ . }}
-      {{- end }}
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
       secretName: {{ .secretName }}
     {{- end }}
   {{- end }}
   rules:
     {{- range .Values.transmission.ingress.hosts }}
-    - host: {{ .host }}
+    - host: {{ .host | quote }}
       http:
         paths:
           - path: {{ $ingressPath }}
