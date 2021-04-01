@@ -3,3 +3,6 @@ appVersion: "1.0"
 description: A Helm chart for resilio sync
 name: resilio
 version: 0.2.1
+maintainers:
+- name: gandazgul
+  email: ravelo.carlos@gmail.com
