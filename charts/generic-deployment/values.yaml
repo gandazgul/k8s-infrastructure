@@ -5,7 +5,8 @@
 replicaCount: 1
 
 image:
-#  repository: this needs to be provided
+  # this needs to be provided
+  repository: busybox
   tag: latest
   pullPolicy: IfNotPresent
 

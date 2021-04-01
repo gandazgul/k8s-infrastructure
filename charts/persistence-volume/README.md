@@ -1,16 +1,22 @@
 # persistence-volume
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square)
+![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square)
 
 A Helm chart to install my data volumes
+
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| gandazgul | ravelo.carlos@gmail.com |  |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| nodeHostname | string | `"localhost.localdomain"` |  |
+| createStorageClass | bool | `true` |  |
 | path | string | `"/media/main"` |  |
-| storage | string | `"1Ti"` |  |
+| storage | string | `"512Gi"` |  |
 | storageClass | string | `"hdd"` |  |
 | volumeMode | string | `"Filesystem"` |  |
 | volumeName | string | `"main-volume"` |  |
