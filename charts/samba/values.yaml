@@ -19,12 +19,12 @@ service:
   externalSMBPort445: 445
   internalSMBPort445: 445
 
-resources: { }
+resources: {}
 
-nodeSelector: { }
+nodeSelector: {}
 
 hostNetwork: true
 
-volumes: [ ]
-volumeMounts: [ ]
-env: [ ]
+volumes: []
+volumeMounts: []
+env: []
