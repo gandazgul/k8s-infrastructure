@@ -1,0 +1,9 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: ca-issuer
+spec:
+  ca:
+    # This secret is created during install check 3-installCertsAndHelm.sh
+    secretName: ca-key-pair
+
