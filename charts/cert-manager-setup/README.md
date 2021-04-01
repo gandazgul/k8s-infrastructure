@@ -1,8 +1,14 @@
 # cert-manager-setup
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
 
 A Helm chart for creating my cert-manager setup
+
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| gandazgul | ravelo.carlos@gmail.com |  |
 
 ## Values
 
