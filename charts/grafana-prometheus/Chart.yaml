@@ -6,5 +6,3 @@ version: 0.1.1
 maintainers:
 - name: gandazgul
   email: ravelo.carlos@gmail.com
-# TODO: this chart can be migrated to a kustomize file now that we have gitops
-# I also need to look into a prometheus operator
