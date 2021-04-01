@@ -4,6 +4,12 @@
 
 A Helm chart for resilio sync
 
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| gandazgul | ravelo.carlos@gmail.com |  |
+
 ## Values
 
 | Key | Type | Default | Description |
