@@ -44,7 +44,7 @@ jobs:
       with:
         charts_repo_url: https://gandazgul.github.io/k8s-infrastructure/
       env:
-        CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        CR_TOKEN: "${{ secrets.CR_TOKEN }}"
 
   # Update the generated timestamp in the index.yaml
   # needed until https://github.com/helm/chart-releaser/issues/90

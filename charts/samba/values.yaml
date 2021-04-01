@@ -19,14 +19,12 @@ service:
   externalSMBPort445: 445
   internalSMBPort445: 445
 
-resources: 
-  requests:
-   cpu: 100m
-   memory: 128Mi
-  limits:
-   cpu: 100m
-   memory: 128Mi
+resources: { }
 
-nodeSelector: {}
+nodeSelector: { }
 
 hostNetwork: true
+
+volumes: [ ]
+volumeMounts: [ ]
+env: [ ]
