@@ -47,8 +47,9 @@ spec:
             requests:
               cpu: {{ default "50m" .Values.vpn.resources.requests.cpu | quote }}
               memory: {{ default "50Mi" .Values.vpn.resources.requests.memory | quote }}
-          volumeMounts:
-{{ toYaml .Values.vpn.volumeMounts | indent 12 }}
+          {{- with .Values.vpn.volumeMounts }}
+          volumeMounts: {{ toYaml . | nindent 12 }}
+          {{- end }}
         # Transmission
         - name: transmission-pia-port-forward
           image: "gandazgul/transmission-pia-port-forward:v318a599"
@@ -60,14 +61,14 @@ spec:
             requests:
               cpu: 50m
               memory: 50Mi
-          volumeMounts:
-{{ toYaml .Values.transmission.volumeMounts | indent 12 }}
+          {{- with .Values.transmission.volumeMounts }}
+          volumeMounts: {{ toYaml . | nindent 12 }}
+          {{- end }}
         - name: {{ .Values.transmission.name }}
           image: "{{ .Values.transmission.image.name }}:{{ .Values.transmission.image.tag }}"
           imagePullPolicy: {{ .Values.transmission.image.pullPolicy | quote }}
           {{- with .Values.transmission.env }}
-          env:
-{{ toYaml . | nindent 12 }}
+          env: {{ toYaml . | nindent 12 }}
           {{- end}}
           resources:
             limits:
@@ -92,8 +93,9 @@ spec:
             tcpSocket:
               port: {{ .Values.transmission.service.port }}
             timeoutSeconds: 2
-          volumeMounts:
-{{ toYaml .Values.transmission.volumeMounts | indent 12 }}
+          {{- with .Values.transmission.volumeMounts }}
+          volumeMounts: {{ toYaml . | nindent 12 }}
+          {{- end }}
           ports:
           - name: {{ .Values.transmission.service.portName }}
             containerPort: {{ .Values.transmission.service.port }}
@@ -109,8 +111,7 @@ spec:
           image: "{{ .Values.flexget.image.name }}:{{ .Values.flexget.image.tag }}"
           imagePullPolicy: {{ .Values.flexget.image.pullPolicy | quote }}
           {{- with .Values.flexget.env }}
-          env:
-{{ toYaml . | nindent 12 }}
+          env: {{ toYaml . | nindent 12 }}
           {{- end}}
           resources:
             limits:
@@ -135,8 +136,9 @@ spec:
             tcpSocket:
               port: flexget-http
             timeoutSeconds: 2
-          volumeMounts:
-{{ toYaml .Values.flexget.volumeMounts | indent 12 }}
+          {{- with .Values.flexget.volumeMounts }}
+          volumeMounts: {{ toYaml . | nindent 12 }}
+          {{- end }}
           ports:
             - name: flexget-http
               containerPort: 3539
@@ -148,8 +150,7 @@ spec:
           image: "{{ .Values.jackett.image.name }}:{{ .Values.jackett.image.tag }}"
           imagePullPolicy: {{ .Values.jackett.image.pullPolicy | quote }}
           {{- with .Values.jackett.env }}
-          env:
-{{ toYaml . | nindent 12 }}
+          env: {{ toYaml . | nindent 12 }}
           {{- end}}
           resources:
             limits:
@@ -174,8 +175,9 @@ spec:
             tcpSocket:
               port: jackett-http
             timeoutSeconds: 2
-          volumeMounts:
-{{ toYaml .Values.jackett.volumeMounts | indent 12 }}
+          {{- with .Values.jackett.volumeMounts }}
+          volumeMounts: {{ toYaml . | nindent 12 }}
+          {{- end }}
           ports:
           - name: jackett-http
             containerPort: 9117
@@ -187,8 +189,7 @@ spec:
           image: "{{ .Values.sonarr.image.name }}:{{ .Values.sonarr.image.tag }}"
           imagePullPolicy: {{ .Values.sonarr.image.pullPolicy | quote }}
           {{- with .Values.sonarr.env }}
-          env:
-{{ toYaml . | nindent 12 }}
+          env: {{ toYaml . | nindent 12 }}
           {{- end}}
           resources:
             limits:
@@ -213,8 +214,9 @@ spec:
             tcpSocket:
               port: sonarr-http
             timeoutSeconds: 2
-          volumeMounts:
-{{ toYaml .Values.sonarr.volumeMounts | indent 12 }}
+          {{- with .Values.sonarr.volumeMounts }}
+          volumeMounts: {{ toYaml . | nindent 12 }}
+          {{- end }}
           ports:
           - name: sonarr-http
             containerPort: 8989
@@ -226,8 +228,7 @@ spec:
           image: "{{ .Values.radarr.image.name }}:{{ .Values.radarr.image.tag }}"
           imagePullPolicy: {{ .Values.radarr.image.pullPolicy | quote }}
           {{- with .Values.radarr.env }}
-          env:
-{{ toYaml . | nindent 12 }}
+          env: {{ toYaml . | nindent 12 }}
           {{- end}}
           resources:
             limits:
@@ -252,8 +253,9 @@ spec:
             tcpSocket:
               port: radarr-http
             timeoutSeconds: 2
-          volumeMounts:
-{{ toYaml .Values.radarr.volumeMounts | indent 12 }}
+          {{- with .Values.radarr.volumeMounts }}
+          volumeMounts: {{ toYaml . | nindent 12 }}
+          {{- end }}
           ports:
           - name: radarr-http
             containerPort: 7878
