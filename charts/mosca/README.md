@@ -24,7 +24,7 @@ A Helm chart for the Mosca.io MQTT Broker
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | service.port | int | `1883` |  |
-| service.type | string | `"NodePort"` |  |
+| service.type | string | `"ClusterIP"` |  |
 | tolerations | list | `[]` |  |
 
 ----------------------------------------------

@@ -16,8 +16,8 @@ A generic deployment chart
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"busybox"` |  |
-| image.tag | string | `"latest"` |  |
+| image.repository | string | `"sverrirab/kube-test-container"` |  |
+| image.tag | string | `"v1.0"` |  |
 | nodeSelector | object | `{}` |  |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |

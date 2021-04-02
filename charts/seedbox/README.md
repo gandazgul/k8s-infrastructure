@@ -2,7 +2,7 @@
 
 A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission, Flexget, jackett, sonarr, radarr
 
-![Version: 0.3.3](https://img.shields.io/badge/Version-0.3.3-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
 
 # Seedbox Config
 
@@ -38,17 +38,7 @@ For my flexget config you can take a look at: https://github.com/gandazgul/flexg
 | flexget.resources.requests.memory | string | `"100Mi"` |  |
 | flexget.service.port | int | `3539` |  |
 | flexget.service.type | string | `"ClusterIP"` |  |
-| flexget.volumeMounts[0].mountPath | string | `"/config"` |  |
-| flexget.volumeMounts[0].name | string | `"yasr-volume"` |  |
-| flexget.volumeMounts[0].subPath | string | `"configs/flexget"` |  |
-| flexget.volumeMounts[1].mountPath | string | `"/main"` |  |
-| flexget.volumeMounts[1].name | string | `"main-volume"` |  |
-| flexget.volumeMounts[2].mountPath | string | `"/data"` |  |
-| flexget.volumeMounts[2].name | string | `"yasr-volume"` |  |
-| flexget.volumeMounts[2].subPath | string | `"configs/transmission"` |  |
-| flexget.volumeMounts[3].mountPath | string | `"/etc/localtime"` |  |
-| flexget.volumeMounts[3].name | string | `"tz-config"` |  |
-| flexget.volumeMounts[3].readOnly | bool | `true` |  |
+| flexget.volumeMounts | object | `{}` |  |
 | jackett.enabled | bool | `true` |  |
 | jackett.image.name | string | `"linuxserver/jackett"` |  |
 | jackett.image.pullPolicy | string | `"Always"` |  |
@@ -61,15 +51,7 @@ For my flexget config you can take a look at: https://github.com/gandazgul/flexg
 | jackett.resources.requests.memory | string | `"100Mi"` |  |
 | jackett.service.port | int | `9117` |  |
 | jackett.service.type | string | `"ClusterIP"` |  |
-| jackett.volumeMounts[0].mountPath | string | `"/config"` |  |
-| jackett.volumeMounts[0].name | string | `"yasr-volume"` |  |
-| jackett.volumeMounts[0].subPath | string | `"configs/jackett"` |  |
-| jackett.volumeMounts[1].mountPath | string | `"/downloads"` |  |
-| jackett.volumeMounts[1].name | string | `"yasr-volume"` |  |
-| jackett.volumeMounts[1].subPath | string | `"configs/jackett/downloads"` |  |
-| jackett.volumeMounts[2].mountPath | string | `"/etc/localtime"` |  |
-| jackett.volumeMounts[2].name | string | `"tz-config"` |  |
-| jackett.volumeMounts[2].readOnly | bool | `true` |  |
+| jackett.volumeMounts | object | `{}` |  |
 | nodeSelector | object | `{}` |  |
 | radarr.enabled | bool | `true` |  |
 | radarr.env[0].name | string | `"PUID"` |  |
@@ -130,26 +112,8 @@ For my flexget config you can take a look at: https://github.com/gandazgul/flexg
 | transmission.service.portName | string | `"9091-tcp"` |  |
 | transmission.service.protocol | string | `"TCP"` |  |
 | transmission.service.type | string | `"ClusterIP"` |  |
-| transmission.volumeMounts[0].mountPath | string | `"/data"` |  |
-| transmission.volumeMounts[0].name | string | `"yasr-volume"` |  |
-| transmission.volumeMounts[0].subPath | string | `"configs/transmission"` |  |
-| transmission.volumeMounts[1].mountPath | string | `"/config"` |  |
-| transmission.volumeMounts[1].name | string | `"yasr-volume"` |  |
-| transmission.volumeMounts[1].subPath | string | `"configs/transmission"` |  |
-| transmission.volumeMounts[2].mountPath | string | `"/watch"` |  |
-| transmission.volumeMounts[2].name | string | `"yasr-volume"` |  |
-| transmission.volumeMounts[2].subPath | string | `"configs/transmission/watch"` |  |
-| transmission.volumeMounts[3].mountPath | string | `"/etc/localtime"` |  |
-| transmission.volumeMounts[3].name | string | `"tz-config"` |  |
-| transmission.volumeMounts[3].readOnly | bool | `true` |  |
-| volumes[0].name | string | `"yasr-volume"` |  |
-| volumes[0].persistentVolumeClaim.claimName | string | `"yasr-volume"` |  |
-| volumes[1].name | string | `"main-volume"` |  |
-| volumes[1].persistentVolumeClaim.claimName | string | `"main-volume"` |  |
-| volumes[2].hostPath.path | string | `"/dev/net/tun"` |  |
-| volumes[2].name | string | `"dev-tun"` |  |
-| volumes[3].hostPath.path | string | `"/etc/localtime"` |  |
-| volumes[3].name | string | `"tz-config"` |  |
+| transmission.volumeMounts | object | `{}` |  |
+| volumes | object | `{}` |  |
 | vpn.image.name | string | `"qmcgaw/gluetun"` |  |
 | vpn.image.pullPolicy | string | `"IfNotPresent"` |  |
 | vpn.image.tag | string | `"v3.13.1"` |  |
@@ -158,17 +122,7 @@ For my flexget config you can take a look at: https://github.com/gandazgul/flexg
 | vpn.resources.limits.memory | string | `"100Mi"` |  |
 | vpn.resources.requests.cpu | string | `"100m"` |  |
 | vpn.resources.requests.memory | string | `"100Mi"` |  |
-| vpn.volumeMounts[0].mountPath | string | `"/vpn"` |  |
-| vpn.volumeMounts[0].name | string | `"yasr-volume"` |  |
-| vpn.volumeMounts[0].subPath | string | `"configs/openvpn"` |  |
-| vpn.volumeMounts[1].mountPath | string | `"/dev/net/tun"` |  |
-| vpn.volumeMounts[1].name | string | `"dev-tun"` |  |
-| vpn.volumeMounts[2].mountPath | string | `"/etc/localtime"` |  |
-| vpn.volumeMounts[2].name | string | `"tz-config"` |  |
-| vpn.volumeMounts[2].readOnly | bool | `true` |  |
-| vpn.volumeMounts[3].mountPath | string | `"/tmp/gluetun/"` |  |
-| vpn.volumeMounts[3].name | string | `"yasr-volume"` |  |
-| vpn.volumeMounts[3].subPath | string | `"configs/transmission/"` |  |
+| vpn.volumeMounts | object | `{}` |  |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.5.0](https://github.com/norwoodj/helm-docs/releases/v1.5.0)
