@@ -26,10 +26,9 @@ spec:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        volumeMounts:
-          {{- with .Values.volumeMounts }}
-{{ toYaml . | indent 8 }}
-          {{- end}}
+        {{- with .Values.volumeMounts }}
+        volumeMounts: {{ toYaml . | nindent 8 }}
+        {{- end}}
         ports:
         - containerPort: {{ .Values.service.internalSMBPort445 }}
           name: smb445
@@ -44,7 +43,7 @@ spec:
 {{ toYaml .Values.env | indent 12 }}
 {{- end }}
         readinessProbe:
-          tcpSocket: 
+          tcpSocket:
             port: {{ .Values.service.internalSMBPort445 }}
           initialDelaySeconds: 5
           periodSeconds: 10
