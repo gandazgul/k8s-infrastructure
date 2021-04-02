@@ -6,8 +6,8 @@ replicaCount: 1
 
 image:
   # this needs to be provided
-  repository: busybox
-  tag: latest
+  repository: sverrirab/kube-test-container
+  tag: v1.0
   pullPolicy: IfNotPresent
 
 resources: {}

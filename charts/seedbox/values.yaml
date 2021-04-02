@@ -15,18 +15,18 @@ vpn:
     limits:
       cpu: 500m
       memory: 100Mi
-  volumeMounts:
-    - name: yasr-volume
-      mountPath: /vpn
-      subPath: configs/openvpn
-    - name: dev-tun
-      mountPath: /dev/net/tun
-    - name: tz-config
-      mountPath: /etc/localtime
-      readOnly: true
-    - name: yasr-volume
-      mountPath: /tmp/gluetun/
-      subPath: configs/transmission/
+  volumeMounts: {}
+#    - name: yasr-volume
+#      mountPath: /vpn
+#      subPath: configs/openvpn
+#    - name: dev-tun
+#      mountPath: /dev/net/tun
+#    - name: tz-config
+#      mountPath: /etc/localtime
+#      readOnly: true
+#    - name: yasr-volume
+#      mountPath: /tmp/gluetun/
+#      subPath: configs/transmission/
 
 transmission:
   name: transmission
@@ -57,19 +57,6 @@ transmission:
     value: "America/New_York"
   ingress:
     enabled: false
-  volumeMounts:
-    - name: yasr-volume
-      mountPath: /data
-      subPath: configs/transmission
-    - name: yasr-volume
-      mountPath: /config
-      subPath: configs/transmission
-    - name: yasr-volume
-      mountPath: /watch
-      subPath: configs/transmission/watch
-    - name: tz-config
-      mountPath: /etc/localtime
-      readOnly: true
   resources:
     requests:
       cpu: 100m
@@ -77,6 +64,19 @@ transmission:
     limits:
       cpu: 1000m
       memory: 2000Mi
+  volumeMounts: {}
+#  - name: yasr-volume
+#    mountPath: /data
+#    subPath: configs/transmission
+#  - name: yasr-volume
+#    mountPath: /config
+#    subPath: configs/transmission
+#  - name: yasr-volume
+#    mountPath: /watch
+#    subPath: configs/transmission/watch
+#  - name: tz-config
+#    mountPath: /etc/localtime
+#    readOnly: true
 
 flexget:
   enabled: false
@@ -90,18 +90,6 @@ flexget:
     port: 3539
   ingress:
     enabled: false
-  volumeMounts:
-    - name: yasr-volume
-      mountPath: /config
-      subPath: configs/flexget
-    - name: main-volume
-      mountPath: /main
-    - name: yasr-volume
-      mountPath: /data
-      subPath: configs/transmission
-    - name: tz-config
-      mountPath: /etc/localtime
-      readOnly: true
   resources:
     requests:
       cpu: 100m
@@ -109,6 +97,18 @@ flexget:
     limits:
       cpu: 500m
       memory: 1000Mi
+  volumeMounts: {}
+#  - name: yasr-volume
+#    mountPath: /config
+#    subPath: configs/flexget
+#  - name: main-volume
+#    mountPath: /main
+#  - name: yasr-volume
+#    mountPath: /data
+#    subPath: configs/transmission
+#  - name: tz-config
+#    mountPath: /etc/localtime
+#    readOnly: true
 
 jackett:
   enabled: true
@@ -122,16 +122,6 @@ jackett:
     port: 9117
   ingress:
     enabled: false
-  volumeMounts:
-    - name: yasr-volume
-      mountPath: /config
-      subPath: configs/jackett
-    - name: yasr-volume
-      mountPath: /downloads
-      subPath: configs/jackett/downloads
-    - name: tz-config
-      mountPath: /etc/localtime
-      readOnly: true
   resources:
     requests:
       cpu: 100m
@@ -139,6 +129,16 @@ jackett:
     limits:
       cpu: 500m
       memory: 1000Mi
+  volumeMounts: {}
+#  - name: yasr-volume
+#    mountPath: /config
+#    subPath: configs/jackett
+#  - name: yasr-volume
+#    mountPath: /downloads
+#    subPath: configs/jackett/downloads
+#  - name: tz-config
+#    mountPath: /etc/localtime
+#    readOnly: true
 
 sonarr:
   enabled: true
@@ -197,19 +197,19 @@ dnsConfig:
     - 8.8.8.8
     - 8.8.4.4
 
-volumes:
-  - name: yasr-volume
-    persistentVolumeClaim:
-      claimName: yasr-volume
-  - name: main-volume
-    persistentVolumeClaim:
-      claimName: main-volume
-  - name: dev-tun
-    hostPath:
-      path: /dev/net/tun
-  - name: tz-config
-    hostPath:
-      path: /etc/localtime
+volumes: {}
+#  - name: yasr-volume
+#    persistentVolumeClaim:
+#      claimName: yasr-volume
+#  - name: main-volume
+#    persistentVolumeClaim:
+#      claimName: main-volume
+#  - name: dev-tun
+#    hostPath:
+#      path: /dev/net/tun
+#  - name: tz-config
+#    hostPath:
+#      path: /etc/localtime
 
 nodeSelector: {}
 

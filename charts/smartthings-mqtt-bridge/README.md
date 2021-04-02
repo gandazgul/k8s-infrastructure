@@ -24,7 +24,7 @@ A Helm chart for the smartthings-mqtt-bridge
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | service.port | int | `8080` |  |
-| service.type | string | `"NodePort"` |  |
+| service.type | string | `"ClusterIP"` |  |
 | tolerations | list | `[]` |  |
 
 ----------------------------------------------
