@@ -20,7 +20,7 @@ A Helm chart for the Mealie app. A recipe management system.
 | autoscaling.minReplicas | int | `1` |  |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | fullnameOverride | string | `""` |  |
-| image.pullPolicy | string | `"always"` |  |
+| image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"hkotel/mealie"` |  |
 | image.tag | string | `"latest"` |  |
 | imagePullSecrets | list | `[]` |  |

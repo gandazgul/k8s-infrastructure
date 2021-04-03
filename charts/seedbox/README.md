@@ -92,7 +92,7 @@ For my flexget config you can take a look at: https://github.com/gandazgul/flexg
 | transmission.env[1].name | string | `"PUID"` |  |
 | transmission.env[1].value | string | `"1000"` |  |
 | transmission.env[2].name | string | `"TRANSMISSION_UMASK"` |  |
-| transmission.env[2].value | int | `2` |  |
+| transmission.env[2].value | string | `"2"` |  |
 | transmission.env[3].name | string | `"TZ"` |  |
 | transmission.env[3].value | string | `"America/New_York"` |  |
 | transmission.image.name | string | `"linuxserver/transmission"` |  |

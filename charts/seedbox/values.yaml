@@ -52,7 +52,7 @@ transmission:
   - name: PUID
     value: "1000"
   - name: TRANSMISSION_UMASK
-    value: 2
+    value: "2"
 #  - name: TRANSMISSION_WEB_HOME
 #    value: "/combustion-release/"
   - name: TZ
