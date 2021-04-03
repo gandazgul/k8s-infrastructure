@@ -43,7 +43,7 @@ Based on the official k8s dashboard chart. General-purpose web UI for Kubernetes
 | podDisruptionBudget.minAvailable | string | `nil` |  |
 | rbac.clusterAdminRole | bool | `false` |  |
 | rbac.clusterReadOnlyRole | bool | `false` |  |
-| rbac.create | bool | `true` |  |
+| rbac.create | bool | `false` |  |
 | replicaCount | int | `1` |  |
 | resources.limits.cpu | string | `"100m"` |  |
 | resources.limits.memory | string | `"100Mi"` |  |

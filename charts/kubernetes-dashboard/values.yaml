@@ -149,7 +149,7 @@ ingress:
 
 rbac:
   # Specifies whether RBAC resources should be created
-  create: true
+  create: false
 
   # Specifies whether cluster-admin ClusterRole will be used for dashboard
   # ServiceAccount (NOT RECOMMENDED).
