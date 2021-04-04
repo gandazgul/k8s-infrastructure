@@ -24,6 +24,18 @@ entries:
   cronjob:
   - apiVersion: v1
     appVersion: "1.0"
+    created: "2021-04-04T05:01:01.177813601Z"
+    description: A Helm chart for creating cron jobs
+    digest: 06db6f63762a3045dd415db7909e54e27da39e802fa90cc4a1ff32f0e0b7bb3d
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: cronjob
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/cronjob-0.1.1/cronjob-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v1
+    appVersion: "1.0"
     created: "2020-12-07T06:44:29.600902477Z"
     description: A Helm chart for creating cron jobs
     digest: 6bdef537c4e82286858c6f05de41de8e170caaf0f4aeca812dee26295bd59b01
@@ -44,6 +56,18 @@ entries:
   generic-deployment:
   - apiVersion: v1
     appVersion: 1.0.0
+    created: "2021-04-04T05:01:01.32508132Z"
+    description: A generic deployment chart
+    digest: fa1222705c395a43ba6941fe9556dcc4d0837ade119495367df1d2610a6fb310
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: generic-deployment
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/generic-deployment-0.1.1/generic-deployment-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v1
+    appVersion: 1.0.0
     created: "2020-12-07T06:44:30.510968228Z"
     description: A generic deployment chart
     digest: d601402ebb34de7bd2bf7d996ca890d5c3b661b9a36327a0b9b6f2de54c397c7
@@ -62,6 +86,17 @@ entries:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/grafana-prometheus-0.1.0/grafana-prometheus-0.1.0.tgz
     version: 0.1.0
   hostpath-provisioner:
+  - apiVersion: v1
+    created: "2021-04-04T05:01:01.480343541Z"
+    description: A chart to install a storage provisioner for single node installs.
+    digest: 73048935de1e380f2609a5f5685c4f4dac04f3b9b3c4afcbcb11e79afc5258c5
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: hostpath-provisioner
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/hostpath-provisioner-0.2.2/hostpath-provisioner-0.2.2.tgz
+    version: 0.2.2
   - apiVersion: v1
     created: "2021-03-23T01:46:33.736013236Z"
     description: A chart to install a storage provisioner for single node installs.
@@ -96,6 +131,25 @@ entries:
   kubernetes-dashboard:
   - apiVersion: v1
     appVersion: 2.0.5
+    created: "2021-04-04T05:01:01.629419638Z"
+    description: Based on the official k8s dashboard chart. General-purpose web UI for Kubernetes clusters
+    digest: b244c5205e742deb8017cf404a777ce715038a1d7e28dac034c1deeb94426e8b
+    home: https://github.com/gandazgul/k8s-infrastructure/tree/master/charts/kubernetes-dashboard
+    icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.svg
+    keywords:
+    - kubernetes
+    - dashboard
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: kubernetes-dashboard
+    sources:
+    - https://github.com/gandazgul/k8s-infrastructure/tree/master/charts/kubernetes-dashboard
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/kubernetes-dashboard-0.1.1/kubernetes-dashboard-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v1
+    appVersion: 2.0.5
     created: "2020-12-07T06:44:31.901783476Z"
     description: Based on the official k8s dashboard chart. General-purpose web UI for Kubernetes clusters
     digest: b1ee3d3fcf5c0d5666e1abbe762eecd18d12a55bc83f2df5653beffe8e71844a
@@ -116,6 +170,19 @@ entries:
   mealie:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2021-04-04T05:01:01.782324988Z"
+    description: A Helm chart for the Mealie app. A recipe management system.
+    digest: e71d2d831db70a3bbf1d65cc56a8b32144448c89808322c27f4ae10b2e19e314
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: mealie
+    type: application
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/mealie-0.1.2/mealie-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2021-03-16T01:38:38.927312906Z"
     description: A Helm chart for the Mealie app. A recipe management system.
     digest: 6aee09fc5eafcc2b718a3d8da105d21fde491e8efdca8a9287e0c659a9e8c144
@@ -128,6 +195,18 @@ entries:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/mealie-0.1.1/mealie-0.1.1.tgz
     version: 0.1.1
   mosca:
+  - apiVersion: v1
+    appVersion: 2.8.3
+    created: "2021-04-04T05:01:01.959915839Z"
+    description: A Helm chart for the Mosca.io MQTT Broker
+    digest: 3fa379db379be1058a06c2601981e9253a50a26baf6c07a258004fc4cacb0b99
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: mosca
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/mosca-0.2.1/mosca-0.2.1.tgz
+    version: 0.2.1
   - apiVersion: v1
     appVersion: 2.8.3
     created: "2020-12-07T06:44:32.354240825Z"
@@ -148,6 +227,17 @@ entries:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/nest-mqtt-bridge-0.2.0/nest-mqtt-bridge-0.2.0.tgz
     version: 0.2.0
   persistence-volume:
+  - apiVersion: v1
+    created: "2021-04-04T05:01:02.107640152Z"
+    description: A Helm chart to install my data volumes
+    digest: 0f83224019ff9e229c200d14e1a1471c7c324084b41300af0178d5c57b8b9072
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: persistence-volume
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/persistence-volume-0.2.2/persistence-volume-0.2.2.tgz
+    version: 0.2.2
   - apiVersion: v1
     created: "2021-03-23T01:34:57.393345814Z"
     description: A Helm chart to install my data volumes
@@ -191,6 +281,18 @@ entries:
   resilio:
   - apiVersion: v1
     appVersion: "1.0"
+    created: "2021-04-04T05:01:02.310863893Z"
+    description: A Helm chart for resilio sync
+    digest: 37ba659998e2bc08ed26d4e98e69a3fe34a1e68e241f55af743f8ea6c8e0df04
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: resilio
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/resilio-0.2.1/resilio-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v1
+    appVersion: "1.0"
     created: "2020-12-07T06:44:34.157968549Z"
     description: A Helm chart for resilio sync
     digest: e1d44678a8a71343d022ad0939c10abea8b5e1ca6cef39a2389ad087e349fbfc
@@ -200,6 +302,17 @@ entries:
     version: 0.2.0
   samba:
   - apiVersion: v1
+    created: "2021-04-04T05:01:02.463618545Z"
+    description: Chart to deploy a simple Samba server on K8s available on hostNetwork or just inside the cluster
+    digest: b83c475d04ea7092042d7683953183b7840cb77afe530311599492fb0256e174
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: samba
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/samba-0.2.1/samba-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v1
     created: "2020-12-07T06:44:34.596086601Z"
     description: Chart to deploy a simple Samba server on K8s available on hostNetwork or just inside the cluster
     digest: 0111c3f980f0e184cc3db7c67014a3f5b48d6e108299c71d9834bed265dec77f
@@ -208,6 +321,18 @@ entries:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/samba-0.2.0/samba-0.2.0.tgz
     version: 0.2.0
   seedbox:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2021-04-04T05:01:02.660838159Z"
+    description: A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission, Flexget, jackett, sonarr, radarr
+    digest: edc3955d060e5ea7301754cb575d57285debd9037fdb3c2091992eefbc763ba1
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: seedbox
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/seedbox-0.4.0/seedbox-0.4.0.tgz
+    version: 0.4.0
   - apiVersion: v1
     appVersion: "1.0"
     created: "2020-12-07T06:44:35.044692124Z"
@@ -220,6 +345,18 @@ entries:
   smartthings-mqtt-bridge:
   - apiVersion: v1
     appVersion: 3.0.0
+    created: "2021-04-04T05:01:02.838351311Z"
+    description: A Helm chart for the smartthings-mqtt-bridge
+    digest: 0fa92f576c885da28ee1376cdc578e60b1285087dce7a2a61e8906cf83cabc04
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: smartthings-mqtt-bridge
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/smartthings-mqtt-bridge-0.2.1/smartthings-mqtt-bridge-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v1
+    appVersion: 3.0.0
     created: "2020-12-07T06:44:35.558111693Z"
     description: A Helm chart for the smartthings-mqtt-bridge
     digest: 51ea4baf9bb69f3ccc344ba1ba8d3d7a85475a431cdd91ff3912d828fdb7cc3c
@@ -227,4 +364,4 @@ entries:
     urls:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/smartthings-mqtt-bridge-0.2.0/smartthings-mqtt-bridge-0.2.0.tgz
     version: 0.2.0
-generated: "2021-03-23T01:46:49.850059800Z"
+generated: "2021-03-23T01:46:49.8500598Z"
