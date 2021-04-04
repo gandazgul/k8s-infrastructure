@@ -10,7 +10,8 @@ image:
 nameOverride: "smartthings-mqtt-bridge"
 
 service:
-  type: NodePort
+#  type: NodePort
+  type: ClusterIP
   port: 8080
 
 ingress:
