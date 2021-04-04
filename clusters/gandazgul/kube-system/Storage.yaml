@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: persistence-volume
-      version: '0.2.1'
+      version: '0.2.2'
       sourceRef:
         kind: HelmRepository
         name: gandazgul
@@ -32,7 +32,7 @@ spec:
   chart:
     spec:
       chart: persistence-volume
-      version: '0.2.1'
+      version: '0.2.2'
       sourceRef:
         kind: HelmRepository
         name: gandazgul
@@ -55,7 +55,7 @@ spec:
   chart:
     spec:
       chart: persistence-volume
-      version: '0.2.1'
+      version: '0.2.2'
       sourceRef:
         kind: HelmRepository
         name: gandazgul
