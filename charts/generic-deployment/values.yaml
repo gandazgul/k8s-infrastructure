@@ -5,8 +5,9 @@
 replicaCount: 1
 
 image:
-#  repository: this needs to be provided
-  tag: latest
+  # this needs to be provided
+  repository: sverrirab/kube-test-container
+  tag: v1.0
   pullPolicy: IfNotPresent
 
 resources: {}
