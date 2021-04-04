@@ -25,6 +25,8 @@ spec:
     name: seedbox-values
     optional: false
   values:
+    dnsPolicy: ClusterFirst
+    dnsConfig: {}
     vpn:
       env:
       - name: TZ
