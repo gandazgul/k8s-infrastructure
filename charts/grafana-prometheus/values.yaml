@@ -1,8 +1,0 @@
-# Default values
-# TODO: this chart can be migrated to a kustomize file now that we have gitops
-# I also need to look into a prometheus operator
-
-adminPassword: "ChangeM3"
-smtp:
-  user: 'smtp_user'
-  password: 'ChangeM3'

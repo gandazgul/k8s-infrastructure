@@ -10,7 +10,7 @@ image:
 nameOverride: "mosca"
 
 service:
-  type: NodePort
+  type: ClusterIP
   port: 1883
 
 ingress:
