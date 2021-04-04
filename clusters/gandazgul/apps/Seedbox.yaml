@@ -11,7 +11,7 @@ spec:
   chart:
     spec:
       chart: seedbox
-      version: 0.3.2
+      version: 0.4.0
       sourceRef:
         kind: HelmRepository
         name: gandazgul
@@ -27,7 +27,21 @@ spec:
   values:
     dnsPolicy: ClusterFirst
     dnsConfig: {}
+    volumes:
+    - name: yasr-volume
+      persistentVolumeClaim:
+        claimName: yasr-volume
+    - name: main-volume
+      persistentVolumeClaim:
+        claimName: main-volume
+    - name: dev-tun
+      hostPath:
+        path: /dev/net/tun
+    - name: tz-config
+      hostPath:
+        path: /etc/localtime
     vpn:
+      enabled: true
       env:
       - name: TZ
         value: "EST5EDT"
@@ -39,7 +53,32 @@ spec:
         value: ${VPN_PASSWORD}
       - name: FIREWALL
         value: "off"
+      volumeMounts:
+      - name: yasr-volume
+        mountPath: /vpn
+        subPath: configs/openvpn
+      - name: dev-tun
+        mountPath: /dev/net/tun
+      - name: tz-config
+        mountPath: /etc/localtime
+        readOnly: true
+      - name: yasr-volume
+        mountPath: /tmp/gluetun/
+        subPath: configs/transmission/
     transmission:
+      volumeMounts:
+      - name: yasr-volume
+        mountPath: /data
+        subPath: configs/transmission
+      - name: yasr-volume
+        mountPath: /config
+        subPath: configs/transmission
+      - name: yasr-volume
+        mountPath: /watch
+        subPath: configs/transmission/watch
+      - name: tz-config
+        mountPath: /etc/localtime
+        readOnly: true
       ingress:
         enabled: true
         hosts:
@@ -53,6 +92,16 @@ spec:
           cert-manager.io/cluster-issuer: "ca-issuer"
           nginx.ingress.kubernetes.io/app-root: "/web/"
     jackett:
+      volumeMounts:
+      - name: yasr-volume
+        mountPath: /config
+        subPath: configs/jackett
+      - name: yasr-volume
+        mountPath: /downloads
+        subPath: configs/jackett/downloads
+      - name: tz-config
+        mountPath: /etc/localtime
+        readOnly: true
       ingress:
         enabled: true
         hosts:
