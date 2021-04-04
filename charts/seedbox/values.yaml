@@ -3,6 +3,7 @@
 replicaCount: 1
 
 vpn:
+  enabled: false
   name: vpn
   image:
     name: qmcgaw/gluetun

@@ -27,6 +27,7 @@ spec:
       dnsConfig:
 {{ toYaml .Values.dnsConfig | indent 8 }}
       containers:
+{{- if .Values.vpn.enabled }}
         # VPN
         - name: {{ .Values.vpn.name | quote }}
           image: "{{ .Values.vpn.image.name }}:{{ .Values.vpn.image.tag }}"
@@ -50,6 +51,7 @@ spec:
           {{- with .Values.vpn.volumeMounts }}
           volumeMounts: {{ toYaml . | nindent 12 }}
           {{- end }}
+{{- end }}
         # Transmission
         - name: transmission-pia-port-forward
           image: "gandazgul/transmission-pia-port-forward:v318a599"
