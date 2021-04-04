@@ -116,6 +116,7 @@ For my flexget config you can take a look at: https://github.com/gandazgul/flexg
 | transmission.service.type | string | `"ClusterIP"` |  |
 | transmission.volumeMounts | object | `{}` |  |
 | volumes | object | `{}` |  |
+| vpn.enabled | bool | `false` |  |
 | vpn.image.name | string | `"qmcgaw/gluetun"` |  |
 | vpn.image.pullPolicy | string | `"IfNotPresent"` |  |
 | vpn.image.tag | string | `"v3.13.1"` |  |
