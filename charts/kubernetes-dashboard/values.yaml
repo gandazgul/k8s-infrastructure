@@ -149,11 +149,11 @@ ingress:
 
 rbac:
   # Specifies whether RBAC resources should be created
-  create: false
+  create: true
 
   # Specifies whether cluster-admin ClusterRole will be used for dashboard
   # ServiceAccount (NOT RECOMMENDED).
-  clusterAdminRole: false
+  clusterAdminRole: true
 
   # Start in ReadOnly mode.
   # Only dashboard-related Secrets and ConfigMaps will still be available for writing.
