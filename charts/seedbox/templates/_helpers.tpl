@@ -29,7 +29,27 @@ Create chart name and version as used by the chart label.
 */}}
 {{- define "helpers.chart" -}}
     {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
+{{- end }}
+
+{{/*
+Common labels
+*/}}
+{{- define "helpers.labels" -}}
+  helm.sh/chart: {{ include "helpers.chart" . }}
+  {{ include "helpers.selectorLabels" . }}
+  {{- if .Chart.AppVersion }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+  {{- end }}
+  app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "helpers.selectorLabels" -}}
+  app.kubernetes.io/name: {{ include "helpers.name" . }}
+  app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
 
 {{- define "helpers.transmission-ingress" -}}
     {{- printf "%s-%s" .Release.Name "transmission-ingress" | trunc 63 -}}

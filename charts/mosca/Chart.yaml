@@ -1,8 +1,9 @@
 apiVersion: v1
-appVersion: "2.8.3"
-description: A Helm chart for the Mosca.io MQTT Broker
 name: mosca
-version: 0.2.1
+description: A Helm chart for the Mosca.io MQTT Broker
+type: application
+version: 0.2.2
+appVersion: "2.8.3"
 maintainers:
 - name: gandazgul
   email: ravelo.carlos@gmail.com
