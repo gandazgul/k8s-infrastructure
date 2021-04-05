@@ -1,8 +1,9 @@
-apiVersion: v1
-appVersion: "1.0.0"
-description: A generic deployment chart
+apiVersion: v2
 name: generic-deployment
-version: 0.1.1
+description: A generic deployment chart
+type: application
+version: 0.1.2
+appVersion: "v1.0"
 maintainers:
 - name: gandazgul
   email: ravelo.carlos@gmail.com

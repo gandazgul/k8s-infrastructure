@@ -1,20 +1,14 @@
 {{- if .Values.transmission.ingress.enabled -}}
 {{- $fullName := include "helpers.transmission-ingress" . -}}
 {{- $serviceName := include "helpers.transmission-service" . -}}
-{{- $ingressPath := .Values.transmission.ingress.path | default '/' -}}
 {{- $svcPort := .Values.transmission.service.port -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
-  labels:
-    app: {{ template "helpers.name" . }}
-    chart: {{ template "helpers.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+  labels: {{- include "helpers.labels" . | nindent 4 }}
   {{- with .Values.transmission.ingress.annotations }}
-  annotations:
-  {{- toYaml . | nindent 4 }}
+  annotations: {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   {{- if .Values.transmission.ingress.tls }}
@@ -28,13 +22,17 @@ spec:
   {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.transmission.ingress.hosts }}
+  {{- range .Values.transmission.ingress.hosts }}
   - host: {{ .host | quote }}
     http:
       paths:
-      - path: {{ $ingressPath }}
+      {{- range .paths }}
+      - path: {{ .path }}
+        pathType: Prefix
         backend:
-          serviceName: {{ $serviceName }}
-          servicePort: {{ $svcPort }}
+          service:
+            name: {{ $serviceName }}
+            port: {{ $svcPort }}
+      {{- end }}
   {{- end }}
 {{- end }}
