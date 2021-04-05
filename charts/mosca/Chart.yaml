@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: v2
 name: mosca
 description: A Helm chart for the Mosca.io MQTT Broker
 type: application

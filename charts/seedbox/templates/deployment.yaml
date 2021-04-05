@@ -9,7 +9,7 @@ spec:
     matchLabels: {{- include "helpers.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      labels: {{- include "chart.selectorLabels" . | nindent 8 }}
+      labels: {{- include "helpers.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.volumes }}
       volumes: {{ toYaml . | nindent 6 }}
