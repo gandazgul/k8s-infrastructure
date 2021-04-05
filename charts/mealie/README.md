@@ -32,7 +32,7 @@ A Helm chart for the Mealie app. A recipe management system.
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
-| service.port | int | `8080` |  |
+| service.port | int | `9000` |  |
 | service.type | string | `"ClusterIP"` |  |
 | tolerations | list | `[]` |  |
 | volumeMounts | list | `[]` |  |
