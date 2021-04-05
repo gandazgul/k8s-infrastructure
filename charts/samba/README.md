@@ -2,11 +2,11 @@
 
 Chart to deploy a simple Samba server on K8s available on hostNetwork or just inside the cluster
 
-![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square)
+![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square)
 
 ## Volumes
 
-This container will mount any number of volumes you configure to it. You can main /etc/samba to override its config,
+This container will mount any number of volumes you configure to it. You can mount /etc/samba to override its config,
 if you want to use the default's or don't want to deal with configs then read the container's author's README @ https://github.com/dperson/samba.
 
 ## Users and Passwords
@@ -68,7 +68,7 @@ path = /shared/testuser
 |-----|------|---------|-------------|
 | env | list | `[]` |  |
 | hostNetwork | bool | `true` |  |
-| image.pullPolicy | string | `"IfNotPresent"` |  |
+| image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"dperson/samba"` |  |
 | image.tag | string | `"latest"` |  |
 | nodeSelector | object | `{}` |  |
