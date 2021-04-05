@@ -5,7 +5,7 @@ replicaCount: 1
 image:
   repository: dperson/samba
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 service:
   name: samba
