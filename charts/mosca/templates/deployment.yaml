@@ -1,68 +1,62 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "mosca.fullname" . }}
-  labels:
-    app: {{ include "mosca.name" . }}
-    chart: {{ include "mosca.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+  name: {{ include "helpers.fullname" . }}
+  labels: {{- include "helpers.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
-    matchLabels:
-      app: {{ include "mosca.name" . }}
-      release: {{ .Release.Name }}
+    matchLabels: {{- include "helpers.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      labels:
-        app: {{ include "mosca.name" . }}
-        release: {{ .Release.Name }}
+      {{- with .Values.podAnnotations }}
+      annotations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels: {{- include "chart.selectorLabels" . | nindent 8 }}
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext: {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- with .Values.volumes }}
-      volumes:
-{{ toYaml . | indent 6 }}
+      volumes: {{ toYaml . | nindent 6 }}
       {{- end}}
-{{- if .Values.dnsPolicy }}
+      {{- if .Values.dnsPolicy }}
       dnsPolicy: {{ .Values.dnsPolicy }}
-      dnsConfig:
-{{ toYaml .Values.dnsConfig | indent 8 }}
-{{- end }}
+      dnsConfig: {{ toYaml .Values.dnsConfig | nindent 8 }}
+      {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          env:
-{{ toYaml .Values.env | indent 12 }}
-          ports:
-            - name: http
-              containerPort: 1883
-              protocol: TCP
-          readinessProbe:
-            tcpSocket:
-              port: http
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          livenessProbe:
-            tcpSocket:
-              port: http
-            initialDelaySeconds: 15
-            periodSeconds: 20
-          securityContext:
-{{ toYaml .Values.securityContext | indent 12 }}
-          volumeMounts:
-{{ toYaml .Values.volumeMounts | indent 12 }}
-          resources:
-{{ toYaml .Values.resources | indent 12 }}
-    {{- with .Values.nodeSelector }}
-      nodeSelector:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.affinity }}
-      affinity:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
-      tolerations:
-{{ toYaml . | indent 8 }}
-    {{- end }}
+      - name: {{ .Chart.Name }}
+        securityContext: {{ toYaml .Values.securityContext | nindent 12 }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: 1883
+          protocol: TCP
+        readinessProbe:
+          tcpSocket:
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: http
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        {{- if .Values.env }}
+        env: {{ toYaml .Values.env | nindent 12 }}
+        {{- end }}
+        {{- with .Values.volumeMounts }}
+        volumeMounts: {{ toYaml .Values.volumeMounts | nindent 12 }}
+        {{- end }}
+        resources: {{ toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations: {{ toYaml . | nindent 8 }}
+      {{- end }}

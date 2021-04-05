@@ -3,11 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "helpers.flexget-service" . }}
-  labels:
-    app: {{ include "helpers.name" . }}
-    chart: {{ include "helpers.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+  labels: {{- include "helpers.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.flexget.service.type }}
   ports:

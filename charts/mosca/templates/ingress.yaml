@@ -1,32 +1,38 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "mosca.fullname" . -}}
-{{- $ingressPath := .Values.ingress.path -}}
-apiVersion: networking.k8s.io/v1beta1
+{{- $fullName := include "helpers.fullname" . -}}
+{{- $serviceName := include "helpers.flexget-service" . -}}
+{{- $svcPort := .Values.flexget.service.port -}}
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
-  labels:
-    app: {{ include "mosca.name" . }}
-    chart: {{ include "mosca.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-{{- with .Values.ingress.annotations }}
-  annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
+  labels: {{- include "helpers.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations: {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
-{{- if .Values.ingress.tls }}
+  {{- if .Values.ingress.tls }}
   tls:
   {{- range .Values.ingress.tls }}
-    - hosts:
+  - hosts:
       {{- range .hosts }}
-        - {{ . | quote }}
+    - {{ . | quote }}
       {{- end }}
-      secretName: {{ .secretName }}
+    secretName: {{ .secretName }}
   {{- end }}
-{{- end }}
-{{- with .Values.ingress.rules }}
+  {{- end }}
   rules:
-{{ toYaml . | indent 4 }}
-{{- end }}
+  {{- range .Values.ingress.hosts }}
+  - host: {{ .host | quote }}
+    http:
+      paths:
+      {{- range .paths }}
+      - path: {{ .path }}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ $serviceName }}
+            port: {{ $svcPort }}
+      {{- end }}
+  {{- end }}
 {{- end }}

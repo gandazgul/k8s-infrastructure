@@ -1,39 +1,38 @@
-{{- if (and .Values.jackett.enabled .Values.jackett.ingress.enabled) -}}
+{{- if .Values.jackett.ingress.enabled -}}
 {{- $fullName := include "helpers.jackett-ingress" . -}}
 {{- $serviceName := include "helpers.jackett-service" . -}}
-{{- $ingressPath := .Values.jackett.ingress.path -}}
-apiVersion: networking.k8s.io/v1beta1
+{{- $svcPort := .Values.jackett.service.port -}}
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
-  labels:
-    app: {{ template "helpers.name" . }}
-    chart: {{ template "helpers.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-{{- with .Values.jackett.ingress.annotations }}
-  annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
+  labels: {{- include "helpers.labels" . | nindent 4 }}
+  {{- with .Values.jackett.ingress.annotations }}
+  annotations: {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   {{- if .Values.jackett.ingress.tls }}
   tls:
-    {{- range .Values.jackett.ingress.tls }}
-    - hosts:
-      {{- range .hosts }}
-      - {{ . }}
-      {{- end }}
-      secretName: {{ .secretName }}
+  {{- range .Values.jackett.ingress.tls }}
+  - hosts:
+    {{- range .hosts }}
+    - {{ . | quote }}
     {{- end }}
+    secretName: {{ .secretName }}
+  {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.jackett.ingress.hosts }}
-    - host: {{ .host }}
-      http:
-        paths:
-          - path: {{ $ingressPath }}
-            backend:
-              serviceName: {{ $serviceName }}
-              servicePort: {{ .servicePort }}
-    {{- end }}
+  {{- range .Values.jackett.ingress.hosts }}
+  - host: {{ .host | quote }}
+    http:
+      paths:
+      {{- range .paths }}
+      - path: {{ .path }}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ $serviceName }}
+            port: {{ $svcPort }}
+      {{- end }}
+  {{- end }}
 {{- end }}

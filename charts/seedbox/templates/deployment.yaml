@@ -2,30 +2,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "helpers.fullname" . }}
-  labels:
-    app: {{ include "helpers.name" . }}
-    chart: {{ include "helpers.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+  labels: {{- include "helpers.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
-    matchLabels:
-      app: {{ include "helpers.name" . }}
-      release: {{ .Release.Name }}
+    matchLabels: {{- include "helpers.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      labels:
-        app: {{ include "helpers.name" . }}
-        release: {{ .Release.Name }}
+      labels: {{- include "chart.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.volumes }}
-      volumes:
-{{ toYaml . | nindent 6 }}
+      volumes: {{ toYaml . | nindent 6 }}
       {{- end}}
+      {{- if .Values.dnsPolicy }}
       dnsPolicy: {{ .Values.dnsPolicy }}
-      dnsConfig:
-{{ toYaml .Values.dnsConfig | indent 8 }}
+      dnsConfig: {{ toYaml .Values.dnsConfig | nindent 8 }}
+      {{- end }}
       containers:
 {{- if .Values.vpn.enabled }}
         # VPN
@@ -34,7 +26,7 @@ spec:
           imagePullPolicy: {{ .Values.vpn.image.pullPolicy | quote }}
           env:
             {{- with .Values.vpn.env }}
-{{ toYaml . | nindent 12 }}
+              {{ toYaml . | nindent 12 }}
             {{- end}}
             - name: PORT_FORWARDING
               value: "on"
@@ -263,15 +255,12 @@ spec:
             containerPort: 7878
             protocol: TCP
 {{- end}}
-{{- with .Values.nodeSelector }}
-      nodeSelector:
-{{ toYaml . | indent 8 }}
-{{- end }}
-{{- with .Values.affinity }}
-      affinity:
-{{ toYaml . | indent 8 }}
-{{- end }}
-{{- with .Values.tolerations }}
-      tolerations:
-{{ toYaml . | indent 8 }}
-{{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations: {{ toYaml . | nindent 8 }}
+      {{- end }}
