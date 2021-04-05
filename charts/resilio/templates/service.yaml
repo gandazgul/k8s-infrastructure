@@ -2,21 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "helpers.fullname" . }}
-  labels:
-    app: {{ include "helpers.name" . }}
-    chart: {{ include "helpers.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+  labels: {{- include "helpers.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
     - name: http
-{{- if contains "NodePort" .Values.service.type }}
-      nodePort: {{ .Values.service.port }}
-{{- end }}
       port: {{ .Values.service.port }}
-      protocol: TCP
+      {{- if contains "NodePort" .Values.service.type }}
+      nodePort: {{ .Values.service.port }}
+      {{- end }}
       targetPort: http
-  selector:
-    app: {{ include "helpers.name" . }}
-    release: {{ .Release.Name }}
+      protocol: TCP
+  selector: {{- include "helpers.selectorLabels" . | nindent 4 }}
