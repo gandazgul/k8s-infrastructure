@@ -172,6 +172,19 @@ entries:
   mealie:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2021-04-06T21:03:33.940081786Z"
+    description: A Helm chart for the Mealie app. A recipe management system.
+    digest: 6272ebb53b43cb15e533237b298f554e650633bb1619887265b603392207f7e8
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: mealie
+    type: application
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/mealie-0.1.4/mealie-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2021-04-04T05:01:01.782324988Z"
     description: A Helm chart for the Mealie app. A recipe management system.
     digest: e71d2d831db70a3bbf1d65cc56a8b32144448c89808322c27f4ae10b2e19e314
@@ -197,6 +210,19 @@ entries:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/mealie-0.1.1/mealie-0.1.1.tgz
     version: 0.1.1
   mosca:
+  - apiVersion: v2
+    appVersion: 2.8.3
+    created: "2021-04-06T21:03:34.008962418Z"
+    description: A Helm chart for the Mosca.io MQTT Broker
+    digest: da1d29e399c081bac06f4304805b715f775b67e571aa6e40e3e74f7a1cd8029d
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: mosca
+    type: application
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/mosca-0.2.3/mosca-0.2.3.tgz
+    version: 0.2.3
   - apiVersion: v1
     appVersion: 2.8.3
     created: "2021-04-04T05:01:01.959915839Z"
@@ -281,6 +307,19 @@ entries:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/pvc-0.1.0/pvc-0.1.0.tgz
     version: 0.1.0
   resilio:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2021-04-06T21:03:34.086053801Z"
+    description: A Helm chart for resilio sync
+    digest: 2fa4877668b1e3a16dff8da1e765e87ab943d67fca5f3b4a4825970d9db8507b
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: resilio
+    type: application
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/resilio-0.2.3/resilio-0.2.3.tgz
+    version: 0.2.3
   - apiVersion: v1
     appVersion: "1.0"
     created: "2021-04-04T05:01:02.310863893Z"
@@ -325,6 +364,20 @@ entries:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/samba-0.2.0/samba-0.2.0.tgz
     version: 0.2.0
   seedbox:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2021-04-06T21:03:34.150548706Z"
+    description: A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission,
+      Flexget, jackett, sonarr, radarr
+    digest: 2c4142572b3ca6729fcd76fb64747b6b708ae990bd66516834bab0656f58ef08
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: seedbox
+    type: application
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/seedbox-0.4.4/seedbox-0.4.4.tgz
+    version: 0.4.4
   - apiVersion: v2
     appVersion: "1.0"
     created: "2021-04-06T19:54:09.010341901Z"
@@ -398,4 +451,4 @@ entries:
     urls:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/smartthings-mqtt-bridge-0.2.0/smartthings-mqtt-bridge-0.2.0.tgz
     version: 0.2.0
-generated: "2021-04-06T19:54:24.046185003Z"
+generated: "2021-04-06T21:03:34.150626206Z"
