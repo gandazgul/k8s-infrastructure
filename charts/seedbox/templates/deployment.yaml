@@ -53,11 +53,11 @@ spec:
             timeoutSeconds: 5
           resources:
             requests:
-              cpu: {{ default "100m" .Values.vpn.resources.requests.cpu | quote }}
-              memory: {{ default "250Mi" .Values.vpn.resources.requests.memory | quote }}
+              cpu: {{ .Values.vpn.resources.requests.cpu | quote }}
+              memory: {{ .Values.vpn.resources.requests.memory | quote }}
             limits:
-              cpu: {{ default "100m" .Values.vpn.resources.limits.cpu | quote }}
-              memory: {{ default "250Mi" .Values.vpn.resources.limits.memory | quote }}
+              cpu: {{ .Values.vpn.resources.limits.cpu | quote }}
+              memory: {{ .Values.vpn.resources.limits.memory | quote }}
           {{- with .Values.vpn.volumeMounts }}
           volumeMounts: {{ toYaml . | nindent 12 }}
           {{- end }}
