@@ -52,8 +52,8 @@ spec:
         value: ${VPN_USER}
       - name: PASSWORD
         value: ${VPN_PASSWORD}
-#      - name: FIREWALL
-#        value: "off"
+      - name: FIREWALL
+        value: "off"
       - name: OPENVPN_IPV6
         value: "off"
       - name: TZ
