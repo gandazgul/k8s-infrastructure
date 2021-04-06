@@ -1,14 +1,14 @@
 sonarr:
   volumeMounts:
   - name: yasr-volume
-    mountPath: "/config"
-    subPath: "configs/sonarr"
+    mountPath: /config
+    subPath: configs/sonarr
   - name: yasr-volume
-    mountPath: "/data"
-    subPath: "configs/transmission"
+    mountPath: /data
+    subPath: configs/transmission
   - name: main-volume
-    mountPath: "/tv"
-    subPath: "public/TV"
+    mountPath: /tv
+    subPath: public/TV
   - name: tz-config
     mountPath: /etc/localtime
     readOnly: true
@@ -16,14 +16,14 @@ sonarr:
 radarr:
   volumeMounts:
   - name: yasr-volume
-    mountPath: "/config"
-    subPath: "configs/radarr"
+    mountPath: /config
+    subPath: configs/radarr
   - name: yasr-volume
-    mountPath: "/data"
-    subPath: "configs/transmission"
+    mountPath: /data
+    subPath: configs/transmission
   - name: main-volume
-    mountPath: "/movies"
-    subPath: "public/Movies"
+    mountPath: /movies
+    subPath: public/Movies
   - name: tz-config
     mountPath: /etc/localtime
     readOnly: true

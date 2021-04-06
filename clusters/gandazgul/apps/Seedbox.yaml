@@ -11,7 +11,7 @@ spec:
   chart:
     spec:
       chart: seedbox
-      version: 0.3.2
+      version: 0.4.2
       sourceRef:
         kind: HelmRepository
         name: gandazgul
@@ -34,17 +34,15 @@ spec:
     - name: main-volume
       persistentVolumeClaim:
         claimName: main-volume
-    - name: dev-tun
-      hostPath:
-        path: /dev/net/tun
+#    - name: dev-tun
+#      hostPath:
+#        path: /dev/net/tun
     - name: tz-config
       hostPath:
         path: /etc/localtime
     vpn:
       enabled: true
       env:
-      - name: TZ
-        value: "EST5EDT"
       - name: VPNSP
         value: "private internet access"
       - name: REGION
@@ -54,19 +52,19 @@ spec:
         value: ${VPN_USER}
       - name: PASSWORD
         value: ${VPN_PASSWORD}
-      - name: FIREWALL
-        value: "off"
+#      - name: FIREWALL
+#        value: "off"
       - name: OPENVPN_IPV6
         value: "off"
       volumeMounts:
       - name: yasr-volume
         mountPath: /vpn
         subPath: configs/openvpn
-      - name: dev-tun
-        mountPath: /dev/net/tun
-      - name: tz-config
-        mountPath: /etc/localtime
-        readOnly: true
+#      - name: dev-tun
+#        mountPath: /dev/net/tun
+#      - name: tz-config
+#        mountPath: /etc/localtime
+#        readOnly: true
       - name: yasr-volume
         mountPath: /tmp/gluetun/
         subPath: configs/transmission/
