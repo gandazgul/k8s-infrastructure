@@ -45,13 +45,17 @@ spec:
       env:
       - name: TZ
         value: "EST5EDT"
-#      - name: REGION
-#        value: "CA Montreal"
+      - name: VPNSP
+        value: "private internet access"
+      - name: REGION
+        value: "CA Toronto,CA Montreal"
       - name: USER
         value: ${VPN_USER}
       - name: PASSWORD
         value: ${VPN_PASSWORD}
       - name: FIREWALL
+        value: "off"
+      - name: OPENVPN_IPV6
         value: "off"
       volumeMounts:
       - name: yasr-volume
