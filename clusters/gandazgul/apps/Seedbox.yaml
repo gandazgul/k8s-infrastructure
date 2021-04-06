@@ -34,9 +34,9 @@ spec:
     - name: main-volume
       persistentVolumeClaim:
         claimName: main-volume
-#    - name: dev-tun
-#      hostPath:
-#        path: /dev/net/tun
+    - name: dev-tun
+      hostPath:
+        path: /dev/net/tun
     - name: tz-config
       hostPath:
         path: /etc/localtime
@@ -56,12 +56,14 @@ spec:
 #        value: "off"
       - name: OPENVPN_IPV6
         value: "off"
+      - name: TZ
+        value: "America/New_York"
       volumeMounts:
       - name: yasr-volume
         mountPath: /vpn
         subPath: configs/openvpn
-#      - name: dev-tun
-#        mountPath: /dev/net/tun
+      - name: dev-tun
+        mountPath: /dev/net/tun
 #      - name: tz-config
 #        mountPath: /etc/localtime
 #        readOnly: true
