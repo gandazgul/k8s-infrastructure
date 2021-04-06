@@ -30,16 +30,34 @@ spec:
             {{- end}}
             - name: PORT_FORWARDING
               value: "on"
+            - name: HTTPPROXY
+              value: "off"
+            - name: SHADOWSOCKS
+              value: "off"
           securityContext:
             capabilities:
               add: ["NET_ADMIN"]
+          livenessProbe:
+            exec:
+              command:
+              - "ping"
+              - "-W3"
+              - "-c1"
+              - "-q"
+              - "-s8"
+              - "1.1.1.1"
+            initialDelaySeconds: 20
+            failureThreshold: 3
+            successThreshold: 1
+            periodSeconds: 20
+            timeoutSeconds: 5
           resources:
-            limits:
-              cpu: {{ default "50m" .Values.vpn.resources.limits.cpu | quote }}
-              memory: {{ default "50Mi" .Values.vpn.resources.limits.memory | quote }}
             requests:
-              cpu: {{ default "50m" .Values.vpn.resources.requests.cpu | quote }}
-              memory: {{ default "50Mi" .Values.vpn.resources.requests.memory | quote }}
+              cpu: {{ default "100m" .Values.vpn.resources.requests.cpu | quote }}
+              memory: {{ default "250Mi" .Values.vpn.resources.requests.memory | quote }}
+            limits:
+              cpu: {{ default "100m" .Values.vpn.resources.limits.cpu | quote }}
+              memory: {{ default "250Mi" .Values.vpn.resources.limits.memory | quote }}
           {{- with .Values.vpn.volumeMounts }}
           volumeMounts: {{ toYaml . | nindent 12 }}
           {{- end }}
