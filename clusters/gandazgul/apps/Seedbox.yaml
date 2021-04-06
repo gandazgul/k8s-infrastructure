@@ -45,8 +45,8 @@ spec:
       env:
       - name: TZ
         value: "EST5EDT"
-      - name: REGION
-        value: "CA Montreal"
+#      - name: REGION
+#        value: "CA Montreal"
       - name: USER
         value: ${VPN_USER}
       - name: PASSWORD
