@@ -86,6 +86,8 @@ spec:
         enabled: true
         hosts:
         - host: transmission.${INGRESS_INTERNAL_NAME}
+          paths:
+          - path: /
         tls:
         - hosts:
           - transmission.${INGRESS_INTERNAL_NAME}
@@ -109,7 +111,8 @@ spec:
         enabled: true
         hosts:
         - host: jackett.${INGRESS_INTERNAL_NAME}
-          servicePort: jackett-http
+          paths:
+          - path: /
         tls:
         - hosts:
           - jackett.${INGRESS_INTERNAL_NAME}
@@ -122,7 +125,8 @@ spec:
         enabled: true
         hosts:
         - host: tv.${INGRESS_INTERNAL_NAME}
-          servicePort: sonarr-http
+          paths:
+          - path: /
         tls:
         - hosts:
           - tv.${INGRESS_INTERNAL_NAME}
@@ -135,7 +139,8 @@ spec:
         enabled: true
         hosts:
         - host: movies.${INGRESS_INTERNAL_NAME}
-          servicePort: radarr-http
+          paths:
+          - path: /
         tls:
         - hosts:
           - movies.${INGRESS_INTERNAL_NAME}
