@@ -7,15 +7,12 @@ vpn:
   name: vpn
   image:
     name: qmcgaw/gluetun
-    tag: v3.13.1
+    tag: v3.15.0
     pullPolicy: IfNotPresent
   resources:
-    requests:
-      cpu: 100m
-      memory: 100Mi
     limits:
       cpu: 500m
-      memory: 100Mi
+      memory: 1500Mi
   volumeMounts: {}
 #    - name: yasr-volume
 #      mountPath: /vpn
