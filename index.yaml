@@ -132,7 +132,8 @@ entries:
   - apiVersion: v1
     appVersion: 2.0.5
     created: "2021-04-04T05:01:01.629419638Z"
-    description: Based on the official k8s dashboard chart. General-purpose web UI for Kubernetes clusters
+    description: Based on the official k8s dashboard chart. General-purpose web UI
+      for Kubernetes clusters
     digest: b244c5205e742deb8017cf404a777ce715038a1d7e28dac034c1deeb94426e8b
     home: https://github.com/gandazgul/k8s-infrastructure/tree/master/charts/kubernetes-dashboard
     icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.svg
@@ -151,7 +152,8 @@ entries:
   - apiVersion: v1
     appVersion: 2.0.5
     created: "2020-12-07T06:44:31.901783476Z"
-    description: Based on the official k8s dashboard chart. General-purpose web UI for Kubernetes clusters
+    description: Based on the official k8s dashboard chart. General-purpose web UI
+      for Kubernetes clusters
     digest: b1ee3d3fcf5c0d5666e1abbe762eecd18d12a55bc83f2df5653beffe8e71844a
     home: https://github.com/gandazgul/k8s-infrastructure/tree/master/charts/kubernetes-dashboard
     icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.svg
@@ -303,7 +305,8 @@ entries:
   samba:
   - apiVersion: v1
     created: "2021-04-04T05:01:02.463618545Z"
-    description: Chart to deploy a simple Samba server on K8s available on hostNetwork or just inside the cluster
+    description: Chart to deploy a simple Samba server on K8s available on hostNetwork
+      or just inside the cluster
     digest: b83c475d04ea7092042d7683953183b7840cb77afe530311599492fb0256e174
     maintainers:
     - email: ravelo.carlos@gmail.com
@@ -314,17 +317,33 @@ entries:
     version: 0.2.1
   - apiVersion: v1
     created: "2020-12-07T06:44:34.596086601Z"
-    description: Chart to deploy a simple Samba server on K8s available on hostNetwork or just inside the cluster
+    description: Chart to deploy a simple Samba server on K8s available on hostNetwork
+      or just inside the cluster
     digest: 0111c3f980f0e184cc3db7c67014a3f5b48d6e108299c71d9834bed265dec77f
     name: samba
     urls:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/samba-0.2.0/samba-0.2.0.tgz
     version: 0.2.0
   seedbox:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2021-04-06T19:29:42.283661607Z"
+    description: A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission,
+      Flexget, jackett, sonarr, radarr
+    digest: f11db074eb9df169b6a02061d28d1c707ec92397a4961cceb63ddaf2632fb484
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: seedbox
+    type: application
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/seedbox-0.4.2/seedbox-0.4.2.tgz
+    version: 0.4.2
   - apiVersion: v1
     appVersion: "1.0"
     created: "2021-04-04T05:01:02.660838159Z"
-    description: A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission, Flexget, jackett, sonarr, radarr
+    description: A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission,
+      Flexget, jackett, sonarr, radarr
     digest: edc3955d060e5ea7301754cb575d57285debd9037fdb3c2091992eefbc763ba1
     maintainers:
     - email: ravelo.carlos@gmail.com
@@ -336,7 +355,8 @@ entries:
   - apiVersion: v1
     appVersion: "1.0"
     created: "2020-12-07T06:44:35.044692124Z"
-    description: A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission, Flexget, jackett, sonarr, radarr
+    description: A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission,
+      Flexget, jackett, sonarr, radarr
     digest: d6e8ac8553f923b3260c5147730d3f468c4b23de926ed95d9dd059ab864334d6
     name: seedbox
     urls:
@@ -364,4 +384,4 @@ entries:
     urls:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/smartthings-mqtt-bridge-0.2.0/smartthings-mqtt-bridge-0.2.0.tgz
     version: 0.2.0
-generated: "2021-04-06T04:49:40.429272814Z"
+generated: "2021-04-06T19:29:42.283714511Z"
