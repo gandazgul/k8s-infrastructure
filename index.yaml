@@ -327,6 +327,20 @@ entries:
   seedbox:
   - apiVersion: v2
     appVersion: "1.0"
+    created: "2021-04-06T19:54:09.010341901Z"
+    description: A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission,
+      Flexget, jackett, sonarr, radarr
+    digest: 96e4bbd28c14f4e49cc0bfe74a9c7393355f38b8c67a990f6c6fac236225582e
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: seedbox
+    type: application
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/seedbox-0.4.3/seedbox-0.4.3.tgz
+    version: 0.4.3
+  - apiVersion: v2
+    appVersion: "1.0"
     created: "2021-04-06T19:29:42.283661607Z"
     description: A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission,
       Flexget, jackett, sonarr, radarr
@@ -384,4 +398,4 @@ entries:
     urls:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/smartthings-mqtt-bridge-0.2.0/smartthings-mqtt-bridge-0.2.0.tgz
     version: 0.2.0
-generated: "2021-04-06T19:29:58.760060930Z"
+generated: "2021-04-06T19:54:09.010396402Z"
