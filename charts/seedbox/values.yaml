@@ -10,6 +10,9 @@ vpn:
     tag: v3.15.0
     pullPolicy: IfNotPresent
   resources:
+    requests:
+      cpu: 100m
+      memory: 250mi
     limits:
       cpu: 500m
       memory: 1500Mi
