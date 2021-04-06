@@ -7,6 +7,7 @@ spec:
   chart:
     spec:
       chart: generic-deployment
+      version: 0.1.2
       sourceRef:
         kind: HelmRepository
         name: gandazgul
