@@ -12,7 +12,7 @@ vpn:
   resources:
     requests:
       cpu: 100m
-      memory: 250mi
+      memory: 250Mi
     limits:
       cpu: 500m
       memory: 1500Mi
