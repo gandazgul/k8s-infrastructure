@@ -7,15 +7,19 @@ metadata:
 spec:
   chart:
     spec:
-      chart: mosca
-      version: 0.2.4
+#      chart: mosca
+      chart: ./charts/mosca
+      version: 0.2.5
       sourceRef:
-        kind: HelmRepository
-        name: gandazgul
+#        kind: HelmRepository
+#        name: gandazgul
+#        namespace: flux-system
+        kind: GitRepository
+        name: flux-system
         namespace: flux-system
   interval: 1h0m0s
   values:
-    image:
-      tag: "v2.8.3"
+#    image:
+#      tag: "v2.8.3"
     service:
       type: NodePort
