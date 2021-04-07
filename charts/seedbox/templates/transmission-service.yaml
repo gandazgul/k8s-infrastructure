@@ -7,13 +7,13 @@ metadata:
 spec:
   type: {{ .Values.transmission.service.type }}
   ports:
-  - name: transmission-http
+  - name: trs-http
     {{- if contains "NodePort" .Values.transmission.service.type }}
     nodePort: {{ .Values.transmission.service.port }}
     {{- end }}
     port: {{ .Values.transmission.service.port }}
     protocol: TCP
-    targetPort: transmission-http
+    targetPort: trs-http
   {{- range .Values.transmission.service.additionalPorts }}
   - name: {{ .name | quote }}
     port: {{ .port }}
