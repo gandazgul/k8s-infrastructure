@@ -21,7 +21,7 @@ spec:
       tag: latest
       pullPolicy: Always
     env:
-      SIGNUPS_ALLOWED: false
+      SIGNUPS_ALLOWED: true
       INVITATIONS_ALLOWED: true
       SERVER_ADMIN_EMAIL: ${EMAIL}
       DOMAIN: https://p.${INGRESS_EXTERNAL_NAME}
