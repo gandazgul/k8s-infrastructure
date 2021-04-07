@@ -109,7 +109,7 @@ spec:
           volumeMounts: {{ toYaml . | nindent 12 }}
           {{- end }}
           ports:
-          - name: transmission-http
+          - name: trs-http
             containerPort: {{ .Values.transmission.service.port }}
             protocol: TCP
           {{- range .Values.transmission.service.additionalPorts }}
