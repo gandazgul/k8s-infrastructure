@@ -39,7 +39,9 @@ spec:
     ingress:
       enabled: true
       hosts:
-      - resilio.${INGRESS_INTERNAL_NAME}
+      - host: resilio.${INGRESS_INTERNAL_NAME}
+        paths:
+        - path: /
       tls:
       - hosts:
         - resilio.${INGRESS_INTERNAL_NAME}
