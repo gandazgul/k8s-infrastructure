@@ -2,7 +2,7 @@ apiVersion: v2
 name: resilio
 description: A Helm chart for resilio sync
 type: application
-version: 0.2.4
+version: 0.2.5
 appVersion: "1.0"
 maintainers:
 - name: gandazgul

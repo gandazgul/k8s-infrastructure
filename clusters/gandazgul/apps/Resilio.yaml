@@ -7,19 +7,21 @@ metadata:
 spec:
   chart:
     spec:
-      chart: resilio
-      version: 0.2.4
+#      chart: resilio
+      chart: ./charts/resilio
+      version: 0.2.5
       sourceRef:
-        kind: HelmRepository
-        name: gandazgul
+#        kind: HelmRepository
+#        name: gandazgul
+#        namespace: flux-system
+        kind: GitRepository
+        name: flux-system
         namespace: flux-system
   dependsOn:
   - name: yasr-volume
   - name: main-volume
   interval: 1h0m0s
   values:
-    image:
-      pullPolicy: Always
     volumes:
     - name: yasr-volume
       persistentVolumeClaim:
