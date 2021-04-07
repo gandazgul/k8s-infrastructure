@@ -21,9 +21,11 @@ spec:
   - name: yasr-volume
   interval: 1h0m0s
   values:
-    image:
-      tag: latest
-      pullPolicy: Always
+    env:
+    - name: TZ
+      value: "America/New_York"
+    - name: DB_TYPE
+      value: "sqlite"
     volumes:
     - name: yasr-volume
       persistentVolumeClaim:
