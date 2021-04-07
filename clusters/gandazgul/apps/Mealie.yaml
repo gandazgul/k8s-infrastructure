@@ -33,7 +33,7 @@ spec:
       hosts:
       - host: mealie.${INGRESS_INTERNAL_NAME}
         paths:
-        - /
+        - path: /
       tls:
       - hosts:
         - mealie.${INGRESS_INTERNAL_NAME}
