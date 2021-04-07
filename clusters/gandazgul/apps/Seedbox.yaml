@@ -10,11 +10,15 @@ metadata:
 spec:
   chart:
     spec:
-      chart: seedbox
-      version: 0.4.5
+#      chart: seedbox
+      chart: ./charts/seedbox
+      version: 0.4.6
       sourceRef:
-        kind: HelmRepository
-        name: gandazgul
+#        kind: HelmRepository
+#        name: gandazgul
+#        namespace: flux-system
+        kind: GitRepository
+        name: flux-system
         namespace: flux-system
   dependsOn:
   - name: yasr-volume
@@ -25,8 +29,6 @@ spec:
     name: seedbox-values
     optional: false
   values:
-    dnsPolicy: ClusterFirst
-    dnsConfig: {}
     volumes:
     - name: yasr-volume
       persistentVolumeClaim:

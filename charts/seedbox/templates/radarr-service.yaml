@@ -7,14 +7,13 @@ metadata:
 spec:
   type: {{ .Values.radarr.service.type }}
   ports:
-    - name: radarr-http
-      {{- if contains "NodePort" .Values.radarr.service.type }}
-      nodePort: {{ .Values.radarr.service.port }}
-      {{- end }}
-      port: {{ .Values.radarr.service.port }}
-      protocol: TCP
-      targetPort: radarr-http
+  - name: radarr-http
+    {{- if contains "NodePort" .Values.radarr.service.type }}
+    nodePort: {{ .Values.radarr.service.port }}
+    {{- end }}
+    port: {{ .Values.radarr.service.port }}
+    protocol: TCP
+    targetPort: radarr-http
   selector:
-    app: {{ include "helpers.name" . }}
-    release: {{ .Release.Name }}
+    {{- include "helpers.selectorLabels" . | nindent 4 }}
 {{- end }}

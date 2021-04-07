@@ -36,10 +36,8 @@ transmission:
     tag: latest
     pullPolicy: Always
   service:
-    portName: "9091-tcp"
-    type: "ClusterIP"
+    type: ClusterIP
     port: 9091
-    protocol: TCP
     additionalPorts:
     - name: "51413-tcp"
       port: 51413
@@ -193,12 +191,8 @@ radarr:
       cpu: 1000m
       memory: 2000Mi
 
-# Without this you can't dns resolve anything inside the container
-dnsPolicy: "None"
-dnsConfig:
-  nameservers:
-    - 8.8.8.8
-    - 8.8.4.4
+dnsPolicy: ClusterFirst
+dnsConfig: {}
 
 volumes: {}
 #  - name: yasr-volume
