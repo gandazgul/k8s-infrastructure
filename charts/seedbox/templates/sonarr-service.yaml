@@ -7,14 +7,13 @@ metadata:
 spec:
   type: {{ .Values.sonarr.service.type }}
   ports:
-    - name: sonarr-http
-      {{- if contains "NodePort" .Values.sonarr.service.type }}
-      nodePort: {{ .Values.sonarr.service.port }}
-      {{- end }}
-      port: {{ .Values.sonarr.service.port }}
-      protocol: TCP
-      targetPort: sonarr-http
+  - name: sonarr-http
+    {{- if contains "NodePort" .Values.sonarr.service.type }}
+    nodePort: {{ .Values.sonarr.service.port }}
+    {{- end }}
+    port: {{ .Values.sonarr.service.port }}
+    protocol: TCP
+    targetPort: sonarr-http
   selector:
-    app: {{ include "helpers.name" . }}
-    release: {{ .Release.Name }}
+    {{- include "helpers.selectorLabels" . | nindent 4 }}
 {{- end }}

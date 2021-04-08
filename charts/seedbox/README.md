@@ -2,7 +2,7 @@
 
 A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission, Flexget, jackett, sonarr, radarr
 
-![Version: 0.4.5](https://img.shields.io/badge/Version-0.4.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
+![Version: 0.4.7](https://img.shields.io/badge/Version-0.4.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
 
 # Seedbox Config
 
@@ -23,9 +23,8 @@ For my flexget config you can take a look at: https://github.com/gandazgul/flexg
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| dnsConfig.nameservers[0] | string | `"8.8.8.8"` |  |
-| dnsConfig.nameservers[1] | string | `"8.8.4.4"` |  |
-| dnsPolicy | string | `"None"` |  |
+| dnsConfig | object | `{}` |  |
+| dnsPolicy | string | `"ClusterFirst"` |  |
 | flexget.enabled | bool | `false` |  |
 | flexget.image.name | string | `"wiserain/flexget"` |  |
 | flexget.image.pullPolicy | string | `"IfNotPresent"` |  |
@@ -111,8 +110,6 @@ For my flexget config you can take a look at: https://github.com/gandazgul/flexg
 | transmission.service.additionalPorts[1].port | int | `51413` |  |
 | transmission.service.additionalPorts[1].protocol | string | `"UDP"` |  |
 | transmission.service.port | int | `9091` |  |
-| transmission.service.portName | string | `"9091-tcp"` |  |
-| transmission.service.protocol | string | `"TCP"` |  |
 | transmission.service.type | string | `"ClusterIP"` |  |
 | transmission.volumeMounts | object | `{}` |  |
 | volumes | object | `{}` |  |
