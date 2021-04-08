@@ -177,7 +177,7 @@ spec:
             timeoutSeconds: 2
           readinessProbe:
             failureThreshold: 3
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
             periodSeconds: 2
             successThreshold: 2
             tcpSocket:
