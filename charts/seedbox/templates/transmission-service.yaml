@@ -1,4 +1,4 @@
-{{- if .Values.transmission.service }}
+{{- if .Values.transmission.service -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,20 +7,19 @@ metadata:
 spec:
   type: {{ .Values.transmission.service.type }}
   ports:
-  - name: {{ .Values.transmission.service.portName | quote }}
-    port: {{ .Values.transmission.service.port }}
-    targetPort: {{ .Values.transmission.service.port }}
-    protocol: {{ .Values.transmission.service.protocol }}
-    {{ if (and (eq .Values.transmission.service.type "NodePort") (not (empty .Values.transmission.service.nodePort))) }}
-    nodePort: {{.Values.transmission.service.nodePort}}
+  - name: trs-http
+    {{- if contains "NodePort" .Values.transmission.service.type }}
+    nodePort: {{ .Values.transmission.service.port }}
     {{- end }}
-{{- range .Values.transmission.service.additionalPorts }}
+    port: {{ .Values.transmission.service.port }}
+    protocol: TCP
+    targetPort: trs-http
+  {{- range .Values.transmission.service.additionalPorts }}
   - name: {{ .name | quote }}
     port: {{ .port }}
     targetPort: {{ .port }}
     protocol: {{ .protocol }}
-{{- end }}
+  {{- end }}
   selector:
-    app: {{ include "helpers.name" . }}
-    release: {{ .Release.Name }}
+    {{- include "helpers.selectorLabels" . | nindent 4 }}
 {{- end }}

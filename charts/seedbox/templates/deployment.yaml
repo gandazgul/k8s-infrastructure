@@ -67,10 +67,10 @@ spec:
           image: "gandazgul/transmission-pia-port-forward:v318a599"
           imagePullPolicy: IfNotPresent
           resources:
-            limits:
+            requests:
               cpu: 50m
               memory: 50Mi
-            requests:
+            limits:
               cpu: 50m
               memory: 50Mi
           {{- with .Values.transmission.volumeMounts }}
@@ -83,12 +83,12 @@ spec:
           env: {{ toYaml . | nindent 12 }}
           {{- end}}
           resources:
-            limits:
-              cpu: {{ default "50m" .Values.transmission.resources.limits.cpu | quote }}
-              memory: {{ .Values.transmission.resources.limits.memory | default "50Mi" | quote }}
             requests:
-              cpu: {{ default "50m" .Values.transmission.resources.requests.cpu | quote }}
-              memory: {{ default "50Mi" .Values.transmission.resources.requests.memory | quote }}
+              cpu: {{ .Values.transmission.resources.requests.cpu | quote }}
+              memory: {{ .Values.transmission.resources.requests.memory | quote }}
+            limits:
+              cpu: {{ .Values.transmission.resources.limits.cpu | quote }}
+              memory: {{ .Values.transmission.resources.limits.memory | quote }}
           livenessProbe:
             failureThreshold: 3
             initialDelaySeconds: 10
@@ -109,14 +109,14 @@ spec:
           volumeMounts: {{ toYaml . | nindent 12 }}
           {{- end }}
           ports:
-          - name: {{ .Values.transmission.service.portName }}
+          - name: trs-http
             containerPort: {{ .Values.transmission.service.port }}
-            protocol: {{ .Values.transmission.service.protocol }}
-{{- range .Values.transmission.service.additionalPorts }}
+            protocol: TCP
+          {{- range .Values.transmission.service.additionalPorts }}
           - name: {{ .name }}
             containerPort: {{ .port }}
             protocol: {{ .protocol }}
-{{- end }}
+          {{- end }}
         # flexget
 {{- if .Values.flexget.enabled }}
         - name: {{ .Values.flexget.name | quote }}
@@ -126,12 +126,12 @@ spec:
           env: {{ toYaml . | nindent 12 }}
           {{- end}}
           resources:
-            limits:
-              cpu: {{ default "50m" .Values.flexget.resources.limits.cpu | quote }}
-              memory: {{ default "50Mi" .Values.flexget.resources.limits.memory | quote }}
             requests:
               cpu: {{ default "50m" .Values.flexget.resources.requests.cpu | quote }}
               memory: {{ default "50Mi" .Values.flexget.resources.requests.memory | quote }}
+            limits:
+              cpu: {{ default "50m" .Values.flexget.resources.limits.cpu | quote }}
+              memory: {{ default "50Mi" .Values.flexget.resources.limits.memory | quote }}
           livenessProbe:
             failureThreshold: 3
             initialDelaySeconds: 10
@@ -153,7 +153,7 @@ spec:
           {{- end }}
           ports:
             - name: flexget-http
-              containerPort: 3539
+              containerPort: {{ .Values.flexget.service.port }}
               protocol: TCP
 {{- end}}
         # Jackett
@@ -165,12 +165,12 @@ spec:
           env: {{ toYaml . | nindent 12 }}
           {{- end}}
           resources:
-            limits:
-              cpu: {{ default "50m" .Values.jackett.resources.limits.cpu | quote }}
-              memory: {{ default "50Mi" .Values.jackett.resources.limits.memory | quote }}
             requests:
-              cpu: {{ default "50m" .Values.jackett.resources.requests.cpu | quote }}
-              memory: {{ default "50Mi" .Values.jackett.resources.requests.memory | quote }}
+              cpu: {{ .Values.jackett.resources.requests.cpu | quote }}
+              memory: {{ .Values.jackett.resources.requests.memory | quote }}
+            limits:
+              cpu: {{ .Values.jackett.resources.limits.cpu | quote }}
+              memory: {{ .Values.jackett.resources.limits.memory | quote }}
           livenessProbe:
             failureThreshold: 3
             initialDelaySeconds: 10
@@ -192,7 +192,7 @@ spec:
           {{- end }}
           ports:
           - name: jackett-http
-            containerPort: 9117
+            containerPort: {{ .Values.jackett.service.port }}
             protocol: TCP
 {{- end}}
         # Sonarr
@@ -204,12 +204,12 @@ spec:
           env: {{ toYaml . | nindent 12 }}
           {{- end}}
           resources:
-            limits:
-              cpu: {{ default "50m" .Values.sonarr.resources.limits.cpu | quote }}
-              memory: {{ default "50Mi" .Values.sonarr.resources.limits.memory | quote }}
             requests:
-              cpu: {{ default "50m" .Values.sonarr.resources.requests.cpu | quote }}
-              memory: {{ default "50Mi" .Values.sonarr.resources.requests.memory | quote }}
+              cpu: {{ .Values.sonarr.resources.requests.cpu | quote }}
+              memory: {{ .Values.sonarr.resources.requests.memory | quote }}
+            limits:
+              cpu: {{ .Values.sonarr.resources.limits.cpu | quote }}
+              memory: {{ .Values.sonarr.resources.limits.memory | quote }}
           livenessProbe:
             failureThreshold: 3
             initialDelaySeconds: 10
@@ -231,7 +231,7 @@ spec:
           {{- end }}
           ports:
           - name: sonarr-http
-            containerPort: 8989
+            containerPort: {{ .Values.sonarr.service.port }}
             protocol: TCP
 {{- end}}
         # radarr
@@ -243,12 +243,12 @@ spec:
           env: {{ toYaml . | nindent 12 }}
           {{- end}}
           resources:
-            limits:
-              cpu: {{ default "50m" .Values.radarr.resources.limits.cpu | quote }}
-              memory: {{ default "50Mi" .Values.radarr.resources.limits.memory | quote }}
             requests:
-              cpu: {{ default "50m" .Values.radarr.resources.requests.cpu | quote }}
-              memory: {{ default "50Mi" .Values.radarr.resources.requests.memory | quote }}
+              cpu: {{ .Values.radarr.resources.requests.cpu | quote }}
+              memory: {{ .Values.radarr.resources.requests.memory | quote }}
+            limits:
+              cpu: {{ .Values.radarr.resources.limits.cpu | quote }}
+              memory: {{ .Values.radarr.resources.limits.memory | quote }}
           livenessProbe:
             failureThreshold: 3
             initialDelaySeconds: 10
@@ -270,7 +270,7 @@ spec:
           {{- end }}
           ports:
           - name: radarr-http
-            containerPort: 7878
+            containerPort: {{ .Values.radarr.service.port }}
             protocol: TCP
 {{- end}}
       {{- with .Values.nodeSelector }}
