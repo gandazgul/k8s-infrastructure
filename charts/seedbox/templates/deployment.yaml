@@ -40,17 +40,11 @@ spec:
           livenessProbe:
             exec:
               command:
-              - "ping"
-              - "-W3"
-              - "-c1"
-              - "-q"
-              - "-s8"
-              - "1.1.1.1"
-            initialDelaySeconds: 20
-            failureThreshold: 3
-            successThreshold: 1
-            periodSeconds: 20
-            timeoutSeconds: 5
+              - sh
+              - -c
+              - '[ "$(curl -s https://ifconfig.co/city)" != "Toronto" ]'
+            initialDelaySeconds: 30
+            periodSeconds: 60
           resources:
             requests:
               cpu: {{ .Values.vpn.resources.requests.cpu | quote }}

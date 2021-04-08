@@ -12,7 +12,7 @@ spec:
     spec:
 #      chart: seedbox
       chart: ./charts/seedbox
-      version: 0.4.7
+      version: 0.4.8
       sourceRef:
 #        kind: HelmRepository
 #        name: gandazgul
