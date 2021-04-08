@@ -45,6 +45,8 @@ spec:
               - '[ "$(curl -s https://ifconfig.co/city)" != "Toronto" ]'
             initialDelaySeconds: 30
             periodSeconds: 60
+            timeoutSeconds: 30
+            failureThreshold: 2
           resources:
             requests:
               cpu: {{ .Values.vpn.resources.requests.cpu | quote }}
