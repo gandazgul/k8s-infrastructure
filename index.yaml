@@ -56,6 +56,19 @@ entries:
   generic-deployment:
   - apiVersion: v2
     appVersion: v1.0
+    created: "2021-04-08T02:25:23.579403216Z"
+    description: A generic deployment chart
+    digest: bb8c723834baf4273741090e9fd97e305202604e6a1bf1f5f7dd496571432110
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: generic-deployment
+    type: application
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/generic-deployment-0.1.4/generic-deployment-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: v1.0
     created: "2021-04-06T22:45:38.721840654Z"
     description: A generic deployment chart
     digest: b18fb8ab2d91aa253ab3c315dca9d586742e1423f134f9c6e7e11c4a3baf974d
@@ -185,6 +198,19 @@ entries:
   mealie:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2021-04-08T02:25:23.984557841Z"
+    description: A Helm chart for the Mealie app. A recipe management system.
+    digest: b0d83cb6897cb27d66691881c11d07e7909a5b93f95cb869b2e753a258b3416f
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: mealie
+    type: application
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/mealie-0.1.6/mealie-0.1.6.tgz
+    version: 0.1.6
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2021-04-06T22:45:38.794689401Z"
     description: A Helm chart for the Mealie app. A recipe management system.
     digest: 94d985959188e40b9f8b4270038ba16be224d0d550023d007df7c952890c6304
@@ -236,6 +262,19 @@ entries:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/mealie-0.1.1/mealie-0.1.1.tgz
     version: 0.1.1
   mosca:
+  - apiVersion: v2
+    appVersion: 2.8.3
+    created: "2021-04-08T02:25:24.391894986Z"
+    description: A Helm chart for the Mosca.io MQTT Broker
+    digest: 468af3abd5352e9f02614b978910af525f1cd2e08b544af73922fed6b7ce2903
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: mosca
+    type: application
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/mosca-0.2.5/mosca-0.2.5.tgz
+    version: 0.2.5
   - apiVersion: v2
     appVersion: 2.8.3
     created: "2021-04-06T22:45:38.863368565Z"
@@ -348,6 +387,19 @@ entries:
   resilio:
   - apiVersion: v2
     appVersion: "1.0"
+    created: "2021-04-08T02:25:24.803238969Z"
+    description: A Helm chart for resilio sync
+    digest: 8ab14e32efcfe373097c080f45e1474738b2854bf0eb53d61c1db0e05a6fe7c5
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: resilio
+    type: application
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/resilio-0.2.5/resilio-0.2.5.tgz
+    version: 0.2.5
+  - apiVersion: v2
+    appVersion: "1.0"
     created: "2021-04-06T22:45:39.009060158Z"
     description: A Helm chart for resilio sync
     digest: da3adac52ccd267fd06ab6379027b85571f0a281ea879302c7ce545a225a48b6
@@ -428,6 +480,20 @@ entries:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/samba-0.2.0/samba-0.2.0.tgz
     version: 0.2.0
   seedbox:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2021-04-08T02:25:25.221017854Z"
+    description: A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission,
+      Flexget, jackett, sonarr, radarr
+    digest: 6574992de5206a224c0676ca0b73660811191f42923d6de0cd500a76c052754e
+    maintainers:
+    - email: ravelo.carlos@gmail.com
+      name: gandazgul
+    name: seedbox
+    type: application
+    urls:
+    - https://github.com/gandazgul/k8s-infrastructure/releases/download/seedbox-0.4.7/seedbox-0.4.7.tgz
+    version: 0.4.7
   - apiVersion: v2
     appVersion: "1.0"
     created: "2021-04-06T22:45:39.155936375Z"
@@ -529,4 +595,4 @@ entries:
     urls:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/smartthings-mqtt-bridge-0.2.0/smartthings-mqtt-bridge-0.2.0.tgz
     version: 0.2.0
-generated: "2021-04-06T22:45:54.501490348Z"
+generated: "2021-04-08T02:25:25.221136354Z"
