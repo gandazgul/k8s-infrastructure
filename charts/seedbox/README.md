@@ -2,7 +2,7 @@
 
 A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission, Flexget, jackett, sonarr, radarr
 
-![Version: 0.4.11](https://img.shields.io/badge/Version-0.4.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
+![Version: 0.4.12](https://img.shields.io/badge/Version-0.4.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
 
 # Seedbox Config
 
@@ -113,6 +113,7 @@ For my flexget config you can take a look at: https://github.com/gandazgul/flexg
 | transmission.service.type | string | `"ClusterIP"` |  |
 | transmission.volumeMounts | object | `{}` |  |
 | volumes | object | `{}` |  |
+| vpn.city | string | `"New York"` |  |
 | vpn.enabled | bool | `false` |  |
 | vpn.image.name | string | `"qmcgaw/gluetun"` |  |
 | vpn.image.pullPolicy | string | `"IfNotPresent"` |  |
