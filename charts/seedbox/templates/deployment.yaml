@@ -42,7 +42,7 @@ spec:
               command:
               - sh
               - -c
-              - '[ "$(curl -s https://ifconfig.co/city)" = "Toronto" ]'
+              - '[ "$(curl -s https://ifconfig.co/city)" != "{{ .Values.vpn.city }}}" ]'
             initialDelaySeconds: 30
             periodSeconds: 60
             timeoutSeconds: 30
