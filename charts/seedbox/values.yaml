@@ -28,6 +28,7 @@ vpn:
 #    - name: yasr-volume
 #      mountPath: /tmp/gluetun/
 #      subPath: configs/transmission/
+  city: New York
 
 transmission:
   name: transmission
