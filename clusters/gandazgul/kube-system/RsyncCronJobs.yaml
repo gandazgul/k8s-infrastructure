@@ -28,7 +28,7 @@ spec:
       tag: latest
       command: [ "/bin/sh", "-c" ]
       args:
-      - rsync -havurz -e 'ssh -l renepor -p 22222 -i /media/main/gandazgul/id_rsa -o StrictHostKeyChecking=no' --delete tonydel.sytes.net:/media/main/renepor/ /media/main/renepor/
+      - rsync -havurz -e 'ssh -l renepor -p 22222 -i /media/main/gandazgul/.ssh/id_rsa -o StrictHostKeyChecking=no' --delete tonydel.sytes.net:/media/main/renepor/ /media/main/renepor/
     volumes:
     - name: ssh-private-key
       secret:
@@ -66,7 +66,7 @@ spec:
       tag: latest
       command: [ "/bin/sh", "-c" ]
       args:
-      - find /media/main/public/Movies/ -mtime -100 -type f | sed 's~/media/main/public/Movies/~~' | rsync -havurz --files-from=- -e 'ssh -l gandazgul -p 22222 -i /media/main/gandazgul/id_rsa -o StrictHostKeyChecking=no' --delete --progress /media/main/public/Movies/ tonydel.sytes.net:/media/main/public/Movies/
+      - find /media/main/public/Movies/ -mtime -100 -type f | sed 's~/media/main/public/Movies/~~' | rsync -havurz --files-from=- -e 'ssh -l gandazgul -p 22222 -i /media/main/gandazgul/.ssh/id_rsa -o StrictHostKeyChecking=no' --delete --progress /media/main/public/Movies/ tonydel.sytes.net:/media/main/public/Movies/
     volumes:
     - name: ssh-private-key
       secret:
@@ -104,7 +104,7 @@ spec:
       tag: latest
       command: [ "/bin/sh", "-c" ]
       args:
-      - rsync -havurz -e 'ssh -l gandazgul -p 22222 -i /media/main/gandazgul/id_rsa -o StrictHostKeyChecking=no' --delete /media/main/gandazgul/ tonydel.sytes.net:/media/main/gandazgul/
+      - rsync -havurz -e 'ssh -l gandazgul -p 22222 -i /media/main/gandazgul/.ssh/id_rsa -o StrictHostKeyChecking=no' --delete /media/main/gandazgul/ tonydel.sytes.net:/media/main/gandazgul/
     volumes:
     - name: ssh-private-key
       secret:
