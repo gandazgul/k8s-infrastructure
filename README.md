@@ -17,7 +17,7 @@ the backup one.
 
 A small business server running as a master node and worker. I plan to add at least one other node to learn to manage
 a "cluster" and to try to automate node on-boarding. I've tested the manual node on-boarding with VMs, and it works
-well. Look at this script [https://github.com/gandazgul/k8s-infrastructure/blob/master/k8s-config/2-configK8SNode.sh]()
+well. Look at this script [https://github.com/gandazgul/k8s-infrastructure/blob/master/install-k8s/2-configK8SNode.sh]()
 
 # [Helm](https://helm.sh) Charts
 
@@ -26,7 +26,7 @@ are based on official charts I need to modify. To use them add this url to helm 
 
 ```bash
 helm repo add gandazgul https://gandazgul.github.io/k8s-infrastructure/
-``` 
+```
 
 Here is the [index.yaml](./index.yaml)
 
