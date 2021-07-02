@@ -40,6 +40,8 @@ spec:
       tls:
       - hosts:
           - www.snagsct.tk
+        secretName: snags-www-cert
+      - hosts:
           - snagsct.tk
         secretName: snags-cert
       annotations:
