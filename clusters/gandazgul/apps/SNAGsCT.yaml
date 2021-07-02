@@ -26,19 +26,19 @@ spec:
       pullPolicy: Always
     env:
       - name: BASE_URL
-        value: https://www.snagsct.tk
+        value: "https://www.snagsct.tk"
       - name: SMTP_HOST
-        value: smtp.gmail.com
+        value: "smtp.gmail.com"
       - name: SMTP_PORT
-        value: 587
+        value: "587"
       - name: SMTP_FROM
-        value: ${EMAIL}
+        value: "${EMAIL}"
       - name: SMTP_SSL
-        value: true
+        value: "true"
       - name: SMTP_USERNAME
-        value: ${EMAIL}
+        value: "${EMAIL}"
       - name: SMTP_PASSWORD
-        value: ${SMTP_PASSWORD}
+        value: "${SMTP_PASSWORD}"
     ingress:
       enabled: true
       hosts:
