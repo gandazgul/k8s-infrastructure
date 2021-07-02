@@ -35,8 +35,12 @@ spec:
     ingress:
       enabled: true
       hosts:
-      - www.snagsct.tk
-      - snagsct.tk
+      - host: www.snagsct.tk
+        paths:
+        - path: /
+      - host: snagsct.tk
+        paths:
+        - path: /
       tls:
       - hosts:
           - www.snagsct.tk
