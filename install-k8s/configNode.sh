@@ -83,7 +83,7 @@ gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cl
 exclude=kube*
 EOF'
 
-    sudo dnf -y install --enablerepo=kubernetes kubelet kubectl kubeadm --disableexcludes=kubernetes || exit 1
+    sudo dnf -y install --enablerepo=kubernetes kubelet-1.20.5-0 kubectl-1.20.5-0 kubeadm-1.20.5-0 --disableexcludes=kubernetes || exit 1
     sudo dnf -y install cockpit-pcp || exit 1
 
     # enable cni plugins
