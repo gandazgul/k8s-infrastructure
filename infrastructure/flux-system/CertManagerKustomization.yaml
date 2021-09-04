@@ -7,7 +7,7 @@ spec:
   dependsOn:
     - name: sealed-secrets
   interval: 5m
-  path: ./clusters/gandazgul/cert-manager/controller/
+  path: ./infrastructure/cert-manager/controller/
   prune: true
   sourceRef:
     kind: GitRepository
@@ -27,7 +27,7 @@ spec:
   dependsOn:
   - name: cert-manager
   interval: 5m
-  path: ./clusters/gandazgul/cert-manager/issuers/
+  path: ./infrastructure/cert-manager/issuers/
   prune: true
   sourceRef:
     kind: GitRepository

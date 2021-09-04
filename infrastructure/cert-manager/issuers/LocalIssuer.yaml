@@ -6,4 +6,3 @@ spec:
   ca:
     # This secret is created during install check 3-installCertsAndHelm.sh
     secretName: ca-key-pair
-

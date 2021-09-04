@@ -26,13 +26,12 @@ need "git"
 installFlux() {
   REPO_ROOT=$(git rev-parse --show-toplevel)
   # shellcheck source=clusters/gandazgul/setup/secrets.env
-  export $(cat "$REPO_ROOT"/clusters/gandazgul/setup/secrets.env | sed 's/#.*//g' | xargs)
+  export $(cat "$REPO_ROOT"/infrastructure/setup/secrets.env | sed 's/#.*//g' | xargs)
 
   # Master node information
+  # TODO: automatically update secrets.env?
   MASTER_IP=$(kubectl get nodes --selector=node-role.kubernetes.io/master -o=jsonpath='{.items[0].metadata.annotations.flannel\.alpha\.coreos\.com\/public-ip}')
-  # TODO: automatically update secrets.env?
   MASTER_NODE_NAME=$(kubectl get nodes --selector=node-role.kubernetes.io/master -o=jsonpath='{.items[0].metadata.labels.kubernetes\.io/hostname}')
-  # TODO: automatically update secrets.env?
 
   echo "Using MASTER_IP=$MASTER_IP"
   echo "Using MASTER_NODE_NAME=$MASTER_NODE_NAME"

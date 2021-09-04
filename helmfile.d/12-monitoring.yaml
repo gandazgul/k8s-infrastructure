@@ -123,7 +123,7 @@ releases:
           GF_SMTP_ENABLED: true
           GF_SMTP_HOST: smtp.gmail.com:587
           GF_SMTP_FROM_ADDRESS: {{ env "MAIL_TO" }}
-          GF_SMTP_FROM_NAME: {{ env "REPOSITORY_USERNAME" }}
+          GF_SMTP_FROM_NAME: {{ env "EMAIL" }}
       - ingress:
           enabled: true
           hosts:
