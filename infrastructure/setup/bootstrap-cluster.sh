@@ -35,8 +35,8 @@ installFlux() {
 
   echo "Using MASTER_IP=$MASTER_IP"
   echo "Using MASTER_NODE_NAME=$MASTER_NODE_NAME"
-  echo "Using INGRESS_INTERNAL_NAME=$INGRESS_INTERNAL_NAME"
-  echo "Using INGRESS_EXTERNAL_NAME=$INGRESS_EXTERNAL_NAME"
+#  echo "Using INGRESS_INTERNAL_NAME=$INGRESS_INTERNAL_NAME"
+#  echo "Using INGRESS_EXTERNAL_NAME=$INGRESS_EXTERNAL_NAME"
   pause
 
   message "installing fluxv2"
@@ -57,7 +57,7 @@ installFlux() {
 #    --branch=feature/gitops \
 #    --path=./clusters/gandazgul/flux-system/ \
 #    --personal
-  kubectl apply -k ./clusters/gandazgul/flux-system/components/
+  kubectl apply -k "$REPO_ROOT"/infrastructure/flux-system/components/
 
   FLUX_INSTALLED=$?
   if [ $FLUX_INSTALLED != 0 ]; then
@@ -72,7 +72,7 @@ while : ; do
   kubectl get svc sealed-secrets-controller -n kube-system && break
   sleep 5
 done
-"$REPO_ROOT"/clusters/gandazgul/setup/update-secret.sh
+"$REPO_ROOT"/infrastructure/setup/update-secrets.sh
 
 message "all done!"
 kubectl get nodes -o=wide
