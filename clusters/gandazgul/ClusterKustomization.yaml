@@ -2,11 +2,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
-  name: flux-system
+  name: gandagul-cluster
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./infrasctructure/flux-system/
+  path: ./clusters/gandazgul/
   prune: true
   sourceRef:
     kind: GitRepository
