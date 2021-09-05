@@ -15,3 +15,16 @@ spec:
     kind: GitRepository
     name: flux-system
   validation: client
+  postBuild:
+    # constants can be specified like this:
+    #    substitute:
+    #      cluster_env: "prod"
+    #      cluster_region: "eu-central-1"
+    substituteFrom:
+    # substitutions can also come from a config map or secret
+    #    - kind: ConfigMap
+    #      name: cluster-vars
+    - kind: Secret
+      name: secrets
+
+  # use ${var:=default} or ${var} in the files to place variables
