@@ -8,6 +8,7 @@ spec:
   dependsOn:
   - name: sealed-secret
   - name: flux-system
+  - name: kube-system
   interval: 10m0s
   path: ./clusters/gandazgul/
   prune: true
