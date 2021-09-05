@@ -1,78 +1,33 @@
 #!/usr/bin/env bash
 
-need() {
-  if ! command -v "$1" &>/dev/null; then
-    echo "Binary '$1' is missing but required"
-    exit 1
-  fi
-}
+#for cluster in ./clusters/*/ ; do
+if [ -z ${1+x} ]; then
+  echo "Make sure to pass in a cluster name as install-flux.sh [name here]"
+  exit 1
+fi
 
-message() {
-  echo -e "\n######################################################################"
-  echo "# $1"
-  echo "######################################################################"
-}
+clusterName=$1
+echo "Installing $clusterName configs..."
+echo "Generating $clusterName secret..."
+# Seal main secrets file
+rm -rf "./clusters/$clusterName/SealedSecret.yaml"
+kubectl create secret generic secrets --dry-run=client --namespace=flux-system --from-env-file="./clusters/$clusterName/secrets.env" -o json |
+  kubeseal -o yaml >"./clusters/$clusterName/SealedSecret.yaml"
 
-pause() {
-  read -r -s -n 1 -p "Check these values. If anything looks wrong stop now and check the secrets.env file. Press any key to continue . . ."
-  echo ""
-}
+# apply it
+kubectl apply -f "./clusters/$clusterName/SealedSecret.yaml"
 
-need "kubectl"
-need "helm"
-need "flux"
-need "git"
+# Create value/yaml secrets
+echo "Generating $clusterName app secrets from values..."
+rm -rf "./clusters/$clusterName/apps/secrets/"
+mkdir "./clusters/$clusterName/apps/secrets/"
 
-installFlux() {
-  REPO_ROOT=$(git rev-parse --show-toplevel)
-  # shellcheck source=clusters/gandazgul/setup/secrets.env
-  export $(cat "$REPO_ROOT"/infrastructure/setup/secrets.env | sed 's/#.*//g' | xargs)
-
-  # Master node information
-  # TODO: automatically update secrets.env?
-  MASTER_IP=$(kubectl get nodes --selector=node-role.kubernetes.io/master -o=jsonpath='{.items[0].metadata.annotations.flannel\.alpha\.coreos\.com\/public-ip}')
-  MASTER_NODE_NAME=$(kubectl get nodes --selector=node-role.kubernetes.io/master -o=jsonpath='{.items[0].metadata.labels.kubernetes\.io/hostname}')
-
-  echo "Using MASTER_IP=$MASTER_IP"
-  echo "Using MASTER_NODE_NAME=$MASTER_NODE_NAME"
-#  echo "Using INGRESS_INTERNAL_NAME=$INGRESS_INTERNAL_NAME"
-#  echo "Using INGRESS_EXTERNAL_NAME=$INGRESS_EXTERNAL_NAME"
-  pause
-
-  message "installing fluxv2"
-  flux check --pre >/dev/null
-  FLUX_PRE=$?
-  if [ $FLUX_PRE != 0 ]; then
-    echo -e "flux prereqs not met:\n"
-    flux check --pre
-    exit 1
-  fi
-#  if [ -z "$GITHUB_TOKEN" ]; then
-#    echo "GITHUB_TOKEN is not set! Check $REPO_ROOT/clusters/gandazgul/setup/secrets.env"
-#    exit 1
-#  fi
-#  flux bootstrap github \
-#    --owner="$GITHUB_USER" \
-#    --repository=k8s-infrastructure \
-#    --branch=feature/gitops \
-#    --path=./clusters/gandazgul/flux-system/ \
-#    --personal
-  kubectl apply -k "$REPO_ROOT"/infrastructure/flux-system/components/
-
-  FLUX_INSTALLED=$?
-  if [ $FLUX_INSTALLED != 0 ]; then
-    echo -e "flux did not install correctly, aborting!"
-    exit 1
-  fi
-}
-
-installFlux
-# wait for secrets controller to be available
-while : ; do
-  kubectl get svc sealed-secrets-controller -n kube-system && break
-  sleep 5
+for f in ./clusters/"$clusterName"/apps/values/*.yaml; do
+  echo "Generating secrets from values file: $f..."
+  basename=$(basename "$f" .yaml)
+  kubectl create secret generic "${basename}" --dry-run=client --from-file=values.yaml="${f}" -o yaml > "./clusters/$clusterName/apps/secrets/${basename}.yaml"
 done
-"$REPO_ROOT"/infrastructure/setup/update-secrets.sh
 
-message "all done!"
-kubectl get nodes -o=wide
+kubectl apply -f "./clusters/$clusterName/ClusterKustomization.yaml"
+
+echo "Done configuring $clusterName's cluster"

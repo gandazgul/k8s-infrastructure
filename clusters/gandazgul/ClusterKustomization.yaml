@@ -6,6 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
+  - name: sealed-secrets
   - name: flux-system
   interval: 10m0s
   path: ./clusters/gandazgul/
