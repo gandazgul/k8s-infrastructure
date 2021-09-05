@@ -5,7 +5,7 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-    - name: sealed-secrets
+    - name: sealed-secret
   interval: 5m
   path: ./infrastructure/cert-manager/controller/
   prune: true
