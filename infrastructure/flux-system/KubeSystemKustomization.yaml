@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-  - name: sealed-secrets
+  - name: sealed-secret
   interval: 10m0s
   path: ./infrastructure/kube-system/
   sourceRef:
