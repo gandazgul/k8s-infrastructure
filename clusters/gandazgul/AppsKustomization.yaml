@@ -2,7 +2,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
-  name: gandazgul
+  name: apps
   namespace: flux-system
 spec:
   dependsOn:
