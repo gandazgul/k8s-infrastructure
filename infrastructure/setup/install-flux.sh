@@ -83,7 +83,7 @@ EOT
   for f in ./clusters/"$CLUSTER_NAME"/apps/values/*.yaml; do
     echo "Generating secrets from values file: $f..."
     basename=$(basename "$f" .yaml)
-    kubectl create secret generic "${basename}" --dry-run=client --from-file=values.yaml="${f}" -o yaml >"./clusters/$CLUSTER_NAME/apps/secrets/${basename}.yaml"
+    kubectl -n default create secret generic "${basename}" --dry-run=client --from-file=values.yaml="${f}" -o yaml >"./clusters/$CLUSTER_NAME/apps/secrets/${basename}.yaml"
     echo "- ${basename}.yaml" >> "./clusters/$CLUSTER_NAME/apps/secrets/kustomization.yaml"
   done
 
