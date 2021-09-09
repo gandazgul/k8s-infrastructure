@@ -37,19 +37,18 @@ installFlux() {
   sed -i '' "s/\(MASTER_NODE_NAME=*\).*/\1$MASTER_NODE_NAME/" "$secretFile" || exit 1
 
   message "installing Flux v2"
-  flux check --pre >/dev/null
-  FLUX_PRE=$?
-  if [ $FLUX_PRE != 0 ]; then
-    echo -e "Flux prereqs not met:\n"
-    flux check --pre
+
+  if ! flux check --pre; then
+    echo -e "Flux prereqs not met see above..."
     exit 1
   fi
 
-  message "Bootstrapping cluster with Flex components..."
-  kubectl apply -k "$REPO_ROOT"/infrastructure/flux-system/components/
+  if ! flux install; then
+    echo -e "Flux did not install correctly, aborting!"
+    exit 1
+  fi
 
-  FLUX_INSTALLED=$?
-  if [ $FLUX_INSTALLED != 0 ]; then
+  if ! kubectl apply -f "$REPO_ROOT"/infrastructure/flux-system/GitRepoSync.yaml; then
     echo -e "Flux did not install correctly, aborting!"
     exit 1
   fi
