@@ -1,0 +1,5 @@
+persistence:
+  extraMounts:
+  - name: data
+    mountPath: pictures
+    subPath: "renepor/PICTURES"
