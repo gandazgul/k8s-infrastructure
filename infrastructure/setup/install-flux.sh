@@ -100,6 +100,7 @@ need "kubectl"
 need "helm"
 need "flux"
 need "git"
+need kubeseal
 
 CLUSTER_NAME=$1
 
