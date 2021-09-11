@@ -6,7 +6,7 @@ metadata:
 spec:
   chart:
     spec:
-      chart: ingress-nginx:3.35.0
+      chart: ingress-nginx:3.34.0
       sourceRef:
         kind: HelmRepository
         name: ingress-nginx
