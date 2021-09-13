@@ -3,3 +3,7 @@ persistence:
   - name: data
     mountPath: pictures
     subPath: "renepor/PICTURES"
+  transcode:
+    enabled: true
+    size: 2Gi
+    accessMode: ReadWriteOnce
