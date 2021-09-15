@@ -1,0 +1,7 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-config
+data:
+  PLEX_TRANSCODE_SIZE: 2Gi
