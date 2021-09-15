@@ -36,7 +36,7 @@ spec:
     persistence:
       transcode:
         enabled: true
-        size: 60Gi
+        size: {$PLEX_TRANSCODE_SIZE:=60Gi}
         accessMode: ReadWriteOnce
       data:
         claimName: main-volume

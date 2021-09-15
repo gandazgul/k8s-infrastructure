@@ -22,9 +22,8 @@ spec:
     #      cluster_env: "prod"
     #      cluster_region: "eu-central-1"
     substituteFrom:
-    # substitutions can also come from a config map or secret
-    #    - kind: ConfigMap
-    #      name: cluster-vars
+    - kind: ConfigMap
+      name: cluster-config
     - kind: Secret
       name: secrets
 
