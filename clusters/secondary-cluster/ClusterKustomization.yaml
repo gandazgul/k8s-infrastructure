@@ -18,12 +18,9 @@ spec:
   validation: client
   postBuild:
     # constants can be specified like this:
-    #    substitute:
-    #      cluster_env: "prod"
-    #      cluster_region: "eu-central-1"
+    substitute:
+      PLEX_TRANSCODE_SIZE: 2Gi
     substituteFrom:
-    - kind: ConfigMap
-      name: cluster-config
     - kind: Secret
       name: secrets
 
