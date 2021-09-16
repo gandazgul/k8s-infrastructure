@@ -16,6 +16,7 @@ spec:
   - name: sealed-secrets-controller
   interval: 1h0m0s
   values:
+    fullnameOverride: kubernetes-dashboard
     extraArgs: [
         --enable-skip-login,
         --enable-insecure-login,
@@ -38,7 +39,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: kubernetes-dashboard
-  namespace: kubernetes-dashboard
+  namespace: kube-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
