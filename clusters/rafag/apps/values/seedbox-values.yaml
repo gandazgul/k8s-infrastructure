@@ -8,7 +8,7 @@ sonarr:
     subPath: configs/transmission
   - name: main-volume
     mountPath: /tv
-    subPath: public/TV
+    subPath: public/shows
   - name: tz-config
     mountPath: /etc/localtime
     readOnly: true
@@ -23,7 +23,7 @@ radarr:
     subPath: configs/transmission
   - name: main-volume
     mountPath: /movies
-    subPath: public/Movies
+    subPath: public/films
   - name: tz-config
     mountPath: /etc/localtime
     readOnly: true
