@@ -47,4 +47,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: kubernetes-dashboard
-  namespace: kubernetes-dashboard
+  namespace: kube-system
