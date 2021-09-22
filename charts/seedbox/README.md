@@ -2,7 +2,7 @@
 
 A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission, Flexget, jackett, sonarr, radarr
 
-![Version: 0.4.13](https://img.shields.io/badge/Version-0.4.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
+![Version: 0.4.14](https://img.shields.io/badge/Version-0.4.14-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0](https://img.shields.io/badge/AppVersion-1.0-informational?style=flat-square)
 
 # Seedbox Config
 
@@ -39,6 +39,12 @@ For my flexget config you can take a look at: https://github.com/gandazgul/flexg
 | flexget.service.type | string | `"ClusterIP"` |  |
 | flexget.volumeMounts | object | `{}` |  |
 | jackett.enabled | bool | `true` |  |
+| jackett.env[0].name | string | `"PUID"` |  |
+| jackett.env[0].value | string | `"1000"` |  |
+| jackett.env[1].name | string | `"PGID"` |  |
+| jackett.env[1].value | string | `"1000"` |  |
+| jackett.env[2].name | string | `"TZ"` |  |
+| jackett.env[2].value | string | `"America/New_York"` |  |
 | jackett.image.name | string | `"linuxserver/jackett"` |  |
 | jackett.image.pullPolicy | string | `"Always"` |  |
 | jackett.image.tag | string | `"amd64-latest"` |  |
@@ -57,6 +63,8 @@ For my flexget config you can take a look at: https://github.com/gandazgul/flexg
 | radarr.env[0].value | string | `"1000"` |  |
 | radarr.env[1].name | string | `"PGID"` |  |
 | radarr.env[1].value | string | `"1000"` |  |
+| radarr.env[2].name | string | `"TZ"` |  |
+| radarr.env[2].value | string | `"America/New_York"` |  |
 | radarr.image.name | string | `"linuxserver/radarr"` |  |
 | radarr.image.pullPolicy | string | `"Always"` |  |
 | radarr.image.tag | string | `"amd64-latest"` |  |
@@ -74,6 +82,8 @@ For my flexget config you can take a look at: https://github.com/gandazgul/flexg
 | sonarr.env[0].value | string | `"1000"` |  |
 | sonarr.env[1].name | string | `"PGID"` |  |
 | sonarr.env[1].value | string | `"1000"` |  |
+| sonarr.env[2].name | string | `"TZ"` |  |
+| sonarr.env[2].value | string | `"America/New_York"` |  |
 | sonarr.image.name | string | `"linuxserver/sonarr"` |  |
 | sonarr.image.pullPolicy | string | `"Always"` |  |
 | sonarr.image.tag | string | `"amd64-latest"` |  |
