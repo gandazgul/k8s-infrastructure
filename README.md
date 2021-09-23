@@ -1,13 +1,13 @@
 # K8s Infrastructure Config
 
-This is a collection of scripts to deploy kubernetes on Fedora. Tested on Fedora 31.
+This is a collection of scripts to deploy kubernetes v1.20.x on Fedora. Tested on Fedora 33.
 
 It's also a collection of helm charts that I developed or customized, as well as
-[helmfiles](https://github.com/roboll/helmfile/) to deploy all of the supported applications.
+[flux v2](https://toolkit.fluxcd.io/) objects to deploy all the supported applications.
 
-The storage is handled with PersistenceVolumes mapped to mount points on the host and pre-existing claims created that
-pods can use as volumes. There's a k8s cron job included to make differential backups between the main mount point and
-the backup one.
+We handled storage with PersistenceVolumes mapped to mount points on the host and pre-existing claims created that pods
+can use as volumes. There's a k8s cron job included to make differential backups between the main mount point and the
+backup one.
 
 [Documentation](https://gandazgul.github.io/k8s-infrastructure/)
 
@@ -22,20 +22,20 @@ well. Look at this script [https://github.com/gandazgul/k8s-infrastructure/blob/
 # [Helm](https://helm.sh) Charts
 
 I publish my charts as a helm repo. Most of these I created because I couldn't find them or were super specific. Some
-are based on official charts I need to modify. To use them add this url to helm as a repo and run update.
+are based on official charts I needed to modify. To use them add this url to helm as a repo and run update.
 
 ```bash
 helm repo add gandazgul https://gandazgul.github.io/k8s-infrastructure/
 ```
 
-Here is the [index.yaml](./index.yaml)
+Here is the [index.yaml](https://gandazgul.github.io/k8s-infrastructure/index.yaml)
 
 ## What is YASR? I see it mentioned everywhere
 
 YASR is an in-joke, it stands for Yet Another Storage
 Repository (https://encyclopedia.thefreedictionary.com/Yet+Another) - SR is the name of storage volumes in Xenserver
-which we migrated from. YASR is the volume we use to store all application settings. MAIN and BACKUP have all the app
-data and personal files, backed up to backup with rdiff-backup.
+which we migrated from. YASR is the volume we use, to store all application settings. MAIN and BACKUP have all the app
+data and personal files, backed up to back up with rdiff-backup.
 
 ## License
 

@@ -10,7 +10,7 @@ releases:
   # MQTT Broker
   - name: mqtt-mosca
     namespace: default
-    chart: ../charts/mosca
+    chart: mosca
     values:
       - image:
           tag: "v2.8.3"

@@ -14,6 +14,7 @@ sudo dnf -y install screen htop git p7zip rdiff-backup fail2ban
 
 printf "Setting up fail2ban for sshd ================================================================================\n"
 sudo cp ./jail.local /etc/fail2ban/jail.local
+sudo systemctl enable fail2ban
 sudo systemctl restart fail2ban
 sudo fail2ban-client status sshd
 
@@ -36,7 +37,12 @@ else
     echo No
 fi
 
+printf "\nDisable sudo asking for password for members of wheel ====================================================\n"
 echo "%wheel ALL=(ALL) NOPASSWD:ALL" | sudo tee --append /etc/sudoers
+
+printf "\nDisable SELINUX because kubelet doesnt support it ========================================================\n"
+sudo setenforce 0
+echo "SELINUX=disabled" | sudo tee /etc/sysconfig/selinux
 
 # TODO:
 # addgroup public
