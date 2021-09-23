@@ -3,30 +3,32 @@
 replicaCount: 1
 
 vpn:
+  enabled: false
   name: vpn
   image:
-    name: qmcgaw/private-internet-access
-    tag: v3.8.0
+    name: qmcgaw/gluetun
+    tag: v3.15.0
     pullPolicy: IfNotPresent
   resources:
     requests:
       cpu: 100m
-      memory: 100Mi
+      memory: 250Mi
     limits:
       cpu: 500m
-      memory: 100Mi
-  volumeMounts:
-    - name: yasr-volume
-      mountPath: /vpn
-      subPath: configs/openvpn
-    - name: dev-tun
-      mountPath: /dev/net/tun
-    - name: tz-config
-      mountPath: /etc/localtime
-      readOnly: true
-    - name: yasr-volume
-      mountPath: /tmp/gluetun/
-      subPath: configs/transmission/
+      memory: 1500Mi
+  volumeMounts: {}
+#    - name: yasr-volume
+#      mountPath: /vpn
+#      subPath: configs/openvpn
+#    - name: dev-tun
+#      mountPath: /dev/net/tun
+#    - name: tz-config
+#      mountPath: /etc/localtime
+#      readOnly: true
+#    - name: yasr-volume
+#      mountPath: /tmp/gluetun/
+#      subPath: configs/transmission/
+  city: New York
 
 transmission:
   name: transmission
@@ -35,10 +37,8 @@ transmission:
     tag: latest
     pullPolicy: Always
   service:
-    portName: "9091-tcp"
-    type: "ClusterIP"
+    type: ClusterIP
     port: 9091
-    protocol: TCP
     additionalPorts:
     - name: "51413-tcp"
       port: 51413
@@ -51,25 +51,12 @@ transmission:
     value: "1000"
   - name: PUID
     value: "1000"
-#  - name: TRANSMISSION_WEB_HOME
-#    value: "/combustion-release/"
+  - name: TRANSMISSION_UMASK
+    value: "2"
   - name: TZ
     value: "America/New_York"
   ingress:
     enabled: false
-  volumeMounts:
-    - name: yasr-volume
-      mountPath: /data
-      subPath: configs/transmission
-    - name: yasr-volume
-      mountPath: /config
-      subPath: configs/transmission
-    - name: yasr-volume
-      mountPath: /watch
-      subPath: configs/transmission/watch
-    - name: tz-config
-      mountPath: /etc/localtime
-      readOnly: true
   resources:
     requests:
       cpu: 100m
@@ -77,6 +64,19 @@ transmission:
     limits:
       cpu: 1000m
       memory: 2000Mi
+  volumeMounts: {}
+#  - name: yasr-volume
+#    mountPath: /data
+#    subPath: configs/transmission
+#  - name: yasr-volume
+#    mountPath: /config
+#    subPath: configs/transmission
+#  - name: yasr-volume
+#    mountPath: /watch
+#    subPath: configs/transmission/watch
+#  - name: tz-config
+#    mountPath: /etc/localtime
+#    readOnly: true
 
 flexget:
   enabled: false
@@ -90,18 +90,6 @@ flexget:
     port: 3539
   ingress:
     enabled: false
-  volumeMounts:
-    - name: yasr-volume
-      mountPath: /config
-      subPath: configs/flexget
-    - name: main-volume
-      mountPath: /main
-    - name: yasr-volume
-      mountPath: /data
-      subPath: configs/transmission
-    - name: tz-config
-      mountPath: /etc/localtime
-      readOnly: true
   resources:
     requests:
       cpu: 100m
@@ -109,6 +97,18 @@ flexget:
     limits:
       cpu: 500m
       memory: 1000Mi
+  volumeMounts: {}
+#  - name: yasr-volume
+#    mountPath: /config
+#    subPath: configs/flexget
+#  - name: main-volume
+#    mountPath: /main
+#  - name: yasr-volume
+#    mountPath: /data
+#    subPath: configs/transmission
+#  - name: tz-config
+#    mountPath: /etc/localtime
+#    readOnly: true
 
 jackett:
   enabled: true
@@ -122,16 +122,13 @@ jackett:
     port: 9117
   ingress:
     enabled: false
-  volumeMounts:
-    - name: yasr-volume
-      mountPath: /config
-      subPath: configs/jackett
-    - name: yasr-volume
-      mountPath: /downloads
-      subPath: configs/jackett/downloads
-    - name: tz-config
-      mountPath: /etc/localtime
-      readOnly: true
+  env:
+  - name: PUID
+    value: "1000"
+  - name: PGID
+    value: "1000"
+  - name: TZ
+    value: "America/New_York"
   resources:
     requests:
       cpu: 100m
@@ -139,6 +136,16 @@ jackett:
     limits:
       cpu: 500m
       memory: 1000Mi
+  volumeMounts: {}
+#  - name: yasr-volume
+#    mountPath: /config
+#    subPath: configs/jackett
+#  - name: yasr-volume
+#    mountPath: /downloads
+#    subPath: configs/jackett/downloads
+#  - name: tz-config
+#    mountPath: /etc/localtime
+#    readOnly: true
 
 sonarr:
   enabled: true
@@ -155,6 +162,8 @@ sonarr:
       value: "1000"
     - name: PGID
       value: "1000"
+    - name: TZ
+      value: "America/New_York"
   ingress:
     enabled: false
   resources:
@@ -180,6 +189,8 @@ radarr:
       value: "1000"
     - name: PGID
       value: "1000"
+    - name: TZ
+      value: "America/New_York"
   ingress:
     enabled: false
   resources:
@@ -190,26 +201,22 @@ radarr:
       cpu: 1000m
       memory: 2000Mi
 
-# Without this you can't dns resolve anything inside the container
-dnsPolicy: "None"
-dnsConfig:
-  nameservers:
-    - 8.8.8.8
-    - 8.8.4.4
+dnsPolicy: ClusterFirst
+dnsConfig: {}
 
-volumes:
-  - name: yasr-volume
-    persistentVolumeClaim:
-      claimName: yasr-volume
-  - name: main-volume
-    persistentVolumeClaim:
-      claimName: main-volume
-  - name: dev-tun
-    hostPath:
-      path: /dev/net/tun
-  - name: tz-config
-    hostPath:
-      path: /etc/localtime
+volumes: {}
+#  - name: yasr-volume
+#    persistentVolumeClaim:
+#      claimName: yasr-volume
+#  - name: main-volume
+#    persistentVolumeClaim:
+#      claimName: main-volume
+#  - name: dev-tun
+#    hostPath:
+#      path: /dev/net/tun
+#  - name: tz-config
+#    hostPath:
+#      path: /etc/localtime
 
 nodeSelector: {}
 

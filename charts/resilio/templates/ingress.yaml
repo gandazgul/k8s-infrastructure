@@ -1,38 +1,39 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "helpers.fullname" . -}}
-{{- $ingressPath := .Values.ingress.path -}}
-apiVersion: networking.k8s.io/v1beta1
+{{- $serviceName := include "helpers.fullname" . -}}
+{{- $svcPort := .Values.service.port -}}
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
-  labels:
-    app: {{ template "helpers.name" . }}
-    chart: {{ template "helpers.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-{{- with .Values.ingress.annotations }}
-  annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
+  labels: {{- include "helpers.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations: {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
-{{- if .Values.ingress.tls }}
+  {{- if .Values.ingress.tls }}
   tls:
   {{- range .Values.ingress.tls }}
-    - hosts:
+  - hosts:
       {{- range .hosts }}
-        - {{ . }}
+    - {{ . | quote }}
       {{- end }}
-      secretName: {{ .secretName }}
+    secretName: {{ .secretName }}
   {{- end }}
-{{- end }}
+  {{- end }}
   rules:
   {{- range .Values.ingress.hosts }}
-    - host: {{ . }}
-      http:
-        paths:
-          - path: {{ $ingressPath }}
-            backend:
-              serviceName: {{ $fullName }}
-              servicePort: http
+  - host: {{ .host | quote }}
+    http:
+      paths:
+      {{- range .paths }}
+      - path: {{ .path }}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ $serviceName }}
+            port:
+              number: {{ $svcPort }}
+      {{- end }}
   {{- end }}
 {{- end }}

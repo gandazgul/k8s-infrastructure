@@ -1,0 +1,50 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: k8s-dashboard
+  namespace: kube-system
+spec:
+  chart:
+    spec:
+      chart: kubernetes-dashboard
+      version: 4.0.3
+      sourceRef:
+        kind: HelmRepository
+        name: kubernetes-dashboard
+        namespace: flux-system
+  dependsOn:
+  - name: sealed-secrets-controller
+  interval: 1h0m0s
+  values:
+    fullnameOverride: kubernetes-dashboard
+    extraArgs: [
+        --enable-skip-login,
+        --enable-insecure-login,
+        --auto-generate-certificates
+    ]
+    ingress:
+      enabled: true
+      hosts:
+      - dashboard.${INGRESS_INTERNAL_NAME}
+      tls:
+      - hosts:
+        - dashboard.${INGRESS_INTERNAL_NAME}
+        secretName: dashboard-k8s-cert
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+        cert-manager.io/cluster-issuer: "ca-issuer"
+---
+# make the dashboard ServiceAccount an admin
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kubernetes-dashboard-admin
+  namespace: kube-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: kubernetes-dashboard
+  namespace: kube-system

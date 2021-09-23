@@ -1,16 +1,11 @@
 # Default values
 
-# These configs are taken mostly unmodified from:
-# https://github.com/MaZderMind/hostpath-provisioner/tree/master/manifests
-# Copyright (c) 2019 Peter Körner
-# MIT Licence
-
 replicaCount: 1
 
 image:
-  repository: mazdermind/hostpath-provisioner
+  repository: quay.io/kubevirt/hostpath-provisioner
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 filesystemPath: /var/kubernetes
 pvReclaimPolicy: Retain

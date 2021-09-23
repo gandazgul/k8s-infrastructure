@@ -1,0 +1,9 @@
+apiVersion: v2
+name: mealie
+description: A Helm chart for the Mealie app. A recipe management system.
+type: application
+version: 0.1.6
+appVersion: "0.1.0"
+maintainers:
+- name: gandazgul
+  email: ravelo.carlos@gmail.com

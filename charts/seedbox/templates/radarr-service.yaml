@@ -3,22 +3,17 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "helpers.radarr-service" . }}
-  labels:
-    app: {{ include "helpers.name" . }}
-    chart: {{ include "helpers.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+  labels: {{- include "helpers.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.radarr.service.type }}
   ports:
-    - name: radarr-http
-      {{- if contains "NodePort" .Values.radarr.service.type }}
-      nodePort: {{ .Values.radarr.service.port }}
-      {{- end }}
-      port: {{ .Values.radarr.service.port }}
-      protocol: TCP
-      targetPort: radarr-http
+  - name: radarr-http
+    {{- if contains "NodePort" .Values.radarr.service.type }}
+    nodePort: {{ .Values.radarr.service.port }}
+    {{- end }}
+    port: {{ .Values.radarr.service.port }}
+    protocol: TCP
+    targetPort: radarr-http
   selector:
-    app: {{ include "helpers.name" . }}
-    release: {{ .Release.Name }}
+    {{- include "helpers.selectorLabels" . | nindent 4 }}
 {{- end }}

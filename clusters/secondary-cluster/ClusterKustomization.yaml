@@ -1,0 +1,27 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: secondary-cluster
+  namespace: flux-system
+spec:
+  dependsOn:
+  - name: sealed-secret
+  - name: flux-system
+  - name: kube-system
+  interval: 10m0s
+  path: ./clusters/secondary-cluster/
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  validation: client
+  postBuild:
+    # constants can be specified like this:
+    substitute:
+      PLEX_TRANSCODE_SIZE: 2Gi
+    substituteFrom:
+    - kind: Secret
+      name: secrets
+
+  # use ${var:=default} or ${var} in the files to place variables

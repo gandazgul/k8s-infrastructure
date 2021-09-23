@@ -10,6 +10,10 @@ charts/gogs/charts/
 
 # secrets and private files
 secrets.sh
+secrets.env
 
 # node
 node_modules/
+
+# yarn
+yarn-error.log

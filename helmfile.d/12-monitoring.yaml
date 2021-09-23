@@ -2,6 +2,8 @@
 #Part 1: https://sysdig.com/blog/kubernetes-monitoring-prometheus/
 #Part 2: https://sysdig.com/blog/kubernetes-monitoring-with-prometheus-alertmanager-grafana-pushgateway-part-2/
 
+TODO: change this to use prometheus operator
+
 # NOTE: cli args take precedence over these
 helmDefaults:
   wait: true
@@ -121,7 +123,7 @@ releases:
           GF_SMTP_ENABLED: true
           GF_SMTP_HOST: smtp.gmail.com:587
           GF_SMTP_FROM_ADDRESS: {{ env "MAIL_TO" }}
-          GF_SMTP_FROM_NAME: {{ env "REPOSITORY_USERNAME" }}
+          GF_SMTP_FROM_NAME: {{ env "EMAIL" }}
       - ingress:
           enabled: true
           hosts:
