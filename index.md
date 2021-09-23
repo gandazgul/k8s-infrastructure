@@ -1,12 +1,13 @@
 # K8s Infrastructure Config
 
-This is a collection of scripts to deploy kubernetes on Fedora. Tested on Fedora 31.
+This is a collection of scripts to deploy kubernetes v1.18.x on Fedora. Tested on Fedora 31.
 
-It's also a collection of helm charts that I developed or customized (See [Repo](#helm-repo)), as well as [helmfiles](https://github.com/roboll/helmfile/)
-to deploy all the supported applications.
+It's also a collection of helm charts that I developed or customized, as well as
+[helmfiles](https://github.com/roboll/helmfile/) to deploy all the supported applications.
 
-The storage is handled with PersistenceVolumes mapped to mount points on the host and pre-existing claims
-created that pods can use as volumes. There's a k8s cron job included to make differential backups between the main mount point and the backup one.
+We handled storage with PersistenceVolumes mapped to mount points on the host and pre-existing claims
+created that pods can use as volumes. There's a k8s cron job included to make differential backups
+between the main mount point and the backup one.
 
 [Get started now](#getting-started){: .btn .btn-primary }
 [View it on GitHub](https://github.com/gandazgul/k8s-infrastructure){: .btn }
@@ -22,17 +23,15 @@ Look at this script [https://github.com/gandazgul/k8s-infrastructure/blob/master
 
 # [Helm](https://helm.sh) Charts
 
-I publish my charts as a helm repo here: [Helm Repo](https://gandazgul.github.io/k8s-infrastructure/).
-
 Most of these I created because I couldn't find them or were super specific. Some are based on official charts I need to modify.
 
-To use them add this url to helm as a repo and run update.
+I publish my charts as a helm repo. To use them add this url to helm and run update.
 
 ```bash
 helm repo add gandazgul https://gandazgul.github.io/k8s-infrastructure/
 ```
 
-Here is the [index.yaml](./index.yaml)
+Here is the [index.yaml](https://gandazgul.github.io/k8s-infrastructure/index.yaml)
 
 ---
 
@@ -73,7 +72,7 @@ kubernetes-client in Fedora)
 3. Test with `kubectl get nodes` you should see your node listed, if not check the permissions on the config file
 (should be owned by your user/group).
 4. Install helm with ./install-k8s/installHelm.sh. This installs helm v3, and some needed plugins. Test helm with:
-   `helm list` <-- You should see no output, if error then something went wrong
+   `helm ls` <-- You should see no output, if error then something went wrong
 5. Install helmfile. For the most up to date version download from the [helmfile's releases](https://github.com/roboll/helmfile/releases))
 6. Set default namespace for kubectl `kubectl config set-context $(kubectl config current-context) --namespace=default`
     * Check that the namespace was set: `kubectl config view | grep namespace:`
@@ -114,14 +113,14 @@ by copying the original file and changing the values to suit your needs.
 | K8s Dashboard                             | dashboard    | -                  | [README](https://github.com/kubernetes/dashboard)      |
 | FileBrowser                               | files        | -                  | [README](https://github.com/filebrowser/filebrowser/)  |
 | Plex                                      | plex         | -                  | [README](https://github.com/munnerz/kube-plex)         |
-| Torrents (Transmission, OpenVPN, Flexget) | transmission | -                  | [README](/charts/seedbox/README.md)                    |
-| SSHD                                      | -            | 22222              | [README](/docker/sshd/README.md)                       |
+| Torrents (Transmission, OpenVPN, Flexget,<br />Radarr, Sonarr) | transmission,<br />movies, tv | - | [README](/charts/seedbox/README.md)|
 | Gogs                                      | gogs         | -                  | [README](https://hub.helm.sh/charts/incubator/gogs)    |
 | Resilio Sync                              | resilio      | -                  | -                                                      |
 | Samba                                     | -            | 139, 445, 137, 138 | [README](/charts/samba/README.md)                      |
 | Prometheus                                | prometheus   | -                  | [README](https://hub.helm.sh/charts/stable/prometheus) |
 | AlertManager (Prometheus)                 | alerts       | -                  | Same                                                   |
 | Grafana                                   | grafana      | -                  | [README](https://hub.helm.sh/charts/stable/grafana)    |
+| No-ip                                     | -            | -                  | [README](https://hub.helm.sh/charts/stabl)    |
 
 ## Node maintenance
 

@@ -1,0 +1,155 @@
+# Seedbox ===========================================================
+# Transmission, sonarr, radarr, jackett, and optionally flexget running over an OpenVPN connection
+
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: seedbox
+  namespace: default
+spec:
+  chart:
+    spec:
+#      chart: seedbox
+      chart: ./charts/seedbox
+      version: 0.4.14
+      sourceRef:
+#        kind: HelmRepository
+#        name: gandazgul
+#        namespace: flux-system
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+  dependsOn:
+  - name: yasr-volume
+  - name: main-volume
+  interval: 1h0m0s
+  valuesFrom:
+  - kind: Secret
+    name: seedbox-values
+    optional: false
+  values:
+    volumes:
+    - name: yasr-volume
+      persistentVolumeClaim:
+        claimName: yasr-volume
+    - name: main-volume
+      persistentVolumeClaim:
+        claimName: main-volume
+    - name: dev-tun
+      hostPath:
+        path: /dev/net/tun
+    - name: tz-config
+      hostPath:
+        path: /etc/localtime
+    vpn:
+      enabled: true
+      city: ${VPN_CITY}
+      env:
+      - name: VPNSP
+        value: "private internet access"
+      - name: REGION
+#        value: "CA Toronto,CA Montreal"
+        value: "CA Toronto"
+      - name: OPENVPN_USER
+        value: ${VPN_USER}
+      - name: OPENVPN_PASSWORD
+        value: ${VPN_PASSWORD}
+      - name: FIREWALL
+        value: "off"
+      - name: OPENVPN_IPV6
+        value: "off"
+      - name: TZ
+        value: "America/New_York"
+      volumeMounts:
+      - name: yasr-volume
+        mountPath: /vpn
+        subPath: configs/openvpn
+      - name: dev-tun
+        mountPath: /dev/net/tun
+#      - name: tz-config
+#        mountPath: /etc/localtime
+#        readOnly: true
+      - name: yasr-volume
+        mountPath: /tmp/gluetun/
+        subPath: configs/transmission/
+    transmission:
+      volumeMounts:
+      - name: yasr-volume
+        mountPath: /data
+        subPath: configs/transmission
+      - name: yasr-volume
+        mountPath: /config
+        subPath: configs/transmission
+      - name: yasr-volume
+        mountPath: /watch
+        subPath: configs/transmission/watch
+      - name: tz-config
+        mountPath: /etc/localtime
+        readOnly: true
+      ingress:
+        enabled: true
+        hosts:
+        - host: transmission.${INGRESS_INTERNAL_NAME}
+          paths:
+          - path: /
+        tls:
+        - hosts:
+          - transmission.${INGRESS_INTERNAL_NAME}
+          secretName: transmission-k8s-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "ca-issuer"
+          nginx.ingress.kubernetes.io/app-root: "/web/"
+    jackett:
+      volumeMounts:
+      - name: yasr-volume
+        mountPath: /config
+        subPath: configs/jackett
+      - name: yasr-volume
+        mountPath: /downloads
+        subPath: configs/jackett/downloads
+      - name: tz-config
+        mountPath: /etc/localtime
+        readOnly: true
+      ingress:
+        enabled: true
+        hosts:
+        - host: jackett.${INGRESS_INTERNAL_NAME}
+          paths:
+          - path: /
+        tls:
+        - hosts:
+          - jackett.${INGRESS_INTERNAL_NAME}
+          secretName: jackett-k8s-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "ca-issuer"
+    sonarr:
+      ingress:
+        enabled: true
+        hosts:
+        - host: tv.${INGRESS_INTERNAL_NAME}
+          paths:
+          - path: /
+        tls:
+        - hosts:
+          - tv.${INGRESS_INTERNAL_NAME}
+          secretName: sonarr-k8s-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "ca-issuer"
+    radarr:
+      ingress:
+        enabled: true
+        hosts:
+        - host: movies.${INGRESS_INTERNAL_NAME}
+          paths:
+          - path: /
+        tls:
+        - hosts:
+          - movies.${INGRESS_INTERNAL_NAME}
+          secretName: radarr-k8s-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "ca-issuer"

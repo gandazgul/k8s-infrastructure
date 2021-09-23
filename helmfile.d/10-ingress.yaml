@@ -39,26 +39,12 @@ releases:
   - name: cert-manager
     namespace: ingress
     chart: jetstack/cert-manager
-    hooks:
-      # Install the custom CRDs
-      # kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.11/deploy/manifests/00-crds.yaml
-      - events: ["prepare"]
-        command: "kubectl"
-        args: ["apply", "--validate=false", "-f", "https://github.com/jetstack/cert-manager/releases/download/v1.0.4/cert-manager.crds.yaml"]
-      # create the ingress namespace
-      # kubectl create namespace ingress
-      - events: ["prepare"]
-        command: "bash"
-        args: ["-c", "kubectl create namespace ingress || exit 0"]
-      # Make sure that the namespace doesn't have tls validation enabled to allow cert manager to install itself
-      # kubectl label namespace ingress cert-manager.io/disable-validation=true --overwrite
-  #      - events: ["prepare"]
-  #        command: "kubectl"
-  #        args: ["label", "namespace", "ingress", "cert-manager.io/disable-validation=true", "--overwrite"]
+    values:
+      installCRDs: true
 
   - name: ca-issuer
     namespace: ingress
-    chart: ../charts/cert-manager-setup
+    chart: gandazgul/cert-manager-setup
     values:
       - letsencrypt:
           enabled: true

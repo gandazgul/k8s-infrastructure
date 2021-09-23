@@ -53,8 +53,6 @@ transmission:
     value: "1000"
   - name: TRANSMISSION_UMASK
     value: "2"
-#  - name: TRANSMISSION_WEB_HOME
-#    value: "/combustion-release/"
   - name: TZ
     value: "America/New_York"
   ingress:
@@ -124,6 +122,13 @@ jackett:
     port: 9117
   ingress:
     enabled: false
+  env:
+  - name: PUID
+    value: "1000"
+  - name: PGID
+    value: "1000"
+  - name: TZ
+    value: "America/New_York"
   resources:
     requests:
       cpu: 100m
@@ -157,6 +162,8 @@ sonarr:
       value: "1000"
     - name: PGID
       value: "1000"
+    - name: TZ
+      value: "America/New_York"
   ingress:
     enabled: false
   resources:
@@ -182,6 +189,8 @@ radarr:
       value: "1000"
     - name: PGID
       value: "1000"
+    - name: TZ
+      value: "America/New_York"
   ingress:
     enabled: false
   resources:

@@ -28,7 +28,23 @@ releases:
             runAsUser: 1000
       - service:
           sshNodePort: 2222
+          sshDomain: gogs.{{ requiredEnv "INGRESS_EXTERNAL_NAME" }}
           gogs:
             serviceDisableRegistration: true
             serviceRequireSignInView: true
-      - values/gogs.yaml.gotmpl
+            serverDomain: gogs.{{ requiredEnv "INGRESS_EXTERNAL_NAME" }}
+            serverRootUrl: https://gogs.{{ requiredEnv "INGRESS_EXTERNAL_NAME" }}
+            securitySecretKey: {{ requiredEnv "GOGS_SECRET_KEY" }}
+          ingress:
+            enabled: true
+            hosts:
+            - gogs.{{ requiredEnv "INGRESS_EXTERNAL_NAME" }}
+            tls:
+            - hosts:
+              - gogs.{{ requiredEnv "INGRESS_EXTERNAL_NAME" }}
+              secretName: gogs-cert
+            annotations:
+              kubernetes.io/ingress.class: "nginx"
+#              cert-manager.io/cluster-issuer: "letsencrypt-staging"
+              cert-manager.io/cluster-issuer: "letsencrypt-prod"
+
