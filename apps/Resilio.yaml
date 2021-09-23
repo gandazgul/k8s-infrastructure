@@ -21,6 +21,10 @@ spec:
   - name: yasr-volume
   - name: main-volume
   interval: 1h0m0s
+  valuesFrom:
+  - kind: Secret
+    name: resilio-values
+    optional: true
   values:
     volumes:
     - name: yasr-volume
