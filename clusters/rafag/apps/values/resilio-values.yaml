@@ -1,0 +1,7 @@
+volumeMounts:
+  - name: yasr-volume
+    mountPath: "/mnt/sync"
+    subPath: "configs/resilio/rafag/config"
+  - name: main-volume
+    mountPath: "/mnt/mounted_folders/"
+    subPath: "rafag"
