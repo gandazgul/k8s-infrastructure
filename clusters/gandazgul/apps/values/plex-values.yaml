@@ -1,5 +1,6 @@
 persistence:
   pictures:
+    enabled: true
     existingClaim: main-volume
     mountPath: /pictures
     subPath: "gandazgul/Pictures"
