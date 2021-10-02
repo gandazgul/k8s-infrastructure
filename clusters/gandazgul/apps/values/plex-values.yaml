@@ -1,5 +1,5 @@
 persistence:
   pictures:
-    claimName: main-volume
+    existingClaim: main-volume
     mountPath: /pictures
     subPath: "gandazgul/Pictures"

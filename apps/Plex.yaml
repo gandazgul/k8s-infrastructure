@@ -55,17 +55,16 @@ spec:
     persistence:
       config:
         enabled: true
-        claimName: yasr-volume
+        existingClaim: yasr-volume
         subPath: "configs/plex"
+      data:
+        enabled: true
+        existingClaim: main-volume
+        subPath: "public"
       transcode:
         enabled: true
         size: ${PLEX_TRANSCODE_SIZE:=60Gi}
         accessMode: ReadWriteOnce
-      data:
-        enabled: true
-        mountPath: /data
-        claimName: main-volume
-        subPath: "public"
     resources:
       limits:
         memory: 4900Mi
