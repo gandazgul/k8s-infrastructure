@@ -25,9 +25,9 @@ spec:
     optional: false
   # All values at https://github.com/k8s-at-home/charts/blob/master/charts/plex/values.yaml
   values:
-#    image:
-#      repository: ghcr.io/k8s-at-home/plex
-#      tag: v1.24.3.5033-757abe6b4
+    #    image:
+    #      repository: ghcr.io/k8s-at-home/plex
+    #      tag: v1.24.3.5033-757abe6b4
     image:
       repository: plexinc/pms-docker
       tag: plexpass
@@ -39,7 +39,7 @@ spec:
           kubernetes.io/ingress.class: "nginx"
           cert-manager.io/cluster-issuer: "letsencrypt-prod"
         hosts:
-        - plex.${INGRESS_EXTERNAL_NAME}
+        - host: plex.${INGRESS_EXTERNAL_NAME}
           paths:
           - path: /
             # Ignored if not kubeVersion >= 1.14-0
