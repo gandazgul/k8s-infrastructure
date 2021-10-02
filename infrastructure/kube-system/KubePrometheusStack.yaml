@@ -21,7 +21,7 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
-          kubernetes.io/ingress.class: "nginx"
+#          kubernetes.io/ingress.class: "nginx"
           cert-manager.io/cluster-issuer: "ca-issuer"
         hosts:
         - alertmanager.${INGRESS_INTERNAL_NAME}
@@ -38,7 +38,7 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
-          kubernetes.io/ingress.class: "nginx"
+#          kubernetes.io/ingress.class: "nginx"
           cert-manager.io/cluster-issuer: "ca-issuer"
         hosts:
         - grafana.${INGRESS_INTERNAL_NAME}
@@ -54,7 +54,7 @@ spec:
         enabled: true
         ingressClassName: nginx
         annotations:
-          kubernetes.io/ingress.class: "nginx"
+#          kubernetes.io/ingress.class: "nginx"
           cert-manager.io/cluster-issuer: "ca-issuer"
         hosts:
         - prometheus.${INGRESS_INTERNAL_NAME}
