@@ -5,46 +5,70 @@ metadata:
   name: plex
   namespace: default
 spec:
+  interval: 5m
   chart:
     spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: plex
-      version: 2.3.3
+      version: 6.0.2
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
         namespace: flux-system
+      interval: 5m
   dependsOn:
   - name: yasr-volume
   - name: main-volume
-  interval: 1h0m0s
   valuesFrom:
   - kind: Secret
     name: plex-values
     optional: false
+  # All values at https://github.com/k8s-at-home/charts/blob/master/charts/plex/values.yaml
   values:
+#    image:
+#      repository: ghcr.io/k8s-at-home/plex
+#      tag: v1.24.3.5033-757abe6b4
     image:
       repository: plexinc/pms-docker
       tag: plexpass
       pullPolicy: Always
-    timezone: America/New_York
-    plexUid: 1000
-    serviceTCP:
-      type: NodePort
-      nodePort: 32400
-    serviceUDP:
-      type: NodePort
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        hosts:
+        - plex.${INGRESS_EXTERNAL_NAME}
+          paths:
+          - path: /
+            # Ignored if not kubeVersion >= 1.14-0
+            pathType: Prefix
+        tls:
+        - hosts:
+          - plex.${INGRESS_EXTERNAL_NAME}
+          secretName: plex-cert
+    env:
+      TZ: "America/New_York"
+      ADVERTISE_IP: "https://plex.${INGRESS_EXTERNAL_NAME}:443/,http://${MASTER_IP}:32400/"
+      #PLEX_CLAIM: set in secret:
     persistence:
+      config:
+        enabled: true
+        claimName: yasr-volume
+        subPath: "configs/plex"
       transcode:
         enabled: true
         size: ${PLEX_TRANSCODE_SIZE:=60Gi}
         accessMode: ReadWriteOnce
       data:
+        enabled: true
+        mountPath: /data
         claimName: main-volume
         subPath: "public"
-      config:
-        claimName: yasr-volume
-        subPath: "configs/plex"
     resources:
+      limits:
+        memory: 4900Mi
       requests:
-        cpu: 2000m
-        memory: 2Gi
+        cpu: 35m
+        memory: 1500Mi
