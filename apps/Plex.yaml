@@ -55,14 +55,17 @@ spec:
     persistence:
       config:
         enabled: true
+        type: pvc
         existingClaim: yasr-volume
         subPath: "configs/plex"
       data:
         enabled: true
+        type: pvc
         existingClaim: main-volume
         subPath: "public"
       transcode:
         enabled: true
+        type: pvc
         size: ${PLEX_TRANSCODE_SIZE:=60Gi}
         accessMode: ReadWriteOnce
     resources:
