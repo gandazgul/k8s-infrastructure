@@ -1,0 +1,67 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: kube-prometheus-stack
+  namespace: kube-system
+spec:
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      version: 19.0.1
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus-community
+        namespace: flux-system
+  dependsOn:
+  - name: sealed-secrets-controller
+  interval: 1h0m0s
+  values:
+    alertmanager:
+      ingress:
+        enabled: true
+        ingressClassName: nginx
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "ca-issuer"
+        hosts:
+        - alertmanager.${INGRESS_INTERNAL_NAME}
+        paths:
+        - /
+        pathType: ImplementationSpecific
+        tls:
+        - secretName: alertmanager-cert
+          hosts:
+          - alertmanager.${INGRESS_INTERNAL_NAME}
+    grafana:
+      adminPassword: ${ADMIN_PASSWORD}
+      ingress:
+        enabled: true
+        ingressClassName: nginx
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "ca-issuer"
+        hosts:
+        - grafana.${INGRESS_INTERNAL_NAME}
+        paths:
+        - /
+        pathType: ImplementationSpecific
+        tls:
+        - secretName: grafana-cert
+          hosts:
+          - grafana.${INGRESS_INTERNAL_NAME}
+    prometheus:
+      ingress:
+        enabled: true
+        ingressClassName: nginx
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "ca-issuer"
+        hosts:
+        - prometheus.${INGRESS_INTERNAL_NAME}
+        paths:
+        - /
+        pathType: ImplementationSpecific
+        tls:
+        - secretName: prometheus-cert
+          hosts:
+          - prometheus.${INGRESS_INTERNAL_NAME}
