@@ -58,11 +58,11 @@ spec:
         existingClaim: yasr-volume
         subPath: "configs/plex"
       data:
-        enabled: true
+#        enabled: true
         existingClaim: main-volume
         subPath: "public"
       transcode:
-        enabled: true
+#        enabled: true
         size: ${PLEX_TRANSCODE_SIZE:=60Gi}
         accessMode: ReadWriteOnce
     resources:
