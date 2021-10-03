@@ -29,22 +29,6 @@ spec:
       repository: plexinc/pms-docker
       tag: plexpass
       pullPolicy: Always
-    ingress:
-      main:
-        enabled: true
-        annotations:
-          kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "letsencrypt-prod"
-        hosts:
-        - host: plex.${INGRESS_EXTERNAL_NAME}
-          paths:
-          - path: /
-            # Ignored if not kubeVersion >= 1.14-0
-            pathType: Prefix
-        tls:
-        - hosts:
-          - plex.${INGRESS_EXTERNAL_NAME}
-          secretName: plex-cert
     service:
       main:
         primary: true
@@ -55,8 +39,7 @@ spec:
             port: 32400
     env:
       TZ: "America/New_York"
-      ADVERTISE_IP: "https://plex.${INGRESS_EXTERNAL_NAME}:443/,http://${MASTER_IP}:32400/"
-      #PLEX_CLAIM: set in secret:
+      ADVERTISE_IP: "http://${DYN_DNS_NAME}:32400/,http://${MASTER_IP}:32400/"
     persistence:
       config:
         enabled: true
