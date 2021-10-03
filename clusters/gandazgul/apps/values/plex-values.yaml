@@ -1,5 +1,10 @@
 persistence:
   data:
+    enabled: true
+    type: pvc
+    existingClaim: main-volume
     subPath:
-      - path: gandazgul/Pictures
-        mountPath: /pictures
+    - path: public
+      mountPath: /data
+    - path: gandazgul/Pictures
+      mountPath: /pictures
