@@ -1,6 +1,5 @@
 persistence:
-  pictures:
-    enabled: true
-    type: pvc
-    existingClaim: main-volume
-    subPath: "gandazgul/Pictures"
+  data:
+    subPath:
+      - path: /gandazgul/Pictures
+        mountPath: /pictures
