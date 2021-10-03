@@ -58,13 +58,14 @@ spec:
         type: pvc
         existingClaim: yasr-volume
         subPath: configs/plex
-      data:
-        enabled: true
-        type: pvc
-        existingClaim: main-volume
-        subPath:
-          - path: public
-            mountPath: /data
+      ## Data is in the individual plex-values for each cluster
+#      data:
+#        enabled: true
+#        type: pvc
+#        existingClaim: main-volume
+#        subPath:
+#          - path: public
+#            mountPath: /data
       transcode:
         enabled: true
         type: pvc
