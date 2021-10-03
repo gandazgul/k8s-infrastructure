@@ -57,12 +57,14 @@ spec:
         enabled: true
         type: pvc
         existingClaim: yasr-volume
-        subPath: "configs/plex"
+        subPath: /configs/plex
       data:
         enabled: true
         type: pvc
         existingClaim: main-volume
-        subPath: "public"
+        subPath:
+          - path: /public
+            mountPath: /data
       transcode:
         enabled: true
         type: pvc
