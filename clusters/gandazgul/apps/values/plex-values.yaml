@@ -1,5 +1,5 @@
 persistence:
   data:
     subPath:
-      - path: /gandazgul/Pictures
+      - path: gandazgul/Pictures
         mountPath: /pictures
