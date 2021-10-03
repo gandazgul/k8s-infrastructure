@@ -51,6 +51,7 @@ spec:
         type: NodePort
         ports:
           http:
+            nodePort: 32400
             port: 32400
     env:
       TZ: "America/New_York"
