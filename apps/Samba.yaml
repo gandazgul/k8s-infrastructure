@@ -11,31 +11,28 @@ spec:
       version: 0.2.3
       sourceRef:
         kind: HelmRepository
-        name: gandazgul
+        name: k8s-at-home
         namespace: flux-system
   dependsOn:
   - name: yasr-volume
   - name: main-volume
-  interval: 1h0m0s
+  interval: 5m
   values:
     image:
       pullPolicy: Always
     hostNetwork: true
-    volumes:
-    - name: yasr-volume
-      persistentVolumeClaim:
-        claimName: yasr-volume
-    - name: main-volume
-      persistentVolumeClaim:
-        claimName: main-volume
-    volumeMounts:
-    - name: yasr-volume
-      mountPath: "/etc/samba/"
-      subPath: "configs/samba/"
-    - name: main-volume
-      mountPath: "/shared"
     env:
     - name: IMPORT
       value: "/etc/samba/smbpasswd"
     - name: TZ
-      value: "EST5EDT"
+      value: "America/New_York"
+    persistence:
+      - config:
+          enabled: true
+          existingClaim: yasr-volume
+          mountPath: "/etc/samba/"
+          subPath: "configs/samba/"
+      - shared:
+          enabled: true
+          existingClaim: main-volume
+          mountPath: "/shared"
