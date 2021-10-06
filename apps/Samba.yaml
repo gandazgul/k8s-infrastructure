@@ -27,12 +27,12 @@ spec:
     - name: TZ
       value: "America/New_York"
     persistence:
-      - config:
-          enabled: true
-          existingClaim: yasr-volume
-          mountPath: "/etc/samba/"
-          subPath: "configs/samba/"
-      - shared:
-          enabled: true
-          existingClaim: main-volume
-          mountPath: "/shared"
+      config:
+        enabled: true
+        existingClaim: yasr-volume
+        mountPath: "/etc/samba/"
+        subPath: "configs/samba/"
+      shared:
+        enabled: true
+        existingClaim: main-volume
+        mountPath: "/shared"
