@@ -2,7 +2,7 @@ persistence:
   config:
     enabled: true
     existingClaim: yasr-volume
-    mountPath: /mnt/sync
+    mountPath: /config
     subPath: configs/resilio
   sync:
     enabled: true
