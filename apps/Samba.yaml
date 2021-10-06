@@ -29,10 +29,11 @@ spec:
     persistence:
       config:
         enabled: true
+        type: pvc
         existingClaim: yasr-volume
-        mountPath: "/etc/samba/"
-        subPath: "configs/samba/"
+        mountPath: /etc/samba/
+        subPath: configs/samba/
       shared:
         enabled: true
+        type: pvc
         existingClaim: main-volume
-        mountPath: "/shared"
