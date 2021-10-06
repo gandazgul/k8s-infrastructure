@@ -34,4 +34,3 @@ releases:
           - name: yasr-volume
             mountPath: "/config"
             subPath: "configs/smartthings-mqtt-bridge"
-
