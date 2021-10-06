@@ -5,6 +5,7 @@ metadata:
   name: resilio
   namespace: default
 spec:
+  interval: 5m
   chart:
     spec:
       chart: resilio-sync
@@ -13,29 +14,30 @@ spec:
         kind: HelmRepository
         name: k8s-at-home
         namespace: flux-system
+      interval: 5m
   dependsOn:
   - name: yasr-volume
   - name: main-volume
-  interval: 1h0m0s
   valuesFrom:
   - kind: Secret
     name: resilio-values
-    optional: true
+    optional: false
   values:
     env:
       TZ: "America/New_York"
       PUID: "1000"
       PGID: "1000"
     ingress:
-      enabled: true
-      hosts:
-      - host: resilio.${INGRESS_INTERNAL_NAME}
-        paths:
-        - path: /
-      tls:
-      - hosts:
-        - resilio.${INGRESS_INTERNAL_NAME}
-        secretName: resilio-k8s-cert
-      annotations:
-        kubernetes.io/ingress.class: "nginx"
-        cert-manager.io/cluster-issuer: "ca-issuer"
+      main:
+        enabled: true
+        hosts:
+        - host: resilio.${INGRESS_INTERNAL_NAME}
+          paths:
+          - path: /
+        tls:
+        - hosts:
+          - resilio.${INGRESS_INTERNAL_NAME}
+          secretName: resilio-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "ca-issuer"
