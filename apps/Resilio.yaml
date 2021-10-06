@@ -7,15 +7,11 @@ metadata:
 spec:
   chart:
     spec:
-#      chart: resilio
-      chart: ./charts/resilio
-      version: 0.2.5
+      chart: resilio
+      version: 5.0.1
       sourceRef:
-#        kind: HelmRepository
-#        name: gandazgul
-#        namespace: flux-system
-        kind: GitRepository
-        name: flux-system
+        kind: HelmRepository
+        name: k8s-at-home
         namespace: flux-system
   dependsOn:
   - name: yasr-volume
@@ -26,13 +22,10 @@ spec:
     name: resilio-values
     optional: true
   values:
-    volumes:
-    - name: yasr-volume
-      persistentVolumeClaim:
-        claimName: yasr-volume
-    - name: main-volume
-      persistentVolumeClaim:
-        claimName: main-volume
+    env:
+      TZ: "America/New_York"
+      PUID: "1000"
+      PGID: "1000"
     ingress:
       enabled: true
       hosts:
