@@ -1,9 +1,10 @@
 persistence:
-  extraMounts:
-  - name: data
-    mountPath: pictures
-    subPath: "renepor/PICTURES"
-  transcode:
+  data:
     enabled: true
-    size: 2Gi
-    accessMode: ReadWriteOnce
+    type: pvc
+    existingClaim: main-volume
+    subPath:
+    - path: public
+      mountPath: /data
+    - path: renepor/PICTURES
+      mountPath: /pictures
