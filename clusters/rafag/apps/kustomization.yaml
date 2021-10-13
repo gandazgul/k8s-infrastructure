@@ -4,9 +4,9 @@ kind: Kustomization
 resources:
 - ./secrets/
 - ../../../apps/K8sDashboard.yaml
-- ../../../apps/Bitwarden.yaml
-- ../../../apps/HomeAssistant.yaml
-- ../../../apps/Seedbox.yaml
 - ../../../apps/Plex.yaml
 - ../../../apps/Resilio.yaml
 - ../../../apps/Samba.yaml
+- ../../../apps/Bitwarden.yaml
+- ../../../apps/HomeAssistant.yaml
+- ../../../apps/Seedbox.yaml
