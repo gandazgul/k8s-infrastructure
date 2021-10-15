@@ -55,7 +55,9 @@ spec:
     ingress:
       enabled: true
       hosts:
-      - p.${INGRESS_EXTERNAL_NAME}
+      - host: p.${INGRESS_EXTERNAL_NAME}
+          paths:
+          - path: /
       tls:
       - hosts:
         - p.${INGRESS_EXTERNAL_NAME}
