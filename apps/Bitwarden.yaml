@@ -57,8 +57,8 @@ spec:
         enabled: true
         hosts:
         - host: p.${INGRESS_EXTERNAL_NAME}
-            paths:
-            - path: /
+          paths:
+          - path: /
         tls:
         - hosts:
           - p.${INGRESS_EXTERNAL_NAME}
