@@ -7,6 +7,7 @@ resources:
 - ../../../apps/Plex.yaml
 - ../../../apps/Resilio.yaml
 - ../../../apps/Samba.yaml
+- ../../../apps/Bitwarden.yaml
 - ../../../apps/HomeAssistant.yaml
 - ../../../apps/Seedbox.yaml
 - ../../../apps/Mealie.yaml
