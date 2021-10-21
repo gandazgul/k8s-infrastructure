@@ -1,7 +1,11 @@
-volumeMounts:
-- name: yasr-volume
-  mountPath: "/mnt/sync"
-  subPath: "configs/resilio"
-- name: main-volume
-  mountPath: "/mnt/mounted_folders/"
-  subPath: "btsync"
+persistence:
+  config:
+    enabled: true
+    existingClaim: yasr-volume
+    mountPath: /config
+    subPath: configs/resilio
+  sync:
+    enabled: true
+    existingClaim: main-volume
+    mountPath: /sync
+    subPath: btsync
