@@ -3,10 +3,5 @@
   <component name="KubernetesSettings">
     <option name="apiVersion" value="1.20" />
     <option name="getSpecFromCluster" value="true" />
-    <specSources>
-      <SpecSource>
-        <option name="pathOrUrl" value="$PROJECT_DIR$/clusters/gandazgul/flux-system/components/FluxSystemComponents.yaml" />
-      </SpecSource>
-    </specSources>
   </component>
 </project>
