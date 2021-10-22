@@ -38,7 +38,7 @@ spec:
         backend {
           auth {
             fixed {
-              enabled = false  # set to true to enable this auth provider
+              enabled = true  # set to true to enable this auth provider
               user = "admin"
               password = "${ADMIN_PASSWORD}"
               order = 10
