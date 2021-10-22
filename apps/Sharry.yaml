@@ -1,0 +1,62 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: sharry
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: sharry
+      version: 5.0.1
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux-system
+      interval: 5m
+  dependsOn:
+  - name: yasr-volume
+  - name: main-volume
+  valuesFrom:
+  - kind: Secret
+    name: resilio-values
+    optional: false
+  values:
+    env:
+      TZ: "America/New_York"
+    # -- Sharry configuration. Supports Helm templates.
+    # See [application docs](https://eikek.github.io/sharry/doc/configure) for more details.
+    # @default -- See values.yaml
+    config: |
+      sharry.restserver {
+        # base-url = "https://sharry.${INGRESS_INTERNAL_NAME}"
+        bind {
+          address = "0.0.0.0"
+          port = 9090
+        }
+        backend {
+          auth {
+            fixed {
+              enabled = false  # set to true to enable this auth provider
+              user = "admin"
+              password = "${ADMIN_PASSWORD}"
+              order = 10
+            }
+          }
+        }
+      }
+    ingress:
+      main:
+        enabled: true
+        hosts:
+        - host: share.${INGRESS_INTERNAL_NAME}
+          paths:
+          - path: /
+        tls:
+        - hosts:
+          - share.${INGRESS_INTERNAL_NAME}
+          secretName: share-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "ca-issuer"
