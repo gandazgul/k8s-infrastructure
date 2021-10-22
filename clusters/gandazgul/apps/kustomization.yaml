@@ -10,5 +10,6 @@ resources:
 - ../../../apps/Bitwarden.yaml
 - ../../../apps/HomeAssistant.yaml
 - ../../../apps/Seedbox.yaml
+- ../../../apps/Sharry.yaml
 - ../../../apps/Mealie.yaml
 - ../../../apps/MQTTBroker.yaml
