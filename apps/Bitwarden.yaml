@@ -2,28 +2,33 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: bitwarden-rs
+  name: vaultwarden
   namespace: default
 spec:
+  interval: 5m
   chart:
     spec:
-      chart: bitwarden-k8s
-      version: 0.1.5
+      chart: vaultwarden
+      version: 3.1.3
       sourceRef:
         kind: HelmRepository
-        name: bitwarden
+        name: k8s-at-home
         namespace: flux-system
+      interval: 5m
   dependsOn:
   - name: yasr-volume
-  interval: 1h0m0s
   values:
-    image:
-      tag: latest
-      pullPolicy: Always
     env:
+      TZ: "America/New_York"
+      DATA_FOLDER: "/config"
+      WEB_VAULT_ENABLED: true
+      LOG_FILE: "/config/bitwarden.log"
+      # makes the logs more readable
+      ROCKET_CLI_COLORS: off
       SIGNUPS_ALLOWED: true
+      ADMIN_TOKEN: ${BITWARDEN_ADMIN_TOKEN}
       INVITATIONS_ALLOWED: true
-      SERVER_ADMIN_EMAIL: ${EMAIL}
+      SHOW_PASSWORD_HINT: false
       DOMAIN: https://p.${INGRESS_EXTERNAL_NAME}
       SMTP_HOST: smtp.gmail.com
       SMTP_PORT: 587
@@ -31,8 +36,9 @@ spec:
       SMTP_SSL: true
       SMTP_USERNAME: ${EMAIL}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
-      SHOW_PASSWORD_HINT: true
-      WEB_VAULT_ENABLED: true
+
+      SERVER_ADMIN_EMAIL: ${EMAIL}
+
       # YUBI key secrets
 #      YUBICO_CLIENT_ID
 #      YUBICO_SECRET_KEY
@@ -42,17 +48,21 @@ spec:
       # how many threads are spawn to handle requests. Docker image is set to 10
 #      ROCKET_WORKERS
     persistence:
-      enabled: true
-      existingClaim: yasr-volume
-      subPath: "configs/bitwarden"
+      config:
+        enabled: true
+        existingClaim: yasr-volume
+        subPath: "configs/bitwarden"
     ingress:
-      enabled: true
-      hosts:
-      - p.${INGRESS_EXTERNAL_NAME}
-      tls:
-      - hosts:
-        - p.${INGRESS_EXTERNAL_NAME}
-        secretName: bitwarden-cert
-      annotations:
-        kubernetes.io/ingress.class: "nginx"
-        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      main:
+        enabled: true
+        hosts:
+        - host: p.${INGRESS_EXTERNAL_NAME}
+          paths:
+          - path: /
+        tls:
+        - hosts:
+          - p.${INGRESS_EXTERNAL_NAME}
+          secretName: bitwarden-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
