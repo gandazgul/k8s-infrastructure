@@ -39,9 +39,9 @@ spec:
       # One of: peaceful, easy, normal, and hard
       difficulty: easy
       # A comma-separated list of player names to whitelist.
-      whitelist: rafag
+      whitelist: cybercrazy
       # A comma-separated list of player names who should be admins.
-      ops: rafag
+      ops: cybercrazy
       # The maximum height in which building is allowed.
       maxBuildHeight: 256
       # Max view distance (in chunks).
