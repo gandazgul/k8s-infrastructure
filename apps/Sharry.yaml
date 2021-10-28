@@ -30,7 +30,7 @@ spec:
     # @default -- See values.yaml
     config: |
       sharry.restserver {
-        # base-url = "https://sharry.${INGRESS_INTERNAL_NAME}"
+        base-url = "https://sharry.${INGRESS_INTERNAL_NAME}"
         bind {
           address = "0.0.0.0"
           port = 9090
