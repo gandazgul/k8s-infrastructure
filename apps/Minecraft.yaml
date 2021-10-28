@@ -38,6 +38,8 @@ spec:
       type: "VANILLA"
       # One of: peaceful, easy, normal, and hard
       difficulty: easy
+      # A comma-separated list of player names to whitelist.
+      whitelist: rafag
       # A comma-separated list of player names who should be admins.
       ops: rafag
       # The maximum height in which building is allowed.
@@ -56,7 +58,7 @@ spec:
       # ref: https://hub.docker.com/r/itzg/minecraft-server/
       generatorSettings:
       # Check accounts against Minecraft account service.
-      onlineMode: false
+      onlineMode: true
 
     extraEnv:
       TZ: "America/New_York"
