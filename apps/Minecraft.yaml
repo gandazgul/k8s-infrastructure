@@ -61,17 +61,17 @@ spec:
       onlineMode: true
       extraPorts:
       - name: map
-       containerPort: 19132
-       protocol: UDP
-       service:
-         enabled: true
-         embedded: false
-         annotations: {}
-         type: NodePort
-         loadBalancerIP: ""
-         loadBalancerSourceRanges: []
-         externalTrafficPolicy: Cluster
-         port: 19132
+        containerPort: 19132
+        protocol: UDP
+        service:
+          enabled: true
+          embedded: false
+          annotations: {}
+          type: NodePort
+          loadBalancerIP: ""
+          loadBalancerSourceRanges: []
+          externalTrafficPolicy: Cluster
+          port: 19132
 
     extraEnv:
       TZ: "America/New_York"
