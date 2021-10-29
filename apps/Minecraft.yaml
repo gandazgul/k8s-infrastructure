@@ -35,9 +35,9 @@ spec:
       serviceType: NodePort
       nodePort: 25565
       # This can be one of "VANILLA", "FORGE", "SPIGOT", "BUKKIT", "PAPER", "FTBA", "SPONGEVANILLA", "CURSEFORGE"
-      type: "VANILLA"
+      type: "PAPER"
       # One of: peaceful, easy, normal, and hard
-      difficulty: easy
+      difficulty: peaceful
       # A comma-separated list of player names to whitelist.
       whitelist: cybercrazy
       # A comma-separated list of player names who should be admins.
