@@ -59,7 +59,7 @@ spec:
       generatorSettings:
       # Check accounts against Minecraft account service.
       onlineMode: true
-      extraPorts:
+      extraPorts: []
         - name: map
          containerPort: 19132
          protocol: UDP
