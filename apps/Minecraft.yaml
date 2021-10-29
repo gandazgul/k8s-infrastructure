@@ -60,8 +60,6 @@ spec:
       # Check accounts against Minecraft account service.
       onlineMode: true
       extraPorts:
-        serviceType: NodePort
-        nodePort: 19132
         - name: map
          containerPort: 19132
          protocol: UDP
