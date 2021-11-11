@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: home-assistant
-      version: 7.1.0
+      version: 11.1.0
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
@@ -43,12 +43,16 @@ spec:
       config:
         enabled: true
         existingClaim: yasr-volume
-        subPath: "configs/hass"
+        subPath: configs/hass
+      usb:
+        enabled: true
+        type: hostPath
+        hostPath: /dev/ttyUSB0
+    metrics:
+      enabled: true
     addons:
       codeserver:
         enabled: true
-        image:
-          tag: 3.9.0
         workingDir: "/config"
         args:
         - --auth
@@ -73,7 +77,13 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /config
-#          subPath: "configs/hass"
+    affinity:
+      nodeAffinity:
+        required:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: node-role.kubernetes.io/master
+              operator: Exists
 
 # do I need this?
 #          - name: deploykey
