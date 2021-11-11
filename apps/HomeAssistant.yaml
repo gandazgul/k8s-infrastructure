@@ -80,7 +80,7 @@ spec:
           mountPath: /config
     affinity:
       nodeAffinity:
-        required:
+        requiredDuringSchedulingIgnoredDuringExecution:
           nodeSelectorTerms:
           - matchExpressions:
             - key: node-role.kubernetes.io/master
