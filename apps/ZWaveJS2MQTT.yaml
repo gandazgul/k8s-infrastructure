@@ -24,12 +24,12 @@ spec:
       main:
         enabled: true
         hosts:
-        - host: zwave.${INGRESS_EXTERNAL_NAME}
+        - host: zwave.${INGRESS_INTERNAL_NAME}
           paths:
           - path: /
         tls:
         - hosts:
-          - zwave.${INGRESS_EXTERNAL_NAME}
+          - zwave.${INGRESS_INTERNAL_NAME}
           secretName: zwave-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
