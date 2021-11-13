@@ -45,10 +45,6 @@ spec:
         enabled: true
         existingClaim: yasr-volume
         subPath: configs/hass
-      usb:
-        enabled: true
-        type: hostPath
-        hostPath: /dev/ttyUSB0
     metrics:
       enabled: true
     addons:
@@ -78,13 +74,6 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /config
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchExpressions:
-            - key: node-role.kubernetes.io/master
-              operator: Exists
 
 # do I need this?
 #          - name: deploykey
