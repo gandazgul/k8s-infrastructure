@@ -21,10 +21,16 @@ spec:
       pullPolicy: Always
       tag: latest
     env:
+    - name: PGID
+      value: "1000"
+    - name: PUID
+      value: "1000"
     - name: TZ
       value: "America/New_York"
     - name: DB_TYPE
       value: "sqlite"
+    - name: DEFAULT_EMAIL
+      value: ""
     persistence:
       config:
         enabled: true
