@@ -10,3 +10,4 @@ resources:
 - ../../../apps/Bitwarden.yaml
 - ../../../apps/HomeAssistant.yaml
 - ../../../apps/seedbox/rafag/
+- ../../../apps/Minecraft.yaml
