@@ -3,7 +3,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: seedbox-seedbox
+  name: seedbox
   labels:
     app.kubernetes.io/name: seedbox
     app.kubernetes.io/instance: seedbox
