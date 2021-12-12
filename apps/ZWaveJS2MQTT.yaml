@@ -39,6 +39,11 @@ spec:
         enabled: true
         type: hostPath
         hostPath: /dev/ttyUSB0
+      config:
+        enabled: true
+        mountPath: /usr/src/app/store/
+        existingClaim: yasr-volume
+        subPath: configs/zwavejs
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
