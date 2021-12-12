@@ -8,7 +8,7 @@ fi
 CLUSTER_NAME=$1
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-source ./requirements.sh
+source "$SCRIPT_DIR/requirements.sh"
 
 installFlux() {
   REPO_ROOT=$(git rev-parse --show-toplevel)
@@ -54,7 +54,7 @@ while :; do
   sleep 15
 done
 
-call ./configure-cluster.sh "$CLUSTER_NAME"
+"$SCRIPT_DIR/configure-cluster.sh" "$CLUSTER_NAME"
 
 kubectl apply -f "./clusters/$CLUSTER_NAME/ClusterKustomization.yaml"
 
