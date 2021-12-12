@@ -19,7 +19,7 @@ spec:
           subPath: configs/transmission
         - name: main-volume
           mountPath: /tv
-          subPath: public/shows
+          subPath: public/TV
       # radarr
       - name: "radarr"
         volumeMounts:
@@ -31,4 +31,4 @@ spec:
           subPath: configs/transmission
         - name: main-volume
           mountPath: /movies
-          subPath: public/films
+          subPath: public/Movies
