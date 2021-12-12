@@ -7,43 +7,47 @@ metadata:
 spec:
   chart:
     spec:
-#      chart: mealie
-      chart: ./charts/mealie
-      version: 0.1.6
+      chart: mealie
+      version: 3.0.1
       sourceRef:
-#        kind: HelmRepository
-#        name: gandazgul
-#        namespace: flux-system
-        kind: GitRepository
-        name: flux-system
+        kind: HelmRepository
+        name: k8s-at-home
         namespace: flux-system
   dependsOn:
   - name: yasr-volume
   interval: 1h0m0s
   values:
+    image:
+      pullPolicy: Always
+      tag: latest
     env:
+    - name: PGID
+      value: "1000"
+    - name: PUID
+      value: "1000"
     - name: TZ
       value: "America/New_York"
     - name: DB_TYPE
       value: "sqlite"
-    volumes:
-    - name: yasr-volume
-      persistentVolumeClaim:
-        claimName: yasr-volume
-    volumeMounts:
-    - name: yasr-volume
-      mountPath: "/app/data"
-      subPath: "configs/mealie"
+    - name: DEFAULT_EMAIL
+      value: ""
+    persistence:
+      config:
+        enabled: true
+        mountPath: /app/data/
+        existingClaim: yasr-volume
+        subPath: configs/mealie
     ingress:
-      enabled: true
-      hosts:
-      - host: mealie.${INGRESS_INTERNAL_NAME}
-        paths:
-        - path: /
-      tls:
-      - hosts:
-        - mealie.${INGRESS_INTERNAL_NAME}
-        secretName: mealie-k8s-cert
-      annotations:
-        kubernetes.io/ingress.class: "nginx"
-        cert-manager.io/cluster-issuer: "ca-issuer"
+      main:
+        enabled: true
+        hosts:
+        - host: mealie.${INGRESS_INTERNAL_NAME}
+          paths:
+          - path: /
+        tls:
+        - hosts:
+          - mealie.${INGRESS_INTERNAL_NAME}
+          secretName: mealie-k8s-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "ca-issuer"
