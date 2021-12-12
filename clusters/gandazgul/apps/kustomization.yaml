@@ -9,7 +9,8 @@ resources:
 - ../../../apps/Samba.yaml
 - ../../../apps/Bitwarden.yaml
 - ../../../apps/HomeAssistant.yaml
-- ../../../apps/Seedbox.yaml
+- ../../../apps/ZWaveJS2MQTT.yaml
+- ../../../apps/seedbox/gandazgul/
 - ../../../apps/Sharry.yaml
 - ../../../apps/Mealie.yaml
 - ../../../apps/MQTTBroker.yaml
