@@ -3,5 +3,10 @@
   <component name="KubernetesSettings">
     <option name="apiVersion" value="1.20" />
     <option name="getSpecFromCluster" value="true" />
+    <specSources>
+      <SpecSource>
+        <option name="pathOrUrl" value="https://github.com/fluxcd/flux2/blob/main/manifests/crds/kustomization.yaml" />
+      </SpecSource>
+    </specSources>
   </component>
 </project>

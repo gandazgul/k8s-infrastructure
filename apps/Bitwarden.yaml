@@ -51,7 +51,7 @@ spec:
       config:
         enabled: true
         existingClaim: yasr-volume
-        subPath: "configs/bitwarden"
+        subPath: configs/bitwarden
     ingress:
       main:
         enabled: true

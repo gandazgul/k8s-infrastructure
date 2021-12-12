@@ -1,0 +1,88 @@
+---
+# Source: seedbox/templates/jackett-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: seedbox-jackett-service
+  labels:
+    app.kubernetes.io/name: seedbox
+    app.kubernetes.io/instance: seedbox
+    app.kubernetes.io/version: "1.0"
+spec:
+  type: ClusterIP
+  ports:
+  - name: jackett-http
+    port: 9117
+    protocol: TCP
+    targetPort: jackett-http
+  selector:
+    app.kubernetes.io/name: seedbox
+    app.kubernetes.io/instance: seedbox
+---
+# Source: seedbox/templates/radarr-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: seedbox-radarr-service
+  labels:
+    app.kubernetes.io/name: seedbox
+    app.kubernetes.io/instance: seedbox
+    app.kubernetes.io/version: "1.0"
+spec:
+  type: ClusterIP
+  ports:
+  - name: radarr-http
+    port: 7878
+    protocol: TCP
+    targetPort: radarr-http
+  selector:
+    app.kubernetes.io/name: seedbox
+    app.kubernetes.io/instance: seedbox
+---
+# Source: seedbox/templates/sonarr-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: seedbox-sonarr-service
+  labels:
+    app.kubernetes.io/name: seedbox
+    app.kubernetes.io/instance: seedbox
+    app.kubernetes.io/version: "1.0"
+spec:
+  type: ClusterIP
+  ports:
+  - name: sonarr-http
+    port: 8989
+    protocol: TCP
+    targetPort: sonarr-http
+  selector:
+    app.kubernetes.io/name: seedbox
+    app.kubernetes.io/instance: seedbox
+---
+# Source: seedbox/templates/transmission-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: seedbox-transmission-service
+  labels:
+    app.kubernetes.io/name: seedbox
+    app.kubernetes.io/instance: seedbox
+    app.kubernetes.io/version: "1.0"
+spec:
+  type: ClusterIP
+  ports:
+  - name: trs-http
+    port: 9091
+    protocol: TCP
+    targetPort: trs-http
+  - name: "51413-tcp"
+    port: 51413
+    targetPort: 51413
+    protocol: TCP
+  - name: "51412-udp"
+    port: 51413
+    targetPort: 51413
+    protocol: UDP
+  selector:
+    app.kubernetes.io/name: seedbox
+    app.kubernetes.io/instance: seedbox
