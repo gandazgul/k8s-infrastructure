@@ -1,9 +1,0 @@
-apiVersion: v2
-name: seedbox
-description: A Helm chart for a seedbox that uses alpine-seedbox, OpenVPN, Transmission, Flexget, jackett, sonarr, radarr
-type: application
-version: 0.4.14
-appVersion: "1.0"
-maintainers:
-- name: gandazgul
-  email: ravelo.carlos@gmail.com
