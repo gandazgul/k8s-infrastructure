@@ -18,6 +18,8 @@ spec:
   dependsOn:
   - name: yasr-volume
   values:
+    image:
+      tag: 5.4.2
     env:
       TZ: "America/New_York"
     ingress:
