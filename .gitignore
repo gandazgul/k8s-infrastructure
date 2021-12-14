@@ -1,5 +1,6 @@
 # Injellij
 .idea/workspace.xml
+.idea/aws.xml
 
 # docker
 docker/sshd/users.conf

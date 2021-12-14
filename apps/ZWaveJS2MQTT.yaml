@@ -1,0 +1,63 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: zwavejs2mqtt
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: zwavejs2mqtt
+      version: 5.0.2
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux-system
+      interval: 5m
+  dependsOn:
+  - name: yasr-volume
+  values:
+    image:
+      tag: 6.1.0
+    env:
+      TZ: "America/New_York"
+    ingress:
+      main:
+        enabled: true
+        hosts:
+        - host: zwave.${INGRESS_INTERNAL_NAME}
+          paths:
+          - path: /
+        tls:
+        - hosts:
+          - zwave.${INGRESS_INTERNAL_NAME}
+          secretName: zwave-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "ca-issuer"
+    service:
+      main:
+        ports:
+          http:
+            port: 8091
+          websocket:
+            enabled: true
+            port: 3000
+    persistence:
+      usb:
+        enabled: true
+        type: hostPath
+        hostPath: /dev/ttyUSB0
+      config:
+        enabled: true
+        mountPath: /usr/src/app/store/
+        existingClaim: yasr-volume
+        subPath: configs/zwavejs
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: node-role.kubernetes.io/master
+              operator: Exists

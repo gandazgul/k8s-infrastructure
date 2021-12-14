@@ -5,17 +5,18 @@ metadata:
   name: home-assistant
   namespace: default
 spec:
+  interval: 5m
   chart:
     spec:
       chart: home-assistant
-      version: 7.1.0
+      version: 11.1.0
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
         namespace: flux-system
+      interval: 5m
   dependsOn:
   - name: yasr-volume
-  interval: 1h0m0s
   values:
     controllerType: deployment
     image:
@@ -25,30 +26,30 @@ spec:
       TZ: "America/New_York"
     hostNetwork: true
     ingress:
-      enabled: true
-      hosts:
-      - host: hass.${INGRESS_EXTERNAL_NAME}
-        paths:
-        - path: /
-      tls:
-      - hosts:
-        - hass.${INGRESS_EXTERNAL_NAME}
-        secretName: hass-cert
-      annotations:
-        kubernetes.io/ingress.class: "nginx"
-        cert-manager.io/cluster-issuer: "letsencrypt-prod"
-        nginx.org/websocket-services: home-assistant
+      main:
+        enabled: true
+        hosts:
+        - host: hass.${INGRESS_EXTERNAL_NAME}
+          paths:
+          - path: /
+        tls:
+        - hosts:
+          - hass.${INGRESS_EXTERNAL_NAME}
+          secretName: hass-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          nginx.org/websocket-services: home-assistant
     persistence:
       config:
         enabled: true
         existingClaim: yasr-volume
-        subPath: "configs/hass"
-        mountPath: "/config"
+        subPath: configs/hass
+    metrics:
+      enabled: true
     addons:
       codeserver:
         enabled: true
-        image:
-          tag: 3.9.0
         workingDir: "/config"
         args:
         - --auth
@@ -73,7 +74,6 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /config
-#          subPath: "configs/hass"
 
 # do I need this?
 #          - name: deploykey

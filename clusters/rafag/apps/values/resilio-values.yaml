@@ -1,0 +1,11 @@
+persistence:
+  config:
+    enabled: true
+    existingClaim: yasr-volume
+    mountPath: /config
+    subPath: configs/resilio
+  sync:
+    enabled: true
+    existingClaim: main-volume
+    mountPath: /sync
+    subPath: rafag

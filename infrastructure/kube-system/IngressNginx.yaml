@@ -7,7 +7,7 @@ spec:
   chart:
     spec:
       chart: ingress-nginx
-      version: 4.0.1
+      version: 4.0.6
       sourceRef:
         kind: HelmRepository
         name: ingress-nginx
@@ -17,6 +17,12 @@ spec:
   interval: 1h0m0s
   values:
     controller:
+      config:
+        client-body-buffer-size: "32M"
+        proxy-body-size: "1G"
+        proxy-buffering: "off"
+        proxy-read-timeout: "600"
+        proxy-send-timeout: "600"
       stats:
         enabled: true
       metrics:

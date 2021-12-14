@@ -5,46 +5,63 @@ metadata:
   name: plex
   namespace: default
 spec:
+  interval: 5m
   chart:
     spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: plex
-      version: 2.3.3
+      version: 6.0.2
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
         namespace: flux-system
+      interval: 5m
   dependsOn:
   - name: yasr-volume
   - name: main-volume
-  interval: 1h0m0s
   valuesFrom:
   - kind: Secret
     name: plex-values
     optional: false
+  # All values at https://github.com/k8s-at-home/charts/blob/master/charts/plex/values.yaml
   values:
     image:
       repository: plexinc/pms-docker
       tag: plexpass
       pullPolicy: Always
-    timezone: America/New_York
-    plexUid: 1000
-    serviceTCP:
-      type: NodePort
-      nodePort: 32400
-    serviceUDP:
-      type: NodePort
+    service:
+      main:
+        primary: true
+        type: NodePort
+        ports:
+          http:
+            nodePort: 32400
+            port: 32400
+    env:
+      TZ: "America/New_York"
+      ADVERTISE_IP: "http://${DYN_DNS_NAME}:32400/,http://${MASTER_IP}:32400/"
     persistence:
+      config:
+        enabled: true
+        type: pvc
+        existingClaim: yasr-volume
+        subPath: configs/plex
+      ## Data is in the individual plex-values for each cluster
+#      data:
+#        enabled: true
+#        type: pvc
+#        existingClaim: main-volume
+#        subPath:
+#          - path: public
+#            mountPath: /data
       transcode:
         enabled: true
+        type: pvc
         size: ${PLEX_TRANSCODE_SIZE:=60Gi}
         accessMode: ReadWriteOnce
-      data:
-        claimName: main-volume
-        subPath: "public"
-      config:
-        claimName: yasr-volume
-        subPath: "configs/plex"
     resources:
+      limits:
+        memory: 4900Mi
       requests:
-        cpu: 2000m
-        memory: 2Gi
+        cpu: 35m
+        memory: 1500Mi

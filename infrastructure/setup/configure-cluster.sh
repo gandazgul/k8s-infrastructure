@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 CLUSTER_NAME=$1
 REPO_ROOT=$(git rev-parse --show-toplevel)
+
+source "$SCRIPT_DIR/requirements.sh"
 
 message "Installing $CLUSTER_NAME configs..."
 
@@ -17,7 +20,7 @@ template=$(sed "s/{{CLUSTER_NAME}}/$CLUSTER_NAME/g" <"$REPO_ROOT"/infrastructure
 echo "$template" | kubectl apply -f - || exit 1
 
 # Create value/yaml secrets
-echo "Generating $CLUSTER_NAME app secrets from values..."
+message "Generating $CLUSTER_NAME app secrets from values..."
 rm -rf "./clusters/$CLUSTER_NAME/apps/secrets/"
 mkdir "./clusters/$CLUSTER_NAME/apps/secrets/"
 cat <<EOT >> "./clusters/$CLUSTER_NAME/apps/secrets/kustomization.yaml"
@@ -34,6 +37,4 @@ for f in ./clusters/"$CLUSTER_NAME"/apps/values/*.yaml; do
   echo "- ${basename}.yaml" >> "./clusters/$CLUSTER_NAME/apps/secrets/kustomization.yaml"
 done
 
-kubectl apply -f "./clusters/$CLUSTER_NAME/ClusterKustomization.yaml"
-
-echo "Done configuring $CLUSTER_NAME's cluster"
+message "Done configuring $CLUSTER_NAME's cluster"

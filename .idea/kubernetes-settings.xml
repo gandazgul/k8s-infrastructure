@@ -5,7 +5,7 @@
     <option name="getSpecFromCluster" value="true" />
     <specSources>
       <SpecSource>
-        <option name="pathOrUrl" value="$PROJECT_DIR$/clusters/gandazgul/flux-system/components/FluxSystemComponents.yaml" />
+        <option name="pathOrUrl" value="https://github.com/fluxcd/flux2/blob/main/manifests/crds/kustomization.yaml" />
       </SpecSource>
     </specSources>
   </component>

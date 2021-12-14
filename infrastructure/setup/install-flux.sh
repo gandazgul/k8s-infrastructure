@@ -1,22 +1,14 @@
 #!/usr/bin/env bash
 
-need() {
-  if ! command -v "$1" &>/dev/null; then
-    echo "Binary '$1' is missing but required"
-    exit 1
-  fi
-}
+if [ -z ${1+x} ]; then
+  echo "Make sure to pass in a cluster name as install-flux.sh [name here]"
+  exit 1
+fi
 
-message() {
-  echo -e "\n######################################################################"
-  echo "# $1"
-  echo "######################################################################"
-}
+CLUSTER_NAME=$1
 
-pause() {
-  read -r -s -n 1 -p "Check these values. If anything looks wrong stop now and check the secrets.env file. Press any key to continue . . ."
-  echo ""
-}
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+source "$SCRIPT_DIR/requirements.sh"
 
 installFlux() {
   REPO_ROOT=$(git rev-parse --show-toplevel)
@@ -54,26 +46,16 @@ installFlux() {
   fi
 }
 
-if [ -z ${1+x} ]; then
-  echo "Make sure to pass in a cluster name as install-flux.sh [name here]"
-  exit 1
-fi
-
-need "kubectl"
-need "helm"
-need "flux"
-need "git"
-need kubeseal
-
-CLUSTER_NAME=$1
-
+######################## Install Flux ###################################
 installFlux
 # wait for secrets controller to be available
 while :; do
   kubectl get svc sealed-secrets-controller -n kube-system && break
-  sleep 5
+  sleep 15
 done
 
-call ./configure-cluster.sh "$CLUSTER_NAME"
+"$SCRIPT_DIR/configure-cluster.sh" "$CLUSTER_NAME"
+
+kubectl apply -f "./clusters/$CLUSTER_NAME/ClusterKustomization.yaml"
 
 message "all done!"

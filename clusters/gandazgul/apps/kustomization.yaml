@@ -4,11 +4,13 @@ kind: Kustomization
 resources:
 - ./secrets/
 - ../../../apps/K8sDashboard.yaml
-- ../../../apps/Bitwarden.yaml
-- ../../../apps/HomeAssistant.yaml
-- ../../../apps/Seedbox.yaml
 - ../../../apps/Plex.yaml
-- ../../../apps/Mealie.yaml
-- ../../../apps/MQTTBroker.yaml
 - ../../../apps/Resilio.yaml
 - ../../../apps/Samba.yaml
+- ../../../apps/Bitwarden.yaml
+- ../../../apps/HomeAssistant.yaml
+- ../../../apps/ZWaveJS2MQTT.yaml
+- ../../../apps/seedbox/gandazgul/
+- ../../../apps/Sharry.yaml
+- ../../../apps/Mealie.yaml
+- ../../../apps/MQTTBroker.yaml
