@@ -116,7 +116,7 @@ spec:
           name: tz-config
           readOnly: true
       - name: transmission
-        image: "linuxserver/transmission:latest"
+        image: "linuxserver/transmission:amd64-latest"
         imagePullPolicy: "Always"
         env:
         - name: PGID
@@ -304,7 +304,7 @@ spec:
           protocol: TCP
       # Prowlarr
       - name: prowlarr
-        image: linuxserver/prowlarr:amd64-latest
+        image: linuxserver/prowlarr:amd64-1.8.1253
         imagePullPolicy: Always
         env:
         - name: PUID
