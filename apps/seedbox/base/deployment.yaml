@@ -30,6 +30,9 @@ spec:
       - hostPath:
           path: /dev/net/tun
         name: dev-tun
+      - hostPath:
+          path: /etc/localtime
+        name: tz-config
       dnsPolicy: ClusterFirst
       dnsConfig:
         {}
