@@ -116,7 +116,7 @@ spec:
           name: tz-config
           readOnly: true
       - name: transmission
-        image: "linuxserver/transmission:latest"
+        image: "linuxserver/transmission:amd64-latest"
         imagePullPolicy: "Always"
         env:
         - name: PGID
@@ -218,9 +218,6 @@ spec:
         - mountPath: /downloads
           name: yasr-volume
           subPath: configs/jackett/downloads
-        - mountPath: /etc/localtime
-          name: tz-config
-          readOnly: true
         ports:
         - name: jackett-http
           containerPort: 9117
@@ -265,7 +262,7 @@ spec:
         - name: sonarr-http
           containerPort: 8989
           protocol: TCP
-      # radarr
+      # Radarr
       - name: "radarr"
         image: "linuxserver/radarr:amd64-latest"
         imagePullPolicy: "Always"
@@ -305,3 +302,47 @@ spec:
         - name: radarr-http
           containerPort: 7878
           protocol: TCP
+      # Prowlarr
+      - name: prowlarr
+        image: linuxserver/prowlarr:amd64-1.8.1253
+        imagePullPolicy: Always
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: America/New_York
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "100Mi"
+          limits:
+            cpu: "1000m"
+            memory: "2000Mi"
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
+          initialDelaySeconds: 30
+          periodSeconds: 60
+          timeoutSeconds: 30
+          failureThreshold: 2
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 2
+          successThreshold: 2
+          tcpSocket:
+            port: prowlarr-http
+          timeoutSeconds: 2
+        ports:
+        - name: prowlarr-http
+          containerPort: 9696
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /config
+          name: yasr-volume
+          subPath: configs/prowlarr
