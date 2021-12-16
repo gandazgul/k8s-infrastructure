@@ -1,5 +1,4 @@
 ---
-# Source: seedbox/templates/jackett-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -19,7 +18,6 @@ spec:
     app.kubernetes.io/name: seedbox
     app.kubernetes.io/instance: seedbox
 ---
-# Source: seedbox/templates/radarr-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -39,7 +37,6 @@ spec:
     app.kubernetes.io/name: seedbox
     app.kubernetes.io/instance: seedbox
 ---
-# Source: seedbox/templates/sonarr-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -59,7 +56,6 @@ spec:
     app.kubernetes.io/name: seedbox
     app.kubernetes.io/instance: seedbox
 ---
-# Source: seedbox/templates/transmission-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -83,6 +79,25 @@ spec:
     port: 51413
     targetPort: 51413
     protocol: UDP
+  selector:
+    app.kubernetes.io/name: seedbox
+    app.kubernetes.io/instance: seedbox
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: seedbox-prowlarr-service
+  labels:
+    app.kubernetes.io/name: seedbox
+    app.kubernetes.io/instance: seedbox
+    app.kubernetes.io/version: "1.0"
+spec:
+  type: ClusterIP
+  ports:
+  - name: prowlarr-http
+    port: 9696
+    protocol: TCP
+    targetPort: prowlarr-http
   selector:
     app.kubernetes.io/name: seedbox
     app.kubernetes.io/instance: seedbox
