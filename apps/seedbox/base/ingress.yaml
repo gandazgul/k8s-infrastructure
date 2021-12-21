@@ -127,7 +127,7 @@ spec:
   tls:
   - hosts:
     - "seedbox.${INGRESS_INTERNAL_NAME}"
-    secretName: sonarr-k8s-cert
+    secretName: prowlarr-k8s-cert
   rules:
   - host: "seedbox.${INGRESS_INTERNAL_NAME}"
     http:
