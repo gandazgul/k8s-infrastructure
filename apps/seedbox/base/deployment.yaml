@@ -91,7 +91,7 @@ spec:
         - mountPath: /tmp/gluetun/
           name: yasr-volume
           subPath: configs/transmission/
-      # Transmission
+      # Transmission port forward
       - name: transmission-pia-port-forward
         image: "gandazgul/transmission-pia-port-forward:v318a599"
         imagePullPolicy: IfNotPresent
@@ -142,8 +142,8 @@ spec:
             - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
           initialDelaySeconds: 30
           periodSeconds: 60
-          timeoutSeconds: 30
-          failureThreshold: 2
+          timeoutSeconds: 20
+          failureThreshold: 1
         readinessProbe:
           failureThreshold: 3
           initialDelaySeconds: 10
