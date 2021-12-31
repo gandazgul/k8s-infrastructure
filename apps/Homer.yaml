@@ -112,18 +112,18 @@ spec:
               #   title: 'id'
               #   content: 'value'
               # refreshInterval: 10000
-#              style: "is-warning"
-#              title: "Optional message!"
-#              icon: "fa fa-exclamation-triangle"
-#              content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+              # style: "is-warning"
+              # title: "Optional message!"
+              # icon: "fa fa-exclamation-triangle"
+              # content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
   
             # Optional navbar
             links: [] # Allows for navbar (dark mode, layout, and search) without any links
-#            links:
-#            - name: "Link 1"
-#              icon: "fab fa-github"
-#              url: "https://github.com/bastienwirtz/homer"
-#              target: "_blank" # optional html tag target attribute
+            # links:
+            # - name: "Link 1"
+            #   icon: "fab fa-github"
+            #   url: "https://github.com/bastienwirtz/homer"
+            #   target: "_blank" # optional html tag target attribute
   
             # Services
             # First level array represents a group.
@@ -136,7 +136,7 @@ spec:
                 logo: "https://transmission.k8s.sytes.net/transmission/web/style/transmission/images/logo.png"
                 tag: "seedbox"
                 url: "https://transmission.k8s.sytes.net/"
-#                target: "_blank" # optional html tag target attribute
+                # target: "_blank" # optional html tag target attribute
               - name: "TV"
                 logo: "https://tv.k8s.sytes.net/Content/Images/logo.svg"
                 tag: "seedbox"
@@ -153,7 +153,7 @@ spec:
               icon: "fas fa-icons"
               items:
               - name: "K8s Dashboard"
-#                icon: "fas fa-dharmachakra"
+                # icon: "fas fa-dharmachakra"
                 logo: "https://dashboard.k8s.sytes.net/assets/images/kubernetes-logo.png"
                 tag: "app"
                 url: "https://dashboard.k8s.sytes.net/"
