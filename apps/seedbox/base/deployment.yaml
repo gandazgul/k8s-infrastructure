@@ -73,8 +73,7 @@ spec:
             - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
           initialDelaySeconds: 30
           periodSeconds: 60
-          timeoutSeconds: 30
-          failureThreshold: 2
+          failureThreshold: 1
         resources:
           requests:
             cpu: "100m"
@@ -142,7 +141,6 @@ spec:
             - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
           initialDelaySeconds: 30
           periodSeconds: 60
-          timeoutSeconds: 20
           failureThreshold: 1
         readinessProbe:
           failureThreshold: 3
@@ -201,8 +199,7 @@ spec:
             - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
           initialDelaySeconds: 30
           periodSeconds: 60
-          timeoutSeconds: 30
-          failureThreshold: 2
+          failureThreshold: 1
         readinessProbe:
           failureThreshold: 3
           initialDelaySeconds: 30
@@ -248,8 +245,7 @@ spec:
             - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
           initialDelaySeconds: 30
           periodSeconds: 60
-          timeoutSeconds: 30
-          failureThreshold: 2
+          failureThreshold: 1
         readinessProbe:
           failureThreshold: 3
           initialDelaySeconds: 10
@@ -288,8 +284,7 @@ spec:
             - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
           initialDelaySeconds: 30
           periodSeconds: 60
-          timeoutSeconds: 30
-          failureThreshold: 2
+          failureThreshold: 1
         readinessProbe:
           failureThreshold: 3
           initialDelaySeconds: 10
@@ -328,8 +323,7 @@ spec:
             - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
           initialDelaySeconds: 30
           periodSeconds: 60
-          timeoutSeconds: 30
-          failureThreshold: 2
+          failureThreshold: 1
         readinessProbe:
           failureThreshold: 3
           initialDelaySeconds: 10
