@@ -101,7 +101,7 @@ spec:
     - "transmission.${INGRESS_INTERNAL_NAME}"
     secretName: transmission-k8s-cert
   rules:
-  - host: "transmission.${INGRESS_INTERNAL_NAME}"
+  - host: transmission.${INGRESS_INTERNAL_NAME}
     http:
       paths:
       - path: /
