@@ -1,5 +1,4 @@
 ---
-# Source: seedbox/templates/jackett-ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -26,9 +25,8 @@ spec:
           service:
             name: seedbox-jackett-service
             port:
-              number: 9117
+              name: jackett-http
 ---
-# Source: seedbox/templates/radarr-ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -55,9 +53,8 @@ spec:
           service:
             name: seedbox-radarr-service
             port:
-              number: 7878
+              name: radarr-http
 ---
-# Source: seedbox/templates/sonarr-ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -84,9 +81,8 @@ spec:
           service:
             name: seedbox-sonarr-service
             port:
-              number: 8989
+              name: sonarr-http
 ---
-# Source: seedbox/templates/transmission-ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -105,7 +101,7 @@ spec:
     - "transmission.${INGRESS_INTERNAL_NAME}"
     secretName: transmission-k8s-cert
   rules:
-  - host: "transmission.${INGRESS_INTERNAL_NAME}"
+  - host: transmission.${INGRESS_INTERNAL_NAME}
     http:
       paths:
       - path: /
@@ -114,4 +110,32 @@ spec:
           service:
             name: seedbox-transmission-service
             port:
-              number: 9091
+              name: trs-http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: seedbox-prowlarr-ingress
+  labels:
+    app.kubernetes.io/name: seedbox
+    app.kubernetes.io/instance: seedbox
+    app.kubernetes.io/version: "1.0"
+  annotations:
+    cert-manager.io/cluster-issuer: ca-issuer
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+  - hosts:
+    - "seedbox.${INGRESS_INTERNAL_NAME}"
+    secretName: prowlarr-k8s-cert
+  rules:
+  - host: "seedbox.${INGRESS_INTERNAL_NAME}"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: seedbox-prowlarr-service
+            port:
+              name: prowlarr-http
