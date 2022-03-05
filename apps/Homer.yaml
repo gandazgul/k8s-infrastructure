@@ -153,12 +153,15 @@ spec:
               icon: "fas fa-icons"
               items:
               - name: "K8s Dashboard"
-                # icon: "fas fa-dharmachakra"
                 logo: "https://dashboard.k8s.sytes.net/assets/images/kubernetes-logo.png"
                 tag: "app"
                 url: "https://dashboard.k8s.sytes.net/"
+              - name: "Resilio Sync"
+                icon: "fas sync-alt"
+                tag: "app"
+                url: "https://dashboard.k8s.sytes.net/"
               - name: "Cockpit"
-                icon: "fas fa-fedora"
+                icon: "fab fa-fedora"
                 tag: "app"
                 url: "https://k8s.sytes.net:9090/"
     ingress:
