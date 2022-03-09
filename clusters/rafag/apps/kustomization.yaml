@@ -11,3 +11,6 @@ resources:
 - ../../../apps/HomeAssistant.yaml
 - ../../../apps/seedbox/rafag/
 - ../../../apps/Minecraft.yaml
+- ../../../apps/ZWaveJS2MQTT.yaml
+- ../../../apps/MQTTBroker.yaml
+
