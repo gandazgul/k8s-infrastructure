@@ -19,7 +19,7 @@ spec:
   - name: yasr-volume
   values:
     image:
-      tag: 6.1.0
+      tag: latest
     env:
       TZ: "America/New_York"
     ingress:
