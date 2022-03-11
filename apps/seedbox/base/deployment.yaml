@@ -38,7 +38,7 @@ spec:
       containers:
       # VPN
       - name: "vpn"
-        image: "qmcgaw/gluetun:v3.24.0"
+        image: "qmcgaw/gluetun:v3.23.0"
         imagePullPolicy: "IfNotPresent"
         env:
         - name: VPNSP
