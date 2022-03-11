@@ -44,7 +44,7 @@ spec:
         - name: VPNSP
           value: private internet access
         - name: REGION
-          value: CA Toronto
+          value: CA Montreal
         - name: OPENVPN_USER
           value: ${VPN_USER}
         - name: OPENVPN_PASSWORD
