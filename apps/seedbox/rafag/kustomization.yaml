@@ -53,6 +53,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
+    namespace: flux-system
   validation: client
   postBuild:
     substituteFrom:
