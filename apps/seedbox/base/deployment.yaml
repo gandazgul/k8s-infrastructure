@@ -303,7 +303,7 @@ spec:
           protocol: TCP
       # Prowlarr
       - name: prowlarr
-        image: linuxserver/prowlarr:amd64-1.8.1253
+        image: linuxserver/prowlarr:amd64-1.8.1259
         imagePullPolicy: Always
         env:
         - name: PUID
