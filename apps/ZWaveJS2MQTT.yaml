@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: zwavejs2mqtt
-      version: 5.0.2
+      version: 5.2.0
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
@@ -19,7 +19,7 @@ spec:
   - name: yasr-volume
   values:
     image:
-      tag: 6.1.0
+      tag: latest
     env:
       TZ: "America/New_York"
     ingress:
