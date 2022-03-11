@@ -1,0 +1,34 @@
+---
+# Source: seedbox/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seedbox
+spec:
+  template:
+    spec:
+      containers:
+      # Sonarr 
+      - name: "sonarr"
+        volumeMounts:
+        - name: yasr-volume
+          mountPath: /config
+          subPath: configs/sonarr
+        - name: yasr-volume
+          mountPath: /data
+          subPath: configs/transmission
+        - name: main-volume
+          mountPath: /tv
+          subPath: public/shows
+      # radarr
+      - name: "radarr"
+        volumeMounts:
+        - name: yasr-volume
+          mountPath: /config
+          subPath: configs/radarr
+        - name: yasr-volume
+          mountPath: /data
+          subPath: configs/transmission
+        - name: main-volume
+          mountPath: /movies
+          subPath: public/films
