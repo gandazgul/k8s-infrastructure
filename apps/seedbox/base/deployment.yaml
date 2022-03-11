@@ -72,7 +72,7 @@ spec:
             - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
           initialDelaySeconds: 45
           periodSeconds: 60
-          failureThreshold: 2
+          failureThreshold: 1
           timeoutSeconds: 5
         resources:
           requests:
@@ -114,229 +114,234 @@ spec:
         - mountPath: /etc/localtime
           name: tz-config
           readOnly: true
-#      - name: transmission
-#        image: "linuxserver/transmission:amd64-latest"
-#        imagePullPolicy: "Always"
-#        env:
-#        - name: PGID
-#          value: "1000"
-#        - name: PUID
-#          value: "1000"
-#        - name: TRANSMISSION_UMASK
-#          value: "2"
-#        - name: TZ
-#          value: America/New_York
-#        resources:
-#          requests:
-#            cpu: "100m"
-#            memory: "100Mi"
-#          limits:
-#            cpu: "1000m"
-#            memory: "2000Mi"
-#        livenessProbe:
-#          exec:
-#            command:
-#            - sh
-#            - -c
-#            - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
-#          initialDelaySeconds: 30
-#          periodSeconds: 60
-#          failureThreshold: 1
-#        readinessProbe:
-#          failureThreshold: 3
-#          initialDelaySeconds: 10
-#          periodSeconds: 2
-#          successThreshold: 2
-#          tcpSocket:
-#            port: 9091
-#          timeoutSeconds: 2
-#        volumeMounts:
-#        - mountPath: /data
-#          name: yasr-volume
-#          subPath: configs/transmission
-#        - mountPath: /config
-#          name: yasr-volume
-#          subPath: configs/transmission
-#        - mountPath: /watch
-#          name: yasr-volume
-#          subPath: configs/transmission/watch
-#        - mountPath: /etc/localtime
-#          name: tz-config
-#          readOnly: true
-#        ports:
-#        - name: trs-http
-#          containerPort: 9091
-#          protocol: TCP
-#        - name: 51413-tcp
-#          containerPort: 51413
-#          protocol: TCP
-#        - name: 51412-udp
-#          containerPort: 51413
-#          protocol: UDP
+      - name: transmission
+        image: "linuxserver/transmission:amd64-latest"
+        imagePullPolicy: "Always"
+        env:
+        - name: PGID
+          value: "1000"
+        - name: PUID
+          value: "1000"
+        - name: TRANSMISSION_UMASK
+          value: "2"
+        - name: TZ
+          value: America/New_York
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "100Mi"
+          limits:
+            cpu: "1000m"
+            memory: "2000Mi"
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
+          initialDelaySeconds: 45
+          periodSeconds: 60
+          failureThreshold: 1
+          timeoutSeconds: 5
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 2
+          successThreshold: 2
+          tcpSocket:
+            port: 9091
+          timeoutSeconds: 2
+        volumeMounts:
+        - mountPath: /data
+          name: yasr-volume
+          subPath: configs/transmission
+        - mountPath: /config
+          name: yasr-volume
+          subPath: configs/transmission
+        - mountPath: /watch
+          name: yasr-volume
+          subPath: configs/transmission/watch
+        - mountPath: /etc/localtime
+          name: tz-config
+          readOnly: true
+        ports:
+        - name: trs-http
+          containerPort: 9091
+          protocol: TCP
+        - name: 51413-tcp
+          containerPort: 51413
+          protocol: TCP
+        - name: 51412-udp
+          containerPort: 51413
+          protocol: UDP
       # Jackett
-#      - name: "jackett"
-#        image: "linuxserver/jackett:amd64-latest"
-#        imagePullPolicy: "Always"
-#        env:
-#        - name: PUID
-#          value: "1000"
-#        - name: PGID
-#          value: "1000"
-#        - name: TZ
-#          value: America/New_York
-#        resources:
-#          requests:
-#            cpu: "100m"
-#            memory: "100Mi"
-#          limits:
-#            cpu: "500m"
-#            memory: "1000Mi"
-#        livenessProbe:
-#          exec:
-#            command:
-#            - sh
-#            - -c
-#            - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
-#          initialDelaySeconds: 30
-#          periodSeconds: 60
-#          failureThreshold: 1
-#        readinessProbe:
-#          failureThreshold: 3
-#          initialDelaySeconds: 30
-#          periodSeconds: 2
-#          successThreshold: 2
-#          tcpSocket:
-#            port: jackett-http
-#          timeoutSeconds: 2
-#        volumeMounts:
-#        - mountPath: /config
-#          name: yasr-volume
-#          subPath: configs/jackett
-#        - mountPath: /downloads
-#          name: yasr-volume
-#          subPath: configs/jackett/downloads
-#        ports:
-#        - name: jackett-http
-#          containerPort: 9117
-#          protocol: TCP
+      - name: "jackett"
+        image: "linuxserver/jackett:amd64-latest"
+        imagePullPolicy: "Always"
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: America/New_York
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "100Mi"
+          limits:
+            cpu: "500m"
+            memory: "1000Mi"
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
+          initialDelaySeconds: 45
+          periodSeconds: 60
+          failureThreshold: 1
+          timeoutSeconds: 5
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 30
+          periodSeconds: 2
+          successThreshold: 2
+          tcpSocket:
+            port: jackett-http
+          timeoutSeconds: 2
+        volumeMounts:
+        - mountPath: /config
+          name: yasr-volume
+          subPath: configs/jackett
+        - mountPath: /downloads
+          name: yasr-volume
+          subPath: configs/jackett/downloads
+        ports:
+        - name: jackett-http
+          containerPort: 9117
+          protocol: TCP
       # Sonarr
-#      - name: "sonarr"
-#        image: "linuxserver/sonarr:amd64-latest"
-#        imagePullPolicy: "Always"
-#        env:
-#        - name: PUID
-#          value: "1000"
-#        - name: PGID
-#          value: "1000"
-#        - name: TZ
-#          value: America/New_York
-#        resources:
-#          requests:
-#            cpu: "100m"
-#            memory: "100Mi"
-#          limits:
-#            cpu: "1000m"
-#            memory: "2000Mi"
-#        livenessProbe:
-#          exec:
-#            command:
-#            - sh
-#            - -c
-#            - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
-#          initialDelaySeconds: 30
-#          periodSeconds: 60
-#          failureThreshold: 1
-#        readinessProbe:
-#          failureThreshold: 3
-#          initialDelaySeconds: 10
-#          periodSeconds: 2
-#          successThreshold: 2
-#          tcpSocket:
-#            port: sonarr-http
-#          timeoutSeconds: 2
-#        ports:
-#        - name: sonarr-http
-#          containerPort: 8989
-#          protocol: TCP
+      - name: "sonarr"
+        image: "linuxserver/sonarr:amd64-latest"
+        imagePullPolicy: "Always"
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: America/New_York
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "100Mi"
+          limits:
+            cpu: "1000m"
+            memory: "2000Mi"
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
+          initialDelaySeconds: 45
+          periodSeconds: 60
+          failureThreshold: 1
+          timeoutSeconds: 5
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 2
+          successThreshold: 2
+          tcpSocket:
+            port: sonarr-http
+          timeoutSeconds: 2
+        ports:
+        - name: sonarr-http
+          containerPort: 8989
+          protocol: TCP
       # Radarr
-#      - name: "radarr"
-#        image: "linuxserver/radarr:amd64-latest"
-#        imagePullPolicy: "Always"
-#        env:
-#        - name: PUID
-#          value: "1000"
-#        - name: PGID
-#          value: "1000"
-#        - name: TZ
-#          value: America/New_York
-#        resources:
-#          requests:
-#            cpu: "100m"
-#            memory: "100Mi"
-#          limits:
-#            cpu: "1000m"
-#            memory: "2000Mi"
-#        livenessProbe:
-#          exec:
-#            command:
-#            - sh
-#            - -c
-#            - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
-#          initialDelaySeconds: 30
-#          periodSeconds: 60
-#          failureThreshold: 1
-#        readinessProbe:
-#          failureThreshold: 3
-#          initialDelaySeconds: 10
-#          periodSeconds: 2
-#          successThreshold: 2
-#          tcpSocket:
-#            port: radarr-http
-#          timeoutSeconds: 2
-#        ports:
-#        - name: radarr-http
-#          containerPort: 7878
-#          protocol: TCP
+      - name: "radarr"
+        image: "linuxserver/radarr:amd64-latest"
+        imagePullPolicy: "Always"
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: America/New_York
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "100Mi"
+          limits:
+            cpu: "1000m"
+            memory: "2000Mi"
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
+          initialDelaySeconds: 45
+          periodSeconds: 60
+          failureThreshold: 1
+          timeoutSeconds: 5
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 2
+          successThreshold: 2
+          tcpSocket:
+            port: radarr-http
+          timeoutSeconds: 2
+        ports:
+        - name: radarr-http
+          containerPort: 7878
+          protocol: TCP
       # Prowlarr
-#      - name: prowlarr
-#        image: linuxserver/prowlarr:amd64-1.8.1253
-#        imagePullPolicy: Always
-#        env:
-#        - name: PUID
-#          value: "1000"
-#        - name: PGID
-#          value: "1000"
-#        - name: TZ
-#          value: America/New_York
-#        resources:
-#          requests:
-#            cpu: "100m"
-#            memory: "100Mi"
-#          limits:
-#            cpu: "1000m"
-#            memory: "2000Mi"
-#        livenessProbe:
-#          exec:
-#            command:
-#            - sh
-#            - -c
-#            - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
-#          initialDelaySeconds: 30
-#          periodSeconds: 60
-#          failureThreshold: 1
-#        readinessProbe:
-#          failureThreshold: 3
-#          initialDelaySeconds: 10
-#          periodSeconds: 2
-#          successThreshold: 2
-#          tcpSocket:
-#            port: prowlarr-http
-#          timeoutSeconds: 2
-#        ports:
-#        - name: prowlarr-http
-#          containerPort: 9696
-#          protocol: TCP
-#        volumeMounts:
-#        - mountPath: /config
-#          name: yasr-volume
-#          subPath: configs/prowlarr
+      - name: prowlarr
+        image: linuxserver/prowlarr:amd64-1.8.1253
+        imagePullPolicy: Always
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: America/New_York
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "100Mi"
+          limits:
+            cpu: "1000m"
+            memory: "2000Mi"
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
+          initialDelaySeconds: 45
+          periodSeconds: 60
+          failureThreshold: 1
+          timeoutSeconds: 5
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 2
+          successThreshold: 2
+          tcpSocket:
+            port: prowlarr-http
+          timeoutSeconds: 2
+        ports:
+        - name: prowlarr-http
+          containerPort: 9696
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /config
+          name: yasr-volume
+          subPath: configs/prowlarr
