@@ -10,7 +10,7 @@ spec:
   - name: flux-system
   - name: kube-system
   interval: 10m0s
-  path: ../base/
+  path: /apps/seedbox/base/
   patches:
     - patch: ./deployment.yaml
       target:
