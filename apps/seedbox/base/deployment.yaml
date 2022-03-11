@@ -82,14 +82,14 @@ spec:
             cpu: "500m"
             memory: "1500Mi"
         volumeMounts:
-          - mountPath: /vpn
-            name: yasr-volume
-            subPath: configs/openvpn
-          - mountPath: /dev/net/tun
-            name: dev-tun
-          - mountPath: /tmp/gluetun/
-            name: yasr-volume
-            subPath: configs/transmission/
+        - mountPath: /vpn
+          name: yasr-volume
+          subPath: configs/openvpn
+        - mountPath: /dev/net/tun
+          name: dev-tun
+        - mountPath: /tmp/gluetun/
+          name: yasr-volume
+          subPath: configs/transmission/
 
 
       # Transmission port forward
