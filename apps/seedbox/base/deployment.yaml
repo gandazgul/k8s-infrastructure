@@ -82,15 +82,17 @@ spec:
             cpu: "500m"
             memory: "1500Mi"
         volumeMounts:
-          - mountPath: /vpn
-            name: yasr-volume
-            subPath: configs/openvpn
-          - mountPath: /dev/net/tun
-            name: dev-tun
-          - mountPath: /tmp/gluetun/
-            name: yasr-volume
-            subPath: configs/transmission/
-#      # Transmission port forward
+        - mountPath: /vpn
+          name: yasr-volume
+          subPath: configs/openvpn
+        - mountPath: /dev/net/tun
+          name: dev-tun
+        - mountPath: /tmp/gluetun/
+          name: yasr-volume
+          subPath: configs/transmission/
+
+
+      # Transmission port forward
 #      - name: transmission-pia-port-forward
 #        image: "gandazgul/transmission-pia-port-forward:v318a599"
 #        imagePullPolicy: IfNotPresent
@@ -173,7 +175,7 @@ spec:
 #        - name: 51412-udp
 #          containerPort: 51413
 #          protocol: UDP
-#      # Jackett
+      # Jackett
 #      - name: "jackett"
 #        image: "linuxserver/jackett:amd64-latest"
 #        imagePullPolicy: "Always"
@@ -219,7 +221,7 @@ spec:
 #        - name: jackett-http
 #          containerPort: 9117
 #          protocol: TCP
-#      # Sonarr
+      # Sonarr
 #      - name: "sonarr"
 #        image: "linuxserver/sonarr:amd64-latest"
 #        imagePullPolicy: "Always"
@@ -258,7 +260,7 @@ spec:
 #        - name: sonarr-http
 #          containerPort: 8989
 #          protocol: TCP
-#      # Radarr
+      # Radarr
 #      - name: "radarr"
 #        image: "linuxserver/radarr:amd64-latest"
 #        imagePullPolicy: "Always"
@@ -297,7 +299,7 @@ spec:
 #        - name: radarr-http
 #          containerPort: 7878
 #          protocol: TCP
-#      # Prowlarr
+      # Prowlarr
 #      - name: prowlarr
 #        image: linuxserver/prowlarr:amd64-1.8.1253
 #        imagePullPolicy: Always
