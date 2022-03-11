@@ -90,32 +90,30 @@ spec:
         - mountPath: /tmp/gluetun/
           name: yasr-volume
           subPath: configs/transmission/
-
-
       # Transmission port forward
-#      - name: transmission-pia-port-forward
-#        image: "gandazgul/transmission-pia-port-forward:v318a599"
-#        imagePullPolicy: IfNotPresent
-#        resources:
-#          requests:
-#            cpu: 50m
-#            memory: 50Mi
-#          limits:
-#            cpu: 50m
-#            memory: 50Mi
-#        volumeMounts:
-#        - mountPath: /data
-#          name: yasr-volume
-#          subPath: configs/transmission
-#        - mountPath: /config
-#          name: yasr-volume
-#          subPath: configs/transmission
-#        - mountPath: /watch
-#          name: yasr-volume
-#          subPath: configs/transmission/watch
-#        - mountPath: /etc/localtime
-#          name: tz-config
-#          readOnly: true
+      - name: transmission-pia-port-forward
+        image: "gandazgul/transmission-pia-port-forward:v318a599"
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 50m
+            memory: 50Mi
+          limits:
+            cpu: 50m
+            memory: 50Mi
+        volumeMounts:
+        - mountPath: /data
+          name: yasr-volume
+          subPath: configs/transmission
+        - mountPath: /config
+          name: yasr-volume
+          subPath: configs/transmission
+        - mountPath: /watch
+          name: yasr-volume
+          subPath: configs/transmission/watch
+        - mountPath: /etc/localtime
+          name: tz-config
+          readOnly: true
 #      - name: transmission
 #        image: "linuxserver/transmission:amd64-latest"
 #        imagePullPolicy: "Always"
