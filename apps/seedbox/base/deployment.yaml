@@ -90,89 +90,91 @@ spec:
         - mountPath: /tmp/gluetun/
           name: yasr-volume
           subPath: configs/transmission/
+
+
       # Transmission port forward
-      - name: transmission-pia-port-forward
-        image: "gandazgul/transmission-pia-port-forward:v318a599"
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            cpu: 50m
-            memory: 50Mi
-          limits:
-            cpu: 50m
-            memory: 50Mi
-        volumeMounts:
-        - mountPath: /data
-          name: yasr-volume
-          subPath: configs/transmission
-        - mountPath: /config
-          name: yasr-volume
-          subPath: configs/transmission
-        - mountPath: /watch
-          name: yasr-volume
-          subPath: configs/transmission/watch
-        - mountPath: /etc/localtime
-          name: tz-config
-          readOnly: true
-      - name: transmission
-        image: "linuxserver/transmission:amd64-latest"
-        imagePullPolicy: "Always"
-        env:
-        - name: PGID
-          value: "1000"
-        - name: PUID
-          value: "1000"
-        - name: TRANSMISSION_UMASK
-          value: "2"
-        - name: TZ
-          value: America/New_York
-        resources:
-          requests:
-            cpu: "100m"
-            memory: "100Mi"
-          limits:
-            cpu: "1000m"
-            memory: "2000Mi"
-        livenessProbe:
-          exec:
-            command:
-            - sh
-            - -c
-            - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
-          initialDelaySeconds: 30
-          periodSeconds: 60
-          failureThreshold: 1
-        readinessProbe:
-          failureThreshold: 3
-          initialDelaySeconds: 10
-          periodSeconds: 2
-          successThreshold: 2
-          tcpSocket:
-            port: 9091
-          timeoutSeconds: 2
-        volumeMounts:
-        - mountPath: /data
-          name: yasr-volume
-          subPath: configs/transmission
-        - mountPath: /config
-          name: yasr-volume
-          subPath: configs/transmission
-        - mountPath: /watch
-          name: yasr-volume
-          subPath: configs/transmission/watch
-        - mountPath: /etc/localtime
-          name: tz-config
-          readOnly: true
-        ports:
-        - name: trs-http
-          containerPort: 9091
-          protocol: TCP
-        - name: 51413-tcp
-          containerPort: 51413
-          protocol: TCP
-        - name: 51412-udp
-          containerPort: 51413
-          protocol: UDP
+#      - name: transmission-pia-port-forward
+#        image: "gandazgul/transmission-pia-port-forward:v318a599"
+#        imagePullPolicy: IfNotPresent
+#        resources:
+#          requests:
+#            cpu: 50m
+#            memory: 50Mi
+#          limits:
+#            cpu: 50m
+#            memory: 50Mi
+#        volumeMounts:
+#        - mountPath: /data
+#          name: yasr-volume
+#          subPath: configs/transmission
+#        - mountPath: /config
+#          name: yasr-volume
+#          subPath: configs/transmission
+#        - mountPath: /watch
+#          name: yasr-volume
+#          subPath: configs/transmission/watch
+#        - mountPath: /etc/localtime
+#          name: tz-config
+#          readOnly: true
+#      - name: transmission
+#        image: "linuxserver/transmission:amd64-latest"
+#        imagePullPolicy: "Always"
+#        env:
+#        - name: PGID
+#          value: "1000"
+#        - name: PUID
+#          value: "1000"
+#        - name: TRANSMISSION_UMASK
+#          value: "2"
+#        - name: TZ
+#          value: America/New_York
+#        resources:
+#          requests:
+#            cpu: "100m"
+#            memory: "100Mi"
+#          limits:
+#            cpu: "1000m"
+#            memory: "2000Mi"
+#        livenessProbe:
+#          exec:
+#            command:
+#            - sh
+#            - -c
+#            - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
+#          initialDelaySeconds: 30
+#          periodSeconds: 60
+#          failureThreshold: 1
+#        readinessProbe:
+#          failureThreshold: 3
+#          initialDelaySeconds: 10
+#          periodSeconds: 2
+#          successThreshold: 2
+#          tcpSocket:
+#            port: 9091
+#          timeoutSeconds: 2
+#        volumeMounts:
+#        - mountPath: /data
+#          name: yasr-volume
+#          subPath: configs/transmission
+#        - mountPath: /config
+#          name: yasr-volume
+#          subPath: configs/transmission
+#        - mountPath: /watch
+#          name: yasr-volume
+#          subPath: configs/transmission/watch
+#        - mountPath: /etc/localtime
+#          name: tz-config
+#          readOnly: true
+#        ports:
+#        - name: trs-http
+#          containerPort: 9091
+#          protocol: TCP
+#        - name: 51413-tcp
+#          containerPort: 51413
+#          protocol: TCP
+#        - name: 51412-udp
+#          containerPort: 51413
+#          protocol: UDP
       # Jackett
 #      - name: "jackett"
 #        image: "linuxserver/jackett:amd64-latest"
