@@ -7,8 +7,11 @@ metadata:
 spec:
   dependsOn:
   - name: sealed-secret
+    namespace: flux-system
   - name: flux-system
+    namespace: flux-system
   - name: kube-system
+    namespace: flux-system
   interval: 10m0s
   path: /apps/seedbox/base/
   patches:
