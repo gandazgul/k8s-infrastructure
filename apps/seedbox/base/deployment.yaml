@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/version: "1.0"
 spec:
   replicas: 1
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
       app.kubernetes.io/name: seedbox
@@ -105,12 +106,6 @@ spec:
         - mountPath: /data
           name: yasr-volume
           subPath: configs/transmission
-        - mountPath: /config
-          name: yasr-volume
-          subPath: configs/transmission
-        - mountPath: /watch
-          name: yasr-volume
-          subPath: configs/transmission/watch
         - mountPath: /etc/localtime
           name: tz-config
           readOnly: true
