@@ -141,11 +141,11 @@ spec:
         readinessProbe:
           failureThreshold: 3
           initialDelaySeconds: 10
-          periodSeconds: 2
-          successThreshold: 2
+          periodSeconds: 10
+          successThreshold: 1
           tcpSocket:
             port: 9091
-          timeoutSeconds: 2
+          timeoutSeconds: 30
         volumeMounts:
         - mountPath: /data
           name: yasr-volume
