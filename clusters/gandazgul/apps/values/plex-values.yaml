@@ -8,3 +8,5 @@ persistence:
       mountPath: /data
     - path: gandazgul/Pictures
       mountPath: /pictures
+    - path: renepor/PICTURES
+      mountPath: /rene_pictures
