@@ -90,7 +90,7 @@ spec:
           name: dev-tun
         - mountPath: /tmp/gluetun/
           name: yasr-volume
-          subPath: configs/transmission/
+          subPath: configs/openvpn/
       # Transmission port forward
       - name: transmission-pia-port-forward
         image: "gandazgul/transmission-pia-port-forward:v318a599"
@@ -105,7 +105,7 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: yasr-volume
-          subPath: configs/transmission
+          subPath: configs/openvpn/
         - mountPath: /etc/localtime
           name: tz-config
           readOnly: true
