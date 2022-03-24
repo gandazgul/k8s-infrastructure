@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/version: "1.0"
 spec:
   replicas: 1
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
       app.kubernetes.io/name: seedbox
@@ -89,7 +90,7 @@ spec:
           name: dev-tun
         - mountPath: /tmp/gluetun/
           name: yasr-volume
-          subPath: configs/transmission/
+          subPath: configs/openvpn/
       # Transmission port forward
       - name: transmission-pia-port-forward
         image: "gandazgul/transmission-pia-port-forward:v318a599"
@@ -104,13 +105,7 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: yasr-volume
-          subPath: configs/transmission
-        - mountPath: /config
-          name: yasr-volume
-          subPath: configs/transmission
-        - mountPath: /watch
-          name: yasr-volume
-          subPath: configs/transmission/watch
+          subPath: configs/openvpn/
         - mountPath: /etc/localtime
           name: tz-config
           readOnly: true
@@ -146,11 +141,11 @@ spec:
         readinessProbe:
           failureThreshold: 3
           initialDelaySeconds: 10
-          periodSeconds: 2
-          successThreshold: 2
+          periodSeconds: 10
+          successThreshold: 1
           tcpSocket:
             port: 9091
-          timeoutSeconds: 2
+          timeoutSeconds: 30
         volumeMounts:
         - mountPath: /data
           name: yasr-volume
