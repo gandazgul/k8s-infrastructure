@@ -12,4 +12,5 @@ resources:
 #- ../../../apps/seedbox/rafag/
 #- ../../../apps/Minecraft.yaml
 - ../../../apps/MQTTBroker.yaml
+- ../../../apps/Zigbee2mqtt.yaml
 
