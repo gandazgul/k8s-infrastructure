@@ -24,7 +24,7 @@ spec:
     additionalVolumes:
       - name: usb
         hostPath:
-          path: /dev/ttyUSB0
+          path: /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_e258ac37e35fec11af99305f25bfaa52-if00-port0
     env:
       TZ: "America/New_York"
 #      DATA_FOLDER: "/config/"
