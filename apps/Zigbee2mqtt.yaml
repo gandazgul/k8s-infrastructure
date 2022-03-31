@@ -1,0 +1,60 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: zigbee2mqtt
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: zigbee2mqtt
+      version: 4.3.0
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: flux-system
+      interval: 5m
+  dependsOn:
+  - name: yasr-volume
+  values:
+    additionalVolumeMounts:
+      - name: usb
+        mountPath: /dev/ttyUSB0
+    additionalVolumes:
+      - name: usb
+        hostPath:
+          path: /dev/ttyUSB0
+    env:
+      TZ: "America/New_York"
+      DATA_FOLDER: "/config"
+      WEB_VAULT_ENABLED: true
+      LOG_FILE: "/config/bitwarden.log"
+      # makes the logs more readable
+      ROCKET_CLI_COLORS: off
+      SIGNUPS_ALLOWED: true
+      ADMIN_TOKEN: ${BITWARDEN_ADMIN_TOKEN}
+      INVITATIONS_ALLOWED: true
+      SHOW_PASSWORD_HINT: false
+      DOMAIN: https://p.${INGRESS_EXTERNAL_NAME}
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 587
+      SMTP_FROM: ${EMAIL}
+      SMTP_SSL: true
+      SMTP_USERNAME: ${EMAIL}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+
+      SERVER_ADMIN_EMAIL: ${EMAIL}
+
+      # YUBI key secrets
+#      YUBICO_CLIENT_ID
+#      YUBICO_SECRET_KEY
+      # Limits config: https://api.rocket.rs/v0.4/rocket/config/struct.Limits.html
+      # Used to increase the API upload/post limit, default is 10MB
+#      ROCKET_LIMITS
+      # how many threads are spawn to handle requests. Docker image is set to 10
+    persistence:
+      config:
+        enabled: true
+        existingClaim: yasr-volume
+        subPath: configs/zigbee2mqtt
