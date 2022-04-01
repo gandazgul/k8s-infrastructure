@@ -18,6 +18,8 @@ spec:
   dependsOn:
   - name: yasr-volume
   values:
+    securityContext:
+      privileged: true
     config:
       serial:
         port: /dev/ttyUSB0
