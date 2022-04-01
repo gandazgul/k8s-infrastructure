@@ -21,6 +21,8 @@ spec:
     securityContext:
       privileged: true
     config:
+      mqtt:
+        server: "mqtt://mqtt-broker-mosca"
       serial:
         port: /dev/ttyUSB0
     image:
