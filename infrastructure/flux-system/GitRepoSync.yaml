@@ -7,7 +7,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: main
+    branch: feature/add_zigbee2mqtt
   url: https://github.com/gandazgul/k8s-infrastructure.git
   ignore: |
     clusters/**/apps/values/
