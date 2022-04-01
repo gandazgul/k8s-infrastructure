@@ -31,7 +31,7 @@ spec:
         enabled: true
         existingClaim: yasr-volume
         mountPath: /data
-        subPath: data
+        subPath: configs/zigbee2mqtt
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
