@@ -21,6 +21,7 @@ spec:
     securityContext:
       privileged: true
     config:
+      homeassistant: true
       mqtt:
         server: "mqtt://mqtt-broker-mosca"
       serial:
