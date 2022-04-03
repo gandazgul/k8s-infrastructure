@@ -46,13 +46,13 @@ spec:
       main:
         enabled: true
         hosts:
-        - host: movies1.${INGRESS_INTERNAL_NAME}
+        - host: movies.${INGRESS_INTERNAL_NAME}
           paths:
           - path: /
         tls:
         - hosts:
-          - movies1.${INGRESS_INTERNAL_NAME}
-          secretName: movies1-k8s-cert
+          - movies.${INGRESS_INTERNAL_NAME}
+          secretName: movies-k8s-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
           cert-manager.io/cluster-issuer: "ca-issuer"
