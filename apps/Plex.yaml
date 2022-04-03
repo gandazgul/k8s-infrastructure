@@ -38,8 +38,8 @@ spec:
             nodePort: 32400
             port: 32400
     env:
-    - TZ: "America/New_York"
-    - ADVERTISE_IP: "http://${DYN_DNS_NAME}:32400/,http://${MASTER_IP}:32400/"
+      TZ: "America/New_York"
+      ADVERTISE_IP: "http://${DYN_DNS_NAME}:32400/,http://${MASTER_IP}:32400/"
     persistence:
       config:
         enabled: true
