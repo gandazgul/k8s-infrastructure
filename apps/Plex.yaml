@@ -38,15 +38,15 @@ spec:
             nodePort: 32400
             port: 32400
     env:
-      TZ: "America/New_York"
-      ADVERTISE_IP: "http://${DYN_DNS_NAME}:32400/,http://${MASTER_IP}:32400/"
+    - TZ: "America/New_York"
+    - ADVERTISE_IP: "http://${DYN_DNS_NAME}:32400/,http://${MASTER_IP}:32400/"
     persistence:
       config:
         enabled: true
         type: pvc
         existingClaim: yasr-volume
         subPath: configs/plex
-      ## Data is in the individual plex-values for each cluster
+## Data is in the individual plex-values for each cluster
 #      data:
 #        enabled: true
 #        type: pvc
