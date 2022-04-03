@@ -209,46 +209,6 @@ spec:
         - name: sonarr-http
           containerPort: 8989
           protocol: TCP
-      # Radarr
-      - name: "radarr"
-        image: "linuxserver/radarr:amd64-latest"
-        imagePullPolicy: "Always"
-        env:
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
-        - name: TZ
-          value: America/New_York
-        resources:
-          requests:
-            cpu: "100m"
-            memory: "100Mi"
-          limits:
-            cpu: "1000m"
-            memory: "2000Mi"
-        livenessProbe:
-          exec:
-            command:
-            - sh
-            - -c
-            - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
-          initialDelaySeconds: 45
-          periodSeconds: 60
-          failureThreshold: 1
-          timeoutSeconds: 5
-        readinessProbe:
-          failureThreshold: 3
-          initialDelaySeconds: 10
-          periodSeconds: 2
-          successThreshold: 2
-          tcpSocket:
-            port: radarr-http
-          timeoutSeconds: 2
-        ports:
-        - name: radarr-http
-          containerPort: 7878
-          protocol: TCP
       # Prowlarr
       - name: prowlarr
         image: linuxserver/prowlarr:amd64-1.8.1259
