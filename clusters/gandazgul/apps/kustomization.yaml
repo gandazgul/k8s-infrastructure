@@ -11,6 +11,7 @@ resources:
 - ../../../apps/HomeAssistant.yaml
 - ../../../apps/ZWaveJS2MQTT.yaml
 - ../../../apps/seedbox/gandazgul/
+- ../../../apps/Radarr.yaml
 - ../../../apps/Sharry.yaml
 - ../../../apps/Mealie.yaml
 - ../../../apps/MQTTBroker.yaml
