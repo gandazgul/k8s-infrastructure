@@ -30,9 +30,9 @@ spec:
       tag: amd64-latest
       pullPolicy: Always
     env:
-    - PUID: "1000"
-    - PGID: "1000"
-    - TZ: "America/New_York"
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "America/New_York"
     persistence:
       config:
         enabled: true
