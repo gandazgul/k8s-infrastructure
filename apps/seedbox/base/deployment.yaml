@@ -109,6 +109,7 @@ spec:
         - mountPath: /etc/localtime
           name: tz-config
           readOnly: true
+      # Transmission
       - name: transmission
         image: "linuxserver/transmission:amd64-latest"
         imagePullPolicy: "Always"
