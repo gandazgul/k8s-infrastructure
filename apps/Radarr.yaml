@@ -28,11 +28,11 @@ spec:
       config:
         enabled: true
         existingClaim: yasr-volume
-        subPath: configs/radarr
-      data:
-        enabled: true
-        existingClaim: yasr-volume
-        subPath: configs/transmission
+        subPath:
+          - path: configs/radarr
+            mountPath: /config
+          - path: configs/transmission
+            mountPath: /data
       movies:
         enabled: true
         existingClaim: main-volume
