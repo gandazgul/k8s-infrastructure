@@ -5,33 +5,38 @@ metadata:
   name: radarr
   namespace: default
 spec:
+  interval: 5m
   chart:
     spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: radarr
       version: 16.0.1
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
         namespace: flux-system
+      interval: 5m
   dependsOn:
   - name: yasr-volume
   - name: main-volume
-  interval: 1h0m0s
+  valuesFrom:
+  - kind: Secret
+    name: radarr-values
+    optional: false
+  # All values at https://github.com/k8s-at-home/charts/blob/master/charts/plex/values.yaml
   values:
     image:
-      pullPolicy: Always
-      tag: amd64-latest
       repository: linuxserver/radarr
+      tag: amd64-latest
+      pullPolicy: Always
     env:
-    - name: PUID
-      value: "1000"
-    - name: PGID
-      value: "1000"
-    - name: TZ
-      value: "America/New_York"
+    - PUID: "1000"
+    - PGID: "1000"
+    - TZ: "America/New_York"
     persistence:
       config:
         enabled: true
+        type: pvc
         existingClaim: yasr-volume
         subPath:
         - path: configs/radarr
