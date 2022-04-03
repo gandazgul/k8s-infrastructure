@@ -21,25 +21,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: seedbox-radarr-service
-  labels:
-    app.kubernetes.io/name: seedbox
-    app.kubernetes.io/instance: seedbox
-    app.kubernetes.io/version: "1.0"
-spec:
-  type: ClusterIP
-  ports:
-  - name: radarr-http
-    port: 7878
-    protocol: TCP
-    targetPort: radarr-http
-  selector:
-    app.kubernetes.io/name: seedbox
-    app.kubernetes.io/instance: seedbox
----
-apiVersion: v1
-kind: Service
-metadata:
   name: seedbox-sonarr-service
   labels:
     app.kubernetes.io/name: seedbox
