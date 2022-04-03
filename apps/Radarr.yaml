@@ -20,8 +20,13 @@ spec:
   values:
     image:
       pullPolicy: Always
-      tag: latest
+      tag: amd64-latest
+      repository: linuxserver/radarr
     env:
+    - name: PUID
+      value: "1000"
+    - name: PGID
+      value: "1000"
     - name: TZ
       value: "America/New_York"
     persistence:
@@ -29,10 +34,10 @@ spec:
         enabled: true
         existingClaim: yasr-volume
         subPath:
-          - path: configs/radarr
-            mountPath: /config
-          - path: configs/transmission
-            mountPath: /data
+        - path: configs/radarr
+          mountPath: /config
+        - path: configs/transmission
+          mountPath: /data
       movies:
         enabled: true
         existingClaim: main-volume
