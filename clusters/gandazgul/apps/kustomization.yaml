@@ -13,6 +13,7 @@ resources:
 - ../../../apps/seedbox/gandazgul/
 - ../../../apps/Radarr.yaml
 - ../../../apps/Sonarr.yaml
+- ../../../apps/Prowlarr.yaml
 - ../../../apps/Sharry.yaml
 - ../../../apps/Mealie.yaml
 - ../../../apps/MQTTBroker.yaml
