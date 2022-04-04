@@ -47,13 +47,13 @@ spec:
       main:
         enabled: true
         hosts:
-        - host: tv1.${INGRESS_INTERNAL_NAME}
+        - host: tv.${INGRESS_INTERNAL_NAME}
           paths:
           - path: /
         tls:
         - hosts:
-          - tv1.${INGRESS_INTERNAL_NAME}
-          secretName: tv1-k8s-cert
+          - tv.${INGRESS_INTERNAL_NAME}
+          secretName: tv-k8s-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
           cert-manager.io/cluster-issuer: "ca-issuer"

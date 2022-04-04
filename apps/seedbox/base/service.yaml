@@ -2,44 +2,6 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: seedbox-jackett-service
-  labels:
-    app.kubernetes.io/name: seedbox
-    app.kubernetes.io/instance: seedbox
-    app.kubernetes.io/version: "1.0"
-spec:
-  type: ClusterIP
-  ports:
-  - name: jackett-http
-    port: 9117
-    protocol: TCP
-    targetPort: jackett-http
-  selector:
-    app.kubernetes.io/name: seedbox
-    app.kubernetes.io/instance: seedbox
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: seedbox-sonarr-service
-  labels:
-    app.kubernetes.io/name: seedbox
-    app.kubernetes.io/instance: seedbox
-    app.kubernetes.io/version: "1.0"
-spec:
-  type: ClusterIP
-  ports:
-  - name: sonarr-http
-    port: 8989
-    protocol: TCP
-    targetPort: sonarr-http
-  selector:
-    app.kubernetes.io/name: seedbox
-    app.kubernetes.io/instance: seedbox
----
-apiVersion: v1
-kind: Service
-metadata:
   name: seedbox-transmission-service
   labels:
     app.kubernetes.io/name: seedbox
