@@ -161,9 +161,3 @@ spec:
         - name: trs-http
           containerPort: 9091
           protocol: TCP
-        - name: 51413-tcp
-          containerPort: 51413
-          protocol: TCP
-        - name: 51412-udp
-          containerPort: 51413
-          protocol: UDP
