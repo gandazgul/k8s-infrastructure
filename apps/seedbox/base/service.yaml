@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: seedbox-transmission-service
+  name: transmission
   labels:
     app.kubernetes.io/name: seedbox
     app.kubernetes.io/instance: seedbox
