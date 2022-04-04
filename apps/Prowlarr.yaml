@@ -22,8 +22,7 @@ spec:
   values:
     image:
       repository: linuxserver/prowlarr
-#      tag: amd64-latest
-      tag: amd64-1.8.1259
+      tag: develop
       pullPolicy: Always
     env:
       PUID: "1000"
