@@ -23,6 +23,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: seedbox-transmission-service
+            name: transmission
             port:
               name: trs-http
