@@ -6,7 +6,6 @@ metadata:
   labels:
     app.kubernetes.io/name: seedbox
     app.kubernetes.io/instance: seedbox
-    app.kubernetes.io/version: "1.0"
 spec:
   type: ClusterIP
   ports:
@@ -14,33 +13,6 @@ spec:
     port: 9091
     protocol: TCP
     targetPort: trs-http
-  - name: "51413-tcp"
-    port: 51413
-    targetPort: 51413
-    protocol: TCP
-  - name: "51412-udp"
-    port: 51413
-    targetPort: 51413
-    protocol: UDP
-  selector:
-    app.kubernetes.io/name: seedbox
-    app.kubernetes.io/instance: seedbox
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: seedbox-prowlarr-service
-  labels:
-    app.kubernetes.io/name: seedbox
-    app.kubernetes.io/instance: seedbox
-    app.kubernetes.io/version: "1.0"
-spec:
-  type: ClusterIP
-  ports:
-  - name: prowlarr-http
-    port: 9696
-    protocol: TCP
-    targetPort: prowlarr-http
   selector:
     app.kubernetes.io/name: seedbox
     app.kubernetes.io/instance: seedbox
