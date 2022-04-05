@@ -26,7 +26,6 @@ spec:
       UID: "1000"
       TZ: "America/New_York"
       PHOTOPRISM_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
-      PHOTOPRISM_PUBLIC: true
     persistence:
       config:
         enabled: true
