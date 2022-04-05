@@ -14,4 +14,4 @@ resources:
 - ../../../apps/Sharry.yaml
 - ../../../apps/Mealie.yaml
 - ../../../apps/MQTTBroker.yaml
-- ../../../apps/Homer.yaml
+- ../../../apps/Photoprism.yaml
