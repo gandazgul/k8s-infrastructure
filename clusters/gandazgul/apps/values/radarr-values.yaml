@@ -1,0 +1,6 @@
+persistence:
+  movies:
+    enabled: true
+    type: pvc
+    existingClaim: main-volume
+    subPath: public/Movies
