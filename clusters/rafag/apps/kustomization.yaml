@@ -9,7 +9,10 @@ resources:
 - ../../../apps/Samba.yaml
 - ../../../apps/Bitwarden.yaml
 - ../../../apps/HomeAssistant.yaml
-#- ../../../apps/seedbox/rafag/
-#- ../../../apps/Minecraft.yaml
 - ../../../apps/MQTTBroker.yaml
+- ../../../apps/seedbox/rafag/
+- ../../../apps/Radarr.yaml
+- ../../../apps/Sonarr.yaml
+- ../../../apps/Prowlarr.yaml
+#- ../../../apps/Minecraft.yaml
 
