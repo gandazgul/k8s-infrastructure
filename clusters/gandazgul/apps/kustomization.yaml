@@ -17,6 +17,5 @@ resources:
 - ../../../apps/ZWaveJS2MQTT.yaml
 - ../../../apps/Sharry.yaml
 - ../../../apps/Mealie.yaml
-- ../../../apps/MQTTBroker.yaml
 - ../../../apps/Photoprism.yaml
 - ../../../apps/Paperless.yaml
