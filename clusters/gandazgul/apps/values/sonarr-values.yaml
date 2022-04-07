@@ -1,0 +1,6 @@
+persistence:
+  tv:
+    enabled: true
+    type: pvc
+    existingClaim: main-volume
+    subPath: public/TV
