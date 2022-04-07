@@ -25,6 +25,7 @@ spec:
       USERMAP_UID: "1000"
       USERMAP_GID: "1000"
       PAPERLESS_TIME_ZONE: "America/New_York"
+      PAPERLESS_REDIS: redis://paperless-redis-master:6379
     persistence:
       data:
         enabled: true
