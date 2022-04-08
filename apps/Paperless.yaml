@@ -27,7 +27,7 @@ spec:
       PAPERLESS_REDIS: redis://paperless-redis-master:6379
       PAPERLESS_ADMIN_USER: admin
       PAPERLESS_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
-      PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY}
+      PAPERLESS_SECRET_KEY: "${PAPERLESS_SECRET_KEY}"
     persistence:
       yasr:
         enabled: true
