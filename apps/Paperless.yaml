@@ -15,7 +15,6 @@ spec:
         namespace: flux-system
   dependsOn:
   - name: yasr-volume
-  - name: main-volume
   interval: 1h0m0s
   values:
     image:
@@ -29,16 +28,18 @@ spec:
       PAPERLESS_ADMIN_USER: admin
       PAPERLESS_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     persistence:
-      data:
+      yasr:
         enabled: true
-        mountPath: /usr/src/paperless/data
         existingClaim: yasr-volume
-        subPath: configs/paperless
-      originals:
-        enabled: true
-        mountPath: /photoprism/originals
-        existingClaim: main-volume
-        subPath: gandazgul/Pictures
+        subPath:
+        - path: configs/paperless/data
+          mountPath: /usr/src/paperless/data
+        - path: configs/paperless/consume
+          mountPath: /usr/src/paperless/consume
+        - path: configs/paperless/media
+          mountPath: /usr/src/paperless/media
+        - path: configs/paperless/export
+          mountPath: /usr/src/paperless/export
     redis:
       enabled: true
     ingress:
