@@ -26,6 +26,8 @@ spec:
       USERMAP_GID: "1000"
       PAPERLESS_TIME_ZONE: "America/New_York"
       PAPERLESS_REDIS: redis://paperless-redis-master:6379
+      PAPERLESS_ADMIN_USER: admin
+      PAPERLESS_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     persistence:
       data:
         enabled: true
