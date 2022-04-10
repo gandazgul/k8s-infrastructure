@@ -43,6 +43,9 @@ spec:
           mountPath: /usr/src/paperless/export
     redis:
       enabled: true
+      replica:
+        ## @param replica.replicaCount Number of Redis&trade; replicas to deploy
+        replicaCount: 0
     ingress:
       main:
         enabled: true
