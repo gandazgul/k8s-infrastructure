@@ -32,7 +32,7 @@ spec:
     env:
       PUID: "1000"
       PGID: "1000"
-      TZ: "America/New_York"
+      TZ: "${CLUSTER_TIME_ZONE}"
     persistence:
       config:
         enabled: true

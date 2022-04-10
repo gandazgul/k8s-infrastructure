@@ -24,7 +24,7 @@ spec:
     optional: false
   values:
     env:
-      TZ: "America/New_York"
+      TZ: "${CLUSTER_TIME_ZONE}"
       PUID: "1000"
       PGID: "1000"
     ingress:

@@ -21,7 +21,7 @@ spec:
     image:
       tag: latest
     env:
-      TZ: "America/New_York"
+      TZ: "${CLUSTER_TIME_ZONE}"
     ingress:
       main:
         enabled: true

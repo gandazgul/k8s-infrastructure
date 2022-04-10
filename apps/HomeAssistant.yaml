@@ -23,7 +23,7 @@ spec:
       tag: stable
       pullPolicy: Always
     env:
-      TZ: "America/New_York"
+      TZ: "${CLUSTER_TIME_ZONE}"
     hostNetwork: true
     ingress:
       main:

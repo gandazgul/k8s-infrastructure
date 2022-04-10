@@ -24,7 +24,7 @@ spec:
     env:
       GID: "1000"
       UID: "1000"
-      TZ: "America/New_York"
+      TZ: "${CLUSTER_TIME_ZONE}"
       PHOTOPRISM_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     persistence:
       config:

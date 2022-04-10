@@ -52,7 +52,7 @@ spec:
         - name: OPENVPN_IPV6
           value: "off"
         - name: TZ
-          value: America/New_York
+          value: ${CLUSTER_TIME_ZONE}
         - name: PORT_FORWARDING
           value: "on"
         - name: HTTPPROXY
@@ -118,7 +118,7 @@ spec:
         - name: TRANSMISSION_UMASK
           value: "2"
         - name: TZ
-          value: America/New_York
+          value: ${CLUSTER_TIME_ZONE}
         resources:
           requests:
             cpu: "100m"
