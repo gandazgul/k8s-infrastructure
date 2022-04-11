@@ -14,5 +14,5 @@ resources:
 - ../../../apps/Radarr.yaml
 - ../../../apps/Sonarr.yaml
 - ../../../apps/Prowlarr.yaml
+- ../../../apps/Zigbee2mqtt.yaml
 #- ../../../apps/Minecraft.yaml
-
