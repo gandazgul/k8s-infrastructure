@@ -19,6 +19,7 @@ spec:
   postBuild:
     # constants can be specified like this:
     substitute:
+      PHOTOS_PATH: renepor/PICTURES
       PLEX_TRANSCODE_SIZE: 2Gi
     substituteFrom:
     - kind: Secret

@@ -36,7 +36,7 @@ spec:
         enabled: true
         mountPath: /photoprism/originals
         existingClaim: main-volume
-        subPath: gandazgul/Pictures
+        subPath: ${PHOTOS_PATH}
     ingress:
       main:
         enabled: true
