@@ -25,7 +25,7 @@ spec:
       GID: "1000"
       UID: "1000"
       TZ: "${CLUSTER_TIME_ZONE}"
-      PHOTOPRISM_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      PHOTOPRISM_ADMIN_PASSWORD: ${PHOTOPRISM_ADMIN_PASSWORD:=ADMIN_PASSWORD}
     persistence:
       config:
         enabled: true
