@@ -47,12 +47,14 @@ spec:
       main:
         enabled: true
         hosts:
-        - host: movies.${INGRESS_INTERNAL_NAME}
+#        - host: movies.${INGRESS_INTERNAL_NAME}
+        - host: movies.ravelo.tk
           paths:
           - path: /
         tls:
         - hosts:
-          - movies.${INGRESS_INTERNAL_NAME}
+#          - movies.${INGRESS_INTERNAL_NAME}
+          - movies.ravelo.tk
           secretName: movies-k8s-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
