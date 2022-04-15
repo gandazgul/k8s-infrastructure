@@ -22,8 +22,8 @@ spec:
       pullPolicy: Always
       tag: latest
     env:
-      GID: "1000"
-      UID: "1000"
+      GID: "1003"
+      UID: "1004"
       TZ: "${CLUSTER_TIME_ZONE}"
       PHOTOPRISM_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     persistence:
