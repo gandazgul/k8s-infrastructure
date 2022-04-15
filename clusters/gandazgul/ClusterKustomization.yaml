@@ -20,6 +20,8 @@ spec:
     # constants can be specified like this:
     substitute:
       PHOTOS_PATH: gandazgul/Pictures
+      UID: "1000"
+      GID: "1000"
     substituteFrom:
     # substitutions can also come from a config map or secret
     #    - kind: ConfigMap

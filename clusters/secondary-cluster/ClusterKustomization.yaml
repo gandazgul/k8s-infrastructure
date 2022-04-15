@@ -21,6 +21,8 @@ spec:
     substitute:
       PHOTOS_PATH: renepor/PICTURES
       PLEX_TRANSCODE_SIZE: 2Gi
+      UID: "1003"
+      GID: "1004"
     substituteFrom:
     - kind: Secret
       name: secrets
