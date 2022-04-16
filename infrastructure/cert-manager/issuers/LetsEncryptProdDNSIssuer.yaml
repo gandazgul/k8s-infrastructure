@@ -31,7 +31,7 @@ metadata:
 stringData:
   acmedns.json: |
     {
-      "ravelo.tk": {
+      "${INGRESS_INTERNAL_NAME}": {
         "username": "${ACME_DNS_USERNAME}",
         "password": "${ACME_DNS_PASSWORD}",
         "fulldomain": "${ACME_DNS_SUBDOMAIN}.auth.acme-dns.io",
@@ -47,8 +47,8 @@ metadata:
   namespace: default
 spec:
   dnsNames:
-  - "*.ravelo.tk"
-  - ravelo.tk
+  - "*.${INGRESS_INTERNAL_NAME}"
+  - ${INGRESS_INTERNAL_NAME}
   issuerRef:
     group: cert-manager.io
     kind: ClusterIssuer
