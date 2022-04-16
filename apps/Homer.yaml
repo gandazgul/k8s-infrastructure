@@ -174,7 +174,6 @@ spec:
         tls:
         - hosts:
           - home.${INGRESS_INTERNAL_NAME}
-          secretName: homer-cert
+          secretName: ravelo-tk-le-cert
         annotations:
           kubernetes.io/ingress.class: nginx
-          cert-manager.io/cluster-issuer: ca-issuer

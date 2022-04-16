@@ -47,16 +47,12 @@ spec:
       main:
         enabled: true
         hosts:
-#        - host: movies.${INGRESS_INTERNAL_NAME}
-        - host: movies.ravelo.tk
+        - host: movies.${INGRESS_INTERNAL_NAME}
           paths:
           - path: /
         tls:
         - hosts:
-#          - movies.${INGRESS_INTERNAL_NAME}
-          - movies.ravelo.tk
+          - movies.${INGRESS_INTERNAL_NAME}
           secretName: ravelo-tk-le-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
-#          cert-manager.io/cluster-issuer: "ca-issuer"
-#          cert-manager.io/cluster-issuer: "letsencrypt-dns01-prod"

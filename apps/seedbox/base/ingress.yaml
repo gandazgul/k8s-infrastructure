@@ -7,14 +7,13 @@ metadata:
     app.kubernetes.io/name: seedbox
     app.kubernetes.io/instance: seedbox
   annotations:
-    cert-manager.io/cluster-issuer: ca-issuer
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/app-root: /web/
 spec:
   tls:
   - hosts:
-    - "transmission.${INGRESS_INTERNAL_NAME}"
-    secretName: transmission-k8s-cert
+    - transmission.${INGRESS_INTERNAL_NAME}
+    secretName: ravelo-tk-le-cert
   rules:
   - host: transmission.${INGRESS_INTERNAL_NAME}
     http:
