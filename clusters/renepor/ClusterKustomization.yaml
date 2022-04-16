@@ -10,7 +10,7 @@ spec:
   - name: flux-system
   - name: kube-system
   interval: 10m0s
-  path: ./clusters/secondary-cluster/
+  path: ./clusters/renepor/
   prune: true
   sourceRef:
     kind: GitRepository
