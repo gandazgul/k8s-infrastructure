@@ -47,6 +47,6 @@ spec:
         tls:
         - hosts:
           - photos.${INGRESS_INTERNAL_NAME}
-          secretName: ravelo-tk-le-cert
+          secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"

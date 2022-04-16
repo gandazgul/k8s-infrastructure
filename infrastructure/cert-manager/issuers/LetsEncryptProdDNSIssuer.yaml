@@ -43,7 +43,7 @@ stringData:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: ravelo-tk-le-cert
+  name: internal-ingress-cert
   namespace: default
 spec:
   dnsNames:
@@ -53,7 +53,7 @@ spec:
     group: cert-manager.io
     kind: ClusterIssuer
     name: letsencrypt-dns01-prod
-  secretName: ravelo-tk-le-cert
+  secretName: internal-ingress-cert
   usages:
   - digital signature
   - key encipherment

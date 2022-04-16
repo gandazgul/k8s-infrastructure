@@ -13,7 +13,7 @@ spec:
   tls:
   - hosts:
     - transmission.${INGRESS_INTERNAL_NAME}
-    secretName: ravelo-tk-le-cert
+    secretName: internal-ingress-cert
   rules:
   - host: transmission.${INGRESS_INTERNAL_NAME}
     http:

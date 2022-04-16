@@ -69,7 +69,7 @@ spec:
           tls:
           - hosts:
             - hass-config.${INGRESS_INTERNAL_NAME}
-            secretName: ravelo-tk-le-cert
+            secretName: internal-ingress-cert
         volumeMounts:
         - name: config
           mountPath: /config
