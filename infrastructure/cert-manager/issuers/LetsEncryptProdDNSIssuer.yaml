@@ -14,20 +14,30 @@ spec:
       name: letsencrypt-prod
     # Enable the HTTP-01 challenge provider
     solvers:
-      # An empty 'selector' means that this solver matches all domains
-      - selector: {}
-        dns01:
-          cloudflare:
-            email: ${EMAIL}
-            apiTokenSecretRef:
-              name: cloudflare-api-token-secret
-              key: api-token
+    # An empty 'selector' means that this solver matches all domains
+    - selector: { }
+      dns01:
+        acmeDNS:
+          accountSecretRef:
+            name: auth-acme-dns-io-credentials
+            key: acmedns.json
+          host: auth.acme-dns.io
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: cloudflare-api-token-secret
+  name: auth-acme-dns-io-credentials
   namespace: kube-system
-type: Opaque
 stringData:
-  api-token: ${CLOUDFLARE_API_TOKEN}
+  acmedns.json: |
+    {
+      "ravelo.tk": {
+        {
+          "username": "ab95d72d-688e-448e-9054-160655fbd3f5",
+          "password": "b5dV5XEqUYifS95qZKuWO2aCAl0RkWdbXBeS-340",
+          "fulldomain": "d601ca57-dcfd-4698-ae8b-00b104f486ad.auth.acme-dns.io",
+          "subdomain": "d601ca57-dcfd-4698-ae8b-00b104f486ad",
+          "allowfrom": ["10.85.0.0/16"]
+        }
+      },
+    }
