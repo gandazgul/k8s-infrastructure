@@ -21,7 +21,7 @@ spec:
           accountSecretRef:
             name: auth-acme-dns-io-credentials
             key: acmedns.json
-          host: auth.acme-dns.io
+          host: https://auth.acme-dns.io
 ---
 apiVersion: v1
 kind: Secret
