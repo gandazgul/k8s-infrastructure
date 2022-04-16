@@ -62,7 +62,6 @@ spec:
           enabled: true
           annotations:
             kubernetes.io/ingress.class: "nginx"
-            cert-manager.io/cluster-issuer: "ca-issuer"
           hosts:
           - host: hass-config.${INGRESS_INTERNAL_NAME}
             paths:
@@ -70,25 +69,7 @@ spec:
           tls:
           - hosts:
             - hass-config.${INGRESS_INTERNAL_NAME}
-            secretName: hass-config-k8s-cert
+            secretName: internal-ingress-cert
         volumeMounts:
         - name: config
           mountPath: /config
-
-# do I need this?
-#          - name: deploykey
-#            mountPath: /root/.ssh/id_rsa
-#            subPath: id_rsa
-#    - appdaemon:
-#        enabled: true
-#        ingress:
-#          enabled: true
-#          hosts:
-#          - hass-appdaemon.${INGRESS_INTERNAL_NAME}
-#          tls:
-#          - hosts:
-#            - hass-appdaemon.${INGRESS_INTERNAL_NAME}
-#            secretName: hass-appdaemon-cert
-#          annotations:
-#            kubernetes.io/ingress.class: "nginx"
-#            cert-manager.io/cluster-issuer: "ca-issuer"

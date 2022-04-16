@@ -14,5 +14,6 @@ resources:
 - ../../../apps/Radarr.yaml
 - ../../../apps/Sonarr.yaml
 - ../../../apps/Prowlarr.yaml
+- ../../../apps/Photoprism.yaml
 #- ../../../apps/Minecraft.yaml
 
