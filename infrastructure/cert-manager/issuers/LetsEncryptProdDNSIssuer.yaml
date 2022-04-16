@@ -20,6 +20,13 @@ spec:
           cloudflare:
             email: ${EMAIL}
             apiTokenSecretRef:
-              name: secrets
-              key: CLOUDFLARE_API_TOKEN
-
+              name: cloudflare-api-token-secret
+              key: api-token
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloudflare-api-token-secret
+type: Opaque
+stringData:
+  api-token: ${CLOUDFLARE_API_TOKEN}
