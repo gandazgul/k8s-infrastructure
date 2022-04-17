@@ -42,9 +42,9 @@ spec:
           auth {
             # the fixed module is used for bootstrapping, after the DB is created it should be disabled
             fixed {
-              enabled = true  # set to true to enable this auth provider
+              enabled = false
               user = "admin"
-              password = "${ADMIN_PASSWORD}"
+#              password = "${ADMIN_PASSWORD}"
               order = 10
             }
             # The internal authentication module checks against the internal database.
