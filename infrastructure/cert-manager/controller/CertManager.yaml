@@ -16,3 +16,5 @@ spec:
       interval: 1h
   values:
     installCRDs: true
+    extraArgs:
+      - --max-concurrent-challenges=2

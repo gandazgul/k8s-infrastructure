@@ -25,7 +25,7 @@ spec:
     - name: IMPORT
       value: "/etc/samba/smbpasswd"
     - name: TZ
-      value: "America/New_York"
+      value: "${CLUSTER_TIME_ZONE}"
     persistence:
       config:
         enabled: true

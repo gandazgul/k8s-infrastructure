@@ -21,7 +21,7 @@ spec:
     image:
       tag: latest
     env:
-      TZ: "America/New_York"
+      TZ: "${CLUSTER_TIME_ZONE}"
     ingress:
       main:
         enabled: true
@@ -32,10 +32,9 @@ spec:
         tls:
         - hosts:
           - zwave.${INGRESS_INTERNAL_NAME}
-          secretName: zwave-cert
+          secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "ca-issuer"
     service:
       main:
         ports:

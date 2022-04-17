@@ -85,7 +85,7 @@ spec:
              hosts:
                - map.local
     extraEnv:
-      TZ: "America/New_York"
+      TZ: "${CLUSTER_TIME_ZONE}"
     persistence:
       dataDir:
         enabled: true

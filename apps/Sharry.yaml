@@ -24,7 +24,7 @@ spec:
     optional: false
   values:
     env:
-      TZ: "America/New_York"
+      TZ: "${CLUSTER_TIME_ZONE}"
     # -- Sharry configuration. Supports Helm templates.
     # See [application docs](https://eikek.github.io/sharry/doc/configure) for more details.
     # @default -- See values.yaml

@@ -6,4 +6,5 @@ resources:
 - ../../../apps/K8sDashboard.yaml
 - ../../../apps/Plex.yaml
 - ../../../apps/Resilio.yaml
+- ../../../apps/Photoprism.yaml
 - ../../../apps/Samba.yaml

@@ -22,9 +22,9 @@ spec:
       pullPolicy: Always
       tag: latest
     env:
-      GID: "1000"
-      UID: "1000"
-      TZ: "America/New_York"
+      UID: "${UID}"
+      GID: "${GID}"
+      TZ: "${CLUSTER_TIME_ZONE}"
       PHOTOPRISM_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     persistence:
       config:
@@ -36,7 +36,7 @@ spec:
         enabled: true
         mountPath: /photoprism/originals
         existingClaim: main-volume
-        subPath: gandazgul/Pictures
+        subPath: ${PHOTOS_PATH}
     ingress:
       main:
         enabled: true
@@ -47,7 +47,6 @@ spec:
         tls:
         - hosts:
           - photos.${INGRESS_INTERNAL_NAME}
-          secretName: photos-k8s-cert
+          secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "ca-issuer"
