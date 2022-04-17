@@ -40,15 +40,31 @@ spec:
             mode = "closed"
           }
           auth {
+            # the fixed module is used for bootstrapping, after the DB is created it should be disabled
             fixed {
               enabled = true  # set to true to enable this auth provider
               user = "admin"
               password = "${ADMIN_PASSWORD}"
               order = 10
             }
+            # The internal authentication module checks against the internal database.
+            internal {
+              enabled = true
+              order = 50
+            }
+          }
+          jdbc {
+            url = "jdbc:h2://config/sharry.db;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE"
+            user = "sa"
+            password = ""
           }
         }
       }
+    persistence:
+      config:
+        enabled: true
+        existingClaim: yasr-volume
+        subPath: configs/sharry
     ingress:
       main:
         enabled: true
