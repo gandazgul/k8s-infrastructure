@@ -40,6 +40,13 @@ spec:
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
       ADVERTISE_IP: "http://${DYN_DNS_NAME}:32400/,http://${MASTER_IP}:32400/"
+    probes:
+      liveness:
+        enabled: false
+      readiness:
+        enabled: false
+      startup:
+        enabled: false
     persistence:
       config:
         enabled: true
@@ -65,3 +72,16 @@ spec:
       requests:
         cpu: 35m
         memory: 1500Mi
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      # Hardware acceleration using an Intel iGPU w/ QuickSync
+      # These IDs below should be matched to your `video` and `render` group on the host
+      # To obtain those IDs run the following grep statement on the host:
+      # $ cat /etc/group | grep "video\|render"
+      # video:x:44:
+      # render:x:109:
+      supplementalGroups:
+       - 39
+       - 998
