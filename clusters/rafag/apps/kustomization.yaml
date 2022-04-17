@@ -15,5 +15,5 @@ resources:
 - ../../../apps/Sonarr.yaml
 - ../../../apps/Prowlarr.yaml
 - ../../../apps/Photoprism.yaml
+- ../../../apps/Zigbee2mqtt.yaml
 #- ../../../apps/Minecraft.yaml
-
