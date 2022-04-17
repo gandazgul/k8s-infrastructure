@@ -58,6 +58,42 @@ spec:
             user = "sa"
             password = ""
           }
+          mail {
+            # Enable/Disable the mail feature.
+            enabled = true
+            # The SMTP settings that are used to sent mails with.
+            smtp {
+              # Host and port of the SMTP server
+              host = "smtp.gmail.com"
+              port = 587
+      
+              # User credentials to authenticate at the server. If the user
+              # is empty, mails are sent without authentication.
+              user = "${EMAIL}"
+              password = "${SMTP_PASSWORD}"
+      
+              # One of: none, starttls, ssl
+              ssl-type = "starttls"
+      
+              # In case of self-signed certificates or other problems like
+              # that, checking certificates can be disabled.
+              check-certificates = true
+      
+              # Timeout for mail commands.
+              timeout = "10 seconds"
+      
+              # The default mail address used for the `From' field.
+              #
+              # If left empty, the e-mail address of the current user is used.
+              default-from = ""
+      
+              # When creating mails, the List-Id header is set to this value.
+              #
+              # This helps identifying these mails in muas. If it is empty,
+              # the header is not set.
+              list-id = "Sharry"
+            }
+          }
         }
       }
     persistence:
