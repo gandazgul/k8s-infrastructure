@@ -49,14 +49,9 @@ spec:
 #        replicaCount: 0
     postgresql:
       enabled: true
-      podSecurityContext:
+      securityContext:
         enabled: true
         fsGroup: 1000
-        ## Container Security Context
-        ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
-        ## @param primary.containerSecurityContext.enabled Enable container security context
-        ## @param primary.containerSecurityContext.runAsUser User ID for the container
-        ##
       containerSecurityContext:
         enabled: true
         runAsUser: 1000
