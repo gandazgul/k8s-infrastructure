@@ -40,7 +40,7 @@ installFlux() {
     exit 1
   fi
 
-  if ! kubectl apply -f "$REPO_ROOT"/infrastructure/flux-system/GitRepoSync.yaml; then
+  if ! kubectl apply -f "$REPO_ROOT"/infrastructure/setup/GitRepoSync.yaml; then
     echo -e "Flux did not install correctly, aborting!"
     exit 1
   fi
