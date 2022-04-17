@@ -25,7 +25,6 @@ spec:
   values:
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
-    # -- Sharry configuration. Supports Helm templates.
     # See [application docs](https://eikek.github.io/sharry/doc/configure) for more details.
     # @default -- See values.yaml
     config: |
@@ -44,7 +43,7 @@ spec:
             fixed {
               enabled = false
               user = "admin"
-#              password = "${ADMIN_PASSWORD}"
+              # password = "${ADMIN_PASSWORD}"
               order = 10
             }
             # The internal authentication module checks against the internal database.
