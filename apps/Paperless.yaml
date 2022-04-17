@@ -46,6 +46,16 @@ spec:
       replica:
         ## @param replica.replicaCount Number of Redis&trade; replicas to deploy
         replicaCount: 0
+    postgresql:
+      enabled: true
+      postgresqlUsername: paperless
+      postgresqlPassword: paperless
+      postgresqlDatabase: paperless
+      persistence:
+        enabled: true
+        existingClaim: yasr-volume
+        mountPath: /bitnami/postgresql
+        subPath: configs/paperless/database
     ingress:
       main:
         enabled: true
