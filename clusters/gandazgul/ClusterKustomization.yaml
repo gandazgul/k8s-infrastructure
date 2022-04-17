@@ -18,9 +18,10 @@ spec:
   validation: client
   postBuild:
     # constants can be specified like this:
-    #    substitute:
-    #      cluster_env: "prod"
-    #      cluster_region: "eu-central-1"
+    substitute:
+      PHOTOS_PATH: gandazgul/Pictures
+      UID: "1000"
+      GID: "1000"
     substituteFrom:
     # substitutions can also come from a config map or secret
     #    - kind: ConfigMap
