@@ -35,10 +35,9 @@ spec:
         tls:
         - hosts:
           - hass.${INGRESS_EXTERNAL_NAME}
-          secretName: hass-cert
+          secretName: external-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "letsencrypt-prod"
           nginx.org/websocket-services: home-assistant
     persistence:
       config:
