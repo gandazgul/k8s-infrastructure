@@ -48,6 +48,7 @@ spec:
         - host: sftp.${INGRESS_INTERNAL_NAME}
           paths:
           - path: /
+            pathType: ImplementationSpecific
         tls:
         - hosts:
           - sftp.${INGRESS_INTERNAL_NAME}
@@ -60,6 +61,7 @@ spec:
         - host: sftp-api.${INGRESS_INTERNAL_NAME}
           paths:
           - path: /
+            pathType: ImplementationSpecific
         tls:
         - hosts:
           - sftp-api.${INGRESS_INTERNAL_NAME}
