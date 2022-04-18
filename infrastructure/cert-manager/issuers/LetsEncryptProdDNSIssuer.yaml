@@ -37,6 +37,13 @@ stringData:
         "fulldomain": "${ACME_DNS_SUBDOMAIN}.auth.acme-dns.io",
         "subdomain": "${ACME_DNS_SUBDOMAIN}",
         "allowfrom": []
+      },
+      "${INGRESS_EXTERNAL_NAME}": {
+        "username": "${ACME_DNS_USERNAME}",
+        "password": "${ACME_DNS_PASSWORD}",
+        "fulldomain": "${ACME_DNS_SUBDOMAIN}.auth.acme-dns.io",
+        "subdomain": "${ACME_DNS_SUBDOMAIN}",
+        "allowfrom": []
       }
     }
 ---
@@ -54,6 +61,24 @@ spec:
     kind: ClusterIssuer
     name: letsencrypt-dns01-prod
   secretName: internal-ingress-cert
+  usages:
+  - digital signature
+  - key encipherment
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: external-ingress-cert
+  namespace: default
+spec:
+  dnsNames:
+  - "*.${INGRESS_EXTERNAL_NAME}"
+  - ${INGRESS_EXTERNAL_NAME}
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-dns01-prod
+  secretName: external-ingress-cert
   usages:
   - digital signature
   - key encipherment
