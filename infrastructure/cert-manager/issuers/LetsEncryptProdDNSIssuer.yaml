@@ -51,7 +51,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: internal-ingress-cert
-  namespace: default
+  namespace: kube-system
 spec:
   dnsNames:
   - "*.${INGRESS_INTERNAL_NAME}"
@@ -65,11 +65,24 @@ spec:
   - digital signature
   - key encipherment
 ---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: internal-dummy-ingress-to-load-certificates
+  namespace: kube-system
+spec:
+  tls:
+  - hosts:
+    - "*.${INGRESS_INTERNAL_NAME}"
+    secretName: internal-ingress-cert
+  rules:
+  - host: "*.${INGRESS_INTERNAL_NAME}"
+---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: external-ingress-cert
-  namespace: default
+  namespace: kube-system
 spec:
   dnsNames:
   - "*.${INGRESS_EXTERNAL_NAME}"
@@ -82,3 +95,16 @@ spec:
   usages:
   - digital signature
   - key encipherment
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: external-dummy-ingress-to-load-certificates
+  namespace: kube-system
+spec:
+  tls:
+  - hosts:
+    - "*.${INGRESS_EXTERNAL_NAME}"
+    secretName: external-ingress-cert
+  rules:
+  - host: "*.${INGRESS_EXTERNAL_NAME}"
