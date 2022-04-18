@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: no-ip
-  namespace: kube-system
+  namespace: default
   labels:
     app.kubernetes.io/name: no-ip
 spec:
