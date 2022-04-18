@@ -37,6 +37,13 @@ stringData:
         "fulldomain": "${ACME_DNS_SUBDOMAIN}.auth.acme-dns.io",
         "subdomain": "${ACME_DNS_SUBDOMAIN}",
         "allowfrom": []
+      },
+      "${INGRESS_EXTERNAL_NAME}": {
+        "username": "${ACME_DNS_USERNAME}",
+        "password": "${ACME_DNS_PASSWORD}",
+        "fulldomain": "${ACME_DNS_SUBDOMAIN}.auth.acme-dns.io",
+        "subdomain": "${ACME_DNS_SUBDOMAIN}",
+        "allowfrom": []
       }
     }
 ---
@@ -44,7 +51,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: internal-ingress-cert
-  namespace: default
+  namespace: kube-system
 spec:
   dnsNames:
   - "*.${INGRESS_INTERNAL_NAME}"
@@ -57,3 +64,47 @@ spec:
   usages:
   - digital signature
   - key encipherment
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: internal-dummy-ingress-to-load-certificates
+  namespace: kube-system
+spec:
+  tls:
+  - hosts:
+    - "*.${INGRESS_INTERNAL_NAME}"
+    secretName: internal-ingress-cert
+  rules:
+  - host: "*.${INGRESS_INTERNAL_NAME}"
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: external-ingress-cert
+  namespace: kube-system
+spec:
+  dnsNames:
+  - "*.${INGRESS_EXTERNAL_NAME}"
+  - ${INGRESS_EXTERNAL_NAME}
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-dns01-prod
+  secretName: external-ingress-cert
+  usages:
+  - digital signature
+  - key encipherment
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: external-dummy-ingress-to-load-certificates
+  namespace: kube-system
+spec:
+  tls:
+  - hosts:
+    - "*.${INGRESS_EXTERNAL_NAME}"
+    secretName: external-ingress-cert
+  rules:
+  - host: "*.${INGRESS_EXTERNAL_NAME}"
