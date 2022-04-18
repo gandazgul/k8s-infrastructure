@@ -19,3 +19,4 @@ resources:
 - ../../../apps/Mealie.yaml
 - ../../../apps/Photoprism.yaml
 - ../../../apps/Paperless.yaml
+- ../../../apps/SFTPGo.yaml
