@@ -17,14 +17,13 @@ spec:
     name: flux-system
   validation: client
   postBuild:
-    # constants can be specified like this:
     substitute:
       PHOTOS_PATH: renepor/PICTURES
+      PHOTOS_UID: "1003"
+      PHOTOS_GID: "1004"
       PLEX_TRANSCODE_SIZE: 2Gi
-      UID: "1003"
-      GID: "1004"
+      # The time zone to apply to all containers
+      CLUSTER_TIME_ZONE: America/New_York
     substituteFrom:
     - kind: Secret
       name: secrets
-
-  # use ${var:=default} or ${var} in the files to place variables
