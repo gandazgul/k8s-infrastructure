@@ -33,22 +33,6 @@ spec:
       PAPERLESS_ADMIN_USER: admin
       PAPERLESS_ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
       PAPERLESS_SECRET_KEY: "${PAPERLESS_SECRET_KEY}"
-    persistence:
-      main:
-        enabled: true
-        existingClaim: main-volume
-        mountPath: /usr/src/paperless/consume
-        subPath: "btsync/Carlos' Documents/PaperlessConsumer"
-      yasr:
-        enabled: true
-        existingClaim: yasr-volume
-        subPath:
-        - path: configs/paperless/data
-          mountPath: /usr/src/paperless/data
-        - path: configs/paperless/media
-          mountPath: /usr/src/paperless/media
-        - path: configs/paperless/export
-          mountPath: /usr/src/paperless/export
     redis:
       enabled: true
       architecture: standalone
