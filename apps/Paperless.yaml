@@ -16,6 +16,10 @@ spec:
   dependsOn:
   - name: yasr-volume
   - name: main-volume
+  valuesFrom:
+    - kind: Secret
+      name: paperless-values
+      optional: false
   interval: 1h0m0s
   values:
     image:
