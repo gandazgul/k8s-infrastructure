@@ -16,4 +16,5 @@ resources:
 - ../../../apps/Prowlarr.yaml
 - ../../../apps/Photoprism.yaml
 - ../../../apps/Zigbee2mqtt.yaml
+- ../../../apps/Paperless.yaml
 #- ../../../apps/Minecraft.yaml
