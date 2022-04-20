@@ -10,11 +10,12 @@ resources:
 - ../../../apps/Bitwarden.yaml
 - ../../../apps/HomeAssistant.yaml
 - ../../../apps/MQTTBroker.yaml
-- ../../../apps/seedbox/rafag/
+- ../../../apps/transmission/rafag/
 - ../../../apps/Radarr.yaml
 - ../../../apps/Sonarr.yaml
 - ../../../apps/Prowlarr.yaml
 - ../../../apps/Photoprism.yaml
 - ../../../apps/Zigbee2mqtt.yaml
 - ../../../apps/Paperless.yaml
+- ../../../apps/SFTPGo.yaml
 #- ../../../apps/Minecraft.yaml
