@@ -60,6 +60,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: sftpgo-webdav
+  namespace: default
   labels:
     app.kubernetes.io/name: sftpgo-webdav
 spec:
