@@ -19,8 +19,8 @@ spec:
   postBuild:
     substitute:
       PHOTOS_PATH: rafag/photos
-      UID: "1000"
-      GID: "1000"
+      PHOTOS_UID: "1000"
+      PHOTOS_GID: "1000"
     # constants can be specified like this:
     #    substitute:
     #      cluster_env: "prod"
