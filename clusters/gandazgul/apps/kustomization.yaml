@@ -10,7 +10,7 @@ resources:
 - ../../../apps/Bitwarden.yaml
 - ../../../apps/HomeAssistant.yaml
 - ../../../apps/MQTTBroker.yaml
-- ../../../apps/seedbox/gandazgul/
+- ../../../apps/transmission/gandazgul/
 - ../../../apps/Radarr.yaml
 - ../../../apps/Sonarr.yaml
 - ../../../apps/Prowlarr.yaml
@@ -19,3 +19,4 @@ resources:
 - ../../../apps/Mealie.yaml
 - ../../../apps/Photoprism.yaml
 - ../../../apps/Paperless.yaml
+- ../../../apps/SFTPGo.yaml

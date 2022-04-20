@@ -2,23 +2,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: seedbox
+  name: transmission
   labels:
-    app.kubernetes.io/name: seedbox
-    app.kubernetes.io/instance: seedbox
-    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/name: transmission
 spec:
   replicas: 1
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app.kubernetes.io/name: seedbox
-      app.kubernetes.io/instance: seedbox
+      app.kubernetes.io/name: transmission
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: seedbox
-        app.kubernetes.io/instance: seedbox
+        app.kubernetes.io/name: transmission
     spec:
       volumes:
       - name: yasr-volume

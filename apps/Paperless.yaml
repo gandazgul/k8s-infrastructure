@@ -47,9 +47,6 @@ spec:
     redis:
       enabled: true
       architecture: standalone
-#      replica:
-        ## @param replica.replicaCount Number of Redis&trade; replicas to deploy
-#        replicaCount: 0
     postgresql:
       enabled: true
       securityContext:
