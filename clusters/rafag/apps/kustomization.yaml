@@ -17,4 +17,5 @@ resources:
 - ../../../apps/Photoprism.yaml
 - ../../../apps/Zigbee2mqtt.yaml
 - ../../../apps/Paperless.yaml
+- ../../../apps/SFTPGo.yaml
 #- ../../../apps/Minecraft.yaml
