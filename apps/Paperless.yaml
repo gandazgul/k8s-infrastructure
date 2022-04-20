@@ -15,6 +15,11 @@ spec:
         namespace: flux-system
   dependsOn:
   - name: yasr-volume
+  - name: main-volume
+  valuesFrom:
+    - kind: Secret
+      name: paperless-values
+      optional: false
   interval: 1h0m0s
   values:
     image:
@@ -35,17 +40,32 @@ spec:
         subPath:
         - path: configs/paperless/data
           mountPath: /usr/src/paperless/data
-        - path: configs/paperless/consume
-          mountPath: /usr/src/paperless/consume
         - path: configs/paperless/media
           mountPath: /usr/src/paperless/media
         - path: configs/paperless/export
           mountPath: /usr/src/paperless/export
     redis:
       enabled: true
-      replica:
+      architecture: standalone
+#      replica:
         ## @param replica.replicaCount Number of Redis&trade; replicas to deploy
-        replicaCount: 0
+#        replicaCount: 0
+    postgresql:
+      enabled: true
+      securityContext:
+        enabled: true
+        fsGroup: 1000
+      containerSecurityContext:
+        enabled: true
+        runAsUser: 1000
+      postgresqlUsername: paperless
+      postgresqlPassword: paperless
+      postgresqlDatabase: paperless
+      persistence:
+        enabled: true
+        existingClaim: yasr-volume
+        mountPath: /bitnami/postgresql
+        subPath: configs/paperless/database
     ingress:
       main:
         enabled: true

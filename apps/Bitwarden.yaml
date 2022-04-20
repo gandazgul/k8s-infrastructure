@@ -62,7 +62,6 @@ spec:
         tls:
         - hosts:
           - p.${INGRESS_EXTERNAL_NAME}
-          secretName: bitwarden-cert
+          secretName: external-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "letsencrypt-prod"
