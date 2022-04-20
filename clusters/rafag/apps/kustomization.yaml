@@ -18,4 +18,5 @@ resources:
 - ../../../apps/Zigbee2mqtt.yaml
 - ../../../apps/Paperless.yaml
 - ../../../apps/SFTPGo.yaml
+- ../../../apps/MQTTAedes.yaml
 #- ../../../apps/Minecraft.yaml

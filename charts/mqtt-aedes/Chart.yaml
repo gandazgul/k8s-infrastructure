@@ -1,5 +1,5 @@
 apiVersion: v2
-name: mqtt-aedes
+name: aedes
 description: A Helm chart for MQTT Mosca Aedes
 
 # A chart can be either an 'application' or a 'library' chart.

@@ -1,0 +1,19 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: mqtt-aedes
+  namespace: default
+spec:
+  chart:
+    spec:
+      chart: ./charts/aedes
+      version: 0.1.0
+      sourceRef:
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+  interval: 1h0m0s
+  values:
+    service:
+      type: NodePort
