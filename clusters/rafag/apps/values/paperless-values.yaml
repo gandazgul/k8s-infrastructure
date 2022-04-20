@@ -3,4 +3,4 @@ persistence:
     enabled: true
     existingClaim: main-volume
     mountPath: /usr/src/paperless/consume
-    subPath: "rafag/personal' Documents/PaperlessConsumer"
+    subPath: "rafag/PaperlessConsumer"
