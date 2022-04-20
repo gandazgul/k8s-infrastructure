@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "mqtt-aedes.fullname" . }}
+  name: {{ include "aedes.fullname" . }}
   labels:
-    {{- include "mqtt-aedes.labels" . | nindent 4 }}
+    {{- include "aedes.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "mqtt-aedes.selectorLabels" . | nindent 6 }}
+      {{- include "aedes.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "mqtt-aedes.selectorLabels" . | nindent 8 }}
+        {{- include "aedes.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "mqtt-aedes.serviceAccountName" . }}
+      serviceAccountName: {{ include "aedes.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
