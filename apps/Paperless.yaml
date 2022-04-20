@@ -16,6 +16,10 @@ spec:
   dependsOn:
   - name: yasr-volume
   - name: main-volume
+  valuesFrom:
+    - kind: Secret
+      name: paperless-values
+      optional: false
   interval: 1h0m0s
   values:
     image:
@@ -30,11 +34,6 @@ spec:
       PAPERLESS_ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
       PAPERLESS_SECRET_KEY: "${PAPERLESS_SECRET_KEY}"
     persistence:
-      main:
-        enabled: true
-        existingClaim: main-volume
-        mountPath: /usr/src/paperless/consume
-        subPath: "btsync/Carlos' Documents/PaperlessConsumer"
       yasr:
         enabled: true
         existingClaim: yasr-volume
@@ -48,9 +47,6 @@ spec:
     redis:
       enabled: true
       architecture: standalone
-#      replica:
-        ## @param replica.replicaCount Number of Redis&trade; replicas to deploy
-#        replicaCount: 0
     postgresql:
       enabled: true
       securityContext:
