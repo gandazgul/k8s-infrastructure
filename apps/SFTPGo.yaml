@@ -29,8 +29,8 @@ spec:
       enabled: true
     config:
       data_provider:
-        drive: 'sqlite'
-        sqlite: 'db.sqlite'
+        driver: 'sqlite'
+        name: '/config/db.sqlite'
         prefer_database_credentials: true
     volumes:
     - name: main-volume
@@ -42,6 +42,9 @@ spec:
     volumeMounts:
     - mountPath: /data
       name: main-volume
+    - mountPath: /config
+      name: yasr-volume
+      subPath: configs/sftpgo
     ui:
       ingress:
         enabled: true
