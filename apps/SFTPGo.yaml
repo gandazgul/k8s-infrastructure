@@ -28,8 +28,10 @@ spec:
     httpd:
       enabled: true
     config:
-      sftpd:
-        max_auth_retries: 10
+      data_provider:
+        drive: 'sqlite'
+        sqlite: 'db.sqlite'
+        prefer_database_credentials: true
     volumes:
     - name: main-volume
       persistentVolumeClaim:
@@ -53,16 +55,27 @@ spec:
         - hosts:
           - sftp.${INGRESS_INTERNAL_NAME}
           secretName: internal-ingress-cert
-    api:
-      ingress:
-        enabled: true
-        className: nginx
-        hosts:
-        - host: sftp-api.${INGRESS_INTERNAL_NAME}
-          paths:
-          - path: /
-            pathType: ImplementationSpecific
-        tls:
-        - hosts:
-          - sftp-api.${INGRESS_INTERNAL_NAME}
-          secretName: internal-ingress-cert
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sftpgo-webdav
+  labels:
+    app.kubernetes.io/name: sftpgo-webdav
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - webdav.${INGRESS_INTERNAL_NAME}
+    secretName: internal-ingress-cert
+  rules:
+  - host: webdav.${INGRESS_INTERNAL_NAME}
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: sftpgo
+            port:
+              name: webdav
