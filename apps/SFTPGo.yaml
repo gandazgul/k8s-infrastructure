@@ -80,3 +80,28 @@ spec:
             name: sftpgo
             port:
               name: webdav
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sftpgo-sftp
+  namespace: default
+  labels:
+    app.kubernetes.io/name: sftpgo-sftp
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - sftp.${INGRESS_INTERNAL_NAME}
+    secretName: internal-ingress-cert
+  rules:
+  - host: sftp.${INGRESS_INTERNAL_NAME}
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: sftpgo
+            port:
+              name: sftp
