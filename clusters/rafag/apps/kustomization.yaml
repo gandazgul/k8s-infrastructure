@@ -9,7 +9,7 @@ resources:
 - ../../../apps/Samba.yaml
 - ../../../apps/Bitwarden.yaml
 - ../../../apps/HomeAssistant.yaml
-#- ../../../apps/MQTTBroker.yaml
+- ../../../apps/MQTTBroker.yaml
 - ../../../apps/transmission/rafag/
 - ../../../apps/Radarr.yaml
 - ../../../apps/Sonarr.yaml
@@ -18,5 +18,5 @@ resources:
 - ../../../apps/Zigbee2mqtt.yaml
 - ../../../apps/Paperless.yaml
 - ../../../apps/SFTPGo.yaml
-- ../../../apps/MQTTAedes.yaml
+#- ../../../apps/MQTTAedes.yaml
 #- ../../../apps/Minecraft.yaml
