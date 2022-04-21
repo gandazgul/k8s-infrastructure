@@ -16,4 +16,4 @@ spec:
   interval: 1h0m0s
   values:
     service:
-      type: NodePort
+      type: ClusterIP
