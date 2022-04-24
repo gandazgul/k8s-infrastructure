@@ -14,3 +14,12 @@ spec:
         name: flux-system
         namespace: flux-system
   interval: 1h0m0s
+  values:
+    volumes:
+    - name: config
+      persistentVolumeClaim:
+        claimName: yasr-volume
+    volumeMounts:
+    - name: config
+      mountPath: /config
+      subPath: configs/mqtt-aedes
