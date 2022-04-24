@@ -6,11 +6,11 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - name: http
+    - name: mqtt
       port: {{ .Values.service.port }}
       {{- if contains "NodePort" .Values.service.type }}
       nodePort: {{ .Values.service.port }}
       {{- end }}
-      targetPort: http
+      targetPort: mqtt
       protocol: TCP
   selector: {{- include "helpers.selectorLabels" . | nindent 4 }}
