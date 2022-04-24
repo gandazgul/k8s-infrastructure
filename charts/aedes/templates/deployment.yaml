@@ -35,16 +35,16 @@ spec:
         - name: mqtt
           containerPort: 1883
           protocol: TCP
-        readinessProbe:
-          tcpSocket:
-            port: mqtt
-          initialDelaySeconds: 10
-          periodSeconds: 10
-        livenessProbe:
-          tcpSocket:
-            port: mqtt
-          initialDelaySeconds: 15
-          periodSeconds: 20
+{{/*        readinessProbe:*/}}
+{{/*          tcpSocket:*/}}
+{{/*            port: mqtt*/}}
+{{/*          initialDelaySeconds: 10*/}}
+{{/*          periodSeconds: 10*/}}
+{{/*        livenessProbe:*/}}
+{{/*          tcpSocket:*/}}
+{{/*            port: mqtt*/}}
+{{/*          initialDelaySeconds: 15*/}}
+{{/*          periodSeconds: 20*/}}
         {{- if .Values.env }}
         env: {{ toYaml .Values.env | nindent 12 }}
         {{- end }}
