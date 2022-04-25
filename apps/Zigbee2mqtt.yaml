@@ -23,7 +23,7 @@ spec:
     config:
       homeassistant: true
       mqtt:
-        server: "mqtt://aedes"
+        server: "mqtt://mqtt-broker-mosca"
       serial:
         port: /dev/ttyUSB0
     image:
