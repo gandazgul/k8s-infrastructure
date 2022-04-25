@@ -29,11 +29,22 @@ spec:
       - name: {{ .Chart.Name }}
         securityContext: {{ toYaml .Values.securityContext | nindent 12 }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        command: [--config /config/config.js]
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
-        - name: http
+        - name: mqtt
           containerPort: 1883
           protocol: TCP
+{{/*        readinessProbe:*/}}
+{{/*          tcpSocket:*/}}
+{{/*            port: mqtt*/}}
+{{/*          initialDelaySeconds: 10*/}}
+{{/*          periodSeconds: 10*/}}
+{{/*        livenessProbe:*/}}
+{{/*          tcpSocket:*/}}
+{{/*            port: mqtt*/}}
+{{/*          initialDelaySeconds: 15*/}}
+{{/*          periodSeconds: 20*/}}
         {{- if .Values.env }}
         env: {{ toYaml .Values.env | nindent 12 }}
         {{- end }}
