@@ -23,3 +23,5 @@ spec:
     - name: config
       mountPath: /config
       subPath: configs/mqtt-aedes
+    service:
+      type: NodePort
