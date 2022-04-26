@@ -29,7 +29,7 @@ spec:
       ADMIN_TOKEN: ${BITWARDEN_ADMIN_TOKEN}
       INVITATIONS_ALLOWED: true
       SHOW_PASSWORD_HINT: false
-      DOMAIN: https://p.${INGRESS_EXTERNAL_NAME}
+      DOMAIN: https://p.${INGRESS_INTERNAL_NAME}
       SMTP_HOST: smtp.gmail.com
       SMTP_PORT: 587
       SMTP_FROM: ${EMAIL}
@@ -56,12 +56,12 @@ spec:
       main:
         enabled: true
         hosts:
-        - host: p.${INGRESS_EXTERNAL_NAME}
+        - host: p.${INGRESS_INTERNAL_NAME}
           paths:
           - path: /
         tls:
         - hosts:
-          - p.${INGRESS_EXTERNAL_NAME}
+          - p.${INGRESS_INTERNAL_NAME}
           secretName: external-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
