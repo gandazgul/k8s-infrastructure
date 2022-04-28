@@ -6,5 +6,6 @@ resources:
 - ../../../apps/K8sDashboard.yaml
 - ../../../apps/Plex.yaml
 - ../../../apps/Resilio.yaml
+- ../../../apps/Bitwarden.yaml
 - ../../../apps/Photoprism.yaml
-- ../../../apps/Samba.yaml
+- ../../../apps/SFTPGo.yaml
