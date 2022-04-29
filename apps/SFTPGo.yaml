@@ -43,11 +43,11 @@ spec:
     - name: main-volume
       mountPath: /data
     - name: yasr-volume
-      subPath:
-        - path: configs/sftpgo
-          mountPath: /config
-        - path: /
-          mountPath: /yasr
+      subPath: configs/sftpgo
+      mountPath: /config
+    - name: yasr-volume
+      mountPath: /yasr
+      subPath: /
     ui:
       ingress:
         enabled: true
