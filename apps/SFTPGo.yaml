@@ -47,7 +47,6 @@ spec:
       mountPath: /config
     - name: yasr-volume
       mountPath: /yasr
-      subPath: /
     ui:
       ingress:
         enabled: true
