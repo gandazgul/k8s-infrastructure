@@ -13,14 +13,17 @@ spec:
         kind: HelmRepository
         name: k8s-at-home
         namespace: flux-system
+  dependsOn:
+    - name: yasr-volume
   interval: 1h0m0s
   values:
     service:
       main:
         primary: true
         type: NodePort
-        ports:
-          http:
-            nodePort: 32400
-            port: 32400
-
+    persistence:
+      config:
+        enabled: true
+        type: pvc
+        existingClaim: yasr-volume
+        subPath: configs/mosquitto
