@@ -22,7 +22,7 @@ spec:
         primary: true
         type: NodePort
     persistence:
-      config:
+      configinc:
         enabled: true
         type: pvc
         existingClaim: yasr-volume
