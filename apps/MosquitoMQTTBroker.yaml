@@ -17,12 +17,11 @@ spec:
     - name: yasr-volume
   interval: 1h0m0s
   values:
+    # TODO: why does it have to be NodePort?
     service:
       main:
         type: NodePort
         ports:
-          http:
-            enabled: false
           mqtt:
             enabled: true
             port: 1883
