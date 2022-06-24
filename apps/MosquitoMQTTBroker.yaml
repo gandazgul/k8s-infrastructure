@@ -19,8 +19,14 @@ spec:
   values:
     service:
       main:
-        primary: true
         type: NodePort
+        ports:
+          http:
+            enabled: false
+          mqtt:
+            enabled: true
+            port: 1883
+            nodePort: 1883
     persistence:
       configinc:
         enabled: true
