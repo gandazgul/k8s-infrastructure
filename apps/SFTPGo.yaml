@@ -32,6 +32,7 @@ spec:
         driver: 'sqlite'
         name: '/config/db.sqlite'
         prefer_database_credentials: true
+        create_default_admin: true
     volumes:
     - name: main-volume
       persistentVolumeClaim:
