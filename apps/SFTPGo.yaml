@@ -21,6 +21,8 @@ spec:
   values:
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
+      SFTPGO_DEFAULT_ADMIN_USERNAME: "admin"
+      SFTPGO_DEFAULT_ADMIN_PASSWORD: "admin"
     sftpd:
       enabled: true
     webdavd:
