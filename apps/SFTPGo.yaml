@@ -40,11 +40,13 @@ spec:
       persistentVolumeClaim:
         claimName: yasr-volume
     volumeMounts:
-    - mountPath: /data
-      name: main-volume
-    - mountPath: /config
-      name: yasr-volume
+    - name: main-volume
+      mountPath: /data
+    - name: yasr-volume
       subPath: configs/sftpgo
+      mountPath: /config
+    - name: yasr-volume
+      mountPath: /yasr
     ui:
       ingress:
         enabled: true
