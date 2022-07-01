@@ -33,12 +33,12 @@ spec:
       # -- joplin-server listening port (same as Service port)
       APP_PORT: 22300
       # -- Use pg for postgres
-      DB_CLIENT:  pg
-      POSTGRES_HOST:  joplin-postgresql
-      POSTGRES_PORT:  5432
-      POSTGRES_DATABASE:  joplin
-      POSTGRES_USER:  admin_joplin
-      POSTGRES_PASSWORD: ${ADMIN_PASSWORD}
+#      DB_CLIENT:  pg
+#      POSTGRES_HOST:  joplin-postgresql
+#      POSTGRES_PORT:  5432
+#      POSTGRES_DATABASE:  joplin
+#      POSTGRES_USER:  admin_joplin
+#      POSTGRES_PASSWORD: ${ADMIN_PASSWORD}
     ingress:
       main:
         enabled: true
