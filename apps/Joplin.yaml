@@ -22,7 +22,7 @@ spec:
   values:
     image:
       repository: joplin/server
-      tag: develop
+      tag: latest
       pullPolicy: Always
     env:
       PUID: "1000"
