@@ -18,5 +18,5 @@ resources:
 - ../../../apps/Paperless.yaml
 - ../../../apps/SFTPGo.yaml
 - ../../../apps/MosquitoMQTTBroker.yaml
-- ../../../apps/joplin.yaml
+- ../../../apps/Joplin.yaml
 #- ../../../apps/Minecraft.yaml
