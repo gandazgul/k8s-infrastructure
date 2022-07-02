@@ -42,7 +42,7 @@ spec:
     persistence:
       config:
         enabled: true
-        mountPath: /joplin
+        mountPath: /data
         existingClaim: main-volume
         subPath: rafag/joplin
     ingress:
