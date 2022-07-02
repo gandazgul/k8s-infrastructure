@@ -39,6 +39,12 @@ spec:
 #      POSTGRES_DATABASE:  joplin
 #      POSTGRES_USER:  admin_joplin
 #      POSTGRES_PASSWORD: ${ADMIN_PASSWORD}
+    persistence:
+      config:
+        enabled: true
+        mountPath: /joplin
+        existingClaim: main-volume
+        subPath: ${PHOTOS_PATH}
     ingress:
       main:
         enabled: true
