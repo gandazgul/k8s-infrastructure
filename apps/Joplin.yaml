@@ -44,7 +44,7 @@ spec:
         enabled: true
         mountPath: /joplin
         existingClaim: main-volume
-        subPath: ${PHOTOS_PATH}
+        subPath: rafag/joplin
     ingress:
       main:
         enabled: true
