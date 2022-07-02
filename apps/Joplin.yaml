@@ -32,6 +32,7 @@ spec:
       APP_BASE_URL: https://joplin.${INGRESS_EXTERNAL_NAME}
       # -- joplin-server listening port (same as Service port)
       APP_PORT: 22300
+      STORAGE_DRIVER: Type=Filesystem; Path=/data
       # -- Use pg for postgres
 #      DB_CLIENT:  pg
 #      POSTGRES_HOST:  joplin-postgresql
