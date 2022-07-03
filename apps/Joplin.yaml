@@ -39,7 +39,7 @@ spec:
     persistence:
       config:
         enabled: true
-        mountPath: /data
+        mountPath: /data/joplin
         existingClaim: yasr-volume
         subPath: configs/joplin
     ingress:
