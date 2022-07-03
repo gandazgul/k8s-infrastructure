@@ -28,7 +28,7 @@ spec:
       TZ: "${CLUSTER_TIME_ZONE}"
       APP_BASE_URL: https://joplin.${INGRESS_EXTERNAL_NAME}
       APP_PORT: 22300
-      STORAGE_DRIVER: Type=Filesystem; Path=/data/joplin
+      STORAGE_DRIVER: Type=Filesystem; Path=/home/joplin/data
       # -- Use pg for postgres
 #      DB_CLIENT:  pg
 #      POSTGRES_HOST:  joplin-postgresql
@@ -39,7 +39,7 @@ spec:
     persistence:
       config:
         enabled: true
-        mountPath: /data/joplin
+        mountPath: /home/joplin/data
         existingClaim: yasr-volume
         subPath: configs/joplin
     ingress:
