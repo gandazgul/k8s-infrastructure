@@ -28,7 +28,7 @@ spec:
             nodePort: 1883
     persistence:
       data:
-        enabled: false
+        enabled: true
         mountPath: /mosquitto/data
       configinc:
         enabled: true
