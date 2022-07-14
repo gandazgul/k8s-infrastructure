@@ -35,3 +35,5 @@ spec:
             mountPath: /mosquitto/data
           - path: configs/mosquitto
             mountPath: /mosquitto/configinc
+      configinc:
+        enabled: true
