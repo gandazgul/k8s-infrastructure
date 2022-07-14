@@ -34,4 +34,4 @@ spec:
           - path: configs/mosquitto/data
             mountPath: /mosquitto/data
           - path: configs/mosquitto
-            mountPath: /configinc
+            mountPath: /mosquitto/configinc
