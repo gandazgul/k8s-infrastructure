@@ -27,13 +27,19 @@ spec:
             port: 1883
             nodePort: 1883
     persistence:
-      yasr:
+#      yasr:
+#        enabled: true
+#        existingClaim: yasr-volume
+#        subPath:
+#          - path: configs/mosquitto/data
+#            mountPath: /mosquitto/data
+#          - path: configs/mosquitto
+#            mountPath: /mosquitto/configinc
+#      configinc:
+#        enabled: true
+      data:
         enabled: true
         existingClaim: yasr-volume
-        subPath:
-          - path: configs/mosquitto/data
-            mountPath: /mosquitto/data
-          - path: configs/mosquitto
-            mountPath: /mosquitto/configinc
-      configinc:
-        enabled: true
+        mountPath: /mosquitto
+        subPath: configs/mosquitto/
+
