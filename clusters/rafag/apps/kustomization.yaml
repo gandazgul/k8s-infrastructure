@@ -5,12 +5,12 @@ resources:
 - ./secrets/
 - ../../../apps/K8sDashboard.yaml
 - ../../../apps/Plex.yaml
-- ../../../apps/Resilio.yaml
-- ../../../apps/Bitwarden.yaml
-- ../../../apps/HomeAssistant.yaml
-- ../../../apps/Photoprism.yaml
+#- ../../../apps/Resilio.yaml
+#- ../../../apps/Bitwarden.yaml
+#- ../../../apps/HomeAssistant.yaml
+#- ../../../apps/Photoprism.yaml
 - ../../../apps/Zigbee2mqtt.yaml
-- ../../../apps/Paperless.yaml
+#- ../../../apps/Paperless.yaml
 - ../../../apps/SFTPGo.yaml
 - ../../../apps/MosquitoMQTTBroker.yaml
 - ../../../apps/Joplin.yaml
