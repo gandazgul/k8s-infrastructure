@@ -13,9 +13,9 @@ resources:
 - ../../../apps/Paperless.yaml
 - ../../../apps/SFTPGo.yaml
 - ../../../apps/MosquitoMQTTBroker.yaml
-- ../../../apps/Joplin.yaml
-- ../../../apps/transmission/rafag/
-- ../../../apps/Radarr.yaml
-- ../../../apps/Prowlarr.yaml
+#- ../../../apps/Joplin.yaml
+#- ../../../apps/transmission/rafag/
+#- ../../../apps/Radarr.yaml
+#- ../../../apps/Prowlarr.yaml
   #- ../../../apps/Sonarr.yaml
 #- ../../../apps/Minecraft.yaml
