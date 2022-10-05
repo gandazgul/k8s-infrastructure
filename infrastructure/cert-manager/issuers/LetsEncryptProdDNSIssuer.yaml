@@ -109,7 +109,6 @@ spec:
   rules:
   - host: "*.${INGRESS_EXTERNAL_NAME}"
 ---
----
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
