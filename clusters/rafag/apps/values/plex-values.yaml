@@ -1,0 +1,8 @@
+persistence:
+  data:
+    enabled: true
+    type: pvc
+    existingClaim: main-volume
+    subPath:
+      - path: public
+        mountPath: /data
