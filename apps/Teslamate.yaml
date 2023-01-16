@@ -59,7 +59,3 @@ spec:
         existingClaim: yasr-volume
         mountPath: /bitnami/postgresql
         subPath: configs/teslamate/database
-  valuesFrom:
-  - kind: Secret
-    name: "teslamate-values"
-    optional: false
