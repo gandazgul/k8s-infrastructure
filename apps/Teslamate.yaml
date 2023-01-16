@@ -5,10 +5,9 @@ metadata:
   name: teslamate
   namespace: default
 spec:
-  interval: 5m
+  interval: 1h0m0s
   chart:
     spec:
-      # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: teslamate
       version: 7.1.2
       sourceRef:
@@ -16,9 +15,12 @@ spec:
         name: k8s-at-home
         namespace: flux-system
       interval: 5m
+  dependsOn:
+    - name: yasr-volume
   values:
     image:
       repository: teslamate/teslamate
+      pullPolicy: Always
       tag: 1.27.2
     env:
       TZ: "America/New_York"
@@ -59,5 +61,5 @@ spec:
         subPath: configs/teslamate/database
   valuesFrom:
   - kind: Secret
-    name: "teslamate-helm-values"
+    name: "teslamate-values"
     optional: false
