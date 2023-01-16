@@ -24,10 +24,8 @@ spec:
       tag: 1.27.2
     env:
       TZ: "America/New_York"
-      DATABASE_USER: "teslamate"
-      DATABASE_NAME: "teslamate"
       DATABASE_HOST: teslamate-postgresql
-      DISABLE_MQTT: "false"
+      DISABLE_MQTT: "true"
       MQTT_HOST: "emqx"
       MQTT_USERNAME: "mqtt"
     ingress:
