@@ -46,6 +46,8 @@ spec:
     postgresql:
       enabled: true
       auth:
+        enablePostgresUser: false
+        username: teslamate
         postgresPassword: "${ADMIN_PASSWORD}"
         database: teslamate
         primary:
