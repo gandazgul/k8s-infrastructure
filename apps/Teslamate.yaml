@@ -26,6 +26,7 @@ spec:
       TZ: "America/New_York"
       DATABASE_HOST: teslamate-postgresql
       DATABASE_USER: teslamate
+      DATABASE_PASS: "M0ZveG82TG8zNw=="
       DISABLE_MQTT: "true"
       MQTT_HOST: "emqx"
       MQTT_USERNAME: "mqtt"
@@ -53,3 +54,7 @@ spec:
         primary:
           persistence:
             enabled: false
+  valuesFrom:
+    - kind: Secret
+      name: teslamate-postgresql
+      optional: false
