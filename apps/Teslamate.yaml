@@ -45,17 +45,12 @@ spec:
           - teslamate.${INGRESS_INTERNAL_NAME}
     postgresql:
       enabled: true
-      securityContext:
-        enabled: true
-        fsGroup: 1000
-      containerSecurityContext:
-        enabled: true
-        runAsUser: 1000
-      postgresqlUsername: teslamate
-      postgresqlPassword: teslamate
-      postgresqlDatabase: teslamate
-      persistence:
-        enabled: true
-        existingClaim: yasr-volume
-        mountPath: /bitnami/postgresql
-        subPath: configs/teslamate/database
+      auth:
+        postgresPassword: "${ADMIN_PASSWORD}"
+        database: teslamate
+        primary:
+          persistence:
+            enabled: true
+            existingClaim: yasr-volume
+            mountPath: /bitnami/postgresql
+            subPath: configs/teslamate/database
