@@ -50,7 +50,4 @@ spec:
         database: teslamate
         primary:
           persistence:
-            enabled: true
-            existingClaim: yasr-volume
-            mountPath: /bitnami/postgresql
-            subPath: configs/teslamate/database
+            enabled: false
