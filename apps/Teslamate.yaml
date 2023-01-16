@@ -25,6 +25,7 @@ spec:
     env:
       TZ: "America/New_York"
       DATABASE_HOST: teslamate-postgresql
+      DATABASE_USER: teslamate
       DISABLE_MQTT: "true"
       MQTT_HOST: "emqx"
       MQTT_USERNAME: "mqtt"
