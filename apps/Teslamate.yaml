@@ -50,6 +50,7 @@ spec:
         existingSecret: ""
         username: teslamate
         postgresPassword: "${ADMIN_PASSWORD}"
+        password: "${ADMIN_PASSWORD}"
         database: teslamate
         primary:
           persistence:
