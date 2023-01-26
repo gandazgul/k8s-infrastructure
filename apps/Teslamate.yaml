@@ -54,7 +54,7 @@ spec:
         primary:
           persistence:
             enabled: false
-  valuesFrom:
-    - kind: Secret
-      name: teslamate-postgresql
-      optional: false
+#  valuesFrom:
+#    - kind: Secret
+#      name: teslamate-postgresql
+#      optional: false
