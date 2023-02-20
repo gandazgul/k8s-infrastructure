@@ -33,12 +33,6 @@ spec:
       MQTT_USERNAME: "mqtt"
     postgresql:
       enabled: true
-      securityContext:
-        enabled: true
-        fsGroup: 1000
-      containerSecurityContext:
-        enabled: true
-        runAsUser: 1000
       auth:
         enablePostgresUser: true
         postgresPassword: "${ADMIN_PASSWORD}"
@@ -51,6 +45,12 @@ spec:
           existingClaim: yasr-volume
           mountPath: /bitnami/postgresql
           subPath: configs/teslamate/database
+        podSecurityContext:
+          enabled: true
+          fsGroup: 1000
+        containerSecurityContext:
+          enabled: true
+          runAsUser: 1000
     ingress:
       main:
         enabled: true
