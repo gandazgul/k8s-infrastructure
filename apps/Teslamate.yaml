@@ -25,8 +25,8 @@ spec:
     env:
       TZ: "America/New_York"
       DATABASE_HOST: teslamate-postgresql
-      DATABASE_USER: teslamate
-#      DATABASE_USER: postgres
+#      DATABASE_USER: teslamate
+      DATABASE_USER: postgres # teslamate complains about not being able to run migrations, you have to use postgres the first time, then connect to postgress and add the priviledges to its migrations table, then revert this back to use teslamate.
       DATABASE_PASS: "${ADMIN_PASSWORD}"
       DISABLE_MQTT: "true"
       MQTT_HOST: "emqx"
@@ -35,9 +35,8 @@ spec:
     postgresql:
       enabled: true
       auth:
-        enablePostgresUser: false
-#        enablePostgresUser: true
-#        postgresPassword: "${ADMIN_PASSWORD}"
+        enablePostgresUser: true
+        postgresPassword: "${ADMIN_PASSWORD}"
         username: teslamate
         password: "${ADMIN_PASSWORD}"
         database: teslamate
