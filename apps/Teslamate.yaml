@@ -39,9 +39,12 @@ spec:
         postgresPassword: "${ADMIN_PASSWORD}"
         password: "${ADMIN_PASSWORD}"
         database: teslamate
-        primary:
-          persistence:
-            enabled: false
+      primary:
+        persistence:
+          enabled: true
+          existingClaim: yasr-volume
+          mountPath: /bitnami/postgresql
+          subPath: configs/teslamate/database
     ingress:
       main:
         enabled: true
