@@ -25,11 +25,23 @@ spec:
     env:
       TZ: "America/New_York"
       DATABASE_HOST: teslamate-postgresql
-      DATABASE_USER: teslamate
+#      DATABASE_USER: teslamate
+      DATABASE_USER: postgres
       DATABASE_PASS: "${ADMIN_PASSWORD}"
       DISABLE_MQTT: "true"
       MQTT_HOST: "emqx"
       MQTT_USERNAME: "mqtt"
+    postgresql:
+      enabled: true
+      auth:
+        enablePostgresUser: true
+        username: teslamate
+        postgresPassword: "${ADMIN_PASSWORD}"
+        password: "${ADMIN_PASSWORD}"
+        database: teslamate
+        primary:
+          persistence:
+            enabled: false
     ingress:
       main:
         enabled: true
@@ -43,17 +55,6 @@ spec:
         tls:
         - hosts:
           - teslamate.${INGRESS_INTERNAL_NAME}
-    postgresql:
-      enabled: true
-      auth:
-        enablePostgresUser: false
-        username: teslamate
-        postgresPassword: "${ADMIN_PASSWORD}"
-        password: "${ADMIN_PASSWORD}"
-        database: teslamate
-        primary:
-          persistence:
-            enabled: false
 #  valuesFrom:
 #    - kind: Secret
 #      name: teslamate-postgresql
