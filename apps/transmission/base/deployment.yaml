@@ -57,7 +57,9 @@ spec:
           value: "off"
         securityContext:
           capabilities:
-            add: ["NET_ADMIN"]
+            add:
+              - NET_ADMIN
+              - NET_RAW
         livenessProbe:
           exec:
             command:
