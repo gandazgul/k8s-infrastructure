@@ -38,6 +38,7 @@ spec:
         - host: home.${INGRESS_INTERNAL_NAME}
           paths:
           - path: /
+            pathType: ImplementationSpecific
         tls:
         - hosts:
           - home.${INGRESS_INTERNAL_NAME}
