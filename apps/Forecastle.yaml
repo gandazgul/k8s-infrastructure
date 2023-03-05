@@ -25,7 +25,7 @@ spec:
         namespaceSelector:
           matchNames:
           - default
-        title: Gandazgul's Cluster Homepage
+        title: Cluster Homepage
         customApps:
           - name: Plex
             icon: https://www.plex.tv/wp-content/themes/plex/assets/img/plex-logo.svg
