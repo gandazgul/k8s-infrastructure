@@ -38,4 +38,4 @@ spec:
         annotations:
           kubernetes.io/ingress.class: "nginx"
           forecastle.stakater.com/expose: "true"
-          forecastle.stakater.com/icon: "https://resilio.ravelo.tk/gui/images/updated/logo_light_100x36.svg"
+          forecastle.stakater.com/icon: "https://www.resilio.com/images/logo.svg"
