@@ -23,7 +23,6 @@ spec:
   - kind: Secret
     name: sonarr-values
     optional: false
-  # All values at https://github.com/k8s-at-home/charts/blob/master/charts/plex/values.yaml
   values:
     image:
       repository: linuxserver/sonarr
