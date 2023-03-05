@@ -1,1 +1,0 @@
-{{ include "helpers.name" . }} is now available.
