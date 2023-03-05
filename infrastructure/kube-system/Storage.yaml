@@ -3,7 +3,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
   name: main-volume
-  namespace: default
+  namespace: flux-system
 spec:
   interval: 10m0s
   path: ./infrastructure/storage/storage-class/
@@ -24,7 +24,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
   name: backup-volume
-  namespace: default
+  namespace: flux-system
 spec:
   interval: 10m0s
   path: ./infrastructure/storage/
@@ -45,7 +45,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
   name: yasr-volume
-  namespace: default
+  namespace: flux-system
 spec:
   interval: 10m0s
   path: ./infrastructure/storage/
