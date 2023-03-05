@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: default
 
 bases:
-- ../
+- ../base/
 
 resources:
 - sc.yaml

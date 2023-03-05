@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./infrastructure/storage/storage-class/
+  path: ./infrastructure/storage/hdd-class/
   sourceRef:
     kind: GitRepository
     name: flux-system
