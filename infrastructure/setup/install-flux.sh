@@ -14,18 +14,18 @@ installFlux() {
   REPO_ROOT=$(git rev-parse --show-toplevel)
 
   # Control plane node information
-  CONTROL_PLANE_ID=$(kubectl get nodes --selector=node-role.kubernetes.io/control-plane -o=jsonpath='{.items[0].metadata.annotations.flannel\.alpha\.coreos\.com\/public-ip}')
+  CONTROL_PLANE_IP=$(kubectl get nodes --selector=node-role.kubernetes.io/control-plane -o=jsonpath='{.items[0].metadata.annotations.flannel\.alpha\.coreos\.com\/public-ip}')
   CONTROL_PLANE_NAME=$(kubectl get nodes --selector=node-role.kubernetes.io/control-plane -o=jsonpath='{.items[0].metadata.labels.kubernetes\.io/hostname}')
 
   # Confirm information
-  echo "Using CONTROL_PLANE_ID=$CONTROL_PLANE_ID"
+  echo "Using CONTROL_PLANE_IP=$CONTROL_PLANE_IP"
   echo "Using CONTROL_PLANE_NAME=$CONTROL_PLANE_NAME"
   echo "Using CLUSTER_NAME=$CLUSTER_NAME"
   pause
 
   # Update secrets file
   secretFile="$REPO_ROOT/clusters/$CLUSTER_NAME/secrets.env"
-  sed -i '' "s/\(CONTROL_PLANE_ID=*\).*/\1$CONTROL_PLANE_ID/" "$secretFile" || exit 1
+  sed -i '' "s/\(CONTROL_PLANE_IP=*\).*/\1$CONTROL_PLANE_IP/" "$secretFile" || exit 1
   sed -i '' "s/\(CONTROL_PLANE_NAME=*\).*/\1$CONTROL_PLANE_NAME/" "$secretFile" || exit 1
 
   message "installing Flux v2"

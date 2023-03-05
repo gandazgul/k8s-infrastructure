@@ -26,12 +26,12 @@ export INGRESS_EXTERNAL_NAME="example.com"
 export GOGS_SECRET_KEY="changeme"
 
 # Control Plane node information, these secrets are automatically obtained from k8s
-CONTROL_PLANE_ID=`kubectl get nodes --selector=node-role.kubernetes.io/control-plane -o=jsonpath='{.items[0].metadata.annotations.flannel\.alpha\.coreos\.com\/public-ip}'`
-export CONTROL_PLANE_ID
+CONTROL_PLANE_IP=`kubectl get nodes --selector=node-role.kubernetes.io/control-plane -o=jsonpath='{.items[0].metadata.annotations.flannel\.alpha\.coreos\.com\/public-ip}'`
+export CONTROL_PLANE_IP
 CONTROL_PLANE_NAME=`kubectl get nodes --selector=node-role.kubernetes.io/control-plane -o=jsonpath='{.items[0].metadata.labels.kubernetes\.io/hostname}'`
 export CONTROL_PLANE_NAME
 
-echo "Using CONTROL_PLANE_ID=$CONTROL_PLANE_ID"
+echo "Using CONTROL_PLANE_IP=$CONTROL_PLANE_IP"
 echo "Using CONTROL_PLANE_NAME=$CONTROL_PLANE_NAME"
 echo "Using INGRESS_INTERNAL_NAME=$INGRESS_INTERNAL_NAME"
 echo "Using INGRESS_EXTERNAL_NAME=$INGRESS_EXTERNAL_NAME"

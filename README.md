@@ -19,11 +19,6 @@ A small business server running the control plane node and worker. I plan to add
 a "cluster" and to try to automate node on-boarding. I've tested the manual node on-boarding with VMs, and it works
 well. Look at this script [https://github.com/gandazgul/k8s-infrastructure/blob/main/install-k8s/2-configK8SNode.sh]()
 
-# [Helm](https://helm.sh) Charts
-
-I publish my charts as a helm repo. Most of these I created because I couldn't find them or were super specific. Some
-are based on official charts I needed to modify. To use them add this url to helm as a repo and run update.
-
 ```bash
 helm repo add gandazgul https://gandazgul.github.io/k8s-infrastructure/
 ```
