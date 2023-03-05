@@ -42,4 +42,4 @@ spec:
         tls:
         - hosts:
           - home.${INGRESS_INTERNAL_NAME}
-          secretName: external-ingress-cert
+          secretName: internal-ingress-cert
