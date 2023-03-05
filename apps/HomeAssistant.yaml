@@ -27,12 +27,12 @@ spec:
       main:
         enabled: true
         hosts:
-        - host: hass.${INGRESS_INTERNAL_NAME}
+        - host: hass.${CLUSTER_DOMAIN_NAME}
           paths:
           - path: /
         tls:
         - hosts:
-          - hass.${INGRESS_INTERNAL_NAME}
+          - hass.${CLUSTER_DOMAIN_NAME}
           secretName: external-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
@@ -60,12 +60,12 @@ spec:
           annotations:
             kubernetes.io/ingress.class: "nginx"
           hosts:
-          - host: hass-config.${INGRESS_INTERNAL_NAME}
+          - host: hass-config.${CLUSTER_DOMAIN_NAME}
             paths:
             - path: /
           tls:
           - hosts:
-            - hass-config.${INGRESS_INTERNAL_NAME}
+            - hass-config.${CLUSTER_DOMAIN_NAME}
             secretName: internal-ingress-cert
         volumeMounts:
         - name: config

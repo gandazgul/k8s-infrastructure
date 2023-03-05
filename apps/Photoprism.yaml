@@ -38,12 +38,12 @@ spec:
       main:
         enabled: true
         hosts:
-        - host: photos.${INGRESS_INTERNAL_NAME}
+        - host: photos.${CLUSTER_DOMAIN_NAME}
           paths:
           - path: /
         tls:
         - hosts:
-          - photos.${INGRESS_INTERNAL_NAME}
+          - photos.${CLUSTER_DOMAIN_NAME}
           secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"

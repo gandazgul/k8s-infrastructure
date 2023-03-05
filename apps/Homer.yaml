@@ -166,12 +166,12 @@ spec:
       main:
         enabled: true
         hosts:
-        - host: home.${INGRESS_INTERNAL_NAME}
+        - host: home.${CLUSTER_DOMAIN_NAME}
           paths:
           - path: /
         tls:
         - hosts:
-          - home.${INGRESS_INTERNAL_NAME}
+          - home.${CLUSTER_DOMAIN_NAME}
           secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: nginx
