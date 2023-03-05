@@ -47,6 +47,9 @@ spec:
     ui:
       ingress:
         enabled: true
+        annotations:
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://share.ravelo.tk/app/assets/sharry-webapp/1.8.0/img/logo.png"
         className: nginx
         hosts:
         - host: sftpgo.${CLUSTER_DOMAIN_NAME}

@@ -73,3 +73,4 @@ spec:
           secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
+          forecastle.stakater.com/expose: "true"
