@@ -22,8 +22,6 @@ spec:
         kind: GitRepository
         name: minecraft-server-charts-fork
         namespace: flux-system
-  dependsOn:
-  - name: yasr-volume
   # All values at https://github.com/itzg/minecraft-server-charts/blob/master/charts/minecraft/values.yaml
   values:
     securityContext:
