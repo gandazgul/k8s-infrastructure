@@ -25,10 +25,10 @@ spec:
     ingress:
       enabled: true
       hosts:
-      - dashboard.${INGRESS_INTERNAL_NAME}
+      - dashboard.${CLUSTER_DOMAIN_NAME}
       tls:
       - hosts:
-        - dashboard.${INGRESS_INTERNAL_NAME}
+        - dashboard.${CLUSTER_DOMAIN_NAME}
         secretName: internal-ingress-cert
       annotations:
         kubernetes.io/ingress.class: "nginx"

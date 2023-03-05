@@ -12,10 +12,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - transmission.${INGRESS_INTERNAL_NAME}
+    - transmission.${CLUSTER_DOMAIN_NAME}
     secretName: internal-ingress-cert
   rules:
-  - host: transmission.${INGRESS_INTERNAL_NAME}
+  - host: transmission.${CLUSTER_DOMAIN_NAME}
     http:
       paths:
       - path: /

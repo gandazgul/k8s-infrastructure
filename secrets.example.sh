@@ -15,12 +15,9 @@ export VPN_USER=""
 export VPN_PASSWORD=""
 
 # required - ingress config
-# Services will use this name for their ingresses (get one free at https://noip.com)
-# set the DNS for a wildcard *.example.sytes.net -> your k8s host internal IP. These names use a k8s singed cert that you can trust internally.
-export INGRESS_INTERNAL_NAME="example.sytes.net"
-# Gogs and other services exposed to the outside world will use this name. Same DNS config *.yourname.tk -> your outside IP
-# get a free name at freenom.com
-export INGRESS_EXTERNAL_NAME="example.com"
+# Services will use this name for their ingresses (get a free name at freenom.com)
+# set the DNS for a wildcard *.example.sytes.net -> your k8s host internal IP.
+export CLUSTER_DOMAIN_NAME="example.sytes.net"
 
 # to secure the gogs install
 export GOGS_SECRET_KEY="changeme"
@@ -33,5 +30,4 @@ export CONTROL_PLANE_NAME
 
 echo "Using CONTROL_PLANE_IP=$CONTROL_PLANE_IP"
 echo "Using CONTROL_PLANE_NAME=$CONTROL_PLANE_NAME"
-echo "Using INGRESS_INTERNAL_NAME=$INGRESS_INTERNAL_NAME"
-echo "Using INGRESS_EXTERNAL_NAME=$INGRESS_EXTERNAL_NAME"
+echo "Using CLUSTER_DOMAIN_NAME=$CLUSTER_DOMAIN_NAME"
