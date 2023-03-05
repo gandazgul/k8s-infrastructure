@@ -36,7 +36,7 @@ spec:
             port: 32400
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
-      ADVERTISE_IP: "http://${DYN_DNS_NAME}:32400/,http://${CONTROL_PLANE_ID}:32400/"
+      ADVERTISE_IP: "http://${DYN_DNS_NAME}:32400/,http://${CONTROL_PLANE_IP}:32400/"
     probes:
       liveness:
         enabled: false

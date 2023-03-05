@@ -34,4 +34,4 @@ spec:
       service:
         type: NodePort
         externalIPs:
-        - ${CONTROL_PLANE_ID}
+        - ${CONTROL_PLANE_IP}
