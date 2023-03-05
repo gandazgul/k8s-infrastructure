@@ -1,0 +1,44 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: forecastle
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: ./deployments/kubernetes/chart/forecastle/
+      version: 3.4.2
+      sourceRef:
+        kind: GitRepository
+        name: forecastle
+        namespace: flux-system
+  # All values at https://github.com/stakater/Forecastle/blob/master/deployments/kubernetes/chart/forecastle/values.yaml
+  values:
+    forecastle:
+      deployment:
+        securityContext:
+          runAsUser: 1000
+          fsGroup: 1000
+      config:
+        namespaceSelector:
+          matchNames:
+          - default
+        headerBackground:
+        headerForeground:
+        title:
+        instanceName:
+        customApps: { }
+      ingress:
+        enabled: true
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+        hosts:
+        - host: home.${INGRESS_INTERNAL_NAME}
+          paths:
+          - path: /
+        tls:
+        - hosts:
+          - home.${INGRESS_INTERNAL_NAME}
+          secretName: external-ingress-cert

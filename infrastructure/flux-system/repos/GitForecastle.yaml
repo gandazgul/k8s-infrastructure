@@ -1,0 +1,11 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: GitRepository
+metadata:
+  name: Forecastle
+  namespace: flux-system
+spec:
+  interval: 60m0s
+  ref:
+    branch: master
+  url: https://github.com/stakater/Forecastle.git
