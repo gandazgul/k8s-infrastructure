@@ -25,11 +25,11 @@ spec:
         namespaceSelector:
           matchNames:
           - default
-        headerBackground:
-        headerForeground:
-        title:
-        instanceName:
-        customApps: { }
+        title: Gandazgul's Cluster Homepage
+        customApps:
+          - name: Plex
+            icon: https://www.plex.tv/wp-content/themes/plex/assets/img/plex-logo.svg
+            url: https://app.plex.tv/desktop/#!/
       ingress:
         enabled: true
         annotations:

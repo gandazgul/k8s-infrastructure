@@ -49,3 +49,4 @@ spec:
         annotations:
           kubernetes.io/ingress.class: "nginx"
           forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://raw.githubusercontent.com/hay-kot/mealie/mealie-next/frontend/static/icon.png"
