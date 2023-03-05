@@ -30,6 +30,7 @@ spec:
           - name: Plex
             icon: https://www.plex.tv/wp-content/themes/plex/assets/img/plex-logo.svg
             url: https://app.plex.tv/desktop/#!/
+            group: default
       ingress:
         enabled: true
         annotations:
