@@ -37,6 +37,9 @@ spec:
         annotations:
           kubernetes.io/ingress.class: "nginx"
           nginx.org/websocket-services: home-assistant
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://hass.ravelo.tk/static/icons/favicon-192x192.png"
+          forecastle.stakater.com/appName: "Home Assistant"
     persistence:
       config:
         enabled: true
@@ -60,6 +63,8 @@ spec:
           annotations:
             kubernetes.io/ingress.class: "nginx"
             forecastle.stakater.com/expose: "true"
+            forecastle.stakater.com/icon: "https://raw.githubusercontent.com/coder/code-server/main/src/browser/media/pwa-icon-512.png"
+            forecastle.stakater.com/appName: "Config Editor"
           hosts:
           - host: hass-config.${CLUSTER_DOMAIN_NAME}
             paths:
