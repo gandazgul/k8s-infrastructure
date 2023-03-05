@@ -1,7 +1,0 @@
-apiVersion: v1
-description: A Helm chart to install my data volumes
-name: persistence-volume
-version: 0.2.2
-maintainers:
-- name: gandazgul
-  email: ravelo.carlos@gmail.com
