@@ -5,32 +5,9 @@ if [[ $EUID = 0 ]]; then
    exit 1
 fi
 
-#printf "\nGet docker ===============================================================================================\n"
-#if [ ! -f docker-ce-18.06.2.ce-3.fc28.x86_64.rpm ]; then
-#    wget https://download.docker.com/linux/fedora/28/x86_64/stable/Packages/docker-ce-18.06.2.ce-3.fc28.x86_64.rpm || exit 1
-#
-#    printf "\nInstall docker & deps ====================================================================================\n"
-#    sudo mkdir -p /var/lib/docker || exit 1
-#    sudo sudo dnf install -y docker-ce-18.06.2.ce-3.fc28.x86_64.rpm || exit 1
-#    sudo sed -i 's/rhgb quiet"/rhgb quiet systemd.unified_cgroup_hierarchy=0"/' /etc/default/grub || exit 1
-#    sudo sh -c 'grub2-mkconfig > /boot/efi/EFI/fedora/grub.cfg'  || exit 1
-#
-#    echo -n "I have to restart in order to finish installing Docker. After reboot, re-run this script. Reboot? (y/n)? "
-#    read answer
-#    if [ "$answer" != "${answer#[Yy]}" ] ;then
-#        sudo reboot
-#    fi;
-#fi;
-
-#printf "\nEnable docker ============================================================================================\n"
-#sudo systemctl enable --now docker || exit 1
-#
-#printf "\nVerify docker is working by running hello-world ==========================================================\n"
-#sudo docker run --rm hello-world || exit 1
-
 if ! dnf list installed cri-o > /dev/null 2>&1; then
     printf "\nInstall cri-o and crun ================================================================================\n"
-    sudo dnf -y module enable cri-o:1.20 || exit 1
+    sudo dnf -y module enable cri-o:1.24 || exit 1
     sudo dnf -y install crun cri-o || exit 1
     sudo dnf update --exclude="cri-*" || exit 1
 
@@ -84,7 +61,7 @@ gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cl
 exclude=kube*
 EOF'
 
-    sudo dnf -y install --enablerepo=kubernetes kubelet-1.20.5-0 kubectl-1.20.5-0 kubeadm-1.20.5-0 --disableexcludes=kubernetes || exit 1
+    sudo dnf -y install --enablerepo=kubernetes kubelet-1.24.11-0 kubectl-1.24.11-0 kubeadm-1.24.11-0 --disableexcludes=kubernetes || exit 1
     sudo dnf -y install cockpit-pcp || exit 1
 
     # enable cni plugins

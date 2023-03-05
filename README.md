@@ -15,9 +15,9 @@ backup one.
 
 ## My Home Setup
 
-A small business server running as a master node and worker. I plan to add at least one other node to learn to manage
+A small business server running the control plane node and worker. I plan to add at least one other node to learn to manage
 a "cluster" and to try to automate node on-boarding. I've tested the manual node on-boarding with VMs, and it works
-well. Look at this script [https://github.com/gandazgul/k8s-infrastructure/blob/master/install-k8s/2-configK8SNode.sh]()
+well. Look at this script [https://github.com/gandazgul/k8s-infrastructure/blob/main/install-k8s/2-configK8SNode.sh]()
 
 # [Helm](https://helm.sh) Charts
 
@@ -40,7 +40,7 @@ data and personal files, backed up to back up with rdiff-backup.
 ## License
 
 Unless specifically noted, all parts of this project are licensed under
-the [MIT license](https://github.com/gandazgul/k8s-infrastructure/blob/master/LICENSE.md).
+the [MIT license](https://github.com/gandazgul/k8s-infrastructure/blob/main/LICENSE.md).
 
 ## Contributing
 
