@@ -7,8 +7,8 @@
     "license": "MIT",
     "private": true,
     "scripts": {
-        "docker:build": "node ./docker/docker-build.js",
-        "docker:run": "node ./docker/docker-run.js",
+        "docker:build": "node containers/docker-build.js",
+        "docker:run": "node containers/docker-run.js",
         "docs": "helm-docs"
     },
     "dependencies": {

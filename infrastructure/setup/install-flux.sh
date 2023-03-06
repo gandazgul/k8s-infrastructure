@@ -35,7 +35,7 @@ installFlux() {
     exit 1
   fi
 
-  if ! flux install; then
+  if ! flux install --components-extra=image-reflector-controller,image-automation-controller; then
     echo -e "Flux did not install correctly, aborting!"
     exit 1
   fi
