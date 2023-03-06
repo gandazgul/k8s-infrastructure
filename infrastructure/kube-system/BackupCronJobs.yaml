@@ -18,8 +18,8 @@ spec:
   # Twice a day at midnight and midday
     schedule: "0 0,12 * * *"
     image:
-      repository: gandazgul/rdiff-backup
-      tag: v7
+      repository: docker.io/gandazgul/rdiff-backup
+      tag: v0150413
       args:
       - /media/main
       - /media/backup
@@ -55,8 +55,8 @@ spec:
   # Every day at midnight
     schedule: "0 0 * * *"
     image:
-      repository: gandazgul/rdiff-backup
-      tag: v7
+      repository: docker.io/gandazgul/rdiff-backup
+      tag: v0150413
       args:
       - --remove-older-than
       - 4W
