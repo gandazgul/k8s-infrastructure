@@ -19,7 +19,6 @@ pause() {
 }
 
 need "kubectl"
-need "helm"
 need "flux"
 need "git"
 need "kubeseal"
