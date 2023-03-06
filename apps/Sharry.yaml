@@ -107,7 +107,7 @@ spec:
         tls:
         - hosts:
           - share.${CLUSTER_DOMAIN_NAME}
-          secretName: external-ingress-cert
+          secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
 
