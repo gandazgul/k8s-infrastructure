@@ -47,6 +47,7 @@ spec:
       - host: gitops.${CLUSTER_DOMAIN_NAME}
         paths:
         - path: /
+          pathType: ImplementationSpecific
       tls:
       - hosts:
         - gitops.${CLUSTER_DOMAIN_NAME}
