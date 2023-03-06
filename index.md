@@ -101,10 +101,10 @@ by copying the original file and changing the values to suit your needs.
 | NGINX Ingress                                                   | -                                      | 80, 443            | [README](https://kubernetes.github.io/ingress-nginx/)  |
 | K8s Dashboard                                                   | dashboard                              | -                  | [README](https://github.com/kubernetes/dashboard)      |
 | Plex                                                            | plex                                   | -                  | [README](https://github.com/munnerz/kube-plex)         |
-| Torrents (Transmission, OpenVPN, Prowlarr,<br />Radarr, Sonarr) | transmission,<br />movies, tv, seedbox | -                  | [README](/charts/seedbox/README.md)                    |
+| Torrents (Transmission, OpenVPN, Prowlarr,<br />Radarr, Sonarr) | transmission,<br />movies, tv, seedbox | -                  | -                                                      |
 | Gogs                                                            | gogs                                   | -                  | [README](https://hub.helm.sh/charts/incubator/gogs)    |
 | Resilio Sync                                                    | resilio                                | -                  | -                                                      |
-| Samba                                                           | -                                      | 139, 445, 137, 138 | [README](/charts/samba/README.md)                      |
+| Samba                                                           | -                                      | 139, 445, 137, 138 | -                                                      |
 | Prometheus                                                      | prometheus                             | -                  | [README](https://hub.helm.sh/charts/stable/prometheus) |
 | AlertManager (Prometheus)                                       | alerts                                 | -                  | Same                                                   |
 | Grafana                                                         | grafana                                | -                  | [README](https://hub.helm.sh/charts/stable/grafana)    |
