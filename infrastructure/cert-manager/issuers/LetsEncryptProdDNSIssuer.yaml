@@ -58,15 +58,20 @@ spec:
   - digital signature
   - key encipherment
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: cert-manager.io/v1
+kind: Certificate
 metadata:
-  name: internal-dummy-ingress-to-load-certificates
-  namespace: kube-system
+  name: internal-ingress-cert
+  namespace: default
 spec:
-  tls:
-  - hosts:
+  dnsNames:
     - "*.${CLUSTER_DOMAIN_NAME}"
-    secretName: internal-ingress-cert
-  rules:
-  - host: "*.${CLUSTER_DOMAIN_NAME}"
+    - ${CLUSTER_DOMAIN_NAME}
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-dns01-prod
+  secretName: internal-ingress-cert
+  usages:
+    - digital signature
+    - key encipherment
