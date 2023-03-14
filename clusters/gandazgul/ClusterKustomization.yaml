@@ -9,6 +9,9 @@ spec:
   - name: sealed-secret
   - name: flux-system
   - name: kube-system
+  - name: main-volume
+  - name: backup-volume
+  - name: yasr-volume
   interval: 10m0s
   path: ./clusters/gandazgul/
   prune: true

@@ -15,9 +15,6 @@ spec:
         name: skm
         namespace: flux-system
       interval: 5m
-  dependsOn:
-  - name: yasr-volume
-  - name: main-volume
   values:
     env:
       TZ: "${CLUSTER_TIME_ZONE}"

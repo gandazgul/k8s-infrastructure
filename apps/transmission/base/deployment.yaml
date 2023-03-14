@@ -31,13 +31,13 @@ spec:
         {}
       containers:
       # VPN
-      - name: "vpn"
-        image: "qmcgaw/gluetun:v3.23.0"
-        imagePullPolicy: "IfNotPresent"
+      - name: vpn
+        image: qmcgaw/gluetun:v3.32.0
+        imagePullPolicy: IfNotPresent
         env:
-        - name: VPNSP
+        - name: VPN_SERVICE_PROVIDER
           value: private internet access
-        - name: REGION
+        - name: SERVER_REGIONS
           value: CA Montreal
         - name: OPENVPN_USER
           value: ${VPN_USER}
@@ -49,7 +49,7 @@ spec:
           value: "off"
         - name: TZ
           value: ${CLUSTER_TIME_ZONE}
-        - name: PORT_FORWARDING
+        - name: PRIVATE_INTERNET_ACCESS_VPN_PORT_FORWARDING
           value: "on"
         - name: HTTPPROXY
           value: "off"
@@ -57,7 +57,9 @@ spec:
           value: "off"
         securityContext:
           capabilities:
-            add: ["NET_ADMIN"]
+            add:
+              - NET_ADMIN
+              - NET_RAW
         livenessProbe:
           exec:
             command:
