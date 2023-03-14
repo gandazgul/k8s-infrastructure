@@ -7,16 +7,11 @@ metadata:
 spec:
   chart:
     spec:
-#      chart: mosca
       chart: ./charts/mosca
-      version: 0.2.5
       sourceRef:
-#        kind: HelmRepository
-#        name: gandazgul
-#        namespace: flux-system
         kind: GitRepository
-        name: flux-system
-        namespace: flux-system
+        name: k8s-infrastructure
+        namespace: kube-system
   interval: 1h0m0s
   values:
 #    image:

@@ -1,8 +1,8 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: skm
-  namespace: flux-system
+  name: gandazgul
+  namespace: kube-system
 spec:
   interval: 10m0s
-  url: https://charts.sagikazarmark.dev
+  url: https://gandazgul.github.io/k8s-infrastructure/
