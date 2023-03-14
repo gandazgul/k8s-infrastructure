@@ -3,13 +3,14 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
   name: main-volume
-  namespace: flux-system
+  namespace: kube-system
 spec:
   interval: 10m0s
   path: ./infrastructure/storage/hdd-class/
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: k8s-infrastructure
+    namespace: kube-system
   prune: true
   validation: client
   postBuild:
@@ -24,13 +25,14 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
   name: backup-volume
-  namespace: flux-system
+  namespace: kube-system
 spec:
   interval: 10m0s
   path: ./infrastructure/storage/base/
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: k8s-infrastructure
+    namespace: kube-system
   prune: true
   validation: client
   postBuild:
@@ -45,13 +47,14 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
   name: yasr-volume
-  namespace: flux-system
+  namespace: kube-system
 spec:
   interval: 10m0s
   path: ./infrastructure/storage/base/
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: k8s-infrastructure
+    namespace: kube-system
   prune: true
   validation: client
   postBuild:
