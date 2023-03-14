@@ -1,0 +1,56 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: sonarr
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
+      chart: sonarr
+      version: 16.0.1
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: kube-system
+      interval: 5m
+  valuesFrom:
+  - kind: Secret
+    name: sonarr-values
+    optional: false
+  values:
+    image:
+      repository: linuxserver/sonarr
+      tag: amd64-latest
+      pullPolicy: Always
+    env:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "${CLUSTER_TIME_ZONE}"
+    persistence:
+      config:
+        enabled: true
+        type: pvc
+        existingClaim: yasr-volume
+        subPath:
+        - path: configs/sonarr
+          mountPath: /config
+        - path: configs/transmission
+          mountPath: /data
+    ingress:
+      main:
+        enabled: true
+        hosts:
+        - host: tv.${CLUSTER_DOMAIN_NAME}
+          paths:
+          - path: /
+        tls:
+        - hosts:
+          - tv.${CLUSTER_DOMAIN_NAME}
+          secretName: internal-ingress-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://tv.ravelo.tk/Content/Images/logo.svg"

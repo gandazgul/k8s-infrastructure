@@ -11,8 +11,8 @@ message "Installing $CLUSTER_NAME configs..."
 echo "Generating $CLUSTER_NAME secret..."
 # Seal main secrets file
 rm -rf "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml"
-kubectl create secret generic secrets --dry-run=client --namespace=flux-system --from-env-file="./clusters/$CLUSTER_NAME/secrets.env" -o json |
-  kubeseal -o yaml >"./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml"
+kubectl create secret generic secrets --dry-run=client --namespace=kube-system --from-env-file="./clusters/$CLUSTER_NAME/secrets.env" -o json |
+  kubeseal -o yaml > "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml"
 
 # apply it
 template=$(sed "s/{{CLUSTER_NAME}}/$CLUSTER_NAME/g" <"$REPO_ROOT"/infrastructure/setup/SealedSecretsKustomization.yaml.templ)

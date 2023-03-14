@@ -3,8 +3,8 @@
 .idea/aws.xml
 
 # docker
-docker/sshd/users.conf
-docker/size-checker/ssmtp.conf
+containers/sshd/users.conf
+containers/size-checker/ssmtp.conf
 
 # chart deps
 charts/gogs/charts/
@@ -18,3 +18,6 @@ node_modules/
 
 # yarn
 yarn-error.log
+
+# Mac
+.DS_Store

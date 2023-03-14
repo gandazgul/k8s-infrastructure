@@ -13,50 +13,101 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
-        namespace: flux-system
+        namespace: kube-system
       interval: 5m
-  dependsOn:
-  - name: yasr-volume
-  - name: main-volume
   valuesFrom:
   - kind: Secret
     name: resilio-values
     optional: false
   values:
     env:
-      TZ: "America/New_York"
-    # -- Sharry configuration. Supports Helm templates.
+      TZ: "${CLUSTER_TIME_ZONE}"
     # See [application docs](https://eikek.github.io/sharry/doc/configure) for more details.
     # @default -- See values.yaml
     config: |
       sharry.restserver {
-        base-url = "https://sharry.${INGRESS_INTERNAL_NAME}"
+        base-url = "https://share.${CLUSTER_DOMAIN_NAME}"
         bind {
           address = "0.0.0.0"
           port = 9090
         }
         backend {
+          signup {
+            mode = "closed"
+          }
           auth {
+            # the fixed module is used for bootstrapping, after the DB is created it should be disabled
             fixed {
-              enabled = true  # set to true to enable this auth provider
+              enabled = false
               user = "admin"
-              password = "${ADMIN_PASSWORD}"
+              # password = "${ADMIN_PASSWORD}"
               order = 10
+            }
+            # The internal authentication module checks against the internal database.
+            internal {
+              enabled = true
+              order = 50
+            }
+          }
+          jdbc {
+            url = "jdbc:h2://config/sharry.db;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE"
+            user = "sa"
+            password = ""
+          }
+          mail {
+            # Enable/Disable the mail feature.
+            enabled = true
+            # The SMTP settings that are used to sent mails with.
+            smtp {
+              # Host and port of the SMTP server
+              host = "smtp.gmail.com"
+              port = 587
+      
+              # User credentials to authenticate at the server. If the user
+              # is empty, mails are sent without authentication.
+              user = "${EMAIL}"
+              password = "${SMTP_PASSWORD}"
+      
+              # One of: none, starttls, ssl
+              ssl-type = "starttls"
+      
+              # In case of self-signed certificates or other problems like
+              # that, checking certificates can be disabled.
+              check-certificates = true
+      
+              # Timeout for mail commands.
+              timeout = "10 seconds"
+      
+              # The default mail address used for the `From' field.
+              #
+              # If left empty, the e-mail address of the current user is used.
+              default-from = ""
+      
+              # When creating mails, the List-Id header is set to this value.
+              #
+              # This helps identifying these mails in muas. If it is empty,
+              # the header is not set.
+              list-id = "Sharry"
             }
           }
         }
       }
+    persistence:
+      config:
+        enabled: true
+        existingClaim: yasr-volume
+        subPath: configs/sharry
     ingress:
       main:
         enabled: true
         hosts:
-        - host: share.${INGRESS_EXTERNAL_NAME}
+        - host: share.${CLUSTER_DOMAIN_NAME}
           paths:
           - path: /
         tls:
         - hosts:
-          - share.${INGRESS_EXTERNAL_NAME}
-          secretName: share-cert
+          - share.${CLUSTER_DOMAIN_NAME}
+          secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+

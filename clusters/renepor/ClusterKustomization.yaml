@@ -1,0 +1,38 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: renepor
+  namespace: kube-system
+spec:
+  dependsOn:
+  - name: sealed-secret
+  - name: kube-system
+  - name: main-volume
+  - name: backup-volume
+  - name: yasr-volume
+  interval: 10m0s
+  path: ./clusters/renepor/
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  validation: client
+  postBuild:
+    # constants can be specified like this:
+    substitute:
+      PHOTOS_PATH: renepor/PICTURES
+      PHOTOS_UID: "1003"
+      PHOTOS_GID: "1004"
+      PLEX_TRANSCODE_SIZE: 2Gi
+      # The time zone to apply to all containers
+      CLUSTER_TIME_ZONE: America/New_York
+    substituteFrom:
+    # substitutions can also come from a config map or secret
+    #    - kind: ConfigMap
+    #      name: cluster-vars
+    - kind: Secret
+      name: secrets
+
+  # use ${var:=default} or ${var} in the files to place variables

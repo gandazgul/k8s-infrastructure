@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: vaultwarden
+  name: bitwarden
   namespace: default
 spec:
   interval: 5m
@@ -13,27 +13,28 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
-        namespace: flux-system
+        namespace: kube-system
       interval: 5m
-  dependsOn:
-  - name: yasr-volume
   values:
+    image:
+      repository: vaultwarden/server
+      tag: 1.27.0
     env:
-      TZ: "America/New_York"
+      TZ: "${CLUSTER_TIME_ZONE}"
       DATA_FOLDER: "/config"
       WEB_VAULT_ENABLED: true
       LOG_FILE: "/config/bitwarden.log"
       # makes the logs more readable
-      ROCKET_CLI_COLORS: off
+      ROCKET_CLI_COLORS: false
       SIGNUPS_ALLOWED: true
       ADMIN_TOKEN: ${BITWARDEN_ADMIN_TOKEN}
       INVITATIONS_ALLOWED: true
       SHOW_PASSWORD_HINT: false
-      DOMAIN: https://p.${INGRESS_EXTERNAL_NAME}
+      DOMAIN: https://p.${CLUSTER_DOMAIN_NAME}
       SMTP_HOST: smtp.gmail.com
       SMTP_PORT: 587
       SMTP_FROM: ${EMAIL}
-      SMTP_SSL: true
+      SMTP_SECURITY: starttls
       SMTP_USERNAME: ${EMAIL}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
 
@@ -56,13 +57,14 @@ spec:
       main:
         enabled: true
         hosts:
-        - host: p.${INGRESS_EXTERNAL_NAME}
+        - host: p.${CLUSTER_DOMAIN_NAME}
           paths:
           - path: /
         tls:
         - hosts:
-          - p.${INGRESS_EXTERNAL_NAME}
-          secretName: bitwarden-cert
+          - p.${CLUSTER_DOMAIN_NAME}
+          secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://bitwarden.com/icons/icon-512x512.png"

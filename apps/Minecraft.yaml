@@ -13,7 +13,7 @@ spec:
 #      sourceRef:
 #        kind: HelmRepository
 #        name: minecraft-server-charts
-#        namespace: flux-system
+#        namespace: kube-system
 #      interval: 5m
     spec:
       chart: ./charts/minecraft
@@ -21,9 +21,7 @@ spec:
       sourceRef:
         kind: GitRepository
         name: minecraft-server-charts-fork
-        namespace: flux-system
-  dependsOn:
-  - name: yasr-volume
+        namespace: kube-system
   # All values at https://github.com/itzg/minecraft-server-charts/blob/master/charts/minecraft/values.yaml
   values:
     securityContext:
@@ -85,7 +83,7 @@ spec:
              hosts:
                - map.local
     extraEnv:
-      TZ: "America/New_York"
+      TZ: "${CLUSTER_TIME_ZONE}"
     persistence:
       dataDir:
         enabled: true

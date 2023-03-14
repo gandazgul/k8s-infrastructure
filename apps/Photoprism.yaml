@@ -1,0 +1,51 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: photoprism
+  namespace: default
+spec:
+  chart:
+    spec:
+      chart: photoprism
+      version: 6.5.0
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: kube-system
+  interval: 1h0m0s
+  values:
+    image:
+      pullPolicy: Always
+      tag: latest
+    env:
+      UID: "${PHOTOS_UID}"
+      GID: "${PHOTOS_GID}"
+      TZ: "${CLUSTER_TIME_ZONE}"
+      PHOTOPRISM_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    persistence:
+      config:
+        enabled: true
+        mountPath: /photoprism/storage
+        existingClaim: yasr-volume
+        subPath: configs/photoprism
+      originals:
+        enabled: true
+        mountPath: /photoprism/originals
+        existingClaim: main-volume
+        subPath: ${PHOTOS_PATH}
+    ingress:
+      main:
+        enabled: true
+        hosts:
+        - host: photos.${CLUSTER_DOMAIN_NAME}
+          paths:
+          - path: /
+        tls:
+        - hosts:
+          - photos.${CLUSTER_DOMAIN_NAME}
+          secretName: internal-ingress-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://www.photoprism.app/static/icons/logo.svg"

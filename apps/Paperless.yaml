@@ -1,0 +1,77 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: paperless
+  namespace: default
+spec:
+  chart:
+    spec:
+      chart: paperless
+      version: 8.6.0
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: kube-system
+  valuesFrom:
+    - kind: Secret
+      name: paperless-values
+      optional: false
+  interval: 1h0m0s
+  values:
+    image:
+      pullPolicy: Always
+      tag: latest
+    env:
+      USERMAP_UID: "1000"
+      USERMAP_GID: "1000"
+      PAPERLESS_TIME_ZONE: "${CLUSTER_TIME_ZONE}"
+      PAPERLESS_REDIS: redis://paperless-redis-master:6379
+      PAPERLESS_ADMIN_USER: admin
+      PAPERLESS_ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
+      PAPERLESS_SECRET_KEY: "${PAPERLESS_SECRET_KEY}"
+    persistence:
+      yasr:
+        enabled: true
+        existingClaim: yasr-volume
+        subPath:
+        - path: configs/paperless/data
+          mountPath: /usr/src/paperless/data
+        - path: configs/paperless/media
+          mountPath: /usr/src/paperless/media
+        - path: configs/paperless/export
+          mountPath: /usr/src/paperless/export
+    redis:
+      enabled: true
+      architecture: standalone
+    postgresql:
+      enabled: true
+      securityContext:
+        enabled: true
+        fsGroup: 1000
+      containerSecurityContext:
+        enabled: true
+        runAsUser: 1000
+      postgresqlUsername: paperless
+      postgresqlPassword: paperless
+      postgresqlDatabase: paperless
+      persistence:
+        enabled: true
+        existingClaim: yasr-volume
+        mountPath: /bitnami/postgresql
+        subPath: configs/paperless/database
+    ingress:
+      main:
+        enabled: true
+        hosts:
+        - host: paperless.${CLUSTER_DOMAIN_NAME}
+          paths:
+          - path: /
+        tls:
+        - hosts:
+          - paperless.${CLUSTER_DOMAIN_NAME}
+          secretName: internal-ingress-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://raw.githubusercontent.com/the-paperless-project/paperless/master/src/paperless/static/paperless/img/logo-dark.png"

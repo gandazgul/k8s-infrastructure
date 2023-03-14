@@ -11,7 +11,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: ingress-nginx
-        namespace: flux-system
+        namespace: kube-system
   dependsOn:
   - name: sealed-secrets-controller
   interval: 1h0m0s
@@ -33,8 +33,5 @@ spec:
             prometheus.io/port: "10254"
       service:
         type: NodePort
-        labels:
-          app.kubernetes.io/name: default-http-backend
-          app.kubernetes.io/part-of: ingress-nginx
         externalIPs:
-        - ${MASTER_IP}
+        - ${CONTROL_PLANE_IP}

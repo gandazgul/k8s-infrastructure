@@ -1,0 +1,6 @@
+persistence:
+  main:
+    enabled: true
+    existingClaim: main-volume
+    mountPath: /usr/src/paperless/consume
+    subPath: "rafag/PaperlessConsumer"

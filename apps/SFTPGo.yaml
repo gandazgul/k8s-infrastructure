@@ -1,0 +1,112 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: sftpgo
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: sftpgo
+      version: 0.12.0
+      sourceRef:
+        kind: HelmRepository
+        name: skm
+        namespace: kube-system
+      interval: 5m
+  values:
+    env:
+      TZ: "${CLUSTER_TIME_ZONE}"
+    sftpd:
+      enabled: true
+    webdavd:
+      enabled: true
+    httpd:
+      enabled: true
+    config:
+      data_provider:
+        driver: 'sqlite'
+        name: '/config/db.sqlite'
+        prefer_database_credentials: true
+    volumes:
+    - name: main-volume
+      persistentVolumeClaim:
+        claimName: main-volume
+    - name: yasr-volume
+      persistentVolumeClaim:
+        claimName: yasr-volume
+    volumeMounts:
+    - name: main-volume
+      mountPath: /data
+    - name: yasr-volume
+      subPath: configs/sftpgo
+      mountPath: /config
+    - name: yasr-volume
+      mountPath: /yasr
+    ui:
+      ingress:
+        enabled: true
+        annotations:
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://share.ravelo.tk/app/assets/sharry-webapp/1.8.0/img/logo.png"
+        className: nginx
+        hosts:
+        - host: sftpgo.${CLUSTER_DOMAIN_NAME}
+          paths:
+          - path: /
+            pathType: ImplementationSpecific
+        tls:
+        - hosts:
+          - sftpgo.${CLUSTER_DOMAIN_NAME}
+          secretName: internal-ingress-cert
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sftpgo-webdav
+  namespace: default
+  labels:
+    app.kubernetes.io/name: sftpgo-webdav
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - webdav.${CLUSTER_DOMAIN_NAME}
+    secretName: internal-ingress-cert
+  rules:
+  - host: webdav.${CLUSTER_DOMAIN_NAME}
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: sftpgo
+            port:
+              name: webdav
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sftpgo-sftp
+  namespace: default
+  labels:
+    app.kubernetes.io/name: sftpgo-sftp
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - sftp.${CLUSTER_DOMAIN_NAME}
+    secretName: internal-ingress-cert
+  rules:
+  - host: sftp.${CLUSTER_DOMAIN_NAME}
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: sftpgo
+            port:
+              name: sftp

@@ -13,20 +13,20 @@ source "$SCRIPT_DIR/requirements.sh"
 installFlux() {
   REPO_ROOT=$(git rev-parse --show-toplevel)
 
-  # Master node information
-  MASTER_IP=$(kubectl get nodes --selector=node-role.kubernetes.io/master -o=jsonpath='{.items[0].metadata.annotations.flannel\.alpha\.coreos\.com\/public-ip}')
-  MASTER_NODE_NAME=$(kubectl get nodes --selector=node-role.kubernetes.io/master -o=jsonpath='{.items[0].metadata.labels.kubernetes\.io/hostname}')
+  # Control plane node information
+  CONTROL_PLANE_IP=$(kubectl get nodes --selector=node-role.kubernetes.io/control-plane -o=jsonpath='{.items[0].metadata.annotations.flannel\.alpha\.coreos\.com\/public-ip}')
+  CONTROL_PLANE_NAME=$(kubectl get nodes --selector=node-role.kubernetes.io/control-plane -o=jsonpath='{.items[0].metadata.labels.kubernetes\.io/hostname}')
 
   # Confirm information
-  echo "Using MASTER_IP=$MASTER_IP"
-  echo "Using MASTER_NODE_NAME=$MASTER_NODE_NAME"
+  echo "Using CONTROL_PLANE_IP=$CONTROL_PLANE_IP"
+  echo "Using CONTROL_PLANE_NAME=$CONTROL_PLANE_NAME"
   echo "Using CLUSTER_NAME=$CLUSTER_NAME"
   pause
 
   # Update secrets file
   secretFile="$REPO_ROOT/clusters/$CLUSTER_NAME/secrets.env"
-  sed -i '' "s/\(MASTER_IP=*\).*/\1$MASTER_IP/" "$secretFile" || exit 1
-  sed -i '' "s/\(MASTER_NODE_NAME=*\).*/\1$MASTER_NODE_NAME/" "$secretFile" || exit 1
+  sed -i '' "s/\(CONTROL_PLANE_IP=*\).*/\1$CONTROL_PLANE_IP/" "$secretFile" || exit 1
+  sed -i '' "s/\(CONTROL_PLANE_NAME=*\).*/\1$CONTROL_PLANE_NAME/" "$secretFile" || exit 1
 
   message "installing Flux v2"
 
@@ -35,12 +35,12 @@ installFlux() {
     exit 1
   fi
 
-  if ! flux install; then
+  if ! flux install --components-extra=image-reflector-controller,image-automation-controller; then
     echo -e "Flux did not install correctly, aborting!"
     exit 1
   fi
 
-  if ! kubectl apply -f "$REPO_ROOT"/infrastructure/flux-system/GitRepoSync.yaml; then
+  if ! kubectl apply -f "$REPO_ROOT"/infrastructure/setup/GitRepoSync.yaml; then
     echo -e "Flux did not install correctly, aborting!"
     exit 1
   fi

@@ -3,24 +3,30 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
   name: rafag
-  namespace: flux-system
+  namespace: kube-system
 spec:
   dependsOn:
   - name: sealed-secret
-  - name: flux-system
   - name: kube-system
+  - name: main-volume
+  - name: backup-volume
+  - name: yasr-volume
   interval: 10m0s
   path: ./clusters/rafag/
   prune: true
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: k8s-infrastructure
+    namespace: kube-system
   validation: client
   postBuild:
     # constants can be specified like this:
-    #    substitute:
-    #      cluster_env: "prod"
-    #      cluster_region: "eu-central-1"
+    substitute:
+      PHOTOS_PATH: rafag/photos
+      PHOTOS_UID: "1000"
+      PHOTOS_GID: "1000"
+      # The time zone to apply to all containers
+      CLUSTER_TIME_ZONE: America/New_York
     substituteFrom:
     # substitutions can also come from a config map or secret
     #    - kind: ConfigMap

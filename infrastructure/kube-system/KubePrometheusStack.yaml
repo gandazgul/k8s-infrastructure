@@ -11,7 +11,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: prometheus-community
-        namespace: flux-system
+        namespace: kube-system
   dependsOn:
   - name: sealed-secrets-controller
   interval: 1h0m0s
@@ -20,48 +20,39 @@ spec:
       ingress:
         enabled: true
         ingressClassName: nginx
-        annotations:
-#          kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "ca-issuer"
         hosts:
-        - alertmanager.${INGRESS_INTERNAL_NAME}
+        - alertmanager.${CLUSTER_DOMAIN_NAME}
         paths:
         - /
         pathType: ImplementationSpecific
         tls:
-        - secretName: alertmanager-cert
-          hosts:
-          - alertmanager.${INGRESS_INTERNAL_NAME}
+        - hosts:
+          - alertmanager.${CLUSTER_DOMAIN_NAME}
+          secretName: internal-ingress-cert
     grafana:
       adminPassword: ${ADMIN_PASSWORD}
       ingress:
         enabled: true
         ingressClassName: nginx
-        annotations:
-#          kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "ca-issuer"
         hosts:
-        - grafana.${INGRESS_INTERNAL_NAME}
+        - grafana.${CLUSTER_DOMAIN_NAME}
         paths:
         - /
         pathType: ImplementationSpecific
         tls:
-        - secretName: grafana-cert
-          hosts:
-          - grafana.${INGRESS_INTERNAL_NAME}
+        - hosts:
+          - grafana.${CLUSTER_DOMAIN_NAME}
+          secretName: internal-ingress-cert
     prometheus:
       ingress:
         enabled: true
         ingressClassName: nginx
-        annotations:
-#          kubernetes.io/ingress.class: "nginx"
-          cert-manager.io/cluster-issuer: "ca-issuer"
         hosts:
-        - prometheus.${INGRESS_INTERNAL_NAME}
+        - prometheus.${CLUSTER_DOMAIN_NAME}
         paths:
         - /
         pathType: ImplementationSpecific
         tls:
-        - secretName: prometheus-cert
-          hosts:
-          - prometheus.${INGRESS_INTERNAL_NAME}
+        - hosts:
+          - prometheus.${CLUSTER_DOMAIN_NAME}
+          secretName: internal-ingress-cert
