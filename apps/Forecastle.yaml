@@ -13,7 +13,7 @@ spec:
       sourceRef:
         kind: GitRepository
         name: forecastle
-        namespace: flux-system
+        namespace: kube-system
   # All values at https://github.com/stakater/Forecastle/blob/master/deployments/kubernetes/chart/forecastle/values.yaml
   values:
     forecastle:

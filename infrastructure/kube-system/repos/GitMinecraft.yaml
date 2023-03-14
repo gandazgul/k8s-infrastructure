@@ -3,7 +3,7 @@ apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: GitRepository
 metadata:
   name: minecraft-server-charts-fork
-  namespace: flux-system
+  namespace: kube-system
 spec:
   interval: 1m0s
   ref:

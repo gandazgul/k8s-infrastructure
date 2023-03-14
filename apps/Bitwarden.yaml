@@ -13,7 +13,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: k8s-at-home
-        namespace: flux-system
+        namespace: kube-system
       interval: 5m
   values:
     image:
@@ -63,7 +63,7 @@ spec:
         tls:
         - hosts:
           - p.${CLUSTER_DOMAIN_NAME}
-          secretName: external-ingress-cert
+          secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
           forecastle.stakater.com/expose: "true"
