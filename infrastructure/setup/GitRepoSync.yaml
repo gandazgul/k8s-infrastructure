@@ -18,6 +18,8 @@ metadata:
   name: kube-system
   namespace: kube-system
 spec:
+  dependsOn:
+  - name: sealed-secret
   interval: 10m0s
   path: ./infrastructure/kube-system/
   prune: true
@@ -26,3 +28,7 @@ spec:
     name: k8s-infrastructure
     namespace: kube-system
   validation: client
+  postBuild:
+    substituteFrom:
+    - kind: Secret
+      name: secrets
