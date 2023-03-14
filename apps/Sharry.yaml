@@ -26,7 +26,7 @@ spec:
     # @default -- See values.yaml
     config: |
       sharry.restserver {
-        base-url = "https://share.${INGRESS_INTERNAL_NAME}"
+        base-url = "https://share.${CLUSTER_DOMAIN_NAME}"
         bind {
           address = "0.0.0.0"
           port = 9090
@@ -101,12 +101,13 @@ spec:
       main:
         enabled: true
         hosts:
-        - host: share.${INGRESS_INTERNAL_NAME}
+        - host: share.${CLUSTER_DOMAIN_NAME}
           paths:
           - path: /
         tls:
         - hosts:
-          - share.${INGRESS_INTERNAL_NAME}
+          - share.${CLUSTER_DOMAIN_NAME}
           secretName: external-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
+

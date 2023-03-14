@@ -8,14 +8,16 @@ metadata:
     app.kubernetes.io/name: transmission
   annotations:
     nginx.ingress.kubernetes.io/app-root: /web/
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/icon: "https://transmissionbt.com/assets/images/Transmission_icon.png"
 spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - transmission.${INGRESS_INTERNAL_NAME}
+    - transmission.${CLUSTER_DOMAIN_NAME}
     secretName: internal-ingress-cert
   rules:
-  - host: transmission.${INGRESS_INTERNAL_NAME}
+  - host: transmission.${CLUSTER_DOMAIN_NAME}
     http:
       paths:
       - path: /

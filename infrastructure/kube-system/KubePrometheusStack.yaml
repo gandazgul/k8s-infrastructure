@@ -21,13 +21,13 @@ spec:
         enabled: true
         ingressClassName: nginx
         hosts:
-        - alertmanager.${INGRESS_INTERNAL_NAME}
+        - alertmanager.${CLUSTER_DOMAIN_NAME}
         paths:
         - /
         pathType: ImplementationSpecific
         tls:
         - hosts:
-          - alertmanager.${INGRESS_INTERNAL_NAME}
+          - alertmanager.${CLUSTER_DOMAIN_NAME}
           secretName: internal-ingress-cert
     grafana:
       adminPassword: ${ADMIN_PASSWORD}
@@ -35,24 +35,24 @@ spec:
         enabled: true
         ingressClassName: nginx
         hosts:
-        - grafana.${INGRESS_INTERNAL_NAME}
+        - grafana.${CLUSTER_DOMAIN_NAME}
         paths:
         - /
         pathType: ImplementationSpecific
         tls:
         - hosts:
-          - grafana.${INGRESS_INTERNAL_NAME}
+          - grafana.${CLUSTER_DOMAIN_NAME}
           secretName: internal-ingress-cert
     prometheus:
       ingress:
         enabled: true
         ingressClassName: nginx
         hosts:
-        - prometheus.${INGRESS_INTERNAL_NAME}
+        - prometheus.${CLUSTER_DOMAIN_NAME}
         paths:
         - /
         pathType: ImplementationSpecific
         tls:
         - hosts:
-          - prometheus.${INGRESS_INTERNAL_NAME}
+          - prometheus.${CLUSTER_DOMAIN_NAME}
           secretName: internal-ingress-cert
