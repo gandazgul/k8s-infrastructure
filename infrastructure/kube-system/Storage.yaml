@@ -1,69 +1,64 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
-kind: HelmRelease
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
 metadata:
   name: main-volume
-  namespace: default
+  namespace: flux-system
 spec:
-  interval: 5m
-  chart:
-    spec:
-      chart: persistence-volume
-      version: '0.2.2'
-      sourceRef:
-        kind: HelmRepository
-        name: gandazgul
-        namespace: flux-system
-      interval: 1m
-  values:
-    volumeName: main-volume
-    storage: 4Ti
-    storageClass: hdd
-    path: /media/main
-    createStorageClass: true
+  interval: 10m0s
+  path: ./infrastructure/storage/hdd-class/
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  prune: true
+  validation: client
+  postBuild:
+    # constants can be specified like this:
+    substitute:
+      VOLUME_NAME: main-volume
+      VOLUME_CAPACITY: 4Ti
+      VOLUME_STORAGE_CLASS: hdd
+      VOLUME_PATH: /media/main
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
-kind: HelmRelease
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
 metadata:
   name: backup-volume
-  namespace: default
+  namespace: flux-system
 spec:
-  interval: 5m
-  chart:
-    spec:
-      chart: persistence-volume
-      version: '0.2.2'
-      sourceRef:
-        kind: HelmRepository
-        name: gandazgul
-        namespace: flux-system
-      interval: 1m
-  values:
-    volumeName: backup-volume
-    storage: 4Ti
-    storageClass: hdd
-    path: /media/backup
-    createStorageClass: false # main already created it
+  interval: 10m0s
+  path: ./infrastructure/storage/base/
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  prune: true
+  validation: client
+  postBuild:
+    # constants can be specified like this:
+    substitute:
+      VOLUME_NAME: backup-volume
+      VOLUME_CAPACITY: 4Ti
+      VOLUME_STORAGE_CLASS: hdd
+      VOLUME_PATH: /media/backup
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
-kind: HelmRelease
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
 metadata:
   name: yasr-volume
-  namespace: default
+  namespace: flux-system
 spec:
-  interval: 5m
-  chart:
-    spec:
-      chart: persistence-volume
-      version: '0.2.2'
-      sourceRef:
-        kind: HelmRepository
-        name: gandazgul
-        namespace: flux-system
-      interval: 1m
-  values:
-    volumeName: yasr-volume
-    storage: 4Ti
-    storageClass: hdd
-    path: /media/yasr
-    createStorageClass: false # main already created it
+  interval: 10m0s
+  path: ./infrastructure/storage/base/
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  prune: true
+  validation: client
+  postBuild:
+    # constants can be specified like this:
+    substitute:
+      VOLUME_NAME: yasr-volume
+      VOLUME_CAPACITY: 4Ti
+      VOLUME_STORAGE_CLASS: hdd
+      VOLUME_PATH: /media/yasr
+

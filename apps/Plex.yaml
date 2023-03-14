@@ -16,14 +16,11 @@ spec:
         name: k8s-at-home
         namespace: flux-system
       interval: 5m
-  dependsOn:
-  - name: yasr-volume
-  - name: main-volume
   valuesFrom:
   - kind: Secret
     name: plex-values
     optional: false
-  # All values at https://github.com/k8s-at-home/charts/blob/master/charts/plex/values.yaml
+  # All values at https://github.com/k8s-at-home/charts/blob/main/charts/plex/values.yaml
   values:
     image:
       repository: plexinc/pms-docker
@@ -39,7 +36,7 @@ spec:
             port: 32400
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
-      ADVERTISE_IP: "http://${DYN_DNS_NAME}:32400/,http://${MASTER_IP}:32400/"
+      ADVERTISE_IP: "http://${DYN_DNS_NAME}:32400/,http://${CONTROL_PLANE_IP}:32400/"
     probes:
       liveness:
         enabled: false

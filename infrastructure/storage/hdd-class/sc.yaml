@@ -1,4 +1,3 @@
-{{- if .Values.createStorageClass -}}
 ---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -6,4 +5,3 @@ metadata:
   name: hdd
 provisioner: kubernetes.io/no-provisioner
 reclaimPolicy: Retain
-{{- end -}}

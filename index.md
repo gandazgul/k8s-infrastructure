@@ -16,10 +16,10 @@ between the main mount point and the backup one.
 
 ## My Home Setup
 
-A small business server running as a master node and worker. I plan to add at least one other
+A small business server running as control plane node and worker. I plan to add at least one other
 node to learn to manage a "cluster" and to try to automate node on-boarding. I've tested the
 manual node on-boarding with VMs, and it works well.
-Look at this script [https://github.com/gandazgul/k8s-infrastructure/blob/master/install-k8s/2-configK8SNode.sh]()
+Look at this script [https://github.com/gandazgul/k8s-infrastructure/blob/main/install-k8s/2-configK8SNode.sh]()
 
 # [Helm](https://helm.sh) Charts
 
@@ -37,9 +37,9 @@ Here is the [index.yaml](https://gandazgul.github.io/k8s-infrastructure/index.ya
 
 ## Getting started
 
-By following these steps you will install a fully functioning kubernetes master where you can run all of your applications.
+By following these steps you will install a fully functioning kubernetes control plane/worker where you can run all of your applications.
 
-1. Install Fedora 31
+1. Install Fedora 33
     1. During install set the hostname, this will be the name of this node, you can do this after install
     2. Create a user, kubectl doesn't like running as root
     3. Remove the swap, kubernetes is not compatible with swap at the moment and will complain about it.
@@ -49,7 +49,7 @@ points as I like them
 4. Copy the scripts over `scp -r ./install-k8s fedora-ip:~/`
 5. `ssh fedora-ip`
 6. Run your modified `~/install-k8s/1-fedoraPostInstall.sh`
-7. Then run `~/install-k8s/2-configK8SMaster.sh` - This will install K8s and configure the master to run pods, it will also install
+7. Then run `~/install-k8s/2-configK8SControlPlane.sh` - This will install K8s and configure the server to run pods, it will also install
 Flannel network plugin
     * Wait for the flannel for your architecture to show `1` in all columns then press ctrl+c
 8. If something fails, you can reset with `sudo kubeadm reset`, delete kubeadminit.lock and try again, all the
@@ -87,7 +87,7 @@ kubernetes-client in Fedora)
 
     OR
 
-    1. You can create a new folder like I've done with my other setups (see gandazgul.d and secondary-master.d)
+    1. You can create a new folder like I've done with my other setups (see gandazgul.d and secondary-server.d)
     2. Then symlink the files that you want to include or copy them and customize them
     3. Then run `helmfile -f your-dir.d sync`
 5. Afterwards when you make changes run `helmfile -f helmfile.d apply`
@@ -136,7 +136,7 @@ volume it gets deleted, is just a warning.
 
     `kubectl uncordon [node-name]`
 
-### How to upgrade the kubernetes master and nodes
+### How to upgrade the kubernetes control plane and nodes
 
 It's fairly easy and I've done it before successfully.
 
@@ -144,7 +144,7 @@ Follow these [instructions](https://kubernetes.io/docs/tasks/administer-cluster/
 
 ## License
 
-Unless specifically noted, all parts of this project are licensed under the [MIT license](https://github.com/gandazgul/k8s-infrastructure/blob/master/LICENSE.md).
+Unless specifically noted, all parts of this project are licensed under the [MIT license](https://github.com/gandazgul/k8s-infrastructure/blob/main/LICENSE.md).
 
 ## Contributing
 

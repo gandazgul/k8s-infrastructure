@@ -15,9 +15,6 @@ spec:
         name: k8s-at-home
         namespace: flux-system
       interval: 5m
-  dependsOn:
-  - name: yasr-volume
-  - name: main-volume
   valuesFrom:
   - kind: Secret
     name: resilio-values

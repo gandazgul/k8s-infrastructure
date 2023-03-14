@@ -13,8 +13,6 @@ spec:
         kind: HelmRepository
         name: k8s-at-home
         namespace: flux-system
-  dependsOn:
-  - name: yasr-volume
   interval: 1h0m0s
   values:
     image:
