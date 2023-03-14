@@ -28,12 +28,14 @@ spec:
       main:
         enabled: true
         hosts:
-        - host: resilio.${INGRESS_INTERNAL_NAME}
+        - host: resilio.${CLUSTER_DOMAIN_NAME}
           paths:
           - path: /
         tls:
         - hosts:
-          - resilio.${INGRESS_INTERNAL_NAME}
+          - resilio.${CLUSTER_DOMAIN_NAME}
           secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://www.resilio.com/images/logo.svg"

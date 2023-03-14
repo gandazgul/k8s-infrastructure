@@ -47,15 +47,18 @@ spec:
     ui:
       ingress:
         enabled: true
+        annotations:
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://share.ravelo.tk/app/assets/sharry-webapp/1.8.0/img/logo.png"
         className: nginx
         hosts:
-        - host: sftpgo.${INGRESS_INTERNAL_NAME}
+        - host: sftpgo.${CLUSTER_DOMAIN_NAME}
           paths:
           - path: /
             pathType: ImplementationSpecific
         tls:
         - hosts:
-          - sftpgo.${INGRESS_INTERNAL_NAME}
+          - sftpgo.${CLUSTER_DOMAIN_NAME}
           secretName: internal-ingress-cert
 ---
 apiVersion: networking.k8s.io/v1
@@ -69,10 +72,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - webdav.${INGRESS_INTERNAL_NAME}
+    - webdav.${CLUSTER_DOMAIN_NAME}
     secretName: internal-ingress-cert
   rules:
-  - host: webdav.${INGRESS_INTERNAL_NAME}
+  - host: webdav.${CLUSTER_DOMAIN_NAME}
     http:
       paths:
       - path: /
@@ -94,10 +97,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - sftp.${INGRESS_INTERNAL_NAME}
+    - sftp.${CLUSTER_DOMAIN_NAME}
     secretName: internal-ingress-cert
   rules:
-  - host: sftp.${INGRESS_INTERNAL_NAME}
+  - host: sftp.${CLUSTER_DOMAIN_NAME}
     http:
       paths:
       - path: /
