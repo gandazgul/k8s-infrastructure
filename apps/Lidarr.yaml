@@ -25,6 +25,10 @@ spec:
         namespace: kube-system
       interval: 5m
   values:
+    image:
+      repository: ghcr.io/geek-cookbook/lidarr
+      tag: latest
+      pullPolicy: Always
     podSecurityContext:
       runAsUser: 1000
       fsGroup: 1000
