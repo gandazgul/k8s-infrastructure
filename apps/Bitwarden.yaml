@@ -63,7 +63,7 @@ spec:
         tls:
         - hosts:
           - ${BITWARDEN_SUBDOMAIN}.${CLUSTER_DOMAIN_NAME}
-          secretName: internal-ingress-cert
+          secretName: letsencrypt-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
           forecastle.stakater.com/expose: "true"
