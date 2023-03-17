@@ -25,7 +25,7 @@ spec:
         namespace: kube-system
       interval: 5m
   values:
-    securityContext:
+    podSecurityContext:
       runAsUser: 1000
       fsGroup: 1000
     env:
