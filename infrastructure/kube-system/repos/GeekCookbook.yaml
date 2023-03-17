@@ -1,0 +1,9 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: k8s-at-home
+  namespace: kube-system
+spec:
+  interval: 1h0m0s
+  url: https://geek-cookbook.github.io/charts/
+  #  url: git+https://github.com/gandazgul/charts-1@charts?ref=patch-1
