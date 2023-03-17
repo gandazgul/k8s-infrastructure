@@ -49,7 +49,7 @@ spec:
         tls:
         - hosts:
           - movies.${CLUSTER_DOMAIN_NAME}
-          secretName: letsencrypt-cert
+          secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
           forecastle.stakater.com/expose: "true"

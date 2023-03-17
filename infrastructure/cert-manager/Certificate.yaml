@@ -2,7 +2,7 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: letsencrypt-cert
+  name: internal-ingress-cert
   namespace: kube-system
 spec:
   dnsNames:
@@ -12,7 +12,7 @@ spec:
     group: cert-manager.io
     kind: ClusterIssuer
     name: letsencrypt-prod-cloudflare
-  secretName: letsencrypt-cert
+  secretName: internal-ingress-cert
   usages:
   - digital signature
   - key encipherment
@@ -20,7 +20,7 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: letsencrypt-cert
+  name: internal-ingress-cert
   namespace: default
 spec:
   dnsNames:
@@ -30,7 +30,7 @@ spec:
     group: cert-manager.io
     kind: ClusterIssuer
     name: letsencrypt-prod-cloudflare
-  secretName: letsencrypt-cert
+  secretName: internal-ingress-cert
   usages:
   - digital signature
   - key encipherment
