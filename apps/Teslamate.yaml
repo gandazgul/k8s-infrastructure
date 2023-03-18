@@ -53,8 +53,6 @@ spec:
     ingress:
       main:
         enabled: true
-        annotations:
-          kubernetes.io/ingress.class: "nginx"
         hosts:
           - host: teslamate.${CLUSTER_DOMAIN_NAME}
             paths:
@@ -63,6 +61,12 @@ spec:
         tls:
           - hosts:
               - teslamate.${CLUSTER_DOMAIN_NAME}
+            secretName: internal-ingress-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://bitwarden.com/icons/icon-512x512.png"
+
 #  valuesFrom:
 #    - kind: Secret
 #      name: teslamate-postgresql
