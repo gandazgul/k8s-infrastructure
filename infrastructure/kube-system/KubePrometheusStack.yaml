@@ -98,7 +98,7 @@ spec:
                   path: /var/lib/grafana/dashboards/teslamate_reports
       dashboards:
         teslamate:
-          custom-dashboard:
+          charges:
             file: charges.json
 
       additionalDataSources:
