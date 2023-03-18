@@ -75,7 +75,7 @@ spec:
                 editable: true
                 updateIntervalSeconds: 86400
                 options:
-                  path: /var/lib/grafana/dashboards/teslamate
+                  path: /var/lib/grafana/provisioning/dashboards/teslamate
               - name: 'teslamate_internal'
                 orgId: 1
                 folder: Internal
@@ -85,7 +85,7 @@ spec:
                 editable: true
                 updateIntervalSeconds: 86400
                 options:
-                  path: /var/lib/grafana/dashboards/teslamate_internal
+                  path: /var/lib/grafana/provisioning/dashboards/teslamate_internal
               - name: 'teslamate_reports'
                 orgId: 1
                 folder: Reports
@@ -95,7 +95,7 @@ spec:
                 editable: true
                 updateIntervalSeconds: 86400
                 options:
-                  path: /var/lib/grafana/dashboards/teslamate_reports
+                  path: /var/lib/grafana/provisioning/dashboards/teslamate_reports
       dashboards:
         teslamate:
           charges:
