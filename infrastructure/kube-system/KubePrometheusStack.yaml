@@ -12,8 +12,6 @@ spec:
         kind: HelmRepository
         name: prometheus-community
         namespace: kube-system
-  dependsOn:
-  - name: sealed-secrets-controller
   interval: 1h0m0s
   values:
     alertmanager:
