@@ -62,6 +62,45 @@ spec:
         subPath: "configs/grafana"
         ## Name of an existing PVC. Can be templated.
         existingClaim: yasr-volume
+      dashboardProviders:
+          dashboardproviders.yaml:
+            apiVersion: 1
+            providers:
+              - name: 'teslamate'
+                orgId: 1
+                folder: TeslaMate
+                folderUid: Nr4ofiDZk
+                type: file
+                disableDeletion: false
+                editable: true
+                updateIntervalSeconds: 86400
+                options:
+                  path: /var/lib/grafana/dashboards/teslamate
+              - name: 'teslamate_internal'
+                orgId: 1
+                folder: Internal
+                folderUid: Nr5ofiDZk
+                type: file
+                disableDeletion: false
+                editable: true
+                updateIntervalSeconds: 86400
+                options:
+                  path: /var/lib/grafana/dashboards/teslamate_internal
+              - name: 'teslamate_reports'
+                orgId: 1
+                folder: Reports
+                folderUid: Nr6ofiDZk
+                type: file
+                disableDeletion: false
+                editable: true
+                updateIntervalSeconds: 86400
+                options:
+                  path: /var/lib/grafana/dashboards/teslamate_reports
+      dashboards:
+        teslamate:
+          custom-dashboard:
+            file: charges.json
+
       additionalDataSources:
         - name: TeslaMate
           type: postgres
