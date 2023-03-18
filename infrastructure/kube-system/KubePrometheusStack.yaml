@@ -67,7 +67,7 @@ spec:
           access: proxy
           basicAuth: false
           withCredentials: false
-          isDefault: true
+          isDefault: false
           secureJsonData:
             password: "${ADMIN_PASSWORD}"
           jsonData:
