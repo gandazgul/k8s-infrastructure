@@ -15,8 +15,6 @@ spec:
         name: geek-cookbook
         namespace: kube-system
       interval: 5m
-  dependsOn:
-    - name: yasr-volume
   values:
     image:
       repository: teslamate/teslamate
