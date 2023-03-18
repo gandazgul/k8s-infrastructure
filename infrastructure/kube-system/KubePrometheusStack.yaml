@@ -57,6 +57,25 @@ spec:
         - hosts:
           - grafana.${CLUSTER_DOMAIN_NAME}
           secretName: internal-ingress-cert
+      additionalDataSources:
+        - name: TeslaMate
+          type: postgres
+          url: teslamate-postgresql.default:5432
+          user: teslamate
+          database: teslamate
+          password: "${ADMIN_PASSWORD}"
+          access: proxy
+          basicAuth: false
+          withCredentials: false
+          isDefault: true
+          secureJsonData:
+            password: "${ADMIN_PASSWORD}"
+          jsonData:
+            postgresVersion: 1000
+            sslmode: disable
+          version: 1
+          editable: true
+
     prometheus:
       ingress:
         enabled: true
