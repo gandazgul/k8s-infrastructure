@@ -57,6 +57,13 @@ spec:
         - hosts:
           - grafana.${CLUSTER_DOMAIN_NAME}
           secretName: internal-ingress-cert
+      persistence:
+        type: pvc
+        enabled: true
+        ## Sub-directory of the PV to mount. Can be templated.
+        subPath: "configs/grafana"
+        ## Name of an existing PVC. Can be templated.
+        existingClaim: yasr-volume
       additionalDataSources:
         - name: TeslaMate
           type: postgres
