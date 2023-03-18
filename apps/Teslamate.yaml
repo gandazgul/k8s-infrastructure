@@ -56,13 +56,13 @@ spec:
         annotations:
           kubernetes.io/ingress.class: "nginx"
         hosts:
-          - host: teslamate.${INGRESS_INTERNAL_NAME}
+          - host: teslamate.${CLUSTER_DOMAIN_NAME}
             paths:
               - path: /
                 pathType: Prefix
         tls:
           - hosts:
-              - teslamate.${INGRESS_INTERNAL_NAME}
+              - teslamate.${CLUSTER_DOMAIN_NAME}
 #  valuesFrom:
 #    - kind: Secret
 #      name: teslamate-postgresql
