@@ -96,10 +96,10 @@ spec:
                 updateIntervalSeconds: 86400
                 options:
                   path: /var/lib/grafana/provisioning/dashboards/teslamate_reports
-      dashboards:
-        teslamate:
-          charges:
-            file: charges.json
+#      dashboards:
+#        teslamate:
+#          charges:
+#            file: charges.json
 
       additionalDataSources:
         - name: TeslaMate
