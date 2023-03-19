@@ -22,7 +22,8 @@ spec:
           claimName: yasr-volume
       - name: dev-tun
         hostPath:
-          path: /dev/net
+          path: /dev/net/tun
+          type: CharDevice
       - name: tz-config
         hostPath:
           path: /etc/localtime
@@ -82,7 +83,7 @@ spec:
           name: yasr-volume
           subPath: configs/openvpn/
         - name: dev-tun
-          mountPath: /dev/net
+          mountPath: /dev/net/tun
         - name: yasr-volume
           mountPath: /tmp/gluetun/
           subPath: configs/openvpn/
