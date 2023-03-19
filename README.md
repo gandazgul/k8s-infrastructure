@@ -1,6 +1,6 @@
 # K8s Infrastructure Config
 
-This is a collection of scripts to deploy kubernetes v1.20.x on Fedora. Tested on Fedora 33.
+This is a collection of scripts to deploy kubernetes v1.20.x on Fedora. Tested on Fedora 37.
 
 It's also a collection of helm charts that I developed or customized, as well as
 [flux v2](https://toolkit.fluxcd.io/) objects to deploy all the supported applications.
