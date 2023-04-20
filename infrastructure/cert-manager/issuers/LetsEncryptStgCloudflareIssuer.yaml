@@ -4,16 +4,16 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-prod-cloudflare
+  name: letsencrypt-stg-cloudflare
 spec:
   acme:
     # The ACME server URL
-    server: https://acme-v02.api.letsencrypt.org/directory
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
     # Email address used for ACME registration
     email: ${EMAIL}
     # Name of a secret used to store the ACME account private key
     privateKeySecretRef:
-      name: letsencrypt-prod
+      name: letsencrypt-staging
     # Enable the HTTP-01 challenge provider
     solvers:
     # An empty 'selector' means that this solver matches all domains
@@ -23,11 +23,3 @@ spec:
           apiTokenSecretRef:
             name: cloudflare-api-token-secret
             key: api-token
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: cloudflare-api-token-secret
-  namespace: kube-system
-stringData:
-  api-token: ${CLOUDFLARE_API_TOKEN}

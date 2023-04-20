@@ -20,12 +20,13 @@ spec:
       - name: yasr-volume
         persistentVolumeClaim:
           claimName: yasr-volume
-      - hostPath:
+      - name: dev-tun
+        hostPath:
           path: /dev/net/tun
-        name: dev-tun
-      - hostPath:
+          type: CharDevice
+      - name: tz-config
+        hostPath:
           path: /etc/localtime
-        name: tz-config
       dnsPolicy: ClusterFirst
       dnsConfig:
         {}
@@ -81,10 +82,10 @@ spec:
         - mountPath: /vpn
           name: yasr-volume
           subPath: configs/openvpn/
-        - mountPath: /dev/net/tun
-          name: dev-tun
-        - mountPath: /tmp/gluetun/
-          name: yasr-volume
+        - name: dev-tun
+          mountPath: /dev/net/tun
+        - name: yasr-volume
+          mountPath: /tmp/gluetun/
           subPath: configs/openvpn/
       # Transmission port forward
       - name: transmission-pia-port-forward

@@ -1,6 +1,6 @@
 # K8s Infrastructure Config
 
-install-k8s/ - This is a collection of scripts to deploy kubernetes v1.24.x on Fedora. Tested on Fedora 33.
+install-k8s/ - This is a collection of scripts to deploy kubernetes v1.24.x on Fedora. Tested on Fedora 37.
 charts/ - Is a collection of helm charts that I developed or customized.
 
 The rest is a GitOps setup using [Flex CD](https://fluxcd.io/flux/get-started/) to deploy all infra and the supported applications.
@@ -39,7 +39,7 @@ Here is the [index.yaml](https://gandazgul.github.io/k8s-infrastructure/index.ya
 
 By following these steps you will install a fully functioning kubernetes control plane/worker where you can run all of your applications.
 
-1. Install Fedora 33
+1. Install Fedora 37
     1. During install set the hostname, this will be the name of this node, you can do this after install
     2. Create a user, kubectl doesn't like running as root for good reason
     3. Remove the swap, kubernetes is not compatible with swap at the moment and will complain about it.
