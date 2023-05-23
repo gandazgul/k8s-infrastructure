@@ -34,7 +34,7 @@ spec:
         annotations:
           kubernetes.io/ingress.class: "nginx"
           forecastle.stakater.com/expose: "true"
-          forecastle.stakater.com/icon: "https://zwave.ravelo.tk/static/logo.png"
+          forecastle.stakater.com/icon: "https://zwave.${CLUSTER_DOMAIN_NAME}/static/logo.png"
     service:
       main:
         ports:
