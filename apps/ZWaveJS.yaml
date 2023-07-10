@@ -36,8 +36,11 @@ spec:
         namespace: kube-system
       interval: 5m
   values:
+    securityContext:
+      privileged: true
     image:
       tag: latest
+      pullPolicy: Always
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
     ingress:
