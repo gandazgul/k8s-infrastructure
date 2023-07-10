@@ -36,6 +36,7 @@ spec:
       - host: zwave.${CLUSTER_DOMAIN_NAME}
         paths:
         - path: /
+          pathType: ImplementationSpecific
       tls:
       - hosts:
         - zwave.${CLUSTER_DOMAIN_NAME}
