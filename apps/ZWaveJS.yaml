@@ -8,17 +8,6 @@ spec:
   interval: 1h0m0s
   url: https://charts.ar80.eu/
 ---
-apiVersion: source.toolkit.fluxcd.io/v1beta1
-kind: GitRepository
-metadata:
-  name: publiccharts
-  namespace: kube-system
-spec:
-  interval: 60m0s
-  ref:
-    branch: patch-1
-  url: https://github.com/gandazgul/publiccharts.git
----
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -28,11 +17,11 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: ./charts/zwave-js-ui
+      chart: zwave-js-ui
       version: 0.2.31
       sourceRef:
-        kind: GitRepository
-        name: publiccharts
+        kind: HelmRepository
+        name: k8sonlab
         namespace: kube-system
       interval: 5m
   values:
