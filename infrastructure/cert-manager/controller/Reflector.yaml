@@ -24,4 +24,3 @@ spec:
         name: emberstack
         namespace: kube-system
       interval: 1h
-
