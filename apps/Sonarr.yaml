@@ -53,4 +53,4 @@ spec:
         annotations:
           kubernetes.io/ingress.class: "nginx"
           forecastle.stakater.com/expose: "true"
-          forecastle.stakater.com/icon: "https://tv.ravelo.tk/Content/Images/logo.svg"
+          forecastle.stakater.com/icon: "https://tv.${CLUSTER_DOMAIN_NAME}/Content/Images/logo.svg"
