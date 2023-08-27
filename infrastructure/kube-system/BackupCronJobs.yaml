@@ -12,7 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: gandazgul
-        namespace: flux-system
+        namespace: kube-system
   interval: 1h0m0s
   values:
   # Twice a day at midnight and midday
@@ -49,7 +49,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: gandazgul
-        namespace: flux-system
+        namespace: kube-system
   interval: 1h0m0s
   values:
   # Every day at midnight

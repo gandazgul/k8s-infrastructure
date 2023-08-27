@@ -2,7 +2,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
   name: cert-manager
-  namespace: flux-system
+  namespace: kube-system
 spec:
   dependsOn:
     - name: sealed-secret
@@ -11,7 +11,8 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: k8s-infrastructure
+    namespace: kube-system
   healthChecks:
   - apiVersion: apps/v1
     kind: Deployment
@@ -22,7 +23,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
   name: cert-manager-issuers
-  namespace: flux-system
+  namespace: kube-system
 spec:
   dependsOn:
   - name: cert-manager
@@ -31,7 +32,8 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: k8s-infrastructure
+    namespace: kube-system
   validation: client
   postBuild:
     substituteFrom:

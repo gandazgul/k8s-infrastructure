@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/name: weave-gitops-dashboard
     app.kubernetes.io/part-of: weave-gitops
   name: weaveworks
-  namespace: flux-system
+  namespace: kube-system
 spec:
   interval: 1h0m0s
   type: oci
@@ -30,7 +30,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: weaveworks
-        namespace: flux-system
+        namespace: kube-system
   interval: 1h0m0s
   values:
     WEAVE_GITOPS_FEATURE_TELEMETRY: "true"
