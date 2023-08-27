@@ -15,7 +15,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: gandazgul
-        namespace: flux-system
+        namespace: kube-system
   dependsOn:
   - name: main-volume
   - name: backup-volume
@@ -56,7 +56,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: gandazgul
-        namespace: flux-system
+        namespace: kube-system
   interval: 1h0m0s
   values:
     # Every day at 3am
@@ -94,7 +94,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: gandazgul
-        namespace: flux-system
+        namespace: kube-system
   interval: 1h0m0s
   values:
     # Every day at 4am
