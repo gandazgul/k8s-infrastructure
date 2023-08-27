@@ -36,7 +36,7 @@ spec:
       SMTP_HOST: smtp.gmail.com
       SMTP_PORT: 587
       SMTP_FROM: ${EMAIL}
-      SMTP_SSL: true
+      SMTP_SECURITY: starttls
       SMTP_USERNAME: ${EMAIL}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
 
