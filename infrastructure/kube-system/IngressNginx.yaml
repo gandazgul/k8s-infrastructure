@@ -37,7 +37,7 @@ spec:
         externalIPs:
         - ${CONTROL_PLANE_IP}
     extraArgs:
-      default-ssl-certificate: "kube-system/letsencrypt-cert"
+      default-ssl-certificate: "kube-system/internal-ingress-cert"
     defaultBackend:
       enabled: true
       image:

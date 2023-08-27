@@ -28,7 +28,7 @@ spec:
         tls:
         - hosts:
           - alertmanager.${CLUSTER_DOMAIN_NAME}
-          secretName: letsencrypt-cert
+          secretName: internal-ingress-cert
     grafana:
       adminPassword: ${ADMIN_PASSWORD}
       ingress:
@@ -42,7 +42,7 @@ spec:
         tls:
         - hosts:
           - grafana.${CLUSTER_DOMAIN_NAME}
-          secretName: letsencrypt-cert
+          secretName: internal-ingress-cert
     prometheus:
       ingress:
         enabled: true
@@ -55,4 +55,4 @@ spec:
         tls:
         - hosts:
           - prometheus.${CLUSTER_DOMAIN_NAME}
-          secretName: letsencrypt-cert
+          secretName: internal-ingress-cert
