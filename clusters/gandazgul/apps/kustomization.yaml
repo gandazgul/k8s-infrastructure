@@ -15,9 +15,11 @@ resources:
 - ../../../apps/Radarr.yaml
 - ../../../apps/Sonarr.yaml
 - ../../../apps/Prowlarr.yaml
+- ../../../apps/Overseerr.yaml
 - ../../../apps/ZWaveJS.yaml
 - ../../../apps/Sharry.yaml
-- ../../../apps/Mealie.yaml
+#- ../../../apps/Mealie.yaml
+- ../../../apps/mealie/base/
 - ../../../apps/Photoprism.yaml
 - ../../../apps/Paperless.yaml
 - ../../../apps/SFTPGo.yaml
