@@ -6,3 +6,5 @@ resources:
 - deployment.yaml
 - service.yaml
 - ingress.yaml
+- service-account.yaml
+- cluster-role-binding.yaml
