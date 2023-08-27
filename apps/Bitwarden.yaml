@@ -18,6 +18,9 @@ spec:
   dependsOn:
   - name: yasr-volume
   values:
+    image:
+      repository: vaultwarden/server
+      tag: 1.27.0
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
       DATA_FOLDER: "/config"
