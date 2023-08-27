@@ -18,10 +18,10 @@ resources:
 - ../../../apps/Overseerr.yaml
 - ../../../apps/ZWaveJS.yaml
 - ../../../apps/Sharry.yaml
-#- ../../../apps/Mealie.yaml
 - ../../../apps/mealie/base/
 - ../../../apps/Photoprism.yaml
 - ../../../apps/Paperless.yaml
 - ../../../apps/SFTPGo.yaml
 - ../../../apps/Forecastle.yaml
 - ../../../apps/WeaveGitopsDashboard.yaml
+- ../../../apps/skooner/
