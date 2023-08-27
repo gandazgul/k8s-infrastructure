@@ -1,0 +1,52 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: overseerr
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: overseerr
+      version: 5.4.2
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: kube-system
+      interval: 5m
+#  valuesFrom:
+#  - kind: Secret
+#    name: overseerr-values
+#    optional: false
+  values:
+    image:
+      tag: latest
+      pullPolicy: Always
+    env:
+      TZ: "${CLUSTER_TIME_ZONE}"
+    persistence:
+      config:
+        enabled: true
+        type: pvc
+        existingClaim: yasr-volume
+        subPath:
+        - path: configs/overseerr
+          mountPath: /config
+        - path: configs/transmission
+          mountPath: /data
+    ingress:
+      main:
+        enabled: true
+        hosts:
+        - host: media.${CLUSTER_DOMAIN_NAME}
+          paths:
+          - path: /
+        tls:
+        - hosts:
+          - media.${CLUSTER_DOMAIN_NAME}
+          secretName: internal-ingress-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://media.${CLUSTER_DOMAIN_NAME}/Content/Images/logo.svg"
