@@ -15,8 +15,6 @@ spec:
         name: k8s-at-home
         namespace: flux-system
       interval: 5m
-  dependsOn:
-    - name: yasr-volume
   values:
     securityContext:
       privileged: true
@@ -59,5 +57,5 @@ spec:
         requiredDuringSchedulingIgnoredDuringExecution:
           nodeSelectorTerms:
             - matchExpressions:
-                - key: node-role.kubernetes.io/master
+                - key: node-role.kubernetes.io/control-plane
                   operator: Exists

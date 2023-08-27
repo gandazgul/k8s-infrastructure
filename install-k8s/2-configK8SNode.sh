@@ -3,7 +3,7 @@
 ./configNode.sh || exit 1
 
 if [[ ! -n ${KUBE_JOIN_COMMAND} ]]; then
-    printf "Run 'kubeadm token create --print-join-command' in the master to get a join command. Then re-run this script with KUBE_JOIN_COMMAND=command ./2-configK8SNode.sh"
+    printf "Run 'kubeadm token create --print-join-command' in the control plane to get a join command. Then re-run this script with KUBE_JOIN_COMMAND=command ./2-configK8SNode.sh"
     exit 1
 fi;
 
