@@ -35,9 +35,13 @@ spec:
     persistence:
       config:
         enabled: true
-        mountPath: /config
+        type: pvc
         existingClaim: yasr-volume
-        subPath: configs/lidarr/
+        subPath:
+        - path: configs/lidarr/
+          mountPath: /config
+        - path: configs/transmission/
+          mountPath: /data
       media:
         enabled: true
         mountPath: /media
@@ -58,4 +62,4 @@ spec:
         annotations:
           kubernetes.io/ingress.class: "nginx"
           forecastle.stakater.com/expose: "true"
-          forecastle.stakater.com/icon: "https://music.${CLUSTER_DOMAIN_NAME}/images/headphoneslogo.png"
+          forecastle.stakater.com/icon: "https://music.${CLUSTER_DOMAIN_NAME}/Content/Images/logo.png"

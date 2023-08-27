@@ -35,9 +35,9 @@ spec:
         type: pvc
         existingClaim: yasr-volume
         subPath:
-        - path: configs/radarr
+        - path: configs/radarr/
           mountPath: /config
-        - path: configs/transmission
+        - path: configs/transmission/
           mountPath: /data
     ingress:
       main:
@@ -46,6 +46,7 @@ spec:
         - host: movies.${CLUSTER_DOMAIN_NAME}
           paths:
           - path: /
+            pathType: ImplementationSpecific
         tls:
         - hosts:
           - movies.${CLUSTER_DOMAIN_NAME}
