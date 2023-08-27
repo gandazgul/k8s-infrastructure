@@ -27,18 +27,18 @@ spec:
     image:
       tag: latest
     env:
-      TZ: "America/New_York"
+      TZ: "${CLUSTER_TIME_ZONE}"
     ingress:
       main:
         enabled: true
         hosts:
-          - host: zigbee.${CLUSTER_DOMAIN_NAME}
-            paths:
-              - path: /
+        - host: zigbee.${CLUSTER_DOMAIN_NAME}
+          paths:
+          - path: /
         tls:
-          - hosts:
-              - zigbee.${CLUSTER_DOMAIN_NAME}
-            secretName: zigbee-cert
+        - hosts:
+          - zigbee.${CLUSTER_DOMAIN_NAME}
+          secretName: letsencrypt-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
           forecastle.stakater.com/expose: "true"
@@ -50,13 +50,13 @@ spec:
         hostPath: /dev/ttyUSB0
       data:
         enabled: true
-        existingClaim: yasr-volume
         mountPath: /data
+        existingClaim: yasr-volume
         subPath: configs/zigbee2mqtt
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
           nodeSelectorTerms:
-            - matchExpressions:
-                - key: node-role.kubernetes.io/control-plane
-                  operator: Exists
+          - matchExpressions:
+            - key: node-role.kubernetes.io/control-plane
+              operator: Exists
