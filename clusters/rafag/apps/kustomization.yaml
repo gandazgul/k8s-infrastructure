@@ -18,4 +18,5 @@ resources:
 - ../../../apps/Paperless.yaml
 - ../../../apps/SFTPGo.yaml
 - ../../../apps/MosquitoMQTTBroker.yaml
-#- ../../../apps/Minecraft.yaml
+- ../../../apps/Forecastle.yaml
+- ../../../apps/WeaveGitopsDashboard.yaml
