@@ -80,7 +80,7 @@ spec:
         volumeMounts:
         - mountPath: /vpn
           name: yasr-volume
-          subPath: configs/openvpn
+          subPath: configs/openvpn/
         - mountPath: /dev/net/tun
           name: dev-tun
         - mountPath: /tmp/gluetun/
