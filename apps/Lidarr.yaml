@@ -25,16 +25,12 @@ spec:
         namespace: kube-system
       interval: 5m
   values:
-    image:
-      repository: linuxserver/lidarr
-      tag: amd64-latest
-      pullPolicy: Always
     podSecurityContext:
       runAsUser: 1000
       fsGroup: 1000
     env:
-      UID: "1000"
-      GID: "1000"
+      PUID: "1000"
+      PGID: "1000"
       TZ: "${CLUSTER_TIME_ZONE}"
     persistence:
       config:
