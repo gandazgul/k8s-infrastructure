@@ -18,6 +18,7 @@ spec:
   values:
     controller:
       config:
+        custom-http-errors: 404,401,403,500,503
         client-body-buffer-size: "32M"
         proxy-body-size: "1G"
         proxy-buffering: "off"
@@ -35,3 +36,17 @@ spec:
         type: NodePort
         externalIPs:
         - ${CONTROL_PLANE_IP}
+    extraArgs:
+      default-ssl-certificate: "kube-system/letsencrypt-cert"
+    defaultBackend:
+      enabled: true
+      image:
+        repository: billimek/custom-error-pages
+        tag: 0.4.4
+      resources:
+        requests:
+          memory: 250Mi
+          cpu: 25m
+        limits:
+          memory: 350Mi
+
