@@ -27,6 +27,8 @@ spec:
       PHOTOS_GID: "1000"
       # The time zone to apply to all containers
       CLUSTER_TIME_ZONE: America/New_York
+      BITWARDEN_SUBDOMAIN: "pass"
+      HASS_SUBDOMAIN: "ha"
     substituteFrom:
     # substitutions can also come from a config map or secret
     #    - kind: ConfigMap
