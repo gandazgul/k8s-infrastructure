@@ -27,7 +27,7 @@ spec:
       WEB_VAULT_ENABLED: true
       LOG_FILE: "/config/bitwarden.log"
       # makes the logs more readable
-      ROCKET_CLI_COLORS: off
+      ROCKET_CLI_COLORS: false
       SIGNUPS_ALLOWED: true
       ADMIN_TOKEN: ${BITWARDEN_ADMIN_TOKEN}
       INVITATIONS_ALLOWED: true
