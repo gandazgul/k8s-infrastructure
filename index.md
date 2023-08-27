@@ -3,7 +3,7 @@
 install-k8s/ - This is a collection of scripts to deploy kubernetes v1.24.x on Fedora. Tested on Fedora 37.
 charts/ - Is a collection of helm charts that I developed or customized.
 
-The rest is a GitOps setup using [Flex CD](https://fluxcd.io/flux/get-started/) to deploy all infra and the supported applications.
+The rest is a GitOps setup using [Flux CD](https://fluxcd.io/flux/get-started/) to deploy all infra and the supported applications.
 
 We handled storage with PersistenceVolumes mapped to mount points on the host and pre-existing claims
 created that pods can use as volumes. There's a k8s cron job included to make differential backups
