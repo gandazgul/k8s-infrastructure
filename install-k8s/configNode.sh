@@ -32,7 +32,7 @@ if [ $GREP_RE != 0 ]; then
   sudo systemctl start crio || exit 1
 
   printf "\nVerify cri-o is running ===============================================================================\n"
-  if ! systemctl is-active --quiet cri-o >/dev/null 2>&1; then
+  if ! systemctl is-active --quiet crio >/dev/null 2>&1; then
       printf "\nSomething failed while installing cri-o please verify that is running and run this script again"
       exit 1
   fi;
