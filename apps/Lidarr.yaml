@@ -26,9 +26,9 @@ spec:
       interval: 5m
   values:
     image:
-      repository: ghcr.io/geek-cookbook/lidarr
-      tag: v1.0.0.2255
-#      pullPolicy: Always
+      repository: hotio/lidarr
+      tag: latest
+      pullPolicy: Always
     podSecurityContext:
       runAsUser: 1000
       fsGroup: 1000
