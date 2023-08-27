@@ -7,12 +7,13 @@ if [ -z ${1+x} ]; then
 fi
 
 CLUSTER_NAME=$1
+REPO_ROOT=$(git rev-parse --show-toplevel)
+
 # Check that all required binaries are installed
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 source "$SCRIPT_DIR/requirements.sh"
 
 ######################## Install Flux ###################################
-REPO_ROOT=$(git rev-parse --show-toplevel)
 
 # Control plane node information
 CONTROL_PLANE_IP=$(kubectl get nodes --selector=node-role.kubernetes.io/control-plane -o=jsonpath='{.items[0].metadata.annotations.flannel\.alpha\.coreos\.com\/public-ip}')
@@ -44,6 +45,12 @@ fi
 message "Installing the Git Repo Source"
 if ! kubectl apply -f "$REPO_ROOT"/infrastructure/setup/GitRepoSync.yaml; then
   echo -e "Flux did not install correctly, aborting!"
+  exit 1
+fi
+
+message "Installing Sealed Secrets"
+if ! kubectl apply -f "$REPO_ROOT"/infrastructure/kube-system/SealedSecretsController.yaml; then
+  echo -e "Sealed secrets didn't install correctly, aborting!"
   exit 1
 fi
 
