@@ -1,0 +1,69 @@
+# while querying the Cloudflare API for POST \"/zones/1d3db8f84a9c4282a53b065902f5f8f2/dns_records\"
+# Error: 1038: You cannot use this API for domains with a .cf, .ga, .gq, .ml, or .tk TLD (top-level domain). To configure the DNS settings for this domain, use the Cloudflare Dashboard.
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-cloudflare-prod
+spec:
+  acme:
+    # The ACME server URL
+    server: https://acme-v02.api.letsencrypt.org/directory
+    # Email address used for ACME registration
+    email: ${EMAIL}
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    # Enable the HTTP-01 challenge provider
+    solvers:
+    # An empty 'selector' means that this solver matches all domains
+    - selector: { }
+      dns01:
+        cloudflare:
+          apiTokenSecretRef:
+            name: cloudflare-api-token-secret
+            key: api-token
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloudflare-api-token-secret
+  namespace: kube-system
+stringData:
+  api-token: ${CLOUDFLARE_API_TOKEN}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: internal-ingress-cert
+  namespace: kube-system
+spec:
+  dnsNames:
+  - "*.${CLUSTER_DOMAIN_NAME}"
+  - ${CLUSTER_DOMAIN_NAME}
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-cloudflare-prod
+  secretName: internal-ingress-cert
+  usages:
+  - digital signature
+  - key encipherment
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: internal-ingress-cert
+  namespace: default
+spec:
+  dnsNames:
+    - "*.${CLUSTER_DOMAIN_NAME}"
+    - ${CLUSTER_DOMAIN_NAME}
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-cloudflare-prod
+  secretName: internal-ingress-cert
+  usages:
+    - digital signature
+    - key encipherment

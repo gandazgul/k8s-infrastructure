@@ -40,38 +40,38 @@ stringData:
       }
     }
 ---
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: internal-ingress-cert
-  namespace: kube-system
-spec:
-  dnsNames:
-  - "*.${CLUSTER_DOMAIN_NAME}"
-  - ${CLUSTER_DOMAIN_NAME}
-  issuerRef:
-    group: cert-manager.io
-    kind: ClusterIssuer
-    name: letsencrypt-dns01-prod
-  secretName: internal-ingress-cert
-  usages:
-  - digital signature
-  - key encipherment
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: internal-ingress-cert
-  namespace: default
-spec:
-  dnsNames:
-    - "*.${CLUSTER_DOMAIN_NAME}"
-    - ${CLUSTER_DOMAIN_NAME}
-  issuerRef:
-    group: cert-manager.io
-    kind: ClusterIssuer
-    name: letsencrypt-dns01-prod
-  secretName: internal-ingress-cert
-  usages:
-    - digital signature
-    - key encipherment
+#apiVersion: cert-manager.io/v1
+#kind: Certificate
+#metadata:
+#  name: internal-ingress-cert
+#  namespace: kube-system
+#spec:
+#  dnsNames:
+#  - "*.${CLUSTER_DOMAIN_NAME}"
+#  - ${CLUSTER_DOMAIN_NAME}
+#  issuerRef:
+#    group: cert-manager.io
+#    kind: ClusterIssuer
+#    name: letsencrypt-dns01-prod
+#  secretName: internal-ingress-cert
+#  usages:
+#  - digital signature
+#  - key encipherment
+#---
+#apiVersion: cert-manager.io/v1
+#kind: Certificate
+#metadata:
+#  name: internal-ingress-cert
+#  namespace: default
+#spec:
+#  dnsNames:
+#    - "*.${CLUSTER_DOMAIN_NAME}"
+#    - ${CLUSTER_DOMAIN_NAME}
+#  issuerRef:
+#    group: cert-manager.io
+#    kind: ClusterIssuer
+#    name: letsencrypt-dns01-prod
+#  secretName: internal-ingress-cert
+#  usages:
+#    - digital signature
+#    - key encipherment
