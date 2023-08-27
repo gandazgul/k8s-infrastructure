@@ -7,7 +7,7 @@ printf "\nInstalling kubernetes ================================================
 if [[ ! -f "/etc/kubernetes/kubelet.conf" ]]; then
     sudo systemctl enable kubelet.service
     sudo kubeadm config images pull
-    sudo kubeadm init --config=./kubeadm.yaml --cri-socket=unix:///var/run/crio/crio.sock || exit 1
+    sudo kubeadm init --config=./kubeadm.yaml || exit 1
 else
     printf "\nNOTE: Looks like kubeadm init already ran. If you want to run it again, run kubeadm reset ===============\n"
 fi;

@@ -32,7 +32,7 @@ spec:
       containers:
       # VPN
       - name: vpn
-        image: qmcgaw/gluetun:v3.32.0
+        image: docker.io/qmcgaw/gluetun:v3.32.0
         imagePullPolicy: IfNotPresent
         env:
         - name: VPN_SERVICE_PROVIDER
@@ -88,7 +88,7 @@ spec:
           subPath: configs/openvpn/
       # Transmission port forward
       - name: transmission-pia-port-forward
-        image: "gandazgul/transmission-pia-port-forward:v318a599"
+        image: docker.io/gandazgul/transmission-pia-port-forward:v0150413
         imagePullPolicy: IfNotPresent
         resources:
           requests:
@@ -106,7 +106,7 @@ spec:
           readOnly: true
       # Transmission
       - name: transmission
-        image: "linuxserver/transmission:amd64-latest"
+        image: docker.io/linuxserver/transmission:amd64-latest
         imagePullPolicy: "Always"
         env:
         - name: PGID
