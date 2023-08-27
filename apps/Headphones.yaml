@@ -42,17 +42,17 @@ spec:
         enabled: true
         mountPath: /config
         existingClaim: yasr-volume
-        subPath: configs/headphones
+        subPath: configs/headphones/
       downloads:
         enabled: true
         mountPath: /downloads
-        existingClaim: main-volume
-        subPath: public/downloads
+        size: 60Gi
+        accessMode: ReadWriteOnce
       music:
         enabled: true
         mountPath: /music
         existingClaim: main-volume
-        subPath: public/Music
+        subPath: public/Music/
     ingress:
       enabled: true
       hosts:
