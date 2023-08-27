@@ -4,5 +4,7 @@ persistence:
     type: pvc
     existingClaim: main-volume
     subPath:
-      - path: public
-        mountPath: /data
+    - path: public
+      mountPath: /data
+    - path: rafag/photos/kalidroid/Camera
+      mountPath: /pictures
