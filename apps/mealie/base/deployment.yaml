@@ -75,6 +75,8 @@ spec:
           value: "false"
         - name: BASE_URL
           value: https://mealie.${CLUSTER_DOMAIN_NAME}
+        - name: DEFAULT_EMAIL
+          value: ${EMAIL}
         livenessProbe:
           httpGet:
             scheme: HTTP
