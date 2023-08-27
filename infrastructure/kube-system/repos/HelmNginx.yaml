@@ -1,8 +1,8 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: kubernetes-dashboard
-  namespace: flux-system
+  name: ingress-nginx
+  namespace: kube-system
 spec:
   interval: 1h0m0s
-  url: https://kubernetes.github.io/dashboard/
+  url: https://kubernetes.github.io/ingress-nginx
