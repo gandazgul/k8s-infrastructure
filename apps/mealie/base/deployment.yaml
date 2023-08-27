@@ -77,6 +77,16 @@ spec:
           value: https://recipes.${CLUSTER_DOMAIN_NAME}
         - name: DEFAULT_EMAIL
           value: ${EMAIL}
+        - name: SMTP_HOST
+          value: smtp.gmail.com
+        - name: SMTP_PORT
+          value: "587"
+        - name: SMTP_FROM_EMAIL
+          value: mealie@${CLUSTER_DOMAIN_NAME}
+        - name: SMTP_USER
+          value: ${EMAIL}
+        - name: SMTP_PASSWORD
+          value: ${SMTP_PASSWORD}
         livenessProbe:
           httpGet:
             scheme: HTTP
