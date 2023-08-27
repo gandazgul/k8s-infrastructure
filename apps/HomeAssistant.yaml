@@ -66,12 +66,12 @@ spec:
             forecastle.stakater.com/icon: "https://raw.githubusercontent.com/coder/code-server/main/src/browser/media/pwa-icon-512.png"
             forecastle.stakater.com/appName: "Config Editor"
           hosts:
-          - host: hass-config.${CLUSTER_DOMAIN_NAME}
+          - host: configs.${CLUSTER_DOMAIN_NAME}
             paths:
             - path: /
           tls:
           - hosts:
-            - hass-config.${CLUSTER_DOMAIN_NAME}
+            - configs.${CLUSTER_DOMAIN_NAME}
             secretName: internal-ingress-cert
         volumeMounts:
         - name: config
