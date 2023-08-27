@@ -33,7 +33,8 @@ spec:
         env:
         - name: TZ
           value: ${CLUSTER_TIME_ZONE}
-        - name:
+        - name: API_URL
+          value: "http://127.0.0.1:9000"
         livenessProbe:
           httpGet:
             scheme: HTTP
@@ -64,12 +65,16 @@ spec:
         image: hkotel/mealie:api-v1.0.0beta-5
         imagePullPolicy: Always
         env:
-        - name: PGID
-          value: "1000"
         - name: PUID
+          value: "1000"
+        - name: PGID
           value: "1000"
         - name: TZ
           value: ${CLUSTER_TIME_ZONE}
+        - name: ALLOW_SIGNUP
+          value: "false"
+        - name: BASE_URL
+          value: https://mealie.${CLUSTER_DOMAIN_NAME}
         livenessProbe:
           httpGet:
             scheme: HTTP
