@@ -13,10 +13,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - mealie.${CLUSTER_DOMAIN_NAME}
+    - recipes.${CLUSTER_DOMAIN_NAME}
     secretName: internal-ingress-cert
   rules:
-  - host: mealie.${CLUSTER_DOMAIN_NAME}
+  - host: recipes.${CLUSTER_DOMAIN_NAME}
     http:
       paths:
       - path: /

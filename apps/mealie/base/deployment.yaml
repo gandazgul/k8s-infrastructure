@@ -74,7 +74,7 @@ spec:
         - name: ALLOW_SIGNUP
           value: "false"
         - name: BASE_URL
-          value: https://mealie.${CLUSTER_DOMAIN_NAME}
+          value: https://recipes.${CLUSTER_DOMAIN_NAME}
         - name: DEFAULT_EMAIL
           value: ${EMAIL}
         livenessProbe:
