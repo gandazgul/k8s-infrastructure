@@ -15,7 +15,7 @@ spec:
   tls:
   - hosts:
     - transmission.${CLUSTER_DOMAIN_NAME}
-    secretName: letsencrypt-cert
+    secretName: internal-ingress-cert
   rules:
   - host: transmission.${CLUSTER_DOMAIN_NAME}
     http:

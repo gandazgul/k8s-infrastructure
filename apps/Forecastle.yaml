@@ -43,4 +43,4 @@ spec:
         tls:
         - hosts:
           - home.${CLUSTER_DOMAIN_NAME}
-          secretName: letsencrypt-cert
+          secretName: internal-ingress-cert
