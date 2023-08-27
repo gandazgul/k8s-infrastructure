@@ -12,7 +12,6 @@ spec:
     name: k8s-infrastructure
     namespace: kube-system
   prune: true
-  validation: client
   postBuild:
     # constants can be specified like this:
     substitute:
@@ -34,7 +33,6 @@ spec:
     name: k8s-infrastructure
     namespace: kube-system
   prune: true
-  validation: client
   postBuild:
     # constants can be specified like this:
     substitute:
@@ -56,7 +54,6 @@ spec:
     name: k8s-infrastructure
     namespace: kube-system
   prune: true
-  validation: client
   postBuild:
     # constants can be specified like this:
     substitute:
