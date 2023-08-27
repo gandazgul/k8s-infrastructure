@@ -1,0 +1,61 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: k8sonlab
+  namespace: kube-system
+spec:
+  interval: 1h0m0s
+  url: https://charts.ar80.eu/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: zwavejs
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: zwave-js-ui
+      version: 0.2.31
+      sourceRef:
+        kind: HelmRepository
+        name: k8sonlab
+        namespace: kube-system
+      interval: 5m
+  values:
+    securityContext:
+      privileged: true
+    image:
+      tag: latest
+      pullPolicy: Always
+    env:
+      TZ: "${CLUSTER_TIME_ZONE}"
+    ingress:
+      enabled: true
+      className: nginx
+      hosts:
+      - host: zwave.${CLUSTER_DOMAIN_NAME}
+        paths:
+        - path: /
+          pathType: ImplementationSpecific
+      tls:
+      - hosts:
+        - zwave.${CLUSTER_DOMAIN_NAME}
+        secretName: internal-ingress-cert
+      annotations:
+        forecastle.stakater.com/expose: "true"
+        forecastle.stakater.com/icon: "https://zwave.${CLUSTER_DOMAIN_NAME}/static/logo.png"
+    persistence:
+      enabled: true
+      mountPath: /usr/src/app/store/
+      existingClaim: yasr-volume
+      subPath: configs/zwavejs
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: node-role.kubernetes.io/control-plane
+              operator: Exists
