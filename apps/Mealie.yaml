@@ -39,12 +39,14 @@ spec:
       main:
         enabled: true
         hosts:
-        - host: mealie.${INGRESS_INTERNAL_NAME}
+        - host: mealie.${CLUSTER_DOMAIN_NAME}
           paths:
           - path: /
         tls:
         - hosts:
-          - mealie.${INGRESS_INTERNAL_NAME}
+          - mealie.${CLUSTER_DOMAIN_NAME}
           secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://raw.githubusercontent.com/hay-kot/mealie/mealie-next/frontend/static/icon.png"
