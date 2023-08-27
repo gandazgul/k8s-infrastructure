@@ -30,11 +30,7 @@ spec:
         enabled: true
         type: pvc
         existingClaim: yasr-volume
-        subPath:
-        - path: configs/overseerr
-          mountPath: /config
-        - path: configs/transmission
-          mountPath: /data
+        subPath: configs/overseerr
     ingress:
       main:
         enabled: true
