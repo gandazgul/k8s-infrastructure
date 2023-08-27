@@ -12,12 +12,10 @@ echo "Generating $CLUSTER_NAME secret..."
 # Seal main secrets file
 rm -rf "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml"
 kubectl create secret generic secrets --dry-run=client --namespace=flux-system --from-env-file="./clusters/$CLUSTER_NAME/secrets.env" -o json |
-  kubeseal -o yaml >"./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml"
+  kubeseal -o yaml > "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml"
 
-# apply it
-template=$(sed "s/{{CLUSTER_NAME}}/$CLUSTER_NAME/g" <"$REPO_ROOT"/infrastructure/setup/SealedSecretsKustomization.yaml.templ)
-# apply the yml with the substituted value
-echo "$template" | kubectl apply -f - || exit 1
+# apply the secret
+kubectl apply -f "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml" || exit 1
 
 # Create value/yaml secrets
 message "Generating $CLUSTER_NAME app secrets from values..."
