@@ -27,18 +27,18 @@ spec:
       main:
         enabled: true
         hosts:
-        - host: hass.${CLUSTER_DOMAIN_NAME}
+        - host: ${HASS_SUBDOMAIN}.${CLUSTER_DOMAIN_NAME}
           paths:
           - path: /
         tls:
         - hosts:
-          - hass.${CLUSTER_DOMAIN_NAME}
+          - ${HASS_SUBDOMAIN}.${CLUSTER_DOMAIN_NAME}
           secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
           nginx.org/websocket-services: home-assistant
           forecastle.stakater.com/expose: "true"
-          forecastle.stakater.com/icon: "https://hass.ravelo.tk/static/icons/favicon-192x192.png"
+          forecastle.stakater.com/icon: "https://${HASS_SUBDOMAIN}.${CLUSTER_DOMAIN_NAME}/static/icons/favicon-192x192.png"
           forecastle.stakater.com/appName: "Home Assistant"
     persistence:
       config:
@@ -66,12 +66,12 @@ spec:
             forecastle.stakater.com/icon: "https://raw.githubusercontent.com/coder/code-server/main/src/browser/media/pwa-icon-512.png"
             forecastle.stakater.com/appName: "Config Editor"
           hosts:
-          - host: hass-config.${CLUSTER_DOMAIN_NAME}
+          - host: configs.${CLUSTER_DOMAIN_NAME}
             paths:
             - path: /
           tls:
           - hosts:
-            - hass-config.${CLUSTER_DOMAIN_NAME}
+            - configs.${CLUSTER_DOMAIN_NAME}
             secretName: internal-ingress-cert
         volumeMounts:
         - name: config

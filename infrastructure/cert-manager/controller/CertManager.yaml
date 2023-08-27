@@ -19,3 +19,5 @@ spec:
     installCRDs: true
     extraArgs:
       - --max-concurrent-challenges=2
+      - --dns01-recursive-nameservers-only
+      - --dns01-recursive-nameservers=1.1.1.1:53,8.8.8.8:53

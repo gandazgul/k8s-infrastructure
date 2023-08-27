@@ -1,8 +1,10 @@
+# while querying the Cloudflare API for POST \"/zones/1d3db8f84a9c4282a53b065902f5f8f2/dns_records\"
+# Error: 1038: You cannot use this API for domains with a .cf, .ga, .gq, .ml, or .tk TLD (top-level domain). To configure the DNS settings for this domain, use the Cloudflare Dashboard.
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-prod-dns01
+  name: letsencrypt-prod-cloudflare
 spec:
   acme:
     # The ACME server URL
@@ -17,25 +19,15 @@ spec:
     # An empty 'selector' means that this solver matches all domains
     - selector: { }
       dns01:
-        acmeDNS:
-          accountSecretRef:
-            name: auth-acme-dns-io-credentials
-            key: acmedns.json
-          host: https://auth.acme-dns.io
+        cloudflare:
+          apiTokenSecretRef:
+            name: cloudflare-api-token-secret
+            key: api-token
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: auth-acme-dns-io-credentials
+  name: cloudflare-api-token-secret
   namespace: kube-system
 stringData:
-  acmedns.json: |
-    {
-      "${CLUSTER_DOMAIN_NAME}": {
-        "username": "${ACME_DNS_USERNAME}",
-        "password": "${ACME_DNS_PASSWORD}",
-        "fulldomain": "${ACME_DNS_SUBDOMAIN}.auth.acme-dns.io",
-        "subdomain": "${ACME_DNS_SUBDOMAIN}",
-        "allowfrom": []
-      }
-    }
+  api-token: ${CLOUDFLARE_API_TOKEN}
