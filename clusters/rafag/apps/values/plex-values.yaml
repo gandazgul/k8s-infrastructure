@@ -6,5 +6,5 @@ persistence:
     subPath:
     - path: public
       mountPath: /data
-    - path: rafag/photos/kalidroid_backup
+    - path: rafag/photos/kalidroid
       mountPath: /pictures

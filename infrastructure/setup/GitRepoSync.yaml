@@ -7,7 +7,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: feature/add-plex-photos
+    branch: main
   url: https://github.com/gandazgul/k8s-infrastructure.git
   ignore: |
     clusters/**/apps/values/
