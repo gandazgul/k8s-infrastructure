@@ -11,6 +11,7 @@ resources:
 #- ../../../apps/MQTTBroker.yaml
 - ../../../apps/MosquitoMQTTBroker.yaml
 - ../../../apps/transmission/gandazgul/
+- ../../../apps/Headphones.yaml
 - ../../../apps/Radarr.yaml
 - ../../../apps/Sonarr.yaml
 - ../../../apps/Prowlarr.yaml
