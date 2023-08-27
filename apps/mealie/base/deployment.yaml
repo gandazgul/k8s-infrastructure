@@ -39,7 +39,7 @@ spec:
           httpGet:
             scheme: HTTP
             path: /
-            port: 3000
+            port: 3001
           initialDelaySeconds: 30
           timeoutSeconds: 10
         resources:
@@ -58,7 +58,7 @@ spec:
             subPath: configs/mealie
         ports:
           - name: fe-http
-            containerPort: 3000
+            containerPort: 3001
             protocol: TCP
       # api ----------------------------------------------------------
       - name: api
