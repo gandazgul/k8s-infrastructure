@@ -16,9 +16,6 @@ spec:
         name: k8s-at-home
         namespace: flux-system
       interval: 5m
-  dependsOn:
-  - name: yasr-volume
-  # All values at https://github.com/k8s-at-home/charts/blob/master/charts/plex/values.yaml
   values:
     image:
       repository: linuxserver/prowlarr
