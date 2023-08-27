@@ -29,9 +29,6 @@ spec:
       repository: hotio/lidarr
       tag: latest
       pullPolicy: Always
-    podSecurityContext:
-      runAsUser: 1000
-      fsGroup: 1000
     env:
       PUID: "1000"
       PGID: "1000"
