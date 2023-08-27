@@ -23,3 +23,4 @@ resources:
 - ../../../apps/SFTPGo.yaml
 - ../../../apps/Forecastle.yaml
 - ../../../apps/WeaveGitopsDashboard.yaml
+- ../../../apps/skooner/
