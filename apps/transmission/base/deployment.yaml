@@ -28,8 +28,7 @@ spec:
         hostPath:
           path: /etc/localtime
       dnsPolicy: ClusterFirst
-      dnsConfig:
-        {}
+      dnsConfig: {}
       containers:
       # VPN
       - name: vpn

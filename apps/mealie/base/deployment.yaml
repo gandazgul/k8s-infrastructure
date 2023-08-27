@@ -78,7 +78,7 @@ spec:
         livenessProbe:
           httpGet:
             scheme: HTTP
-            path: /
+            path: /api/app/about
             port: 9000
           initialDelaySeconds: 30
           timeoutSeconds: 10
