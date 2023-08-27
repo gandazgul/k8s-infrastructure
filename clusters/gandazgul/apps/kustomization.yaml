@@ -20,3 +20,4 @@ resources:
 - ../../../apps/Photoprism.yaml
 - ../../../apps/Paperless.yaml
 - ../../../apps/SFTPGo.yaml
+- ../../../apps/Forecastle.yaml
