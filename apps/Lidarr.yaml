@@ -27,8 +27,8 @@ spec:
   values:
     image:
       repository: ghcr.io/geek-cookbook/lidarr
-      tag: latest
-      pullPolicy: Always
+      tag: v1.0.0.2255
+#      pullPolicy: Always
     podSecurityContext:
       runAsUser: 1000
       fsGroup: 1000
