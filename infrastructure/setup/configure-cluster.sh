@@ -6,9 +6,7 @@ REPO_ROOT=$(git rev-parse --show-toplevel)
 
 source "$SCRIPT_DIR/requirements.sh"
 
-message "Installing $CLUSTER_NAME configs..."
-
-echo "Generating $CLUSTER_NAME secret..."
+message "Generating $CLUSTER_NAME secret..."
 # Seal main secrets file
 rm -rf "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml"
 kubectl create secret generic secrets --dry-run=client --namespace=kube-system --from-env-file="./clusters/$CLUSTER_NAME/secrets.env" -o json |
@@ -36,5 +34,8 @@ for f in ./clusters/"$CLUSTER_NAME"/apps/values/*.yaml; do
   kubectl -n default create secret generic "${basename}" --dry-run=client --from-file=values.yaml="${f}" -o yaml >"./clusters/$CLUSTER_NAME/apps/secrets/${basename}.yaml"
   echo "- ${basename}.yaml" >> "./clusters/$CLUSTER_NAME/apps/secrets/kustomization.yaml"
 done
+
+message "Installing $CLUSTER_NAME configs..."
+kubectl apply -f "./clusters/$CLUSTER_NAME/ClusterKustomization.yaml"
 
 message "Done configuring $CLUSTER_NAME's cluster"
