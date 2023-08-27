@@ -12,6 +12,8 @@ rm -rf "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml"
 kubectl create secret generic secrets --dry-run=client --namespace=kube-system --from-env-file="./clusters/$CLUSTER_NAME/secrets.env" -o json |
   kubeseal -o yaml > "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml"
 
+kubectl apply -f "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml"
+
 # Create a kustomization for the cluster's Secrets so that apps can depend on it
 template=$(sed "s/{{CLUSTER_NAME}}/$CLUSTER_NAME/g" <"$REPO_ROOT"/infrastructure/setup/SealedSecretsKustomization.yaml.templ)
 # apply the yml with the substituted value

@@ -7,7 +7,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: main
+    branch: add-overseerr-expose-mealy
   url: https://github.com/gandazgul/k8s-infrastructure.git
   ignore: |
     clusters/**/apps/values/
@@ -32,3 +32,4 @@ spec:
     substituteFrom:
     - kind: Secret
       name: secrets
+      optional: true
