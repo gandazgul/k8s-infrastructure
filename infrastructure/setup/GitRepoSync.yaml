@@ -32,4 +32,3 @@ spec:
     substituteFrom:
     - kind: Secret
       name: secrets
-      optional: true
