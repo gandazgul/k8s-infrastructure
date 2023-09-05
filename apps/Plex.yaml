@@ -39,11 +39,11 @@ spec:
       ADVERTISE_IP: "http://${DYN_DNS_NAME}:32400/,http://${CONTROL_PLANE_IP}:32400/"
     probes:
       liveness:
-        enabled: false
+        enabled: true
       readiness:
-        enabled: false
+        enabled: true
       startup:
-        enabled: false
+        enabled: true
     persistence:
       config:
         enabled: true
