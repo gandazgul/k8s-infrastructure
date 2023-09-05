@@ -8,3 +8,4 @@ resources:
 - ingress.yaml
 - service-account.yaml
 - cluster-role-binding.yaml
+- sa-token.yaml
