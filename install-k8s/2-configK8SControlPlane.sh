@@ -18,17 +18,17 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 printf "\nInstalling flannel =======================================================================================\n"
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
 
 printf "\n\n=========================================================================================================\n"
 printf "Kubernetes is now installed. Please check the status of flannel and kubelet to make sure the network is ready before we proceed to the next step."
 printf "\nVerify that is running:\n"
 kubectl get nodes
 printf "\n"
-kubectl get ds --watch --namespace=kube-system
+kubectl get ds --watch --all-namespaces
 
 echo -n "I have to restart in order to finish installing K8s. After reboot, run step 3. Reboot? (y/n)? "
-    read answer
-    if [ "$answer" != "${answer#[Yy]}" ] ;then
-        sudo reboot
-    fi;
+read answer
+if [ "$answer" != "${answer#[Yy]}" ] ;then
+    sudo reboot
+fi;

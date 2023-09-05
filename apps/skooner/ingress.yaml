@@ -12,10 +12,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - skooner.${CLUSTER_DOMAIN_NAME}
+    - dashboard.${CLUSTER_DOMAIN_NAME}
     secretName: internal-ingress-cert
   rules:
-  - host: skooner.${CLUSTER_DOMAIN_NAME}
+  - host: dashboard.${CLUSTER_DOMAIN_NAME}
     http:
       paths:
       - path: /
