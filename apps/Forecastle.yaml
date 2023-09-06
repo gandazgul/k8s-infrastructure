@@ -9,7 +9,6 @@ spec:
   chart:
     spec:
       chart: ./deployments/kubernetes/chart/forecastle/
-      version: 3.4.2
       sourceRef:
         kind: GitRepository
         name: forecastle
