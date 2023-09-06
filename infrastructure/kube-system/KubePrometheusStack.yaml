@@ -20,6 +20,10 @@ spec:
       ingress:
         enabled: true
         ingressClassName: nginx
+        annotations:
+          forecastle.stakater.com/appName: "Alertmanager"
+          forecastle.stakater.com/group: "Management"
+          forecastle.stakater.com/expose: "true"
         hosts:
         - alertmanager.${CLUSTER_DOMAIN_NAME}
         paths:
@@ -34,6 +38,11 @@ spec:
       ingress:
         enabled: true
         ingressClassName: nginx
+        annotations:
+          forecastle.stakater.com/appName: "Grafana"
+          forecastle.stakater.com/group: "Management"
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://grafana.${CLUSTER_DOMAIN_NAME}/public/img/grafana_icon.svg"
         hosts:
         - grafana.${CLUSTER_DOMAIN_NAME}
         paths:
@@ -47,6 +56,11 @@ spec:
       ingress:
         enabled: true
         ingressClassName: nginx
+        annotations:
+          forecastle.stakater.com/appName: "Prometheus"
+          forecastle.stakater.com/group: "Management"
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://upload.wikimedia.org/wikipedia/commons/3/38/Prometheus_software_logo.svg"
         hosts:
         - prometheus.${CLUSTER_DOMAIN_NAME}
         paths:
