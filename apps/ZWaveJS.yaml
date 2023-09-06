@@ -45,6 +45,8 @@ spec:
         - zwave.${CLUSTER_DOMAIN_NAME}
         secretName: internal-ingress-cert
       annotations:
+        forecastle.stakater.com/appName: "ZWaveJS"
+        forecastle.stakater.com/group: "Management"
         forecastle.stakater.com/expose: "true"
         forecastle.stakater.com/icon: "https://zwave.${CLUSTER_DOMAIN_NAME}/static/logo.png"
     persistence:
