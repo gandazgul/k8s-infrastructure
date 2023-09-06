@@ -47,4 +47,4 @@ spec:
           forecastle.stakater.com/appName: "Overseerr"
           forecastle.stakater.com/group: "Media"
           forecastle.stakater.com/expose: "true"
-          forecastle.stakater.com/icon: "https://media.${CLUSTER_DOMAIN_NAME}/logo_full.svg"
+          forecastle.stakater.com/icon: "https://media.${CLUSTER_DOMAIN_NAME}/os_logo_filled.png"
