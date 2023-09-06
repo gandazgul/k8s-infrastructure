@@ -6,8 +6,9 @@ metadata:
   labels:
     app.kubernetes.io/name: skooner
   annotations:
+    forecastle.stakater.com/appName: "Dashboard"
     forecastle.stakater.com/expose: "true"
-    forecastle.stakater.com/icon: "https://transmissionbt.com/assets/images/Transmission_icon.png"
+    forecastle.stakater.com/icon: "https://skooner.io/images/Skooner-Logo-Horizontal-COLOR.png"
 spec:
   ingressClassName: nginx
   tls:
@@ -19,7 +20,7 @@ spec:
     http:
       paths:
       - path: /
-        pathType: Prefix
+        pathType: ImplementationSpecific
         backend:
           service:
             name: skooner
