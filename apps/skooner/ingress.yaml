@@ -7,6 +7,7 @@ metadata:
     app.kubernetes.io/name: skooner
   annotations:
     forecastle.stakater.com/appName: "Dashboard"
+    forecastle.stakater.com/group: "Management"
     forecastle.stakater.com/expose: "true"
     forecastle.stakater.com/icon: "https://skooner.io/images/Skooner-Logo-Horizontal-COLOR.png"
 spec:

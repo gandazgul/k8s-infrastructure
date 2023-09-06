@@ -54,6 +54,8 @@ spec:
         secretName: internal-ingress-cert
       annotations:
         kubernetes.io/ingress.class: "nginx"
+        forecastle.stakater.com/appName: "GitOps"
+        forecastle.stakater.com/group: "Management"
         forecastle.stakater.com/expose: "true"
         forecastle.stakater.com/icon: "https://docs.gitops.weave.works/img/weave-logo.png"
 
