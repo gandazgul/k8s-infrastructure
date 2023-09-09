@@ -37,13 +37,13 @@ spec:
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
       ADVERTISE_IP: "http://${DYN_DNS_NAME}:32400/,http://${CONTROL_PLANE_IP}:32400/"
-#    probes:
-#      liveness:
-#        enabled: false
-#      readiness:
-#        enabled: false
-#      startup:
-#        enabled: false
+    probes:
+      liveness:
+        enabled: true
+      readiness:
+        enabled: true
+      startup:
+        enabled: true
     persistence:
       config:
         enabled: true
