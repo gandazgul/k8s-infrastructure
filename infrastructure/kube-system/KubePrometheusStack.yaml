@@ -35,6 +35,11 @@ spec:
           secretName: internal-ingress-cert
     grafana:
       adminPassword: ${ADMIN_PASSWORD}
+      persistence:
+        type: pvc
+        enabled: true
+        subPath: "configs/grafana"
+        existingClaim: yasr-volume
       ingress:
         enabled: true
         ingressClassName: nginx
