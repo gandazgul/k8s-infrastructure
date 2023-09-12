@@ -3,9 +3,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: default
 resources:
-  - ../pv/
-  - ../pvc/
-  - sc.yaml
+  - pvc.yaml
 
 commonLabels:
   app.kubernetes.io/name: ${VOLUME_NAME}
