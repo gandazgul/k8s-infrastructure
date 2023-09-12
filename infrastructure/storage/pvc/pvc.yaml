@@ -2,7 +2,6 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: ${VOLUME_NAME}
-  namespace: ${PVC_NAMESPACE}
 spec:
   storageClassName: ${VOLUME_STORAGE_CLASS}
   accessModes:
