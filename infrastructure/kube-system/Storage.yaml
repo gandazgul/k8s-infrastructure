@@ -3,7 +3,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: main-volume
-  namespace: default
+  namespace: kube-system
 spec:
   interval: 10m0s
   path: ./infrastructure/storage/hdd-class/
@@ -19,12 +19,13 @@ spec:
       VOLUME_CAPACITY: 4Ti
       VOLUME_STORAGE_CLASS: hdd
       VOLUME_PATH: /media/main
+      PVC_NAMESPACE: kube-system
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: backup-volume
-  namespace: default
+  namespace: kube-system
 spec:
   interval: 10m0s
   path: ./infrastructure/storage/hdd/
@@ -39,12 +40,13 @@ spec:
       VOLUME_CAPACITY: 4Ti
       VOLUME_STORAGE_CLASS: hdd
       VOLUME_PATH: /media/backup
+      PVC_NAMESPACE: kube-system
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: yasr-volume
-  namespace: default
+  namespace: kube-system
 spec:
   interval: 10m0s
   path: ./infrastructure/storage/hdd/
@@ -59,6 +61,7 @@ spec:
       VOLUME_CAPACITY: 4Ti
       VOLUME_STORAGE_CLASS: hdd
       VOLUME_PATH: /media/yasr
+      PVC_NAMESPACE: kube-system
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -78,3 +81,4 @@ spec:
       VOLUME_NAME: yasr-volume
       VOLUME_CAPACITY: 4Ti
       VOLUME_STORAGE_CLASS: hdd
+      PVC_NAMESPACE: default
