@@ -5,7 +5,7 @@ metadata:
 spec:
   storageClassName: ${VOLUME_STORAGE_CLASS}
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   capacity:
     storage: ${VOLUME_CAPACITY}
   volumeMode: ${VOLUME_MODE}
