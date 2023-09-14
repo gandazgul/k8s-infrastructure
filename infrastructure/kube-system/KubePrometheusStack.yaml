@@ -39,7 +39,7 @@ spec:
         type: pvc
         enabled: true
         subPath: "configs/grafana"
-        existingClaim: yasr-volume
+        existingClaim: yasr-volume-kube-system
       ingress:
         enabled: true
         ingressClassName: nginx
