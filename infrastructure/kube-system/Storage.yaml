@@ -70,7 +70,7 @@ metadata:
   namespace: kube-system
 spec:
   interval: 10m0s
-  path: ./infrastructure/storage/pvc/
+  path: ./infrastructure/storage/hdd/
   sourceRef:
     kind: GitRepository
     name: k8s-infrastructure
@@ -81,4 +81,5 @@ spec:
       VOLUME_NAME: yasr-volume
       VOLUME_CAPACITY: 4Ti
       VOLUME_STORAGE_CLASS: hdd
+      VOLUME_PATH: /media/yasr
       NAMESPACE: kube-system
