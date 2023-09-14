@@ -11,4 +11,4 @@ spec:
       storage: ${VOLUME_CAPACITY}
   selector:
     matchLabels:
-      name: ${VOLUME_NAME}
+      app.kubernetes.io/name: ${VOLUME_NAME}
