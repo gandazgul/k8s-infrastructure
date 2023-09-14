@@ -78,7 +78,7 @@ spec:
   prune: true
   postBuild:
     substitute:
-      VOLUME_NAME: yasr-volume
+      VOLUME_NAME: yasr-volume-kube-system
       VOLUME_CAPACITY: 4Ti
       VOLUME_STORAGE_CLASS: hdd
       VOLUME_PATH: /media/yasr
