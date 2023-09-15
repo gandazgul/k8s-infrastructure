@@ -6,20 +6,22 @@ metadata:
   labels:
     app.kubernetes.io/name: skooner
   annotations:
+    forecastle.stakater.com/appName: "Dashboard"
+    forecastle.stakater.com/group: "Management"
     forecastle.stakater.com/expose: "true"
-    forecastle.stakater.com/icon: "https://transmissionbt.com/assets/images/Transmission_icon.png"
+    forecastle.stakater.com/icon: "https://skooner.io/images/Skooner-Logo-Horizontal-COLOR.png"
 spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - skooner.${CLUSTER_DOMAIN_NAME}
+    - dashboard.${CLUSTER_DOMAIN_NAME}
     secretName: internal-ingress-cert
   rules:
-  - host: skooner.${CLUSTER_DOMAIN_NAME}
+  - host: dashboard.${CLUSTER_DOMAIN_NAME}
     http:
       paths:
       - path: /
-        pathType: Prefix
+        pathType: ImplementationSpecific
         backend:
           service:
             name: skooner

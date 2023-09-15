@@ -65,6 +65,7 @@ spec:
             forecastle.stakater.com/expose: "true"
             forecastle.stakater.com/icon: "https://raw.githubusercontent.com/coder/code-server/main/src/browser/media/pwa-icon-512.png"
             forecastle.stakater.com/appName: "Config Editor"
+            forecastle.stakater.com/group: "Management"
           hosts:
           - host: configs.${CLUSTER_DOMAIN_NAME}
             paths:

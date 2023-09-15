@@ -9,7 +9,6 @@ spec:
   chart:
     spec:
       chart: ./deployments/kubernetes/chart/forecastle/
-      version: 3.4.2
       sourceRef:
         kind: GitRepository
         name: forecastle
@@ -25,12 +24,13 @@ spec:
         namespaceSelector:
           matchNames:
           - default
+          - kube-system
         title: Cluster Homepage
         customApps:
           - name: Plex
             icon: https://www.plex.tv/wp-content/themes/plex/assets/img/plex-logo.svg
             url: https://app.plex.tv/desktop/#!/
-            group: default
+            group: Media
       ingress:
         enabled: true
         annotations:

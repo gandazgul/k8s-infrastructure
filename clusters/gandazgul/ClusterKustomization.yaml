@@ -1,5 +1,5 @@
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: gandazgul
@@ -18,7 +18,6 @@ spec:
     kind: GitRepository
     name: k8s-infrastructure
     namespace: kube-system
-  validation: client
   postBuild:
     # constants can be specified like this:
     substitute:
