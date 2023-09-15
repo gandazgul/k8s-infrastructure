@@ -4,18 +4,19 @@ kind: Kustomization
 resources:
 - ./secrets/
 - ../../../apps/Bitwarden.yaml
-# - ../../../apps/Forecastle.yaml
-# - ../../../apps/HomeAssistant.yaml
-# - ../../../apps/K8sDashboard.yaml
-# - ../../../apps/MosquitoMQTTBroker.yaml
-# - ../../../apps/Paperless.yaml
-# - ../../../apps/Photoprism.yaml
-# - ../../../apps/Plex.yaml
-# - ../../../apps/Prowlarr.yaml
-# - ../../../apps/Radarr.yaml
-# - ../../../apps/Resilio.yaml
-# - ../../../apps/SFTPGo.yaml
-# - ../../../apps/Sonarr.yaml
-# - ../../../apps/WeaveGitopsDashboard.yaml
-# - ../../../apps/Zigbee2mqtt.yaml
-# - ../../../apps/transmission/rafag/
+- ../../../apps/Forecastle.yaml
+- ../../../apps/HomeAssistant.yaml
+#- ../../../apps/K8sDashboard.yaml
+- ../../../apps/skooner/
+- ../../../apps/MosquitoMQTTBroker.yaml
+- ../../../apps/Paperless.yaml
+- ../../../apps/Photoprism.yaml
+- ../../../apps/Plex.yaml
+- ../../../apps/Prowlarr.yaml
+- ../../../apps/Radarr.yaml
+- ../../../apps/Resilio.yaml
+- ../../../apps/SFTPGo.yaml
+- ../../../apps/Sonarr.yaml
+- ../../../apps/WeaveGitopsDashboard.yaml
+- ../../../apps/Zigbee2mqtt.yaml
+- ../../../apps/transmission/rafag/
