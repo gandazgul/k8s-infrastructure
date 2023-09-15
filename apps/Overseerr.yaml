@@ -44,5 +44,7 @@ spec:
           secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
+          forecastle.stakater.com/appName: "Overseerr"
+          forecastle.stakater.com/group: "Media"
           forecastle.stakater.com/expose: "true"
-          forecastle.stakater.com/icon: "https://media.${CLUSTER_DOMAIN_NAME}/Content/Images/logo.svg"
+          forecastle.stakater.com/icon: "https://media.${CLUSTER_DOMAIN_NAME}/apple-touch-icon.png"

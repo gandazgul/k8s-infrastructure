@@ -110,4 +110,8 @@ spec:
           secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
+          forecastle.stakater.com/appName: "Sharry"
+          forecastle.stakater.com/group: "File Sharing"
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://share.${CLUSTER_DOMAIN_NAME}/app/assets/sharry-webapp/1.8.0/img/logo.png"
 

@@ -7,5 +7,7 @@ metadata:
 spec:
   interval: 60m0s
   ref:
-    branch: master
-  url: https://github.com/stakater/Forecastle.git
+#    branch: master
+    branch: patch-1
+#  url: https://github.com/stakater/Forecastle.git
+  url: https://github.com/gandazgul/Forecastle.git

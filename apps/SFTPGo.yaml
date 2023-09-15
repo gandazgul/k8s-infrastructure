@@ -48,8 +48,10 @@ spec:
       ingress:
         enabled: true
         annotations:
+          forecastle.stakater.com/appName: "SFTPGo"
+          forecastle.stakater.com/group: "File Sharing"
           forecastle.stakater.com/expose: "true"
-          forecastle.stakater.com/icon: "https://share.${CLUSTER_DOMAIN_NAME}/app/assets/sharry-webapp/1.8.0/img/logo.png"
+          forecastle.stakater.com/icon: "https://raw.githubusercontent.com/drakkan/sftpgo/main/img/logo.png"
         className: nginx
         hosts:
         - host: sftpgo.${CLUSTER_DOMAIN_NAME}

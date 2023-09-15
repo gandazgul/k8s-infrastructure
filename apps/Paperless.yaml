@@ -73,5 +73,6 @@ spec:
           secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
+          forecastle.stakater.com/appName: "Paperless"
           forecastle.stakater.com/expose: "true"
           forecastle.stakater.com/icon: "https://raw.githubusercontent.com/the-paperless-project/paperless/master/src/paperless/static/paperless/img/logo-dark.png"
