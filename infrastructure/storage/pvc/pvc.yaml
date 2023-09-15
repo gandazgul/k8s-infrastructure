@@ -5,10 +5,10 @@ metadata:
 spec:
   storageClassName: ${VOLUME_STORAGE_CLASS}
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: ${VOLUME_CAPACITY}
   selector:
     matchLabels:
-      name: ${VOLUME_NAME}
+      app.kubernetes.io/name: ${VOLUME_NAME}

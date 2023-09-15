@@ -19,6 +19,7 @@ spec:
       VOLUME_CAPACITY: 4Ti
       VOLUME_STORAGE_CLASS: hdd
       VOLUME_PATH: /media/main
+      NAMESPACE: default
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -27,19 +28,19 @@ metadata:
   namespace: kube-system
 spec:
   interval: 10m0s
-  path: ./infrastructure/storage/base/
+  path: ./infrastructure/storage/hdd/
   sourceRef:
     kind: GitRepository
     name: k8s-infrastructure
     namespace: kube-system
   prune: true
   postBuild:
-    # constants can be specified like this:
     substitute:
       VOLUME_NAME: backup-volume
       VOLUME_CAPACITY: 4Ti
       VOLUME_STORAGE_CLASS: hdd
       VOLUME_PATH: /media/backup
+      NAMESPACE: default
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -48,17 +49,37 @@ metadata:
   namespace: kube-system
 spec:
   interval: 10m0s
-  path: ./infrastructure/storage/base/
+  path: ./infrastructure/storage/hdd/
   sourceRef:
     kind: GitRepository
     name: k8s-infrastructure
     namespace: kube-system
   prune: true
   postBuild:
-    # constants can be specified like this:
     substitute:
       VOLUME_NAME: yasr-volume
       VOLUME_CAPACITY: 4Ti
       VOLUME_STORAGE_CLASS: hdd
       VOLUME_PATH: /media/yasr
-
+      NAMESPACE: default
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: yasr-volume-kube-system
+  namespace: kube-system
+spec:
+  interval: 10m0s
+  path: ./infrastructure/storage/hdd/
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  prune: true
+  postBuild:
+    substitute:
+      VOLUME_NAME: yasr-volume-kube-system
+      VOLUME_CAPACITY: 4Ti
+      VOLUME_STORAGE_CLASS: hdd
+      VOLUME_PATH: /media/yasr
+      NAMESPACE: kube-system
