@@ -3,7 +3,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - ./secrets/
-#- ../../../apps/K8sDashboard.yaml
 - ../../../apps/Bitwarden.yaml
 - ../../../apps/Forecastle.yaml
 - ../../../apps/HomeAssistant.yaml
@@ -12,10 +11,8 @@ resources:
 - ../../../apps/Photoprism.yaml
 - ../../../apps/Resilio.yaml
 - ../../../apps/SFTPGo.yaml
-- ../../../apps/Sharry.yaml
-- ../../../apps/WeaveGitopsDashboard.yaml
 - ../../../apps/ZWaveJS.yaml
-- ../../../apps/mealie/base/
+- ../../../apps/WeaveGitopsDashboard.yaml
 - ../../../apps/Skooner.yaml
 - ../../../apps/transmission/gandazgul/
 - ../../../apps/Lidarr.yaml
@@ -24,3 +21,5 @@ resources:
 - ../../../apps/Radarr.yaml
 - ../../../apps/Sonarr.yaml
 - ../../../apps/Plex.yaml
+- ../../../apps/Sharry.yaml
+- ../../../apps/mealie/base/
