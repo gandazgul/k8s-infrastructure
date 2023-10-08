@@ -2,7 +2,7 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: internal-ingress-cert
+  name: internal-ingress-cert-rene
   namespace: kube-system
 spec:
   dnsNames:
