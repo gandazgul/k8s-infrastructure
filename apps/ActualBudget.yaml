@@ -19,30 +19,19 @@ spec:
     image:
       tag: latest
       pullPolicy: Always
-    env:
-      PUID: "1000"
-      PGID: "1000"
-      TZ: "${CLUSTER_TIME_ZONE}"
     persistence:
-      config:
+      data:
         enabled: true
-        type: pvc
         existingClaim: yasr-volume
-        subPath: configs/prowlarr
+        subPath: configs/actualbudget
     ingress:
-      main:
-        enabled: true
-        hosts:
-        - host: seedbox.${CLUSTER_DOMAIN_NAME}
-          paths:
-          - path: /
-        tls:
-        - hosts:
-          - seedbox.${CLUSTER_DOMAIN_NAME}
-          secretName: internal-ingress-cert
-        annotations:
-          kubernetes.io/ingress.class: "nginx"
-          forecastle.stakater.com/appName: "Prowlarr"
-          forecastle.stakater.com/group: "Media"
-          forecastle.stakater.com/expose: "true"
-          forecastle.stakater.com/icon: "https://seedbox.${CLUSTER_DOMAIN_NAME}/Content/Images/logo.png"
+      enabled: true
+      hostName: money.${CLUSTER_DOMAIN_NAME}
+      ingressClassName: nginx
+      tls: true
+#     secretName: internal-ingress-cert
+      annotations:
+        forecastle.stakater.com/appName: "ActualBudget"
+        forecastle.stakater.com/group: "Finance"
+        forecastle.stakater.com/expose: "true"
+        forecastle.stakater.com/icon: ""
