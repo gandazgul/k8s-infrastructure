@@ -3,9 +3,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - ./secrets/
-- ../../../apps/K8sDashboard.yaml
-- ../../../apps/Plex.yaml
-- ../../../apps/Resilio.yaml
+#- ../../../apps/K8sDashboard.yaml
 - ../../../apps/Bitwarden.yaml
+- ../../../apps/Forecastle.yaml
 - ../../../apps/Photoprism.yaml
+- ../../../apps/Resilio.yaml
 - ../../../apps/SFTPGo.yaml
+- ../../../apps/skooner/
+- ../../../apps/Plex.yaml
