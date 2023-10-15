@@ -2,7 +2,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: kube-prometheus-stack
-  namespace: kube-system
+  namespace: default
 spec:
   chart:
     spec:
@@ -12,8 +12,6 @@ spec:
         kind: HelmRepository
         name: prometheus-community
         namespace: kube-system
-  dependsOn:
-  - name: sealed-secrets-controller
   interval: 1h0m0s
   values:
     alertmanager:
@@ -57,6 +55,71 @@ spec:
         - hosts:
           - grafana.${CLUSTER_DOMAIN_NAME}
           secretName: internal-ingress-cert
+      persistence:
+        type: pvc
+        enabled: true
+        ## Sub-directory of the PV to mount. Can be templated.
+        subPath: "configs/grafana"
+        ## Name of an existing PVC. Can be templated.
+        existingClaim: yasr-volume
+#      dashboardProviders:
+#          dashboardproviders.yaml:
+#            apiVersion: 1
+#            providers:
+#              - name: 'teslamate'
+#                orgId: 1
+#                folder: TeslaMate
+#                folderUid: Nr4ofiDZk
+#                type: file
+#                disableDeletion: false
+#                editable: true
+#                updateIntervalSeconds: 86400
+#                options:
+#                  path: /var/lib/grafana/provisioning/dashboards/teslamate
+#              - name: 'teslamate_internal'
+#                orgId: 1
+#                folder: Internal
+#                folderUid: Nr5ofiDZk
+#                type: file
+#                disableDeletion: false
+#                editable: true
+#                updateIntervalSeconds: 86400
+#                options:
+#                  path: /var/lib/grafana/provisioning/dashboards/teslamate_internal
+#              - name: 'teslamate_reports'
+#                orgId: 1
+#                folder: Reports
+#                folderUid: Nr6ofiDZk
+#                type: file
+#                disableDeletion: false
+#                editable: true
+#                updateIntervalSeconds: 86400
+#                options:
+#                  path: /var/lib/grafana/provisioning/dashboards/teslamate_reports
+#      dashboards:
+#        teslamate:
+#          charges:
+#            file: charges.json
+
+      additionalDataSources:
+        - name: TeslaMate
+          type: postgres
+          url: teslamate-postgresql.default:5432
+          user: teslamate
+          database: teslamate
+          password: "${ADMIN_PASSWORD}"
+          access: proxy
+          basicAuth: false
+          withCredentials: false
+          isDefault: false
+          secureJsonData:
+            password: "${ADMIN_PASSWORD}"
+          jsonData:
+            postgresVersion: 1000
+            sslmode: disable
+          version: 1
+          editable: true
+
     prometheus:
       ingress:
         enabled: true

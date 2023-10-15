@@ -1,0 +1,68 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: teslamate
+  namespace: default
+spec:
+  interval: 1h0m0s
+  chart:
+    spec:
+      chart: teslamate
+      version: 7.1.2
+      sourceRef:
+        kind: HelmRepository
+        name: geek-cookbook
+        namespace: kube-system
+      interval: 5m
+  values:
+    image:
+      repository: teslamate/teslamate
+      pullPolicy: Always
+      tag: 1.27.2
+    env:
+      TZ: "America/New_York"
+      DATABASE_HOST: teslamate-postgresql
+      #      DATABASE_USER: teslamate
+      DATABASE_USER: postgres # teslamate complains about not being able to run migrations, you have to use postgres the first time, then connect to postgress and add the priviledges to its migrations table, then revert this back to use teslamate.
+      DATABASE_PASS: "${ADMIN_PASSWORD}"
+      DISABLE_MQTT: "true"
+      MQTT_HOST: "emqx"
+      MQTT_USERNAME: "mqtt"
+      ENCRYPTION_KEY: "CHANGE ME, SEE PAPERLESS OR BITWARDEN"
+    postgresql:
+      enabled: true
+      auth:
+        enablePostgresUser: true
+        postgresPassword: "${ADMIN_PASSWORD}"
+        username: teslamate
+        password: "${ADMIN_PASSWORD}"
+        database: teslamate
+      primary:
+        persistence:
+          enabled: true
+          existingClaim: yasr-volume
+          mountPath: /bitnami/postgresql
+          subPath: configs/teslamate/database
+        podSecurityContext:
+          enabled: true
+          fsGroup: 1000
+        containerSecurityContext:
+          enabled: true
+          runAsUser: 1000
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: teslamate.${CLUSTER_DOMAIN_NAME}
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - teslamate.${CLUSTER_DOMAIN_NAME}
+            secretName: internal-ingress-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://bitwarden.com/icons/icon-512x512.png"
