@@ -28,7 +28,7 @@ spec:
       containers:
       # frontend ---------------------------------------------------------
       - name: frontend
-        image: hkotel/mealie:frontend-v1.0.0beta-5
+        image: hkotel/mealie:frontend-nightly
         imagePullPolicy: Always
         env:
         - name: TZ
@@ -62,7 +62,7 @@ spec:
             protocol: TCP
       # api ----------------------------------------------------------
       - name: api
-        image: hkotel/mealie:api-v1.0.0beta-5
+        image: hkotel/mealie:api-nightly
         imagePullPolicy: Always
         env:
         - name: PUID
