@@ -32,7 +32,7 @@ spec:
       containers:
       # VPN
       - name: vpn
-        image: docker.io/qmcgaw/gluetun:v3.32.0
+        image: docker.io/qmcgaw/gluetun:v3.36.0
         imagePullPolicy: IfNotPresent
         env:
         - name: VPN_SERVICE_PROVIDER
@@ -49,7 +49,7 @@ spec:
           value: "off"
         - name: TZ
           value: ${CLUSTER_TIME_ZONE}
-        - name: PRIVATE_INTERNET_ACCESS_VPN_PORT_FORWARDING
+        - name: VPN_PORT_FORWARDING
           value: "on"
         - name: HTTPPROXY
           value: "off"
