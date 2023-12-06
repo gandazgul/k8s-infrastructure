@@ -19,4 +19,4 @@ resources:
 - ../../../apps/Sonarr.yaml
 - ../../../apps/WeaveGitopsDashboard.yaml
 - ../../../apps/Zigbee2mqtt.yaml
-#- ../../../apps/transmission/rafag/
+- ../../../apps/transmission/rafag/
