@@ -43,6 +43,8 @@ spec:
         type: pvc
         existingClaim: main-volume
         subPath: public
+      shared:
+        enabled: true
     ingress:
       main:
         enabled: true
