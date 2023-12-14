@@ -27,6 +27,11 @@ spec:
       PUID: "1000"
       PGID: "1000"
       TZ: "${CLUSTER_TIME_ZONE}"
+    node:
+      enabled: true
+      image:
+        tag: latest
+        pullPolicy: Always
     persistence:
       config:
         enabled: true
