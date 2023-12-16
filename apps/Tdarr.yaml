@@ -37,14 +37,12 @@ spec:
         enabled: true
         type: pvc
         existingClaim: yasr-volume
-        subPath:
-        - path: configs/tdarr/
+        subPath: configs/tdarr/
       data:
         enabled: true
         type: pvc
         existingClaim: main-volume
-        subPath:
-        - path: public
+        subPath: public
       shared:
         enabled: true
     ingress:
