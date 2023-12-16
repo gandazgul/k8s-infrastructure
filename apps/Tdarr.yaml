@@ -40,9 +40,9 @@ spec:
         mountPath: null
         subPath:
         - path: configs/tdarr/
-          mountPath: config
+          mountPath: /app/configs
         - path: configs/tdarr/
-          mountPath: data
+          mountPath: /app/server
       media:
         enabled: true
         type: pvc
