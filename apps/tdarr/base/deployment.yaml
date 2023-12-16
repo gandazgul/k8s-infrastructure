@@ -41,8 +41,6 @@ spec:
           value: "1000"
         - name: PGID
           value: "1000"
-        - name: serverIP
-          value: 0.0.0.0
         - name: serverPort
           value: '8266'
         - name: webUIPort
