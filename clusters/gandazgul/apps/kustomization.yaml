@@ -23,5 +23,5 @@ resources:
 - ../../../apps/Prowlarr.yaml
 - ../../../apps/Radarr.yaml
 - ../../../apps/Sonarr.yaml
-- ../../../apps/Tdarr.yaml
+- ../../../apps/tdarr/base/
 - ../../../apps/Plex.yaml
