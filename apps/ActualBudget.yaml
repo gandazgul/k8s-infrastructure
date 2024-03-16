@@ -1,0 +1,37 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: actual-budget
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: actual
+      version: 1.7.0
+      sourceRef:
+        kind: HelmRepository
+        name: beluga-cloud
+        namespace: kube-system
+      interval: 5m
+  values:
+    image:
+      tag: latest
+      pullPolicy: Always
+    persistence:
+      data:
+        enabled: true
+        existingClaim: yasr-volume
+        subPath: configs/actualbudget
+    ingress:
+      enabled: true
+      hostname: money.${CLUSTER_DOMAIN_NAME}
+      ingressClassName: nginx
+      tls: true
+#     secretName: internal-ingress-cert
+      annotations:
+        forecastle.stakater.com/appName: "ActualBudget"
+        forecastle.stakater.com/group: "Finance"
+        forecastle.stakater.com/expose: "true"
+        forecastle.stakater.com/icon: ""
