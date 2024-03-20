@@ -8,9 +8,9 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - name: fe-http
-    port: 3001
+  - name: http
+    port: 9000
     protocol: TCP
-    targetPort: fe-http
+    targetPort: http
   selector:
     app.kubernetes.io/name: mealie
