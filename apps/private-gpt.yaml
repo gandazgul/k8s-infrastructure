@@ -1,0 +1,18 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: private-gpt
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: private-gpt
+      version: 0.5.0
+      sourceRef:
+        kind: HelmRepository
+        name: clemlesne-private-gpt # Updated repository name
+        namespace: kube-system
+      interval: 5m
+  values:
+  # Configuration values for private-gpt will go here
