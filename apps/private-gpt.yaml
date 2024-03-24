@@ -25,3 +25,13 @@ spec:
         namespace: flux-system
       interval: 5m
   values:
+    ingress:
+      hosts:
+      - host: gpt.${CLUSTER_DOMAIN_NAME}
+      tls:
+      - hosts:
+        - gpt.${CLUSTER_DOMAIN_NAME}
+        secretName: internal-ingress-cert
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
