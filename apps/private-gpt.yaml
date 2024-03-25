@@ -26,7 +26,7 @@ spec:
       interval: 5m
   values:
     ingress:
-      hosts:
+      host:
       - host: gpt.${CLUSTER_DOMAIN_NAME}
       tls:
       - hosts:
