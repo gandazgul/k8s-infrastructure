@@ -1,6 +1,7 @@
 # Injellij
 .idea/workspace.xml
 .idea/aws.xml
+.idea/copilot/
 
 # docker
 containers/sshd/users.conf

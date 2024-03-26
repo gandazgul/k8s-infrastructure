@@ -5,26 +5,28 @@ if [[ $EUID = 0 ]]; then
    exit 1
 fi
 
+printf "\nInstalling cri-o from its repo ==================================================================\n"
 if ! dnf list installed cri-o > /dev/null 2>&1; then
-    printf "\nInstall cri-o and crun ================================================================================\n"
-    sudo dnf -y module enable cri-o:1.24 || exit 1
-    sudo dnf -y install crun cri-o || exit 1
-    sudo dnf update --exclude="cri-*" || exit 1
+  sudo bash -c 'cat <<EOF | tee /etc/yum.repos.d/cri-o.repo
+[cri-o]
+name=CRI-O
+baseurl=https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.28/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.28/rpm/repodata/repomd.xml.key
+EOF'
 
-    printf "\nRaising user watches to the highest number to allow kubelet to work with lots of containers ===========\n"
-    echo fs.inotify.max_user_watches=1048576 | sudo tee --append /etc/sysctl.conf
-    echo fs.inotify.max_user_instances=1048576 | sudo tee --append /etc/sysctl.conf
-fi;
+  printf "\nInstalling cri-o dependencies\n"
+  sudo dnf install -y \
+      conntrack \
+      container-selinux \
+      ebtables \
+      ethtool \
+      iptables \
+      socat
 
-cat /etc/crio/crio.conf | grep default_runtime | grep crun
-GREP_RE=$?
-if [ $GREP_RE != 0 ]; then
-  printf "\nChange cri-o's config to work with crun ===============================================================\n"
-  sudo sed -c -i "s/\(default_runtime *= *\).*/\1\"crun\"/" /etc/crio/crio.conf || exit 1
-  echo "[crio.runtime.runtimes.crun]" | sudo tee --append /etc/crio/crio.conf || exit 1
-  echo "runtime_path = \"/usr/bin/crun\"" | sudo tee --append /etc/crio/crio.conf || exit 1
-  echo "runtime_type = \"oci\"" | sudo tee --append /etc/crio/crio.conf || exit 1
-  echo "runtime_root = \"/run/crun\"" | sudo tee --append /etc/crio/crio.conf || exit 1
+  printf "\nInstalling cri-o\n"
+  sudo dnf install -y --repo cri-o cri-o
 
   printf "\nEnable cri-o ==========================================================================================\n"
   sudo systemctl daemon-reload || exit 1
@@ -40,28 +42,19 @@ fi;
 
 printf "\nInstalling Kubernetes packages from repo ==================================================================\n"
 if [[ ! -f /etc/yum.repos.d/kubernetes.repo ]]; then
-    printf "\nInstall kubelet, kubeadm, crictl(needed by kubelet), cockpit (nice fedora dashboard):"
+    printf "\nInstall kubelet, kubeadm and kubectl"
     sudo bash -c 'cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
-baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.28/rpm/
 enabled=1
 gpgcheck=1
-repo_gpgcheck=1
-gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-exclude=kube*
-
-[kubernetes-unstable]
-name=Kubernetes-unstable
-baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64-unstable
-enabled=0
-gpgcheck=1
-repo_gpgcheck=1
-gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-exclude=kube*
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.28/rpm/repodata/repomd.xml.key
+exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
 EOF'
 
-    sudo dnf -y install --enablerepo=kubernetes kubelet-1.24.11-0 kubectl-1.24.11-0 kubeadm-1.24.11-0 --disableexcludes=kubernetes || exit 1
+    sudo dnf -y install --enablerepo=kubernetes kubelet kubectl kubeadm --disableexcludes=kubernetes || exit 1
+    # cockpit-pcp enables the metric graphs in cockpit
     sudo dnf -y install cockpit-pcp || exit 1
 
     # enable cni plugins
@@ -75,7 +68,6 @@ sudo systemctl enable --now cockpit.socket || exit 1
 if dnf list installed zram-generator-defaults > /dev/null 2>&1; then
   printf "\nDisabling swap ==========================================================================================\n"
   sudo dnf -y remove zram-generator-defaults
-  sudo systemctl stop swap-create@zram0 || exit 1
   sudo swapoff /dev/zram0 || exit 1
 fi
 

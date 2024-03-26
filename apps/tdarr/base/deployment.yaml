@@ -1,0 +1,130 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tdarr
+  labels:
+    app.kubernetes.io/name: tdarr
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tdarr
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tdarr
+    spec:
+      volumes:
+      - name: yasr-volume
+        persistentVolumeClaim:
+          claimName: yasr-volume
+      - name: main-volume
+        persistentVolumeClaim:
+          claimName: main-volume
+      - name: tz-config
+        hostPath:
+          path: /etc/localtime
+      - name: transcode-cache
+        emptyDir: {}
+      dnsPolicy: ClusterFirst
+      containers:
+      # Tdarr ---------------------------------------------------------
+      - name: tdarr
+        image: ghcr.io/haveagitgat/tdarr
+        imagePullPolicy: Always
+        env:
+        - name: TZ
+          value: ${CLUSTER_TIME_ZONE}
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: serverIP
+          value: 127.0.0.1
+        - name: serverPort
+          value: '8266'
+        - name: webUIPort
+          value: '8265'
+        livenessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /
+            port: 8265
+          initialDelaySeconds: 30
+          timeoutSeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 250Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+        volumeMounts:
+          - mountPath: /etc/localtime
+            name: tz-config
+            readOnly: true
+          - mountPath: /app/configs
+            name: yasr-volume
+            subPath: configs/tdarr
+          - mountPath: /app/server
+            name: yasr-volume
+            subPath: configs/tdarr
+          - mountPath: /media
+            name: main-volume
+            subPath: public
+          - mountPath: /shared
+            name: transcode-cache
+        ports:
+        - name: http
+          containerPort: 8265
+          protocol: TCP
+        - name: server
+          containerPort: 8266
+          protocol: TCP
+      # Node ----------------------------------------------------------
+      - name: node
+        image: haveagitgat/tdarr_node:latest
+        imagePullPolicy: Always
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: ${CLUSTER_TIME_ZONE}
+        - name: nodeID
+          value: node
+        - name: serverIP
+          value: 127.0.0.1
+        - name: serverPort
+          value: '8266'
+#        - name: ffmpegPath
+#          value: <nil>
+#        livenessProbe:
+#          httpGet:
+#            scheme: HTTP
+#            path: /api/app/about
+#            port: 9000
+#          initialDelaySeconds: 30
+#          timeoutSeconds: 10
+        resources:
+          requests:
+            cpu: 500m
+            memory: 250Mi
+          limits:
+            cpu: 4000m
+            memory: 2500Mi
+        volumeMounts:
+        - mountPath: /etc/localtime
+          name: tz-config
+          readOnly: true
+        - mountPath: /app/configs
+          name: yasr-volume
+          subPath: configs/tdarr
+        - mountPath: /media
+          name: main-volume
+          subPath: public
+        - mountPath: /shared
+          name: transcode-cache
