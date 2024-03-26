@@ -20,4 +20,4 @@ resources:
 - ../../../apps/WeaveGitopsDashboard.yaml
 - ../../../apps/Zigbee2mqtt.yaml
 - ../../../apps/transmission/rafag/
-#- ../../../apps/ollama.yaml
+- ../../../apps/ollama.yaml
