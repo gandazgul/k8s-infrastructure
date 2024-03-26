@@ -6,6 +6,7 @@ metadata:
   namespace: default
 spec:
   interval: 5m
+  url: "https://otwld.github.io/ollama-helm"
   chart:
     spec:
       chart: ollama
