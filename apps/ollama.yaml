@@ -42,8 +42,6 @@ spec:
         - hosts:
             - ai.${CLUSTER_DOMAIN_NAME}
           secretName: internal-ingress-cert
-      annotations:
-        kubernetes.io/ingress.class: "nginx"
     persistentVolume:
       enabled: true
       existingClaim: yasr-volume
