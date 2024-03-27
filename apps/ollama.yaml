@@ -33,7 +33,6 @@ spec:
         - llama2
     ingress:
       enabled: true
-      className: "nginx"
       hosts:
         - host: ai.${CLUSTER_DOMAIN_NAME}
           paths:
