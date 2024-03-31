@@ -44,11 +44,10 @@ spec:
           secretName: internal-ingress-cert
       annotations:
         kubernetes.io/ingress.class: "nginx"
+        forecastle.stakater.com/appName: "ollama"
+        forecastle.stakater.com/expose: "true"
+#        forecastle.stakater.com/icon: "https://ollama.com/icons/icon-512x512.png"
     persistentVolume:
       enabled: true
       existingClaim: yasr-volume
       subPath: configs/ollama
-
-#          forecastle.stakater.com/appName: "ollama"
-#          forecastle.stakater.com/expose: "true"
-#          forecastle.stakater.com/icon: "https://ollama.com/icons/icon-512x512.png"

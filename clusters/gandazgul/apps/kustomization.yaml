@@ -25,3 +25,4 @@ resources:
 - ../../../apps/Sonarr.yaml
 - ../../../apps/tdarr/base/
 - ../../../apps/Plex.yaml
+- ../../../apps/Ollama.yaml
