@@ -30,7 +30,7 @@ spec:
       ADMIN_TOKEN: ${BITWARDEN_ADMIN_TOKEN}
       INVITATIONS_ALLOWED: true
       SHOW_PASSWORD_HINT: false
-      DOMAIN: https://p.${CLUSTER_DOMAIN_NAME}
+      DOMAIN: https://${BITWARDEN_SUBDOMAIN}.${CLUSTER_DOMAIN_NAME}
       SMTP_HOST: smtp.gmail.com
       SMTP_PORT: 587
       SMTP_FROM: ${EMAIL}
