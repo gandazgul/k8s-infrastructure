@@ -18,7 +18,7 @@ resources:
 - ../../../apps/skooner/
 - ../../../apps/transmission/gandazgul/
 - ../../../apps/Lidarr.yaml
-- ../../../apps/Overseerr.yaml
+#- ../../../apps/Overseerr.yaml
 - ../../../apps/Prowlarr.yaml
 - ../../../apps/Radarr.yaml
 - ../../../apps/Sonarr.yaml
