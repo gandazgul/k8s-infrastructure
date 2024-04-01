@@ -31,6 +31,7 @@ spec:
     ollama:
       models:
         - llama2
+        - Llama 2 Uncensored
     ingress:
       enabled: true
       hosts:
@@ -46,7 +47,7 @@ spec:
         kubernetes.io/ingress.class: "nginx"
         forecastle.stakater.com/appName: "ollama"
         forecastle.stakater.com/expose: "true"
-#        forecastle.stakater.com/icon: "https://ollama.com/icons/icon-512x512.png"
+        forecastle.stakater.com/icon: "https://ollama.com/public/ollama.png"
     persistentVolume:
       enabled: true
       existingClaim: yasr-volume
