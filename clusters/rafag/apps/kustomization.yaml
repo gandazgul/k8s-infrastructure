@@ -25,3 +25,4 @@ resources:
 - ../../../apps/tdarr/base/
 - ../../../apps/Plex.yaml
 - ../../../apps/Ollama.yaml
+- ../../../apps/Zigbee2mqtt.yaml
