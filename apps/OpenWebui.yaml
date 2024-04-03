@@ -1,0 +1,51 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: GitRepository
+metadata:
+  name: open-webui-repo
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: "https://github.com/open-webui/open-webui"
+  ref:
+    branch: main
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: open-webui
+  namespace: default
+spec:
+  interval: 5m
+  path: "./kubernetes/manifest/"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: open-webui-repo
+    namespace: flux-system
+  decryption:
+    provider: none
+  validation: client
+  values:
+    ollama:
+      persistence:
+        existingClaim: yasr-volume
+    webui:
+      ingress:
+        enabled: true
+        hosts:
+          - host: webai.${CLUSTER_DOMAIN_NAME}
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - webai.${CLUSTER_DOMAIN_NAME}
+            secretName: internal-ingress-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          forecastle.stakater.com/appName: "Open WebUI AI"
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://docs.openwebui.com/img/logo.png"
+      persistence:
+        existingClaim: yasr-volume
