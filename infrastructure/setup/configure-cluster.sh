@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# check if have the cluster name
+if [ -z ${1+x} ]; then
+  echo "Make sure to pass in a cluster name like this: configure-cluster.sh [name here]"
+  exit 1
+fi
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 CLUSTER_NAME=$1
 REPO_ROOT=$(git rev-parse --show-toplevel)
@@ -10,9 +16,9 @@ source "$SCRIPT_DIR/requirements.sh"
 message "Generating $CLUSTER_NAME secret..."
 rm -rf "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml"
 kubectl create secret generic secrets --dry-run=client --namespace=kube-system --from-env-file="./clusters/$CLUSTER_NAME/secrets.env" -o json |
-  kubeseal -o yaml > "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml"
+  kubeseal -o yaml > "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml" || exit 1
 
-kubectl apply -f "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml"
+kubectl apply -f "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml" || exit 1
 
 # Create a kustomization for the cluster's Secrets so that apps can depend on it
 template=$(sed "s/{{CLUSTER_NAME}}/$CLUSTER_NAME/g" <"$REPO_ROOT"/infrastructure/setup/SealedSecretsKustomization.yaml.templ)
