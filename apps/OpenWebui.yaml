@@ -2,7 +2,7 @@ apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: GitRepository
 metadata:
   name: open-webui-repo
-  namespace: flux-system
+  namespace: kube-system
 spec:
   interval: 1m
   url: "https://github.com/open-webui/open-webui"
@@ -11,21 +11,20 @@ spec:
 
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
-kind: Kustomization
+kind: HelmRelease
 metadata:
   name: open-webui
   namespace: default
 spec:
   interval: 5m
-  path: "./kubernetes/manifest/"
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: open-webui-repo
-    namespace: flux-system
-  decryption:
-    provider: none
-  validation: client
+  chart:
+    spec:
+      chart: ./kubernetes/helm/
+      sourceRef:
+        kind: GitRepository
+        name: open-webui
+        namespace: kube-system
+
   values:
     ollama:
       persistence:
