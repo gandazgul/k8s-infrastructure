@@ -22,7 +22,7 @@ spec:
       chart: ./kubernetes/helm/
       sourceRef:
         kind: GitRepository
-        name: open-webui
+        name: open-webui-repo
         namespace: kube-system
 
   values:
