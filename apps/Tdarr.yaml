@@ -32,6 +32,13 @@ spec:
       image:
         tag: latest
         pullPolicy: Always
+      resources:
+        limits:
+          cpu: 4
+          memory: 4000Mi
+        requests:
+          cpu: 500m
+          memory: 500Mi
     persistence:
       config:
         enabled: true
