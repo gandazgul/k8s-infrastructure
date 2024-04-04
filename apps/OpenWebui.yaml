@@ -31,20 +31,20 @@ spec:
         existingClaim: yasr-volume
     webui:
       ingress:
-        enabled: true
-        hosts:
+        main:
+          enabled: true
+          hosts:
           - host: webai.${CLUSTER_DOMAIN_NAME}
             paths:
-              - path: /
-                pathType: Prefix
-        tls:
+            - path: /
+          tls:
           - hosts:
-              - webai.${CLUSTER_DOMAIN_NAME}
+            - webai.${CLUSTER_DOMAIN_NAME}
             secretName: internal-ingress-cert
-        annotations:
-          kubernetes.io/ingress.class: "nginx"
-          forecastle.stakater.com/appName: "Open WebUI AI"
-          forecastle.stakater.com/expose: "true"
-          forecastle.stakater.com/icon: "https://docs.openwebui.com/img/logo.png"
+          annotations:
+            kubernetes.io/ingress.class: "nginx"
+            forecastle.stakater.com/appName: "Open WebUI AI"
+            forecastle.stakater.com/expose: "true"
+            forecastle.stakater.com/icon: "https://docs.openwebui.com/img/logo.png"
       persistence:
         existingClaim: yasr-volume
