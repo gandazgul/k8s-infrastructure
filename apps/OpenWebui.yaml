@@ -46,6 +46,6 @@ spec:
             forecastle.stakater.com/appName: "Open WebUI AI"
             forecastle.stakater.com/expose: "true"
             forecastle.stakater.com/icon: "https://docs.openwebui.com/img/logo.png"
-          existingSecret: internal-ingress-cert
+          # existingSecret: internal-ingress-cert
       persistence:
         existingClaim: yasr-volume
