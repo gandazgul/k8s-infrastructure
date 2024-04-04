@@ -1,0 +1,53 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: GitRepository
+metadata:
+  name: open-webui-repo
+  namespace: kube-system
+spec:
+  interval: 1m
+  url: "https://github.com/open-webui/open-webui"
+  ref:
+    branch: main
+
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: open-webui
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: ./kubernetes/helm/
+      sourceRef:
+        kind: GitRepository
+        name: open-webui-repo
+        namespace: kube-system
+#https://github.com/open-webui/open-webui/blob/main/kubernetes/helm/values.yaml
+  values:
+    ollama:
+      models:
+        - llama2    
+      persistence:
+        existingClaim: yasr-volume
+    webui:
+      ingress:
+        enabled: true
+        main:
+          enabled: true
+          host: webai.${CLUSTER_DOMAIN_NAME}
+          paths:
+          - path: /          
+          tls:
+            hosts:
+              - webai.${CLUSTER_DOMAIN_NAME}
+            secretName: internal-ingress-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          forecastle.stakater.com/appName: "Open WebUI AI"
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://docs.openwebui.com/img/logo-dark.png"
+          # existingSecret: internal-ingress-cert
+      persistence:
+        existingClaim: yasr-volume
