@@ -24,13 +24,14 @@ spec:
         kind: GitRepository
         name: open-webui-repo
         namespace: kube-system
-
+#https://github.com/open-webui/open-webui/blob/main/kubernetes/helm/values.yaml
   values:
     ollama:
       persistence:
         existingClaim: yasr-volume
     webui:
       ingress:
+        enabled: true
         main:
           enabled: true
           hosts:
@@ -46,5 +47,6 @@ spec:
             forecastle.stakater.com/appName: "Open WebUI AI"
             forecastle.stakater.com/expose: "true"
             forecastle.stakater.com/icon: "https://docs.openwebui.com/img/logo.png"
+          existingSecret: internal-ingress-cert
       persistence:
         existingClaim: yasr-volume
