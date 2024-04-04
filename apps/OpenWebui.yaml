@@ -10,7 +10,7 @@ spec:
     branch: main
 
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: open-webui
