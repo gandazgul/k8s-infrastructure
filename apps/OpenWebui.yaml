@@ -27,6 +27,8 @@ spec:
 #https://github.com/open-webui/open-webui/blob/main/kubernetes/helm/values.yaml
   values:
     ollama:
+      models:
+        - llama2    
       persistence:
         existingClaim: yasr-volume
     webui:
@@ -45,7 +47,7 @@ spec:
           kubernetes.io/ingress.class: "nginx"
           forecastle.stakater.com/appName: "Open WebUI AI"
           forecastle.stakater.com/expose: "true"
-          forecastle.stakater.com/icon: "https://docs.openwebui.com/img/logo.png"
+          forecastle.stakater.com/icon: "https://docs.openwebui.com/img/logo-dark.png"
           # existingSecret: internal-ingress-cert
       persistence:
         existingClaim: yasr-volume
