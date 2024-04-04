@@ -41,11 +41,11 @@ spec:
             hosts:
               - webai.${CLUSTER_DOMAIN_NAME}
             secretName: internal-ingress-cert
-          annotations:
-            kubernetes.io/ingress.class: "nginx"
-            forecastle.stakater.com/appName: "Open WebUI AI"
-            forecastle.stakater.com/expose: "true"
-            forecastle.stakater.com/icon: "https://docs.openwebui.com/img/logo.png"
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          forecastle.stakater.com/appName: "Open WebUI AI"
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: "https://docs.openwebui.com/img/logo.png"
           # existingSecret: internal-ingress-cert
       persistence:
         existingClaim: yasr-volume
