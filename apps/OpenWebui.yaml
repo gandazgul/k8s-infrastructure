@@ -34,13 +34,12 @@ spec:
         enabled: true
         main:
           enabled: true
-          hosts:
-          - host: webai.${CLUSTER_DOMAIN_NAME}
-            paths:
-            - path: /
+          host: webai.${CLUSTER_DOMAIN_NAME}
+          paths:
+          - path: /          
           tls:
-          - hosts:
-            - webai.${CLUSTER_DOMAIN_NAME}
+            hosts:
+              - webai.${CLUSTER_DOMAIN_NAME}
             secretName: internal-ingress-cert
           annotations:
             kubernetes.io/ingress.class: "nginx"
