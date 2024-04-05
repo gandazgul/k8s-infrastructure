@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # check if have the cluster name
 if [ -z ${1+x} ]; then
   echo "Make sure to pass in a cluster name like this: configure-cluster.sh [name here]"
@@ -16,14 +18,15 @@ source "$SCRIPT_DIR/requirements.sh"
 message "Generating $CLUSTER_NAME secret..."
 rm -rf "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml"
 kubectl create secret generic secrets --dry-run=client --namespace=kube-system --from-env-file="./clusters/$CLUSTER_NAME/secrets.env" -o json |
-  kubeseal -o yaml > "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml" || exit 1
+  jq '.metadata.annotations |= { "reflector.v1.k8s.emberstack.com/reflection-auto-enabled": "true", "reflector.v1.k8s.emberstack.com/reflection-allowed": "true", "reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces": "default" }' |
+  kubeseal -o yaml > "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml"
 
-kubectl apply -f "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml" || exit 1
+kubectl apply -f "./clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml"
 
 # Create a kustomization for the cluster's Secrets so that apps can depend on it
 template=$(sed "s/{{CLUSTER_NAME}}/$CLUSTER_NAME/g" <"$REPO_ROOT"/infrastructure/setup/SealedSecretsKustomization.yaml.templ)
 # apply the yml with the substituted value
-echo "$template" | kubectl apply -f - || exit 1
+echo "$template" | kubectl apply -f -
 
 # Create value/yaml secrets
 message "Generating $CLUSTER_NAME app secrets from values..."
