@@ -15,8 +15,8 @@ resources:
 - ../../../apps/Sharry.yaml
 - ../../../apps/WeaveGitopsDashboard.yaml
 - ../../../apps/ZWaveJS.yaml
-- ../../../apps/mealie/base/
-- ../../../apps/skooner/
+- ../../../apps/Mealie.yaml
+- ../../../apps/Skooner.yaml
 - ../../../apps/transmission/gandazgul/
 - ../../../apps/Lidarr.yaml
 - ../../../apps/Overseerr.yaml
