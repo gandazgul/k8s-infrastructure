@@ -17,3 +17,7 @@ spec:
       kind: Deployment
       name: tdarr
       namespace: default
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: secrets
