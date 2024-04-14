@@ -40,8 +40,8 @@ spec:
               cpu: 100m
               memory: 250Mi
             limits:
-              cpu: 500m
-              memory: 500Mi
+              cpu: 1000m
+              memory: 2000Mi
           volumeMounts:
             - name: tz-config
               mountPath: /etc/localtime
