@@ -53,6 +53,9 @@ spec:
         - name: yasr-volume
           persistentVolumeClaim:
             claimName: yasr-volume
+        - name: main-volume
+          persistentVolumeClaim:
+            claimName: main-volume
         - name: tz-config
           hostPath:
             path: /etc/localtime

@@ -6,7 +6,6 @@ metadata:
 spec:
   interval: 1m
   url: "https://charts.truecharts.org"
-  
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
@@ -29,4 +28,3 @@ spec:
     key2:
       subkey1: value2
       subkey2: value3
-    

@@ -6,7 +6,7 @@ metadata:
   namespace: default
 spec:
   interval: 5m
-  path: ./apps/open-webui/base/
+  path: ./apps/open-webui/${CLUSTER_NAME
   prune: true
   sourceRef:
     kind: GitRepository
