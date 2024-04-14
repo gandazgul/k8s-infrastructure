@@ -17,7 +17,7 @@ resources:
 - ../../../apps/ZWaveJS.yaml
 - ../../../apps/Mealie.yaml
 - ../../../apps/Skooner.yaml
-- ../../../apps/transmission/gandazgul/
+- ../../../apps/Transmission.yaml
 - ../../../apps/Lidarr.yaml
 - ../../../apps/Overseerr.yaml
 - ../../../apps/Prowlarr.yaml

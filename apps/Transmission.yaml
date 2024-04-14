@@ -1,0 +1,23 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: transmission
+  namespace: default
+spec:
+  interval: 5m
+  path: ./apps/transmission/base/
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: transmission
+      namespace: default
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: secrets

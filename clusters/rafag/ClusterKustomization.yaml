@@ -28,6 +28,7 @@ spec:
       CLUSTER_TIME_ZONE: America/New_York
       BITWARDEN_SUBDOMAIN: "p"
       HASS_SUBDOMAIN: "hass"
+      CLUSTER_NAME: "rafag"
     substituteFrom:
     # substitutions can also come from a config map or secret
     #    - kind: ConfigMap
