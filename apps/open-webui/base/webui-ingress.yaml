@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: open-webui
+  namespace: default
+  labels:
+    app.kubernetes.io/name: open-webui
+  annotations:
+    forecastle.stakater.com/appName: "Open WebUI AI"
+    forecastle.stakater.com/expose: "true"
+#    forecastle.stakater.com/group: "Media"
+#    forecastle.stakater.com/icon: "https://transmissionbt.com/assets/images/Transmission_icon.png"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: webai.${CLUSTER_DOMAIN_NAME}
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: open-webui
+                port:
+                  number: http
+  tls:
+    - hosts:
+        - webai.${CLUSTER_DOMAIN_NAME}
+      secretName: internal-ingress-cert
