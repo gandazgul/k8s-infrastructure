@@ -29,10 +29,6 @@ spec:
     image:
       pullPolicy: Always
     ollama:
-      gpu:
-        enabled: true
-        type: nvidia
-        number: 2
       models:
         - llama2
     ingress:
