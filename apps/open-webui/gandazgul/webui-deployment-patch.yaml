@@ -11,4 +11,4 @@ spec:
           volumeMounts:
             - name: main-volume
               mountPath: /data/docs
-              subPath: "/media/main/btsync/Carlos' Documents/"
+              subPath: "btsync/Carlos' Documents/"
