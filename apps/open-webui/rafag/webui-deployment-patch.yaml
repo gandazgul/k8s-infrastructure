@@ -11,4 +11,4 @@ spec:
           volumeMounts:
             - name: main-volume
               mountPath: /data/docs
-              subPath: "PATH TO DOCS HERE"
+              subPath: "rafag"
