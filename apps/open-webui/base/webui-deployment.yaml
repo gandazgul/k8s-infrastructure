@@ -1,0 +1,65 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: open-webui
+  namespace: default
+  labels:
+    app.kubernetes.io/name: open-webui
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: open-webui
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: open-webui
+    spec:
+      containers:
+        - name: open-webui
+          image: ghcr.io/open-webui/open-webui:main
+          imagePullPolicy: Always
+          env:
+            - name: OLLAMA_BASE_URL
+              value: "http://ollama.default.svc.cluster.local:11434"
+            - name: RAG_EMBEDDING_MODEL_AUTO_UPDATE
+              value: "true"
+            - name: ENABLE_SIGNUP
+              value: "false"
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /
+              port: 8080
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 250Mi
+            limits:
+              cpu: 1000m
+              memory: 2000Mi
+          volumeMounts:
+            - name: tz-config
+              mountPath: /etc/localtime
+              readOnly: true
+            - name: yasr-volume
+              mountPath: /app/backend/data
+              subPath: configs/open-webui/
+      volumes:
+        - name: yasr-volume
+          persistentVolumeClaim:
+            claimName: yasr-volume
+        - name: main-volume
+          persistentVolumeClaim:
+            claimName: main-volume
+        - name: tz-config
+          hostPath:
+            path: /etc/localtime

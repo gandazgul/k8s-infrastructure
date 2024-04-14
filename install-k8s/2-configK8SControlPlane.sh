@@ -6,6 +6,7 @@ printf "\nInstalling kubernetes ================================================
 # Check if kubeadm already ran, do kubeadm reset to re-run
 if [[ ! -f "/etc/kubernetes/kubelet.conf" ]]; then
     sudo systemctl enable kubelet.service
+    sudo hostnamectl set-hostname --static k8s-control-plane
     sudo kubeadm config images pull
     sudo kubeadm init --config=./kubeadm.yaml || exit 1
 else

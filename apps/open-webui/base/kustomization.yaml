@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: default
+resources:
+  #- ollama-service.yaml
+  #- ollama-statefulset.yaml
+  - webui-deployment.yaml
+  - webui-service.yaml
+  - webui-ingress.yaml

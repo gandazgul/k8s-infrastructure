@@ -1,4 +1,3 @@
----
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -9,21 +8,22 @@ metadata:
   annotations:
     forecastle.stakater.com/appName: "Mealie"
     forecastle.stakater.com/expose: "true"
+    #    forecastle.stakater.com/group: "Media"
     forecastle.stakater.com/icon: "https://raw.githubusercontent.com/hay-kot/mealie/mealie-next/frontend/static/icon.png"
 spec:
   ingressClassName: nginx
-  tls:
-  - hosts:
-    - recipes.${CLUSTER_DOMAIN_NAME}
-    secretName: internal-ingress-cert
   rules:
   - host: recipes.${CLUSTER_DOMAIN_NAME}
     http:
       paths:
       - path: /
-        pathType: Prefix
+        pathType: ImplementationSpecific
         backend:
           service:
             name: mealie
             port:
-              name: fe-http
+              name: http
+  tls:
+    - hosts:
+        - recipes.${CLUSTER_DOMAIN_NAME}
+      secretName: internal-ingress-cert

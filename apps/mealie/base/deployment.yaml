@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mealie
+  namespace: default
   labels:
     app.kubernetes.io/name: mealie
 spec:
@@ -16,53 +17,9 @@ spec:
       labels:
         app.kubernetes.io/name: mealie
     spec:
-      volumes:
-      - name: yasr-volume
-        persistentVolumeClaim:
-          claimName: yasr-volume
-      - name: tz-config
-        hostPath:
-          path: /etc/localtime
-      dnsPolicy: ClusterFirst
-      dnsConfig: {}
       containers:
-      # frontend ---------------------------------------------------------
-      - name: frontend
-        image: hkotel/mealie:frontend-v1.0.0beta-5
-        imagePullPolicy: Always
-        env:
-        - name: TZ
-          value: ${CLUSTER_TIME_ZONE}
-        - name: API_URL
-          value: "http://127.0.0.1:9000"
-        livenessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /
-            port: 3001
-          initialDelaySeconds: 30
-          timeoutSeconds: 10
-        resources:
-          requests:
-            cpu: 100m
-            memory: 250Mi
-          limits:
-            cpu: 500m
-            memory: 500Mi
-        volumeMounts:
-          - mountPath: /etc/localtime
-            name: tz-config
-            readOnly: true
-          - mountPath: /app/data
-            name: yasr-volume
-            subPath: configs/mealie
-        ports:
-          - name: fe-http
-            containerPort: 3001
-            protocol: TCP
-      # api ----------------------------------------------------------
-      - name: api
-        image: hkotel/mealie:api-v1.0.0beta-5
+      - name: mealie
+        image: ghcr.io/mealie-recipes/mealie:latest
         imagePullPolicy: Always
         env:
         - name: PUID
@@ -87,10 +44,14 @@ spec:
           value: ${EMAIL}
         - name: SMTP_PASSWORD
           value: ${SMTP_PASSWORD}
+        ports:
+          - name: http
+            containerPort: 9000
+            protocol: TCP
         livenessProbe:
           httpGet:
             scheme: HTTP
-            path: /api/app/about
+            path: /
             port: 9000
           initialDelaySeconds: 30
           timeoutSeconds: 10
@@ -102,13 +63,16 @@ spec:
             cpu: 500m
             memory: 500Mi
         volumeMounts:
-        - mountPath: /app/data
-          name: yasr-volume
-          subPath: configs/mealie
-        - mountPath: /etc/localtime
-          name: tz-config
-          readOnly: true
-        ports:
-        - name: api-http
-          containerPort: 9000
-          protocol: TCP
+          - name: tz-config
+            mountPath: /etc/localtime
+            readOnly: true
+          - name: yasr-volume
+            mountPath: /app/data
+            subPath: configs/mealie
+      volumes:
+        - name: yasr-volume
+          persistentVolumeClaim:
+            claimName: yasr-volume
+        - name: tz-config
+          hostPath:
+            path: /etc/localtime

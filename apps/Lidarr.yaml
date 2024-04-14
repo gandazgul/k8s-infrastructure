@@ -1,13 +1,4 @@
 ---
-apiVersion: source.toolkit.fluxcd.io/v1beta1
-kind: HelmRepository
-metadata:
-  name: geek-cookbook
-  namespace: kube-system
-spec:
-  interval: 1h0m0s
-  url: https://geek-cookbook.github.io/charts/
----
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
