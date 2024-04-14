@@ -24,6 +24,10 @@ spec:
           env:
             - name: OLLAMA_BASE_URL
               value: "http://ollama.default.svc.cluster.local:11434"
+            - name: RAG_EMBEDDING_MODEL_AUTO_UPDATE
+              value: "true"
+            - name: ENABLE_SIGNUP
+              value: "false"
           ports:
             - name: http
               containerPort: 8080
