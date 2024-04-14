@@ -22,7 +22,7 @@ spec:
               service:
                 name: open-webui
                 port:
-                  number: http
+                  name: http
   tls:
     - hosts:
         - webai.${CLUSTER_DOMAIN_NAME}
