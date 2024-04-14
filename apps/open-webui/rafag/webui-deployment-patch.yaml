@@ -1,0 +1,14 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: open-webui
+spec:
+  template:
+    spec:
+      containers:
+        - name: open-webui
+          volumeMounts:
+            - name: main-volume
+              mountPath: /app/backend/data/docs
+              subPath: "rafag"

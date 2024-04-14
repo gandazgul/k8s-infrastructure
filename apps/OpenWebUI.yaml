@@ -2,11 +2,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: tdarr
+  name: open-webui
   namespace: default
 spec:
   interval: 5m
-  path: ./apps/tdarr/base/
+  path: ./apps/open-webui/${CLUSTER_NAME}
   prune: true
   sourceRef:
     kind: GitRepository
@@ -15,7 +15,7 @@ spec:
   healthChecks:
     - apiVersion: apps/v1
       kind: Deployment
-      name: tdarr
+      name: open-webui
       namespace: default
   postBuild:
     substituteFrom:
