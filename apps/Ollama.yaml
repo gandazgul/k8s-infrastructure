@@ -31,6 +31,7 @@ spec:
     ollama:
       models:
         - llama2
+        - llama2-uncensored
     ingress:
       enabled: true
       hosts:
