@@ -1,0 +1,13 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: k8s-infrastructure
+  namespace: kube-system
+spec:
+  interval: 1m0s
+  ref:
+    branch: main
+  url: https://github.com/{{CLUSTER_NAME}}/k8s-infrastructure.git
+  ignore: |
+    clusters/**/apps/values/
