@@ -10,5 +10,5 @@ spec:
         - name: open-webui
           volumeMounts:
             - name: main-volume
-              mountPath: /data/docs
+              mountPath: /app/backend/data/docs
               subPath: "rafag"
