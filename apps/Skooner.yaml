@@ -5,7 +5,7 @@ metadata:
   name: skooner
   namespace: default
 spec:
-  interval: 5m
+  interval: 10m
   path: ./apps/skooner/
   prune: true
   sourceRef:

@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
 - ./secrets/
 - ./RsyncCronJobs.yaml
+- ../../../apps/ActualBudget.yaml
 - ../../../apps/Bitwarden.yaml
 - ../../../apps/Forecastle.yaml
 - ../../../apps/HomeAssistant.yaml
@@ -12,8 +13,6 @@ resources:
 - ../../../apps/Photoprism.yaml
 - ../../../apps/Resilio.yaml
 - ../../../apps/SFTPGo.yaml
-- ../../../apps/Sharry.yaml
-- ../../../apps/WeaveGitopsDashboard.yaml
 - ../../../apps/ZWaveJS.yaml
 - ../../../apps/Mealie.yaml
 - ../../../apps/Skooner.yaml
