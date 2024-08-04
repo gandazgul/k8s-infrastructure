@@ -1,0 +1,50 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: truecharts
+  namespace: flux-system
+spec:
+  interval: 1h
+  type: oci
+  url: oci://ghcr.io/truecharts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: wyoming-piper
+  namespace: default
+spec:
+  releaseName: wyoming-piper
+  chart:
+    spec:
+      chart: rhasspy/wyoming-piper
+      sourceRef:
+        kind: HelmRepository
+        name: truecharts
+        namespace: flux-system
+      version: "1.0.0"  # Specify the version you want to use
+  interval: 1h
+  values:
+    # Add your specific values here
+    service:
+      main:
+        ports:
+          main:
+            port: 10200
+            protocol: tcp
+            targetPort: 10200
+
+
+
+
+
+
+
+
+
+
+
+
+
+
