@@ -32,6 +32,8 @@ EOF'
   sudo systemctl daemon-reload || exit 1
   sudo systemctl enable --now crio || exit 1
   sudo systemctl start crio || exit 1
+  sudo rm -rf /opt/cni/bin
+  sudo ln -s /usr/libexec/cni/ /opt/cni/bin
 
   printf "\nVerify cri-o is running ===============================================================================\n"
   if ! systemctl is-active --quiet crio >/dev/null 2>&1; then
