@@ -10,11 +10,10 @@ metadata:
 spec:
   chart:
     spec:
-      chart: cronjob
-      version: ">=0.1.0"
+      chart: ./charts/cronjob
       sourceRef:
-        kind: HelmRepository
-        name: gandazgul
+        kind: GitRepository
+        name: k8s-infrastructure
         namespace: kube-system
   dependsOn:
   - name: main-volume
@@ -51,11 +50,10 @@ metadata:
 spec:
   chart:
     spec:
-      chart: cronjob
-      version: ">=0.1.0"
+      chart: ./charts/cronjob
       sourceRef:
-        kind: HelmRepository
-        name: gandazgul
+        kind: GitRepository
+        name: k8s-infrastructure
         namespace: kube-system
   interval: 1h0m0s
   values:
@@ -89,11 +87,10 @@ metadata:
 spec:
   chart:
     spec:
-      chart: cronjob
-      version: ">=0.1.0"
+      chart: ./charts/cronjob
       sourceRef:
-        kind: HelmRepository
-        name: gandazgul
+        kind: GitRepository
+        name: k8s-infrastructure
         namespace: kube-system
   interval: 1h0m0s
   values:
