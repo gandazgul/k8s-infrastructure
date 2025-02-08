@@ -56,19 +56,20 @@ spec:
         - name: SHADOWSOCKS
           value: "off"
         securityContext:
+          privileged: true
           capabilities:
             add:
               - NET_ADMIN
-        livenessProbe:
-          exec:
-            command:
-            - sh
-            - -c
-            - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
-          initialDelaySeconds: 45
-          periodSeconds: 60
-          failureThreshold: 1
-          timeoutSeconds: 5
+#        livenessProbe:
+#          exec:
+#            command:
+#            - sh
+#            - -c
+#            - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
+#          initialDelaySeconds: 45
+#          periodSeconds: 60
+#          failureThreshold: 1
+#          timeoutSeconds: 5
         resources:
           requests:
             cpu: "100m"
@@ -86,75 +87,75 @@ spec:
           mountPath: /tmp/gluetun/
           subPath: configs/openvpn/
       # Transmission port forward
-      - name: transmission-pia-port-forward
-        image: docker.io/gandazgul/transmission-pia-port-forward:v0150413
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            cpu: 50m
-            memory: 50Mi
-          limits:
-            cpu: 50m
-            memory: 50Mi
-        volumeMounts:
-        - mountPath: /data
-          name: yasr-volume
-          subPath: configs/openvpn/
-        - mountPath: /etc/localtime
-          name: tz-config
-          readOnly: true
-      # Transmission
-      - name: transmission
-        image: docker.io/linuxserver/transmission:amd64-latest
-        imagePullPolicy: "Always"
-        env:
-        - name: PGID
-          value: "1000"
-        - name: PUID
-          value: "1000"
-        - name: TRANSMISSION_UMASK
-          value: "2"
-        - name: TZ
-          value: ${CLUSTER_TIME_ZONE}
-        resources:
-          requests:
-            cpu: "100m"
-            memory: "100Mi"
-          limits:
-            cpu: "1000m"
-            memory: "2000Mi"
-        livenessProbe:
-          exec:
-            command:
-            - sh
-            - -c
-            - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
-          initialDelaySeconds: 45
-          periodSeconds: 60
-          failureThreshold: 1
-          timeoutSeconds: 5
-        readinessProbe:
-          failureThreshold: 3
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          successThreshold: 1
-          tcpSocket:
-            port: 9091
-          timeoutSeconds: 30
-        volumeMounts:
-        - mountPath: /data
-          name: yasr-volume
-          subPath: configs/transmission
-        - mountPath: /config
-          name: yasr-volume
-          subPath: configs/transmission
-        - mountPath: /watch
-          name: yasr-volume
-          subPath: configs/transmission/watch
-        - mountPath: /etc/localtime
-          name: tz-config
-          readOnly: true
-        ports:
-        - name: trs-http
-          containerPort: 9091
-          protocol: TCP
+#      - name: transmission-pia-port-forward
+#        image: docker.io/gandazgul/transmission-pia-port-forward:v0150413
+#        imagePullPolicy: IfNotPresent
+#        resources:
+#          requests:
+#            cpu: 50m
+#            memory: 50Mi
+#          limits:
+#            cpu: 50m
+#            memory: 50Mi
+#        volumeMounts:
+#        - mountPath: /data
+#          name: yasr-volume
+#          subPath: configs/openvpn/
+#        - mountPath: /etc/localtime
+#          name: tz-config
+#          readOnly: true
+#      # Transmission
+#      - name: transmission
+#        image: docker.io/linuxserver/transmission:amd64-latest
+#        imagePullPolicy: "Always"
+#        env:
+#        - name: PGID
+#          value: "1000"
+#        - name: PUID
+#          value: "1000"
+#        - name: TRANSMISSION_UMASK
+#          value: "2"
+#        - name: TZ
+#          value: ${CLUSTER_TIME_ZONE}
+#        resources:
+#          requests:
+#            cpu: "100m"
+#            memory: "100Mi"
+#          limits:
+#            cpu: "1000m"
+#            memory: "2000Mi"
+#        livenessProbe:
+#          exec:
+#            command:
+#            - sh
+#            - -c
+#            - '[ "$(curl -s https://ifconfig.co/city)" != "${VPN_CITY}" ]'
+#          initialDelaySeconds: 45
+#          periodSeconds: 60
+#          failureThreshold: 1
+#          timeoutSeconds: 5
+#        readinessProbe:
+#          failureThreshold: 3
+#          initialDelaySeconds: 10
+#          periodSeconds: 10
+#          successThreshold: 1
+#          tcpSocket:
+#            port: 9091
+#          timeoutSeconds: 30
+#        volumeMounts:
+#        - mountPath: /data
+#          name: yasr-volume
+#          subPath: configs/transmission
+#        - mountPath: /config
+#          name: yasr-volume
+#          subPath: configs/transmission
+#        - mountPath: /watch
+#          name: yasr-volume
+#          subPath: configs/transmission/watch
+#        - mountPath: /etc/localtime
+#          name: tz-config
+#          readOnly: true
+#        ports:
+#        - name: trs-http
+#          containerPort: 9091
+#          protocol: TCP
