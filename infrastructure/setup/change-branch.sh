@@ -13,8 +13,8 @@ if ! git ls-remote --exit-code origin "$CURRENT_BRANCH" &> /dev/null; then
   git push --set-upstream origin "$CURRENT_BRANCH"
 fi
 
-message "Changing branch to $(git branch --show-current)"
-< "$SCRIPT_DIR"/GitRepoSync.yaml.templ sed "s/{{CLUSTER_NAME}}/$CLUSTER_NAME/g" | sed "s/main/$(git branch --show-current)/g" | kubectl apply -f -
+message "Changing branch to $(CURRENT_BRANCH)"
+< "$SCRIPT_DIR"/GitRepoSync.yaml.templ sed "s/main/$(CURRENT_BRANCH)/g" | kubectl apply -f -
 
 message "Reconciling..."
 flux reconcile kustomization --with-source kube-system -n kube-system && flux reconcile kustomization gandazgul -n kube-system
