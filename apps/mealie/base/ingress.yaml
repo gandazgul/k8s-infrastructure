@@ -26,4 +26,4 @@ spec:
           service:
             name: mealie
             port:
-              name: fe-http
+              name: http
