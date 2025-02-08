@@ -10,7 +10,7 @@ printf "Upgrade ================================================================
 sudo dnf -y update || exit 1
 
 printf "Install screen, and other tools =============================================================================\n"
-sudo dnf -y install screen htop git p7zip rdiff-backup fail2ban
+sudo dnf -y install screen htop nano iproute-tc fail2ban
 
 printf "Setting up fail2ban for sshd ================================================================================\n"
 sudo cp ./jail.local /etc/fail2ban/jail.local
