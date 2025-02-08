@@ -10,7 +10,7 @@ printf "Upgrade ================================================================
 sudo dnf -y update || exit 1
 
 printf "Install screen, and other tools =============================================================================\n"
-sudo dnf -y install screen htop git p7zip rdiff-backup fail2ban
+sudo dnf -y install screen htop nano iproute-tc fail2ban
 
 printf "Setting up fail2ban for sshd ================================================================================\n"
 sudo cp ./jail.local /etc/fail2ban/jail.local
@@ -43,10 +43,6 @@ echo "%wheel ALL=(ALL) NOPASSWD:ALL" | sudo tee --append /etc/sudoers
 printf "\nDisable SELINUX because kubelet doesnt support it ========================================================\n"
 sudo setenforce 0
 echo "SELINUX=disabled" | sudo tee /etc/sysconfig/selinux
-
-# TODO:
-# addgroup public
-# adduser rafag 1004, renepor 1003
 
 # TODO Restore plex backups
 #/media/main/plex_db_backup$ sudo cp com.plexapp.plugins.library.blobs.db-2018-09-28 /media/yasr/configs/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.blobs.db

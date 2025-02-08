@@ -56,10 +56,10 @@ spec:
         - name: SHADOWSOCKS
           value: "off"
         securityContext:
+          privileged: true
           capabilities:
             add:
               - NET_ADMIN
-              - NET_RAW
         livenessProbe:
           exec:
             command:
