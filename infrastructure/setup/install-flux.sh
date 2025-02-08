@@ -1,16 +1,7 @@
 #!/usr/bin/env bash
 
-# check if have the cluster name
-if [ -z ${1+x} ]; then
-  echo "Make sure to pass in a cluster name like this: install-flux.sh [name here]"
-  exit 1
-fi
-
-CLUSTER_NAME=$1
-REPO_ROOT=$(git rev-parse --show-toplevel)
-
-# Check that all required binaries are installed
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+# The directory where this script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 source "$SCRIPT_DIR/requirements.sh"
 
 ######################## Install Flux ###################################
@@ -43,13 +34,13 @@ if ! flux install --components-extra=image-reflector-controller,image-automation
 fi
 
 message "Installing the Git Repo Source"
-if ! kubectl apply -f "$REPO_ROOT"/infrastructure/setup/GitRepoSync.yaml; then
+if ! echo "$(sed "s/{{CLUSTER_NAME}}/$CLUSTER_NAME/g" <"$REPO_ROOT"/infrastructure/setup/GitRepoSync.yaml.templ)" | kubectl apply -f -; then
   echo -e "Flux did not install correctly, aborting!"
   exit 1
 fi
 
-message "Installing Sealed Secrets"
-if ! kubectl apply -f "$REPO_ROOT"/infrastructure/kube-system/SealedSecretsController.yaml; then
+message "Installing KubeSystem Kustomization, includes Sealed Secrets"
+if ! kubectl apply -f "$REPO_ROOT"/infrastructure/setup/KubeSystem.yaml; then
   echo -e "Sealed secrets didn't install correctly, aborting!"
   exit 1
 fi
@@ -60,7 +51,5 @@ while :; do
   sleep 15
 done
 
-# Creating/Updating Sealed Secrets -------------------
+# Creating/Updating Sealed Secrets ---------------------------------------------------------
 "$SCRIPT_DIR/configure-cluster.sh" "$CLUSTER_NAME"
-
-message "all done!"
