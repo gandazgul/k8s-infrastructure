@@ -7,7 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/name: transmission
   annotations:
-#    nginx.ingress.kubernetes.io/app-root: /web/
+    nginx.ingress.kubernetes.io/app-root: /transmission/web/
     forecastle.stakater.com/appName: "Transmission"
     forecastle.stakater.com/group: "Media"
     forecastle.stakater.com/expose: "true"
