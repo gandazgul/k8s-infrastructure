@@ -15,5 +15,10 @@
         "minimist": "^1.2.6",
         "pre-commit": "^1.2.2"
     },
-    "pre-commit": ["docs"]
+    "pre-commit": [
+        "docs"
+    ],
+    "resolutions": {
+        "cross-spawn": "6.0.6"
+    }
 }
