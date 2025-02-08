@@ -12,7 +12,7 @@
         "docs": "helm-docs"
     },
     "dependencies": {
-        "minimist": "^1.2.6",
+        "minimist": "^1.2.8",
         "pre-commit": "^1.2.2"
     },
     "pre-commit": [
