@@ -15,9 +15,6 @@ spec:
         kind: GitRepository
         name: k8s-infrastructure
         namespace: kube-system
-  dependsOn:
-  - name: main-volume
-  - name: backup-volume
   interval: 1h0m0s
   values:
     # Every day at 5am
