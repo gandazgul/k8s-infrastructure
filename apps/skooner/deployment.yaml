@@ -1,11 +1,14 @@
-kind: Deployment
+---
 apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: skooner
+  namespace: default
   labels:
     app.kubernetes.io/name: skooner
 spec:
   replicas: 1
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
       app.kubernetes.io/name: skooner
@@ -17,9 +20,11 @@ spec:
       containers:
       - name: skooner
         image: ghcr.io/skooner-k8s/skooner:stable
+        imagePullPolicy: Always
         ports:
           - name: http
             containerPort: 4654
+            protocol: TCP
         livenessProbe:
           httpGet:
             scheme: HTTP
@@ -27,5 +32,10 @@ spec:
             port: 4654
           initialDelaySeconds: 30
           timeoutSeconds: 30
-      nodeSelector:
-        'beta.kubernetes.io/os': linux
+        resources:
+          requests:
+            cpu: 100m
+            memory: 250Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi

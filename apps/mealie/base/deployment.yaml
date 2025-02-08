@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mealie
+  namespace: default
   labels:
     app.kubernetes.io/name: mealie
 spec:
@@ -16,15 +17,6 @@ spec:
       labels:
         app.kubernetes.io/name: mealie
     spec:
-      volumes:
-      - name: yasr-volume
-        persistentVolumeClaim:
-          claimName: yasr-volume
-      - name: tz-config
-        hostPath:
-          path: /etc/localtime
-      dnsPolicy: ClusterFirst
-      dnsConfig: {}
       containers:
       - name: mealie
         image: ghcr.io/mealie-recipes/mealie:latest
@@ -52,6 +44,10 @@ spec:
           value: ${EMAIL}
         - name: SMTP_PASSWORD
           value: ${SMTP_PASSWORD}
+        ports:
+          - name: http
+            containerPort: 9000
+            protocol: TCP
         livenessProbe:
           httpGet:
             scheme: HTTP
@@ -67,13 +63,16 @@ spec:
             cpu: 500m
             memory: 500Mi
         volumeMounts:
-          - mountPath: /etc/localtime
-            name: tz-config
+          - name: tz-config
+            mountPath: /etc/localtime
             readOnly: true
-          - mountPath: /app/data
-            name: yasr-volume
+          - name: yasr-volume
+            mountPath: /app/data
             subPath: configs/mealie
-        ports:
-          - name: http
-            containerPort: 9000
-            protocol: TCP
+      volumes:
+        - name: yasr-volume
+          persistentVolumeClaim:
+            claimName: yasr-volume
+        - name: tz-config
+          hostPath:
+            path: /etc/localtime
