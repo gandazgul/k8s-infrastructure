@@ -19,6 +19,7 @@ spec:
     image:
       repository: koenkk/zigbee2mqtt
       tag: 1.35.3
+      pullPolicy: IfNotPresent
     config:
       homeassistant: true
       mqtt:
@@ -27,6 +28,35 @@ spec:
         port: /dev/ttyUSB0
       frontend:
         port: 8080
+        host: 0.0.0.0
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
+    probes:
+      liveness:
+        enabled: true
+        custom: true
+        spec:
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: http
+      readiness:
+        enabled: true
+        custom: true
+        spec:
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: http
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
     ingress:
