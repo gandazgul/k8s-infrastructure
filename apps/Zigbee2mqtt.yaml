@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: zigbee2mqtt
@@ -9,37 +9,38 @@ spec:
   chart:
     spec:
       chart: zigbee2mqtt
-      version: 10.2.0
+      version: '1.37.1'
       sourceRef:
         kind: HelmRepository
         name: zigbee2mqtt
         namespace: kube-system
       interval: 5m
   values:
-    securityContext:
-      privileged: true
+    image:
+      repository: koenkk/zigbee2mqtt
+      tag: 1.35.3
     config:
       homeassistant: true
       mqtt:
         server: "mqtt://10.1.1.2"
       serial:
         port: /dev/ttyUSB0
-    image:
-      repository: koenkk/zigbee2mqtt
-      tag: 1.34.0
+      frontend:
+        port: 8080
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
     ingress:
       main:
         enabled: true
         hosts:
-        - host: zigbee.${CLUSTER_DOMAIN_NAME}
-          paths:
-          - path: /
+          - host: zigbee.${CLUSTER_DOMAIN_NAME}
+            paths:
+              - path: /
+                pathType: Prefix
         tls:
-        - hosts:
-          - zigbee.${CLUSTER_DOMAIN_NAME}
-          secretName: internal-ingress-cert
+          - hosts:
+              - zigbee.${CLUSTER_DOMAIN_NAME}
+            secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
           forecastle.stakater.com/expose: "true"
@@ -54,10 +55,12 @@ spec:
         mountPath: /data
         existingClaim: yasr-volume
         subPath: configs/zigbee2mqtt
+    securityContext:
+      privileged: true
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
           nodeSelectorTerms:
-          - matchExpressions:
-            - key: node-role.kubernetes.io/control-plane
-              operator: Exists
+            - matchExpressions:
+                - key: node-role.kubernetes.io/control-plane
+                  operator: Exists
