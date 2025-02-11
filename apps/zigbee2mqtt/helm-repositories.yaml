@@ -6,4 +6,4 @@ metadata:
   namespace: kube-system
 spec:
   interval: 10m
-  url: https://charts.zigbee2mqtt.io
+  url: https://charts.zigbee2mqtt.io/index
