@@ -13,7 +13,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: zigbee2mqtt
-        namespace: kube-system
+        namespace: default
       interval: 5m
   values:
     image:
