@@ -5,5 +5,5 @@ metadata:
   name: zigbee2mqtt
   namespace: kube-system
 spec:
-  interval: 1h
-  url: https://zigbee2mqtt.github.io/helm-charts/
+  interval: 10m
+  url: https://charts.zigbee2mqtt.io
