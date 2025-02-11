@@ -1,0 +1,9 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: zigbee2mqtt
+  namespace: kube-system
+spec:
+  interval: 1h
+  url: https://zigbee2mqtt.github.io/helm-charts/

@@ -9,10 +9,10 @@ spec:
   chart:
     spec:
       chart: zigbee2mqtt
-      version: 9.2.0
+      version: 10.2.0
       sourceRef:
         kind: HelmRepository
-        name: k8s-at-home
+        name: zigbee2mqtt
         namespace: kube-system
       interval: 5m
   values:
@@ -25,7 +25,8 @@ spec:
       serial:
         port: /dev/ttyUSB0
     image:
-      tag: latest
+      repository: koenkk/zigbee2mqtt
+      tag: 1.34.0
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
     ingress:
