@@ -24,41 +24,40 @@ spec:
       homeassistant: true
       mqtt:
         server: "mqtt://10.1.1.2"
+        base_topic: zigbee2mqtt
+        server_key: null
+        server_cert: null
+        ca: null
       serial:
         port: /dev/ttyUSB0
+        adapter: deconz
       frontend:
         port: 8080
         host: 0.0.0.0
+      permit_join: true
+      advanced:
+        log_level: debug  # Temporarily increase logging
+        network_key: GENERATE
     service:
       main:
+        enabled: true
+        type: ClusterIP
         ports:
           http:
+            enabled: true
             port: 8080
+            protocol: TCP
+            targetPort: 8080
     probes:
       liveness:
-        enabled: true
-        custom: true
-        spec:
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-          httpGet:
-            path: /
-            port: http
+        enabled: false
       readiness:
-        enabled: true
-        custom: true
-        spec:
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-          httpGet:
-            path: /
-            port: http
+        enabled: false
+      startup:
+        enabled: false
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
+      ZIGBEE2MQTT_DATA: "/data"
     ingress:
       main:
         enabled: true
