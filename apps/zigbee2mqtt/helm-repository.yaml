@@ -1,0 +1,9 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: zigbee2mqtt
+  namespace: kube-system
+spec:
+  interval: 10m
+  url: https://k8s-at-home.com/charts/ 
