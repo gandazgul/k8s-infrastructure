@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: zigbee2mqtt
@@ -9,67 +9,36 @@ spec:
   chart:
     spec:
       chart: zigbee2mqtt
-      version: '1.37.1'
+      version: 9.2.0
       sourceRef:
         kind: HelmRepository
         name: zigbee2mqtt
-        namespace: default
+        namespace: kube-system
       interval: 5m
   values:
-    image:
-      repository: koenkk/zigbee2mqtt
-      tag: 1.35.3
-      pullPolicy: IfNotPresent
+    securityContext:
+      privileged: true
     config:
       homeassistant: true
       mqtt:
         server: "mqtt://10.1.1.2"
-        base_topic: zigbee2mqtt
-        server_key: null
-        server_cert: null
-        ca: null
       serial:
         port: /dev/ttyUSB0
-        adapter: deconz
-      frontend:
-        port: 8080
-        host: 0.0.0.0
-      permit_join: true
-      advanced:
-        log_level: debug
-        network_key: GENERATE
-    service:
-      main:
-        enabled: true
-        type: ClusterIP
-        ports:
-          http:
-            enabled: true
-            port: 8080
-            protocol: TCP
-            targetPort: 8080
-    probes:
-      liveness:
-        enabled: false
-      readiness:
-        enabled: false
-      startup:
-        enabled: false
+    image:
+      tag: latest
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
-      ZIGBEE2MQTT_DATA: "/data"
     ingress:
       main:
         enabled: true
         hosts:
-          - host: zigbee.${CLUSTER_DOMAIN_NAME}
-            paths:
-              - path: /
-                pathType: Prefix
+        - host: zigbee.${CLUSTER_DOMAIN_NAME}
+          paths:
+          - path: /
         tls:
-          - hosts:
-              - zigbee.${CLUSTER_DOMAIN_NAME}
-            secretName: internal-ingress-cert
+        - hosts:
+          - zigbee.${CLUSTER_DOMAIN_NAME}
+          secretName: internal-ingress-cert
         annotations:
           kubernetes.io/ingress.class: "nginx"
           forecastle.stakater.com/expose: "true"
@@ -84,12 +53,10 @@ spec:
         mountPath: /data
         existingClaim: yasr-volume
         subPath: configs/zigbee2mqtt
-    securityContext:
-      privileged: true
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
           nodeSelectorTerms:
-            - matchExpressions:
-                - key: node-role.kubernetes.io/control-plane
-                  operator: Exists 
+          - matchExpressions:
+            - key: node-role.kubernetes.io/control-plane
+              operator: Exists
