@@ -6,4 +6,4 @@ metadata:
   namespace: default
 spec:
   interval: 10m
-  url: https://zigbee2mqtt.github.io/helm-charts/ 
+  url: https://charts.zigbee2mqtt.io 
