@@ -24,10 +24,20 @@ spec:
         server: "mqtt://10.1.1.2"
       serial:
         port: /dev/ttyUSB0
+        adapter: zstack
+      frontend:
+        port: 8080
+        host: 0.0.0.0
+      advanced:
+        log_level: debug
+        network_key: GENERATE
     image:
+      repository: koenkk/zigbee2mqtt
       tag: latest
+      pullPolicy: Always
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
+      ZIGBEE2MQTT_DATA: "/data"
     ingress:
       main:
         enabled: true
@@ -35,6 +45,7 @@ spec:
         - host: zigbee.${CLUSTER_DOMAIN_NAME}
           paths:
           - path: /
+            pathType: Prefix
         tls:
         - hosts:
           - zigbee.${CLUSTER_DOMAIN_NAME}
