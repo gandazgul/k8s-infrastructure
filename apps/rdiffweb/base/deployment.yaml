@@ -28,7 +28,7 @@ spec:
               value: ${ADMIN_PASSWORD}
           ports:
             - name: http
-              containerPort: 9000
+              containerPort: 8080
               protocol: TCP
           livenessProbe:
             httpGet:
