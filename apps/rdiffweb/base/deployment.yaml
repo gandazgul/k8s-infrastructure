@@ -43,7 +43,7 @@ spec:
               memory: 250Mi
             limits:
               cpu: 500m
-              memory: 500Mi
+              memory: 1Gi
           volumeMounts:
             - name: yasr-volume
               mountPath: /etc/rdiffweb/
