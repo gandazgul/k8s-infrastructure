@@ -54,3 +54,6 @@ spec:
         - name: yasr-volume
           persistentVolumeClaim:
             claimName: yasr-volume
+        - name: backup-volume
+          persistentVolumeClaim:
+            claimName: backup-volume
