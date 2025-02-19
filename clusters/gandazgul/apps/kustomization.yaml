@@ -25,5 +25,4 @@ resources:
 - ../../../apps/Sonarr.yaml
 - ../../../apps/Tdarr.yaml
 - ../../../apps/Plex.yaml
-- ../../../apps/Ollama.yaml
-- ../../../apps/OpenWebUI.yaml
+- ../../../apps/RDiffWeb.yaml
