@@ -22,9 +22,9 @@ spec:
           image: docker.io/ikus060/rdiffweb:latest
           imagePullPolicy: Always
           env:
-            - name: RDIFFWEB_ADMIN-USER
+            - name: RDIFFWEB_ADMIN_USER
               value: gandazgul
-            - name: RDIFFWEB_ADMIN-PASSWORD
+            - name: RDIFFWEB_ADMIN_PASSWORD
               value: ${ADMIN_PASSWORD}
           ports:
             - name: http
