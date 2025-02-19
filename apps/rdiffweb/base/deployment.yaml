@@ -34,7 +34,7 @@ spec:
             httpGet:
               scheme: HTTP
               path: /
-              port: 9000
+              port: 8080
             initialDelaySeconds: 30
             timeoutSeconds: 10
           resources:
@@ -45,9 +45,6 @@ spec:
               cpu: 500m
               memory: 500Mi
           volumeMounts:
-            - name: tz-config
-              mountPath: /etc/localtime
-              readOnly: true
             - name: yasr-volume
               mountPath: /etc/rdiffweb/
               subPath: configs/rdiffweb
@@ -55,6 +52,3 @@ spec:
         - name: yasr-volume
           persistentVolumeClaim:
             claimName: yasr-volume
-        - name: tz-config
-          hostPath:
-            path: /etc/localtime
