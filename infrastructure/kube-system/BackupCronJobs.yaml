@@ -1,74 +1,74 @@
----
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
-kind: HelmRelease
-metadata:
-  name: incremental-backups
-  namespace: default
-spec:
-  chart:
-    spec:
-      chart: ./charts/cronjob
-      sourceRef:
-        kind: GitRepository
-        name: k8s-infrastructure
-        namespace: kube-system
-  interval: 1h0m0s
-  values:
-  # Twice a day at midnight and midday
-    schedule: "0 0,12 * * *"
-    image:
-      repository: docker.io/gandazgul/rdiff-backup
-      tag: v0150413
-      args:
-      - /media/main
-      - /media/backup
-    volumes:
-    - name: main-volume
-      persistentVolumeClaim:
-        claimName: main-volume
-    - name: backup-volume
-      persistentVolumeClaim:
-        claimName: backup-volume
-    volumeMounts:
-    - name: main-volume
-      mountPath: /media/main
-    - name: backup-volume
-      mountPath: /media/backup
----
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
-kind: HelmRelease
-metadata:
-  name: clean-incremental-backups
-  namespace: default
-spec:
-  chart:
-    spec:
-      chart: ./charts/cronjob
-      sourceRef:
-        kind: GitRepository
-        name: k8s-infrastructure
-        namespace: kube-system
-  interval: 1h0m0s
-  values:
-  # Every day at midnight
-    schedule: "0 0 * * *"
-    image:
-      repository: docker.io/gandazgul/rdiff-backup
-      tag: v0150413
-      args:
-      - --remove-older-than
-      - 4W
-      - --force
-      - /media/backup
-    volumes:
-    - name: main-volume
-      persistentVolumeClaim:
-        claimName: main-volume
-    - name: backup-volume
-      persistentVolumeClaim:
-        claimName: backup-volume
-    volumeMounts:
-    - name: main-volume
-      mountPath: /media/main
-    - name: backup-volume
-      mountPath: /media/backup
+#---
+#apiVersion: helm.toolkit.fluxcd.io/v2beta1
+#kind: HelmRelease
+#metadata:
+#  name: incremental-backups
+#  namespace: default
+#spec:
+#  chart:
+#    spec:
+#      chart: ./charts/cronjob
+#      sourceRef:
+#        kind: GitRepository
+#        name: k8s-infrastructure
+#        namespace: kube-system
+#  interval: 1h0m0s
+#  values:
+#  # Twice a day at midnight and midday
+#    schedule: "0 0,12 * * *"
+#    image:
+#      repository: docker.io/gandazgul/rdiff-backup
+#      tag: v0150413
+#      args:
+#      - /media/main
+#      - /media/backup
+#    volumes:
+#    - name: main-volume
+#      persistentVolumeClaim:
+#        claimName: main-volume
+#    - name: backup-volume
+#      persistentVolumeClaim:
+#        claimName: backup-volume
+#    volumeMounts:
+#    - name: main-volume
+#      mountPath: /media/main
+#    - name: backup-volume
+#      mountPath: /media/backup
+#---
+#apiVersion: helm.toolkit.fluxcd.io/v2beta1
+#kind: HelmRelease
+#metadata:
+#  name: clean-incremental-backups
+#  namespace: default
+#spec:
+#  chart:
+#    spec:
+#      chart: ./charts/cronjob
+#      sourceRef:
+#        kind: GitRepository
+#        name: k8s-infrastructure
+#        namespace: kube-system
+#  interval: 1h0m0s
+#  values:
+#  # Every day at midnight
+#    schedule: "0 0 * * *"
+#    image:
+#      repository: docker.io/gandazgul/rdiff-backup
+#      tag: v0150413
+#      args:
+#      - --remove-older-than
+#      - 4W
+#      - --force
+#      - /media/backup
+#    volumes:
+#    - name: main-volume
+#      persistentVolumeClaim:
+#        claimName: main-volume
+#    - name: backup-volume
+#      persistentVolumeClaim:
+#        claimName: backup-volume
+#    volumeMounts:
+#    - name: main-volume
+#      mountPath: /media/main
+#    - name: backup-volume
+#      mountPath: /media/backup

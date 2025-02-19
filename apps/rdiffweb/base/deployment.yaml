@@ -48,6 +48,8 @@ spec:
             - name: yasr-volume
               mountPath: /etc/rdiffweb/
               subPath: configs/rdiffweb
+            - name: backup-volume
+              mountPath: /backups
       volumes:
         - name: yasr-volume
           persistentVolumeClaim:
