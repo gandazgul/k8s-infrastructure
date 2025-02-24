@@ -45,22 +45,14 @@ spec:
   values:
     image:
       repository: koenkk/zigbee2mqtt
-      tag: '2.1.1'
-      pullPolicy: IfNotPresent
+      tag: latest
+      pullPolicy: Always
     config:
       homeassistant: true
       mqtt:
         server: "mqtt://10.1.1.2"
-        base_topic: zigbee2mqtt
-        user: "${MQTT_USERNAME}"
-        password: "${MQTT_PASSWORD}"
-        client_id: "zigbee2mqtt_k8s"
-        keepalive: 60
-        reject_unauthorized: false
-        version: 4
       serial:
         port: /dev/ttyUSB0
-        adapter: deconz
       frontend:
         port: 8080
         host: 0.0.0.0
