@@ -15,10 +15,19 @@ metadata:
   namespace: default
 spec:
   interval: 5m
+  timeout: 15m
+  install:
+    timeout: 10m
+    remediation:
+      retries: 3
+  upgrade:
+    timeout: 10m
+    remediation:
+      retries: 3
   chart:
     spec:
       chart: zigbee2mqtt
-      version: '1.37.1'
+      version: '2.1.1'
       sourceRef:
         kind: HelmRepository
         name: zigbee2mqtt
@@ -98,4 +107,12 @@ spec:
           nodeSelectorTerms:
             - matchExpressions:
                 - key: node-role.kubernetes.io/control-plane
-                  operator: Exists 
+                  operator: Exists
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+---
