@@ -97,7 +97,7 @@ spec:
           periodSeconds: 10
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
-      ZIGBEE2MQTT_DATA: "/app/data"
+      ZIGBEE2MQTT_DATA: "/config"
     ingress:
       main:
         enabled: true
@@ -119,23 +119,18 @@ spec:
       replicas: 1
     podSecurityContext:
       runAsUser: 1000
-      runAsGroup: 1000
       fsGroup: 1000
     securityContext:
       privileged: true
-      allowPrivilegeEscalation: true
     persistence:
+      config:
+        enabled: true
+        existingClaim: yasr-volume
+        subPath: configs/zigbee2mqtt
       usb:
         enabled: true
         type: hostPath
         hostPath: /dev/ttyUSB0
-      data:
-        enabled: true
-        type: pvc
-        existingClaim: yasr-volume
-        mountPath: /app/data
-        subPath: configs/zigbee2mqtt
-        accessMode: ReadWriteOnce
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
@@ -157,11 +152,4 @@ spec:
     logging:
       type: console
       level: debug
-    volumePermissions:
-      enabled: true
-      image:
-        repository: bitnami/bitnami-shell
-        tag: latest
-      securityContext:
-        runAsUser: 0
 ---
