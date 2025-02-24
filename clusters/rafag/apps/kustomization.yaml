@@ -6,14 +6,14 @@ resources:
 - ../../../apps/Bitwarden.yaml
 - ../../../apps/Forecastle.yaml
 - ../../../apps/HomeAssistant.yaml
-- ../../../apps/MosquitoMQTTBroker.yaml
+# - ../../../apps/MosquitoMQTTBroker.yaml
 - ../../../apps/Paperless.yaml
 - ../../../apps/Photoprism.yaml
 - ../../../apps/Resilio.yaml
 - ../../../apps/SFTPGo.yaml
 - ../../../apps/Sharry.yaml
 - ../../../apps/WeaveGitopsDashboard.yaml
-- ../../../apps/ZWaveJS.yaml
+# - ../../../apps/ZWaveJS.yaml
 - ../../../apps/Mealie.yaml
 - ../../../apps/Skooner.yaml
 - ../../../apps/Transmission.yaml
@@ -24,6 +24,6 @@ resources:
 - ../../../apps/Sonarr.yaml
 - ../../../apps/Tdarr.yaml
 - ../../../apps/Plex.yaml
-- ../../../apps/Ollama.yaml
-- ../../../apps/OpenWebUI.yaml
+# - ../../../apps/Ollama.yaml
+# - ../../../apps/OpenWebUI.yaml
 - ../../../apps/zigbee2mqtt
