@@ -97,7 +97,7 @@ spec:
           periodSeconds: 10
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
-      ZIGBEE2MQTT_DATA: "/data"
+      ZIGBEE2MQTT_DATA: "/app/data"
     ingress:
       main:
         enabled: true
@@ -121,7 +121,7 @@ spec:
         hostPath: /dev/ttyUSB0
       data:
         enabled: true
-        mountPath: /data
+        mountPath: /app/data
         existingClaim: yasr-volume
         subPath: configs/zigbee2mqtt
     securityContext:
