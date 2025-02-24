@@ -27,7 +27,7 @@ spec:
             - name: RAG_EMBEDDING_MODEL_AUTO_UPDATE
               value: "true"
             - name: ENABLE_SIGNUP
-              value: "false"
+              value: "true"
           ports:
             - name: http
               containerPort: 8080
