@@ -26,4 +26,4 @@ resources:
 - ../../../apps/Plex.yaml
 # - ../../../apps/Ollama.yaml
 - ../../../apps/OpenWebUI.yaml
-# - ../../../apps/Zigbee2mqtt.yaml
+- ../../../apps/Zigbee2mqtt.yaml
