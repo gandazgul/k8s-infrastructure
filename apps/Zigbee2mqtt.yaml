@@ -119,8 +119,8 @@ spec:
       replicas: 1
     podSecurityContext:
       runAsUser: 1000
+      runAsGroup: 1000
       fsGroup: 1000
-      fsGroupChangePolicy: "OnRootMismatch"
     securityContext:
       privileged: true
       allowPrivilegeEscalation: true
@@ -131,11 +131,11 @@ spec:
         hostPath: /dev/ttyUSB0
       data:
         enabled: true
-        mountPath: /app/data
+        type: pvc
         existingClaim: yasr-volume
+        mountPath: /app/data
         subPath: configs/zigbee2mqtt
         accessMode: ReadWriteOnce
-        permissions: "0777"
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
@@ -157,11 +157,11 @@ spec:
     logging:
       type: console
       level: debug
-    initContainers:
-      - name: init-config
-        image: busybox
-        command: ['sh', '-c', 'mkdir -p /app/data && chmod -R 777 /app/data']
-        volumeMounts:
-          - name: data
-            mountPath: /app/data
+    volumePermissions:
+      enabled: true
+      image:
+        repository: bitnami/bitnami-shell
+        tag: latest
+      securityContext:
+        runAsUser: 0
 ---
