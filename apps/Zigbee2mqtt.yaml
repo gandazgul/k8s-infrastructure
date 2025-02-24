@@ -124,8 +124,11 @@ spec:
         mountPath: /app/data
         existingClaim: yasr-volume
         subPath: configs/zigbee2mqtt
+        accessMode: ReadWriteOnce
     securityContext:
       privileged: true
+      runAsUser: 1000
+      fsGroup: 1000
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
