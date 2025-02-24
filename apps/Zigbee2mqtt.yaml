@@ -1,4 +1,13 @@
 ---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: zigbee2mqtt
+  namespace: flux-system
+spec:
+  interval: 10m
+  url: https://charts.zigbee2mqtt.io
+---
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -25,9 +34,6 @@ spec:
       mqtt:
         server: "mqtt://10.1.1.2"
         base_topic: zigbee2mqtt
-        server_key: null
-        server_cert: null
-        ca: null
       serial:
         port: /dev/ttyUSB0
         adapter: deconz
@@ -36,7 +42,7 @@ spec:
         host: 0.0.0.0
       permit_join: true
       advanced:
-        log_level: debug  # Temporarily increase logging
+        log_level: debug
         network_key: GENERATE
     service:
       main:
@@ -92,4 +98,4 @@ spec:
           nodeSelectorTerms:
             - matchExpressions:
                 - key: node-role.kubernetes.io/control-plane
-                  operator: Exists
+                  operator: Exists 
