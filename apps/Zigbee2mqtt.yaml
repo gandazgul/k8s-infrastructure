@@ -15,15 +15,24 @@ metadata:
   namespace: default
 spec:
   interval: 5m
-  timeout: 15m
+  timeout: 30m
   install:
-    timeout: 10m
+    timeout: 20m
     remediation:
       retries: 3
+      remediateLastFailure: true
   upgrade:
-    timeout: 10m
+    timeout: 20m
     remediation:
       retries: 3
+      remediateLastFailure: true
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  dependsOn:
+    - name: mosquitto
+      namespace: default
   chart:
     spec:
       chart: zigbee2mqtt
@@ -43,6 +52,12 @@ spec:
       mqtt:
         server: "mqtt://10.1.1.2"
         base_topic: zigbee2mqtt
+        user: "${MQTT_USERNAME}"
+        password: "${MQTT_PASSWORD}"
+        client_id: "zigbee2mqtt_k8s"
+        keepalive: 60
+        reject_unauthorized: false
+        version: 4
       serial:
         port: /dev/ttyUSB0
         adapter: deconz
@@ -65,11 +80,32 @@ spec:
             targetPort: 8080
     probes:
       liveness:
-        enabled: false
+        enabled: true
+        custom: true
+        spec:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
       readiness:
-        enabled: false
+        enabled: true
+        custom: true
+        spec:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
       startup:
-        enabled: false
+        enabled: true
+        custom: true
+        spec:
+          httpGet:
+            path: /health
+            port: http
+          failureThreshold: 30
+          periodSeconds: 10
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
       ZIGBEE2MQTT_DATA: "/data"
@@ -115,4 +151,11 @@ spec:
       limits:
         cpu: 500m
         memory: 256Mi
+    wait:
+      enabled: false
+    debug:
+      enabled: true
+    logging:
+      type: console
+      level: debug
 ---
