@@ -114,6 +114,14 @@ spec:
           kubernetes.io/ingress.class: "nginx"
           forecastle.stakater.com/expose: "true"
           forecastle.stakater.com/icon: ""
+    controller:
+      type: statefulset
+      replicas: 1
+    podSecurityContext:
+      runAsUser: 1000
+    securityContext:
+      privileged: true
+      allowPrivilegeEscalation: true
     persistence:
       usb:
         enabled: true
@@ -125,10 +133,6 @@ spec:
         existingClaim: yasr-volume
         subPath: configs/zigbee2mqtt
         accessMode: ReadWriteOnce
-    securityContext:
-      privileged: true
-      runAsUser: 1000
-      fsGroup: 1000
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
