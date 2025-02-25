@@ -27,14 +27,3 @@ spec:
   values:
     image:
       pullPolicy: Always
-    rules:
-      - name: "docker.io replace rule"
-        match:
-          - image: "^docker.io\/"
-        replace:
-          - image: "mirror.gcr.io/"
-      - name: "no repo replace rule"
-        match:
-          - image: "^(([a-zA-Z0-9\-\.]+/)?([a-zA-Z0-9\-\.]+):([a-zA-Z0-9\-\.]+))$"
-        replace:
-          - image: "mirror.gcr.io/$1"
