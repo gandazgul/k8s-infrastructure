@@ -63,6 +63,7 @@ spec:
           existingClaim: yasr-volume
           subPath: configs/harbor/trivy
     containerSecurityContext:
+      runAsUser: 1000
       runAsGroup: 472
 ---
 apiVersion: source.toolkit.fluxcd.io/v1beta2
