@@ -101,3 +101,4 @@ spec:
         matches:
           - "^(([a-zA-Z0-9\-\.]+/)?([a-zA-Z0-9\-\.]+):([a-zA-Z0-9\-\.]+))$"
         replace: "mirror.gcr.io/$1"
+        checkUpstream: true
