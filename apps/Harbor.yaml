@@ -36,6 +36,7 @@ spec:
       type: ingress
       tls:
         enabled: true
+        certSource: secret
         secret:
           secretName: internal-ingress-cert
       ingress:
