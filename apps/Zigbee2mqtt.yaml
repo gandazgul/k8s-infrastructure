@@ -97,7 +97,6 @@ spec:
           periodSeconds: 10
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
-      ZIGBEE2MQTT_DATA: "/config"
     ingress:
       main:
         enabled: true
@@ -120,6 +119,7 @@ spec:
     podSecurityContext:
       runAsUser: 1000
       fsGroup: 1000
+      fsGroupChangePolicy: "OnRootMismatch"
     securityContext:
       privileged: true
     persistence:
@@ -127,6 +127,7 @@ spec:
         enabled: true
         existingClaim: yasr-volume
         subPath: configs/zigbee2mqtt
+        mountPath: /app/data
       usb:
         enabled: true
         type: hostPath
@@ -152,4 +153,16 @@ spec:
     logging:
       type: console
       level: debug
+    initContainers:
+      - name: init-chmod
+        image: busybox
+        command:
+          - sh
+          - -c
+          - |
+            mkdir -p /app/data
+            chmod -R 777 /app/data
+        volumeMounts:
+          - name: config
+            mountPath: /app/data
 ---
