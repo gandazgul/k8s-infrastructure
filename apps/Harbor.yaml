@@ -63,8 +63,7 @@ spec:
           existingClaim: yasr-volume
           subPath: configs/harbor/trivy
     containerSecurityContext:
-      fsGroup: 1000
-      fsGroupChangePolicy: "OnRootMismatch"
+      runAsGroup: 472
 ---
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
