@@ -64,6 +64,7 @@ spec:
           subPath: configs/harbor/trivy
     containerSecurityContext:
       allowPrivilegeEscalation: true
+      runAsNonRoot: false
       privileged: true
       runAsUser: 0
       runAsGroup: 472
