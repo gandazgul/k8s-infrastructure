@@ -63,7 +63,6 @@ spec:
           existingClaim: yasr-volume
           subPath: configs/harbor/trivy
     containerSecurityContext:
-      privileged: true
       runAsUser: 0
       runAsGroup: 472
 ---
