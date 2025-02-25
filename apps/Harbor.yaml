@@ -63,6 +63,8 @@ spec:
           existingClaim: yasr-volume
           subPath: configs/harbor/trivy
     containerSecurityContext:
+      allowPrivilegeEscalation: true
+      privileged: true
       runAsUser: 0
       runAsGroup: 472
 ---
