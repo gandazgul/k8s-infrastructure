@@ -29,7 +29,7 @@ spec:
       interval: 5m
   values:
     image:
-      repository: koenkk/zigbee2mqtt
+      repository: docker.io/koenkk/zigbee2mqtt
       tag: latest
       pullPolicy: Always
     config:
@@ -118,6 +118,7 @@ spec:
         subPath: configs/zigbee2mqtt
         accessMode: ReadWriteOnce
         size: 1Gi
+        mountPath: /app/data
       usb:
         enabled: true
         type: hostPath
@@ -143,11 +144,5 @@ spec:
     logging:
       type: console
       level: debug
-    volumes:
-      data:
-        enabled: true
-        type: pvc
-        existingClaim: yasr-volume
-        mountPath: /app/data
-        subPath: configs/zigbee2mqtt
+    volumes: {}
 ---
