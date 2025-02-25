@@ -62,6 +62,10 @@ spec:
         trivy:
           existingClaim: yasr-volume
           subPath: configs/harbor/trivy
+    imageChartStorage:
+      type: filesystem
+      filesystem:
+        rootdirectory: /storage
     containerSecurityContext:
       allowPrivilegeEscalation: true
       runAsNonRoot: false
