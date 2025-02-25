@@ -128,7 +128,6 @@ spec:
         type: pvc
         existingClaim: yasr-volume
         subPath: configs/zigbee2mqtt
-        mountPath: /app/data
         accessMode: ReadWriteOnce
         size: 1Gi
       usb:
