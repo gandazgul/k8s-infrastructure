@@ -105,10 +105,11 @@ spec:
       - name: 'docker.io replace rule'
         matches:
           - '^docker.io\/'
-        replace: 'mirror.gcr.io'
+        #        replace: 'mirror.gcr.io'
+        replace: 'harbor.dumbhome.uk/dockerproxy/'
         checkUpstream: false
-      - name: 'no repo replace rule'
-        matches:
-          - '^(([a-zA-Z0-9\-\.]+/)?([a-zA-Z0-9\-\.]+):([a-zA-Z0-9\-\.]+))$'
-        replace: 'mirror.gcr.io/$1'
-        checkUpstream: true
+#      - name: 'no repo replace rule'
+#        matches:
+#          - '^(([a-zA-Z0-9\-\.]+/)?([a-zA-Z0-9\-\.]+):([a-zA-Z0-9\-\.]+))$'
+#        replace: 'mirror.gcr.io/$1'
+#        checkUpstream: true
