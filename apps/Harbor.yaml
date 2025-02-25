@@ -62,6 +62,9 @@ spec:
         trivy:
           existingClaim: yasr-volume
           subPath: configs/harbor/trivy
+    securityContext:
+      fsGroup: 1000
+      fsGroupChangePolicy: "OnRootMismatch"
 ---
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
@@ -95,7 +98,7 @@ spec:
       - name: 'docker.io replace rule'
         matches:
           - '^docker.io\/'
-        replace: 'mirror.gcr.io/'
+        replace: 'mirror.gcr.io'
         checkUpstream: false
       - name: 'no repo replace rule'
         matches:
