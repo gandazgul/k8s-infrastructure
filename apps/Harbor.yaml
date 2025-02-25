@@ -38,14 +38,14 @@ spec:
         enabled: true
         secret:
           secretName: internal-ingress-cert
-        ingress:
-          hosts:
-            core: harbor.${CLUSTER_DOMAIN_NAME}
-          annotations:
-            kubernetes.io/ingress.class: "nginx"
-            forecastle.stakater.com/appName: "Harbor"
-            forecastle.stakater.com/expose: "true"
-            forecastle.stakater.com/icon: ""
+      ingress:
+        hosts:
+          core: harbor.${CLUSTER_DOMAIN_NAME}
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          forecastle.stakater.com/appName: "Harbor"
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: ""
     persistence:
       enabled: true
       persistentVolumeClaim:
@@ -61,3 +61,38 @@ spec:
         trivy:
           existingClaim: yasr-volume
           subPath: configs/harbor/trivy
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: harbor-container-webhook
+  namespace: kube-system
+spec:
+  interval: 1h0m0s
+  url: "https://indeedeng.github.io/harbor-container-webhook/"
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: harbor-container-webhook
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: harbor-container-webhook
+      version: 0.7.1
+      sourceRef:
+        kind: HelmRepository
+        name: harbor-container-webhook
+        namespace: kube-system
+      interval: 5m
+  values:
+    image:
+      pullPolicy: Always
+    rules:
+      - name: docker.io replace rule
+        match:
+          - image: "docker.io/*"
+        replace:
+          - image: "harbor.${CLUSTER_DOMAIN_NAME}/library/*"
