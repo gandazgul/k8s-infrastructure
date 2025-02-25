@@ -125,9 +125,12 @@ spec:
     persistence:
       data:
         enabled: true
+        type: pvc
         existingClaim: yasr-volume
         subPath: configs/zigbee2mqtt
         mountPath: /app/data
+        accessMode: ReadWriteOnce
+        size: 1Gi
       usb:
         enabled: true
         type: hostPath
@@ -153,6 +156,11 @@ spec:
     logging:
       type: console
       level: debug
-    storage:
-      type: pvc
+    volumes:
+      data:
+        enabled: true
+        type: pvc
+        existingClaim: yasr-volume
+        mountPath: /app/data
+        subPath: configs/zigbee2mqtt
 ---
