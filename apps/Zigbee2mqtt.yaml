@@ -123,7 +123,7 @@ spec:
     securityContext:
       privileged: true
     persistence:
-      config:
+      data:
         enabled: true
         existingClaim: yasr-volume
         subPath: configs/zigbee2mqtt
@@ -153,16 +153,6 @@ spec:
     logging:
       type: console
       level: debug
-    initContainers:
-      - name: init-chmod
-        image: busybox
-        command:
-          - sh
-          - -c
-          - |
-            mkdir -p /app/data
-            chmod -R 777 /app/data
-        volumeMounts:
-          - name: config
-            mountPath: /app/data
+    storage:
+      type: pvc
 ---
