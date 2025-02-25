@@ -108,7 +108,7 @@ spec:
         exclude:
           - '^docker.io\/goharbor'
         #        replace: 'mirror.gcr.io'
-        replace: 'harbor.dumbhome.uk/dockerproxy/'
+        replace: 'harbor.dumbhome.uk/dockerproxy'
         checkUpstream: false
       - name: 'harbor images'
         matches:
