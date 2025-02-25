@@ -97,8 +97,8 @@ spec:
           - '^docker.io\/'
         replace: 'mirror.gcr.io/'
         checkUpstream: false
-      - name: "no repo replace rule"
+      - name: 'no repo replace rule'
         matches:
-          - "^(([a-zA-Z0-9\-\.]+/)?([a-zA-Z0-9\-\.]+):([a-zA-Z0-9\-\.]+))$"
-        replace: "mirror.gcr.io/$1"
+          - '^(([a-zA-Z0-9\-\.]+/)?([a-zA-Z0-9\-\.]+):([a-zA-Z0-9\-\.]+))$'
+        replace: 'mirror.gcr.io/$1'
         checkUpstream: true
