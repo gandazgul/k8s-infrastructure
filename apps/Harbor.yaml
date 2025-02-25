@@ -92,8 +92,14 @@ spec:
     image:
       pullPolicy: Always
     rules:
-      - name: docker.io replace rule
+      - name: "docker.io replace rule"
         match:
-          - image: "docker.io/*"
+          - image: "^docker.io/"
         replace:
-          - image: "harbor.${CLUSTER_DOMAIN_NAME}/library/*"
+          #          - image: "harbor.${CLUSTER_DOMAIN_NAME}/library/*"
+          - image: "mirror.gcr.io/"
+      - name: "no repo replace rule"
+        match:
+          - image: "^(([a-zA-Z0-9\-\.]+/)?([a-zA-Z0-9\-\.]+):([a-zA-Z0-9\-\.]+))$"
+        replace:
+          - image: "mirror.gcr.io/$1"
