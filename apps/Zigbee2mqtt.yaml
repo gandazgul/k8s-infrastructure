@@ -28,7 +28,7 @@ spec:
       retries: 3
       remediateLastFailure: true
   dependsOn:
-    - name: mosquitto-mqtt-broker
+    - name: mosquitto
       namespace: default
   chart:
     spec:
