@@ -62,7 +62,7 @@ spec:
         trivy:
           existingClaim: yasr-volume
           subPath: configs/harbor/trivy
-    securityContext:
+    containerSecurityContext:
       fsGroup: 1000
       fsGroupChangePolicy: "OnRootMismatch"
 ---
