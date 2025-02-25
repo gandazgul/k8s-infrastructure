@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m
-  url: https://charts.zigbee2mqtt.io
+  url: https://charts.zigbee2mqtt.io/index
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
@@ -15,25 +15,13 @@ metadata:
   namespace: default
 spec:
   interval: 5m
-  timeout: 30m
-  install:
-    timeout: 20m
-    createNamespace: true
-    remediation:
-      retries: 3
-      remediateLastFailure: true
-  upgrade:
-    timeout: 20m
-    remediation:
-      retries: 3
-      remediateLastFailure: true
   dependsOn:
     - name: mosquitto
       namespace: default
   chart:
     spec:
       chart: zigbee2mqtt
-      version: '2.1.1'
+      version: '1.37.1'
       sourceRef:
         kind: HelmRepository
         name: zigbee2mqtt
