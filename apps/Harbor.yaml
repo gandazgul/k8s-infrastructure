@@ -56,9 +56,6 @@ spec:
         database:
           existingClaim: yasr-volume
           subPath: configs/harbor/database
-        redis:
-          existingClaim: yasr-volume
-          subPath: configs/harbor/redis
         trivy:
           existingClaim: yasr-volume
           subPath: configs/harbor/trivy
@@ -66,6 +63,16 @@ spec:
       type: filesystem
       filesystem:
         rootdirectory: /storage
+    redis:
+      type: external
+      external:
+        addr: paperless-redis-master.default.svc.cluster.local:6379
+        coreDatabaseIndex: "2"
+        jobserviceDatabaseIndex: "3"
+        registryDatabaseIndex: "4"
+        trivyAdapterIndex: "5"
+        harborDatabaseIndex: "6"
+        cacheLayerDatabaseIndex: "7"
     containerSecurityContext:
       allowPrivilegeEscalation: true
       runAsNonRoot: false
@@ -107,7 +114,6 @@ spec:
           - '^docker.io\/'
         exclude:
           - '^docker.io\/goharbor'
-        #        replace: 'mirror.gcr.io'
         replace: 'harbor.dumbhome.uk/dockerproxy'
         checkUpstream: false
       - name: 'harbor images'
