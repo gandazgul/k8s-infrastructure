@@ -46,7 +46,8 @@ spec:
           kubernetes.io/ingress.class: "nginx"
           forecastle.stakater.com/appName: "Harbor"
           forecastle.stakater.com/expose: "true"
-          forecastle.stakater.com/icon: ""
+          forecastle.stakater.com/url: "https://harbor.${CLUSTER_DOMAIN_NAME}"
+          forecastle.stakater.com/icon: "https://goharbor.io/img/logos/harbor-horizontal-color.png"
     persistence:
       enabled: true
       persistentVolumeClaim:
@@ -113,10 +114,10 @@ spec:
         matches:
           - '^docker.io\/'
         excludes:
-          - '^goharbor\/'
+          - '^docker.io\/goharbor\/'
         replace: 'harbor.dumbhome.uk/dockerproxy'
         checkUpstream: false
       - name: 'harbor images'
         matches:
-          - '^goharbor\/'
-        replace: 'mirror.gcr.io'
+          - '^docker.io\/(goharbor\/)'
+        replace: 'mirror.gcr.io/$1'
