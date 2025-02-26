@@ -113,10 +113,10 @@ spec:
         matches:
           - '^docker.io\/'
         exclude:
-          - 'goharbor'
+          - '^goharbor\/'
         replace: 'harbor.dumbhome.uk/dockerproxy'
         checkUpstream: false
       - name: 'harbor images'
         matches:
-          - 'goharbor'
+          - '^goharbor\/'
         replace: 'mirror.gcr.io'
