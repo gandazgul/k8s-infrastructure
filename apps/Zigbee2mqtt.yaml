@@ -29,7 +29,7 @@ spec:
       interval: 5m
   values:
     image:
-      repository: docker.io/koenkk/zigbee2mqtt
+      repository: koenkk/zigbee2mqtt
       tag: latest
       pullPolicy: Always
     config:
@@ -48,11 +48,12 @@ spec:
     statefulset:
       # Disable the built-in storage mechanism
       storage:
-        enabled: false
+        enabled: true
       # Define volumeMounts for both the data and USB device
       volumeMounts:
         - name: data-volume
-          mountPath: /app/data
+          persistentVolumeClaim:
+            claimName: yasr-volume
         - name: usb
           mountPath: /dev/ttyUSB0
       # Define volumes including the existing PVC
