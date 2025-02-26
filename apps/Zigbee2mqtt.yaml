@@ -46,10 +46,23 @@ spec:
         log_level: debug
         network_key: GENERATE
     statefulset:
+      # Disable the built-in storage mechanism
+      storage:
+        enabled: false
+      # Define volumeMounts for both the data and USB device
       volumeMounts:
+        - name: data-volume
+          mountPath: /app/data
+        - name: usb
+          mountPath: /dev/ttyUSB0
+      # Define volumes including the existing PVC
+      volumes:
         - name: data-volume
           persistentVolumeClaim:
             claimName: yasr-volume
+        - name: usb
+          hostPath:
+            path: /dev/ttyUSB0
     service:
       main:
         enabled: true
@@ -115,18 +128,6 @@ spec:
       fsGroupChangePolicy: "OnRootMismatch"
     securityContext:
       privileged: true
-    persistence:
-      data:
-        enabled: true
-        type: pvc
-        existingClaim: yasr-volume
-        subPath: configs/zigbee2mqtt
-        accessMode: ReadWriteOnce
-        size: 1Gi
-      usb:
-        enabled: true
-        type: hostPath
-        hostPath: /dev/ttyUSB0
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
@@ -148,5 +149,4 @@ spec:
     logging:
       type: console
       level: debug
-    volumes: {}
 ---
