@@ -112,7 +112,7 @@ spec:
       - name: 'docker.io replace rule'
         matches:
           - '^docker.io\/'
-        exclude:
+        excludes:
           - '^goharbor\/'
         replace: 'harbor.dumbhome.uk/dockerproxy'
         checkUpstream: false
