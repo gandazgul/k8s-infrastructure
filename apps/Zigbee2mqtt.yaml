@@ -52,11 +52,8 @@ spec:
       # Define volumeMounts for both the data and USB device
       volumeMounts:
         - name: data-volume
-          persistentVolumeClaim:
-            claimName: yasr-volume
-        - name: usb
-          mountPath: /dev/ttyUSB0
-      # Define volumes including the existing PVC
+          mountPath: /data
+
       volumes:
         - name: data-volume
           persistentVolumeClaim:
