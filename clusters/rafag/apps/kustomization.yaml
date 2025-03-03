@@ -11,11 +11,11 @@ resources:
 - ../../../apps/Photoprism.yaml
 - ../../../apps/Resilio.yaml
 - ../../../apps/SFTPGo.yaml
-- ../../../apps/Sharry.yaml
-- ../../../apps/WeaveGitopsDashboard.yaml
+#- ../../../apps/Sharry.yaml
+#- ../../../apps/WeaveGitopsDashboard.yaml
 # - ../../../apps/ZWaveJS.yaml
-- ../../../apps/Mealie.yaml
-- ../../../apps/Skooner.yaml
+#- ../../../apps/Mealie.yaml
+#- ../../../apps/Skooner.yaml
 - ../../../apps/Transmission.yaml
 - ../../../apps/Lidarr.yaml
 #- ../../../apps/Overseerr.yaml
