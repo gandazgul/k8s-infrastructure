@@ -21,6 +21,7 @@ spec:
       tag: vfa41640
       args:
         - backup
+        - --force
         - /media/main
         - /media/backup
     volumes:
