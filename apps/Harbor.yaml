@@ -119,5 +119,5 @@ spec:
         checkUpstream: false
       - name: 'harbor images'
         matches:
-          - '^docker.io\/(goharbor\/)'
-        replace: 'mirror.gcr.io/$1'
+          - '^docker.io\/goharbor\/'
+        replace: 'mirror.gcr.io'
