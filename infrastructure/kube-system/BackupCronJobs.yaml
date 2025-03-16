@@ -20,8 +20,8 @@ spec:
       repository: docker.io/gandazgul/rdiff-backup
       tag: vfa41640
       args:
-        - backup
         - --force
+        - backup
         - /media/main
         - /media/backup
     volumes:
