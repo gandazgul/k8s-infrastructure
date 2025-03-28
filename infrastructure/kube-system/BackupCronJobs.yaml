@@ -14,26 +14,28 @@ spec:
         namespace: kube-system
   interval: 1h0m0s
   values:
-  # Twice a day at midnight and midday
+    # Twice a day at midnight and midday
     schedule: "0 0,12 * * *"
     image:
       repository: docker.io/gandazgul/rdiff-backup
-      tag: v0150413
+      tag: vfa41640
       args:
-      - /media/main
-      - /media/backup
+        - --force
+        - backup
+        - /media/main
+        - /media/backup
     volumes:
-    - name: main-volume
-      persistentVolumeClaim:
-        claimName: main-volume
-    - name: backup-volume
-      persistentVolumeClaim:
-        claimName: backup-volume
+      - name: main-volume
+        persistentVolumeClaim:
+          claimName: main-volume
+      - name: backup-volume
+        persistentVolumeClaim:
+          claimName: backup-volume
     volumeMounts:
-    - name: main-volume
-      mountPath: /media/main
-    - name: backup-volume
-      mountPath: /media/backup
+      - name: main-volume
+        mountPath: /media/main
+      - name: backup-volume
+        mountPath: /media/backup
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
@@ -50,25 +52,25 @@ spec:
         namespace: kube-system
   interval: 1h0m0s
   values:
-  # Every day at midnight
+    # Every day at midnight
     schedule: "0 0 * * *"
     image:
       repository: docker.io/gandazgul/rdiff-backup
-      tag: v0150413
+      tag: vfa41640
       args:
-      - --remove-older-than
-      - 4W
-      - --force
-      - /media/backup
+        - remove
+        - increments
+        - --older-than 4W
+        - /media/backup
     volumes:
-    - name: main-volume
-      persistentVolumeClaim:
-        claimName: main-volume
-    - name: backup-volume
-      persistentVolumeClaim:
-        claimName: backup-volume
+      - name: main-volume
+        persistentVolumeClaim:
+          claimName: main-volume
+      - name: backup-volume
+        persistentVolumeClaim:
+          claimName: backup-volume
     volumeMounts:
-    - name: main-volume
-      mountPath: /media/main
-    - name: backup-volume
-      mountPath: /media/backup
+      - name: main-volume
+        mountPath: /media/main
+      - name: backup-volume
+        mountPath: /media/backup

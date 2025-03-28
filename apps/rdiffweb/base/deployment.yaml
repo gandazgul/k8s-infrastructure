@@ -1,0 +1,59 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rdiffweb
+  namespace: default
+  labels:
+    app.kubernetes.io/name: rdiffweb
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: rdiffweb
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: rdiffweb
+    spec:
+      containers:
+        - name: rdiffweb
+          image: docker.io/ikus060/rdiffweb:latest
+          imagePullPolicy: Always
+          env:
+            - name: RDIFFWEB_ADMIN_USER
+              value: gandazgul
+            - name: RDIFFWEB_ADMIN_PASSWORD
+              value: ${ADMIN_PASSWORD}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /
+              port: 8080
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 250Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /etc/rdiffweb/
+              subPath: configs/rdiffweb
+            - name: backup-volume
+              mountPath: /backups
+      volumes:
+        - name: yasr-volume
+          persistentVolumeClaim:
+            claimName: yasr-volume
+        - name: backup-volume
+          persistentVolumeClaim:
+            claimName: backup-volume

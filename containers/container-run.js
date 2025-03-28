@@ -28,7 +28,7 @@ process.on('SIGINT', () => {
     process.exit(0);
 });
 
-const runCommand = `podman run --rm --name=${imageName} ${argv._.join(' ')} ${imageNameLatest}`;
+const runCommand = `podman run --rm --name=${imageName} ${imageNameLatest} ${argv._.join(' ')}`;
 
 try {
     console.info('CONTAINERS:RUN', `Running: ${runCommand}`);

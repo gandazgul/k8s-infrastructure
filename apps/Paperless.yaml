@@ -30,6 +30,7 @@ spec:
       PAPERLESS_ADMIN_USER: admin
       PAPERLESS_ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
       PAPERLESS_SECRET_KEY: "${PAPERLESS_SECRET_KEY}"
+      PAPERLESS_URL: "https://paperless.${CLUSTER_DOMAIN_NAME}"
     persistence:
       yasr:
         enabled: true
