@@ -31,7 +31,7 @@ spec:
     image:
       repository: docker.io/koenkk/zigbee2mqtt
       tag: latest
-      pullPolicy: Always
+    #      pullPolicy: Always
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
     ingress:
