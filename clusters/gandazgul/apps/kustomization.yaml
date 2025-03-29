@@ -24,4 +24,3 @@ resources:
   - ../../../apps/Plex.yaml
   - ../../../apps/RDiffWeb.yaml
   - ../../../apps/Harbor.yaml
-  - ../../../apps/Zigbee2mqtt.yaml
