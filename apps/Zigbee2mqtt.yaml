@@ -29,6 +29,7 @@ spec:
     securityContext:
       privileged: true
     image:
+      repository: docker.io/koenkk/zigbee2mqtt
       tag: latest
       pullPolicy: Always
     env:
