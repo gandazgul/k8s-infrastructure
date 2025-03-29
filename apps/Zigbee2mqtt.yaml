@@ -1,4 +1,14 @@
 ---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: andrenarchy
+  namespace: kube-system
+spec:
+  interval: 1h0m0s
+  url: "https://andrenarchy.github.io/helm-charts/"
+
+---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -9,10 +19,10 @@ spec:
   chart:
     spec:
       chart: zigbee2mqtt
-      version: 9.2.0
+      version: 9.25.0
       sourceRef:
         kind: HelmRepository
-        name: k8s-at-home
+        name: andrenarchy
         namespace: kube-system
       interval: 5m
   values:
@@ -26,6 +36,7 @@ spec:
         port: /dev/ttyUSB0
     image:
       tag: latest
+      pullPolicy: Always
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
     ingress:
