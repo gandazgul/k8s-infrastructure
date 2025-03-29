@@ -33,7 +33,9 @@ spec:
       mqtt:
         server: "mqtt://10.1.1.2"
       serial:
-        port: /usb
+        port: /dev/ttyUSB0
+        adapter: ember
+        rtscts: true
     #        stack: zstack
     image:
       tag: latest
