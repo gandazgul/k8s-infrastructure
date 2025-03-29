@@ -34,6 +34,7 @@ spec:
         server: "mqtt://10.1.1.2"
       serial:
         port: /dev/ttyUSB0
+        stack: deconz
     image:
       tag: latest
       pullPolicy: Always
