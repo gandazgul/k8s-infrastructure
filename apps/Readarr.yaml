@@ -19,7 +19,7 @@ spec:
   values:
     image:
       repository: linuxserver/readarr
-      tag: amd64-latest
+      tag: latest
       pullPolicy: Always
     env:
       PUID: "1000"
