@@ -19,7 +19,7 @@ spec:
   values:
     image:
       repository: linuxserver/readarr
-      tag: latest
+      tag: nightly
       pullPolicy: Always
     env:
       PUID: "1000"
