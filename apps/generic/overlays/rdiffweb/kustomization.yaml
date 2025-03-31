@@ -5,11 +5,6 @@ namespace: default
 resources:
   - ../../base/
 
-images:
-  - name: changeme:latest
-    newTag: latest
-    newName: ghcr.io/rdiffweb/rdiffweb
-
 labels:
   - pairs:
       app.kubernetes.io/name: rdiffweb

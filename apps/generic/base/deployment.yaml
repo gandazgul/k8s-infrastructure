@@ -10,8 +10,8 @@ spec:
   template:
     spec:
       containers:
-        - name: rdiffweb
-          image: changeme:latest
+        - name: container
+          image: changeme
           imagePullPolicy: Always
           ports:
             - name: http
@@ -31,12 +31,6 @@ spec:
             limits:
               cpu: 500m
               memory: 1Gi
-          volumeMounts:
-            - name: yasr-volume
-              mountPath: /etc/rdiffweb/
-              subPath: configs/rdiffweb
-            - name: backup-volume
-              mountPath: /backups
       volumes:
         - name: yasr-volume
           persistentVolumeClaim:
@@ -44,3 +38,6 @@ spec:
         - name: backup-volume
           persistentVolumeClaim:
             claimName: backup-volume
+        - name: main-volume
+          persistentVolumeClaim:
+            claimName: main-volume
