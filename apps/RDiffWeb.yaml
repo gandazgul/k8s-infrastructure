@@ -12,10 +12,6 @@ spec:
     kind: GitRepository
     name: k8s-infrastructure
     namespace: kube-system
-  images:
-    - name: changeme
-      newTag: latest
-      newName: ghcr.io/rdiffweb/rdiffweb
   healthChecks:
     - apiVersion: apps/v1
       kind: Deployment

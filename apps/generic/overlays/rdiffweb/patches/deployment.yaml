@@ -8,6 +8,8 @@ spec:
     spec:
       containers:
         - name: container
+          image: ghcr.io/rdiffweb/rdiffweb:latest
+          imagePullPolicy: Always
           env:
             - name: RDIFFWEB_ADMIN_USER
               value: gandazgul
