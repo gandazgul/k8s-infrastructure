@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: container
-          image: ghcr.io/rdiffweb/rdiffweb:latest
+          image: docker.io/ikus060/rdiffweb:latest
           imagePullPolicy: Always
           env:
             - name: RDIFFWEB_ADMIN_USER
