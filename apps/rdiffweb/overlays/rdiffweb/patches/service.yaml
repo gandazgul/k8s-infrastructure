@@ -1,10 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: service
+  name: rdiffweb
   namespace: default
 spec:
-  type: ClusterIP
   ports:
     - name: http
       protocol: TCP

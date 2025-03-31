@@ -6,7 +6,7 @@ metadata:
   namespace: default
 spec:
   interval: 5m
-  path: ./apps/rdiffweb/
+  path: ./apps/generic/overlays/rdiffweb/
   prune: true
   sourceRef:
     kind: GitRepository
@@ -18,6 +18,8 @@ spec:
       name: rdiffweb
       namespace: default
   postBuild:
+    substitute:
+      INGRESS_HOSTNAME: backups.${CLUSTER_DOMAIN_NAME}
     substituteFrom:
       - kind: Secret
         name: secrets
