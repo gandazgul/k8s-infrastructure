@@ -8,7 +8,7 @@ spec:
   interval: 1h0m0s
   url: https://github.com/kubernetes-sigs/headlamp.git
   ref:
-    branch: master
+    branch: main
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
