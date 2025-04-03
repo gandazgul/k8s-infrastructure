@@ -36,6 +36,7 @@ spec:
       port: 4466
     ingress:
       enabled: true
+      ingressClassName: nginx
       annotations:
         forecastle.stakater.com/appName: "Headlamp"
         forecastle.stakater.com/group: "Management"
