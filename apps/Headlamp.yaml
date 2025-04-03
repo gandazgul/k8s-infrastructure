@@ -1,12 +1,14 @@
 ---
 apiVersion: source.toolkit.fluxcd.io/v1beta1
-kind: HelmRepository
+kind: GitRepository
 metadata:
   name: headlamp
   namespace: kube-system
 spec:
   interval: 1h0m0s
-  url: https://headlamp-k8s.github.io/headlamp/
+  url: https://github.com/kubernetes-sigs/headlamp
+  ref:
+    branch: master
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
@@ -17,9 +19,9 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: headlamp
+      chart: ./charts/headlamp
       sourceRef:
-        kind: HelmRepository
+        kind: GitRepository
         name: headlamp
         namespace: kube-system
   values:
