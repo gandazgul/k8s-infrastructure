@@ -19,9 +19,9 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: OCIRepository
+      chart: flaresolverr
       sourceRef:
-        kind: HelmRepository
+        kind: OCIRepository
         name: flaresolverr
         namespace: kube-system
       interval: 5m
