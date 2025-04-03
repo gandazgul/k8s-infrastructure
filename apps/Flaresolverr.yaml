@@ -17,14 +17,10 @@ metadata:
   namespace: default
 spec:
   interval: 5m
-  chart:
-    spec:
-      chart: flaresolverr
-      sourceRef:
-        kind: OCIRepository
-        name: flaresolverr
-        namespace: kube-system
-      interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: flaresolverr
+    namespace: kube-system
   values:
     extraEnv:
       PUID: "1000"
