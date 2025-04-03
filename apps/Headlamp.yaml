@@ -25,8 +25,6 @@ spec:
         name: headlamp
         namespace: kube-system
   values:
-    config:
-      baseURL: https://dashboard.${CLUSTER_DOMAIN_NAME}
     volumes:
       - name: config
         existingClaim: yasr-volume
