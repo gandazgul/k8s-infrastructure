@@ -1,0 +1,55 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: OCIRepository
+metadata:
+  name: flaresolverr
+  namespace: kube-system
+spec:
+  interval: 5m0s
+  url: oci://ghcr.io/m0nsterrr/helm-charts/flaresolverr
+  ref:
+    semver: ">=2.0.1"
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: flaresolverr
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: OCIRepository
+      sourceRef:
+        kind: HelmRepository
+        name: flaresolverr
+        namespace: kube-system
+      interval: 5m
+  values:
+    extraEnv:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "${CLUSTER_TIME_ZONE}"
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - host: tv.${CLUSTER_DOMAIN_NAME}
+          paths:
+            - path: /
+      tls:
+        - hosts:
+            - tv.${CLUSTER_DOMAIN_NAME}
+          secretName: internal-ingress-cert
+      annotations:
+        forecastle.stakater.com/appName: "Flaresolverr"
+        forecastle.stakater.com/group: "Media"
+        forecastle.stakater.com/expose: "true"
+        forecastle.stakater.com/icon: ""
+    resources:
+      limits:
+        memory: 512Mi
+        cpu: 500m
+      requests:
+        memory: 256Mi
+        cpu: 250m

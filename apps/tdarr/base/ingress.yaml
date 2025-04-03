@@ -10,7 +10,7 @@ metadata:
     forecastle.stakater.com/appName: "Tdarr"
     forecastle.stakater.com/group: "Media"
     forecastle.stakater.com/expose: "true"
-    forecastle.stakater.com/icon: ""
+    forecastle.stakater.com/icon: "https://home.tdarr.io/static/media/logo3-min.246d6df44c7f16ddebaf.png"
 spec:
   ingressClassName: nginx
   tls:

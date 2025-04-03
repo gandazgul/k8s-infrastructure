@@ -1,0 +1,50 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: headlamp
+  namespace: kube-system
+spec:
+  interval: 1h0m0s
+  url: https://headlamp-k8s.github.io/headlamp/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: headlamp
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: headlamp
+      sourceRef:
+        kind: HelmRepository
+        name: headlamp
+        namespace: kube-system
+  values:
+    config:
+      baseURL: https://dashboard.${CLUSTER_DOMAIN_NAME}
+    volumes:
+      - name: config
+        existingClaim: yasr-volume
+        subPath: configs/headlamp
+    volumeMounts:
+      - name: config
+        mountPath: /headlamp
+    ingress:
+      enabled: true
+      annotations:
+        forecastle.stakater.com/appName: "Headlamp"
+        forecastle.stakater.com/group: "Management"
+        forecastle.stakater.com/expose: "true"
+        forecastle.stakater.com/icon: "https://headlamp.dev/img/logo.svg"
+      hosts:
+        - host: dashboard.${CLUSTER_DOMAIN_NAME}
+          paths:
+            - path: /
+              type: ImplementationSpecific
+      tls:
+        - secretName: internal-ingress-cert
+          hosts:
+            - dashboard.${CLUSTER_DOMAIN_NAME}
