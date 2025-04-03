@@ -23,7 +23,7 @@ resources:
   - ../../../apps/Sonarr.yaml
   - ../../../apps/Tdarr.yaml
   - ../../../apps/Readarr.yaml
-  - ../../../apps/Flaresolverr.yaml
+  #  - ../../../apps/Flaresolverr.yaml
   - ../../../apps/Plex.yaml
   - ../../../apps/RDiffWeb.yaml
   - ../../../apps/Harbor.yaml
