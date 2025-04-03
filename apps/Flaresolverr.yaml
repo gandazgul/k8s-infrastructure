@@ -9,6 +9,7 @@ spec:
   url: oci://ghcr.io/m0nsterrr/helm-charts/flaresolverr
   ref:
     semver: ">=2.0.1"
+
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
