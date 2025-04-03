@@ -33,7 +33,7 @@ spec:
         subPath: configs/headlamp
     volumeMounts:
       - name: config
-        mountPath: /headlamp
+        mountPath: /headlamp/plugins
     ingress:
       enabled: true
       annotations:
