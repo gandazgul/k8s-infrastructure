@@ -23,9 +23,12 @@ spec:
     namespace: kube-system
   values:
     extraEnv:
-      PUID: "1000"
-      PGID: "1000"
-      TZ: "${CLUSTER_TIME_ZONE}"
+      - name: PUID
+        value: "1000"
+      - name: PGID
+        value: "1000"
+      - name: TZ
+        value: "${CLUSTER_TIME_ZONE}"
     ingress:
       enabled: true
       ingressClassName: nginx
