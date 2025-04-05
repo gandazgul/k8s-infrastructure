@@ -2,7 +2,7 @@
 # kubectl create secret generic ssh-private-key --from-file=/Users/gandazgul/.ssh/carlos_rsa
 
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: rsync-renepor
@@ -39,7 +39,7 @@ spec:
     - name: main-volume
       mountPath: /media/main
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: rsync-movies-rene
@@ -76,7 +76,7 @@ spec:
     - name: main-volume
       mountPath: /media/main
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: rsync-gandazgul-rene

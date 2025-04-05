@@ -1,11 +1,11 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: home-assistant
   namespace: default
 spec:
-  interval: 5m
+  interval: 1h
   chart:
     spec:
       chart: home-assistant

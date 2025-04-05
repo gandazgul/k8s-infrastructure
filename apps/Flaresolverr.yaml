@@ -1,5 +1,5 @@
 ---
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
   name: flaresolverr
@@ -10,14 +10,13 @@ spec:
   ref:
     semver: ">=2.0.1"
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: flaresolverr
   namespace: default
 spec:
   interval: 5m
-  chart: flaresolverr
   chartRef:
     kind: OCIRepository
     name: flaresolverr

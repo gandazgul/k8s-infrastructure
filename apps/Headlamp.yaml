@@ -1,5 +1,5 @@
 ---
-apiVersion: source.toolkit.fluxcd.io/v1beta1
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
   name: headlamp
@@ -10,13 +10,13 @@ spec:
   ref:
     branch: main
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: headlamp
   namespace: default
 spec:
-  interval: 5m
+  interval: 1h
   chart:
     spec:
       chart: ./charts/headlamp
