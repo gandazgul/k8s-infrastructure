@@ -29,6 +29,8 @@ spec:
         value: "1000"
       - name: TZ
         value: "${CLUSTER_TIME_ZONE}"
+    service:
+      port: 8191
     ingress:
       enabled: true
       ingressClassName: nginx
