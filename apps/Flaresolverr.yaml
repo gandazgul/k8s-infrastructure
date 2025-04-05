@@ -33,13 +33,13 @@ spec:
       enabled: true
       ingressClassName: nginx
       hosts:
-        - host: tv.${CLUSTER_DOMAIN_NAME}
+        - host: flaresolverr.${CLUSTER_DOMAIN_NAME}
           paths:
             - path: /
               pathType: ImplementationSpecific
       tls:
         - hosts:
-            - tv.${CLUSTER_DOMAIN_NAME}
+            - flaresolverr.${CLUSTER_DOMAIN_NAME}
           secretName: internal-ingress-cert
       annotations:
         forecastle.stakater.com/appName: "Flaresolverr"
