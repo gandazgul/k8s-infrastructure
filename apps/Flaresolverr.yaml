@@ -17,6 +17,7 @@ metadata:
   namespace: default
 spec:
   interval: 5m
+  chart: flaresolverr
   chartRef:
     kind: OCIRepository
     name: flaresolverr
