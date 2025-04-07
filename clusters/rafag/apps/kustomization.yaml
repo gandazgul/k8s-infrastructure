@@ -12,10 +12,9 @@ resources:
   - ../../../apps/Resilio.yaml
   - ../../../apps/SFTPGo.yaml
   - ../../../apps/Sharry.yaml
-  - ../../../apps/WeaveGitopsDashboard.yaml
   #  - ../../../apps/ZWaveJS.yaml
   - ../../../apps/Mealie.yaml
-  - ../../../apps/Skooner.yaml
+  - ../../../apps/Headlamp.yaml
   - ../../../apps/Transmission.yaml
   - ../../../apps/Lidarr.yaml
   #- ../../../apps/Overseerr.yaml

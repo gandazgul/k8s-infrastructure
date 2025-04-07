@@ -6,8 +6,7 @@ metadata:
   namespace: kube-system
 spec:
   interval: 1h0m0s
-  url: "https://andrenarchy.github.io/helm-charts/"
-
+  url: https://andrenarchy.github.io/helm-charts/
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
