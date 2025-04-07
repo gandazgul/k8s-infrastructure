@@ -32,6 +32,7 @@ spec:
     volumeMounts:
       - name: config
         mountPath: /headlamp/plugins
+        subPath: configs/headlamp
     service:
       port: 4466
     ingress:
