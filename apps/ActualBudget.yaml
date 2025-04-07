@@ -61,7 +61,4 @@ spec:
     persistence:
       enabled: true
       existingClaim: yasr-volume
-    volumeMounts:
-      - name: data
-        mountPath: /data
-        subPath: configs/actualbudget
+      subPath: configs/actualbudget
