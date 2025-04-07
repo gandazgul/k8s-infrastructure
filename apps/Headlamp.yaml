@@ -26,9 +26,9 @@ spec:
         namespace: kube-system
   values:
     volumes:
-      - name: config
-        existingClaim: yasr-volume
-        subPath: configs/headlamp
+      - name: yasr-volume
+        persistentVolumeClaim:
+          claimName: yasr-volume
     volumeMounts:
       - name: config
         mountPath: /headlamp/plugins
