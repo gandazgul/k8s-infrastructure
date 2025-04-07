@@ -8,6 +8,17 @@ spec:
   interval: 1h0m0s
   url: https://community-charts.github.io/helm-charts
 ---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: community-charts
+  namespace: kube-system
+spec:
+  interval: 1h0m0s
+  url: https://github.com/gandazgul/helm-charts.git
+  ref:
+    branch: patch-1
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -17,13 +28,14 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: actualbudget
+      chart: ./charts/actualbudget
       version: 1.4.3
       sourceRef:
-        kind: HelmRepository
+        #        kind: HelmRepository
+        kind: GitRepository
         name: community-charts
         namespace: kube-system
-      interval: 5m
+      interval: 1h
   values:
     strategy:
       type: Recreate
