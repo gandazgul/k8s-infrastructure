@@ -18,7 +18,7 @@ spec:
     schedule: "0 */1 * * *"
     image:
       repository: docker.io/gandazgul/ddns-cloudflare
-      tag: v43ea6c5
+      tag: vb299a70
     env:
       - name: CLUSTER_NAME
         value: ${CLUSTER_NAME}

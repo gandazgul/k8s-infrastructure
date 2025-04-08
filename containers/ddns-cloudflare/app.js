@@ -13,7 +13,7 @@ if (!clusterName) {
     process.exit(1);
 }
 
-if (!process.env.EMAIL) {
+if (!process.env.CLOUDFLARE_API_EMAIL) {
     const gitIgnore = await findUp('.gitignore');
     const projectDir = path.dirname(gitIgnore);
     const config = parse(fs.readFileSync(path.join(projectDir, 'clusters', clusterName, 'secrets.env'), 'utf8'));
