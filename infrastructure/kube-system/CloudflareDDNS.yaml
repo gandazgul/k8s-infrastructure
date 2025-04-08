@@ -1,33 +1,32 @@
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
 metadata:
-  name: ddns-cloudflare
+  name: cloudflare-ddns
   namespace: default
-  labels:
-    app.kubernetes.io/name: ddns-cloudflare
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: ddns-cloudflare
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: ddns-cloudflare
+  chart:
     spec:
-      containers:
-        - name: container
-          image: docker.io/gandazgul/ddns-cloudflare:v43ea6c5
-          imagePullPolicy: IfNotPresent
-          env:
-            - name: CLUSTER_NAME
-              value: ${CLUSTER_NAME}
-            - name: CLOUDFLARE_API_TOKEN
-              value: ${CLOUDFLARE_API_TOKEN}
-            - name: CLOUDFLARE_API_EMAIL
-              value: ${CLOUDFLARE_API_EMAIL}
-            - name: CLUSTER_DOMAIN_NAME
-              value: ${CLUSTER_DOMAIN_NAME}
-            - name: CLOUDFLARE_ZONE_ID
-              value: ${CLOUDFLARE_ZONE_ID}
+      chart: ./charts/cronjob
+      sourceRef:
+        kind: GitRepository
+        name: k8s-infrastructure
+        namespace: kube-system
+  interval: 1h0m0s
+  values:
+    # Every hour
+    schedule: "0 */1 * * *"
+    image:
+      repository: docker.io/gandazgul/ddns-cloudflare
+      tag: v43ea6c5
+    env:
+      - name: CLUSTER_NAME
+        value: ${CLUSTER_NAME}
+      - name: CLOUDFLARE_API_TOKEN
+        value: ${CLOUDFLARE_API_TOKEN}
+      - name: CLOUDFLARE_API_EMAIL
+        value: ${CLOUDFLARE_API_EMAIL}
+      - name: CLUSTER_DOMAIN_NAME
+        value: ${CLUSTER_DOMAIN_NAME}
+      - name: CLOUDFLARE_ZONE_ID
+        value: ${CLOUDFLARE_ZONE_ID}
