@@ -1,0 +1,16 @@
+{
+    "name": "ddns-cloudflare",
+    "version": "1.0.0",
+    "description": "An updater for DNS entries, one per cluster, to the cluster's external IP address",
+    "main": "app.js",
+    "repository": "https://github.com/gandazgul/k8s-infrastructure.git",
+    "author": "Carlos Ravelo",
+    "license": "MIT",
+    "private": true,
+    "type": "module",
+    "dependencies": {
+        "cloudflare": "^4.2.0",
+        "dotenv": "^16.4.7",
+        "find-up": "^7.0.0"
+    }
+}

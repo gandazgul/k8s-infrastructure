@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ddns-cloudflare
+  namespace: default
+  labels:
+    app.kubernetes.io/name: ddns-cloudflare
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ddns-cloudflare
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ddns-cloudflare
+    spec:
+      containers:
+        - name: container
+          image: docker.io/gandazgul/ddns-cloudflare:v43ea6c5
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: CLUSTER_NAME
+              value: ${CLUSTER_NAME}
+            - name: CLOUDFLARE_API_TOKEN
+              value: ${CLOUDFLARE_API_TOKEN}
+            - name: CLOUDFLARE_API_EMAIL
+              value: ${CLOUDFLARE_API_EMAIL}
+            - name: CLUSTER_DOMAIN_NAME
+              value: ${CLUSTER_DOMAIN_NAME}
+            - name: CLOUDFLARE_ZONE_ID
+              value: ${CLOUDFLARE_ZONE_ID}
