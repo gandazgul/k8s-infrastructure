@@ -29,7 +29,7 @@ spec:
       oidc:
         clientID: ${HEADLAMP_GOOGLE_CLIENT_ID}
         clientSecret: ${HEADLAMP_GOOGLE_CLIENT_SECRET}
-        issuer: https://accounts.google.com
+        issuerURL: https://accounts.google.com
         scopes: openid,email,profile
     volumes:
       - name: config
