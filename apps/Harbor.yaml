@@ -1,5 +1,5 @@
 ---
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: harbor
@@ -9,7 +9,7 @@ spec:
   url: "https://helm.goharbor.io"
 
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: harbor
@@ -81,7 +81,7 @@ spec:
       runAsUser: 1000
       runAsGroup: 472
 ---
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: harbor-container-webhook
@@ -90,7 +90,7 @@ spec:
   interval: 1h0m0s
   url: "https://indeedeng.github.io/harbor-container-webhook/"
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: harbor-container-webhook

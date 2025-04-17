@@ -39,8 +39,8 @@ if ! echo "$(sed "s/{{CLUSTER_NAME}}/$CLUSTER_NAME/g" <"$REPO_ROOT"/infrastructu
   exit 1
 fi
 
-message "Installing KubeSystem Kustomization, includes Sealed Secrets"
-if ! kubectl apply -f "$REPO_ROOT"/infrastructure/setup/KubeSystem.yaml; then
+message "Installing Sealed Secrets"
+if ! kubectl apply -f "$REPO_ROOT"/infrastructure/kube-system/SealedSecretsController.yaml; then
   echo -e "Sealed secrets didn't install correctly, aborting!"
   exit 1
 fi
@@ -50,6 +50,12 @@ while :; do
   kubectl get svc sealed-secrets-controller -n kube-system && break
   sleep 15
 done
+
+message "Installing the KubeSystem Kustomization"
+if ! kubectl apply -f "$REPO_ROOT"/infrastructure/setup/KubeSystem.yaml; then
+  echo -e "KubeSystem didn't install correctly, aborting!"
+  exit 1
+fi
 
 # Creating/Updating Sealed Secrets ---------------------------------------------------------
 "$SCRIPT_DIR/configure-cluster.sh" "$CLUSTER_NAME"

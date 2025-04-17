@@ -1,0 +1,32 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cloudflare-ddns
+  namespace: default
+spec:
+  chart:
+    spec:
+      chart: ./charts/cronjob
+      sourceRef:
+        kind: GitRepository
+        name: k8s-infrastructure
+        namespace: kube-system
+  interval: 1h0m0s
+  values:
+    # Every hour
+    schedule: "0 */1 * * *"
+    image:
+      repository: docker.io/gandazgul/ddns-cloudflare
+      tag: vb299a70
+    env:
+      - name: CLUSTER_NAME
+        value: ${CLUSTER_NAME}
+      - name: CLOUDFLARE_API_TOKEN
+        value: ${CLOUDFLARE_API_TOKEN}
+      - name: CLOUDFLARE_API_EMAIL
+        value: ${CLOUDFLARE_API_EMAIL}
+      - name: CLUSTER_DOMAIN_NAME
+        value: ${CLUSTER_DOMAIN_NAME}
+      - name: CLOUDFLARE_ZONE_ID
+        value: ${CLOUDFLARE_ZONE_ID}

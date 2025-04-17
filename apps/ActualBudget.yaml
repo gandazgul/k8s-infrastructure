@@ -1,0 +1,64 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: community-charts
+  namespace: kube-system
+spec:
+  interval: 1h0m0s
+  url: https://community-charts.github.io/helm-charts
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: community-charts
+  namespace: kube-system
+spec:
+  interval: 1h0m0s
+  url: https://github.com/gandazgul/helm-charts.git
+  ref:
+    branch: patch-1
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: actualbudget
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: ./charts/actualbudget
+      version: 1.4.3
+      sourceRef:
+        #        kind: HelmRepository
+        kind: GitRepository
+        name: community-charts
+        namespace: kube-system
+      interval: 1h
+  values:
+    strategy:
+      type: Recreate
+    files:
+      server: /data/server-files
+      user: /data/user-files
+    ingress:
+      enabled: true
+      className: nginx
+      hosts:
+        - host: budget.${CLUSTER_DOMAIN_NAME}
+          paths:
+            - path: /
+              pathType: ImplementationSpecific
+      tls:
+        - hosts:
+            - budget.${CLUSTER_DOMAIN_NAME}
+          secretName: internal-ingress-cert
+      annotations:
+        forecastle.stakater.com/expose: "true"
+        forecastle.stakater.com/appName: "ActualBudget"
+        forecastle.stakater.com/icon: ""
+    persistence:
+      enabled: true
+      existingClaim: yasr-volume
+      subPath: configs/actualbudget

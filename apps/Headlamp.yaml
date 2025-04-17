@@ -1,0 +1,60 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: headlamp
+  namespace: kube-system
+spec:
+  interval: 1h0m0s
+  url: https://github.com/kubernetes-sigs/headlamp.git
+  ref:
+    branch: main
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: headlamp
+  namespace: default
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: ./charts/headlamp
+      sourceRef:
+        kind: GitRepository
+        name: headlamp
+        namespace: kube-system
+  values:
+    config:
+      oidc:
+        clientID: ${HEADLAMP_GOOGLE_CLIENT_ID}
+        clientSecret: ${HEADLAMP_GOOGLE_CLIENT_SECRET}
+        issuerURL: https://accounts.google.com
+        scopes: openid,email,profile
+    volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: yasr-volume
+    volumeMounts:
+      - name: config
+        mountPath: /headlamp/plugins
+        subPath: configs/headlamp
+    service:
+      port: 4466
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        forecastle.stakater.com/appName: "Headlamp"
+        forecastle.stakater.com/group: "Management"
+        forecastle.stakater.com/expose: "true"
+        forecastle.stakater.com/icon: "https://headlamp.dev/img/logo.svg"
+      hosts:
+        - host: dashboard.${CLUSTER_DOMAIN_NAME}
+          paths:
+            - path: /
+              type: ImplementationSpecific
+      tls:
+        - secretName: internal-ingress-cert
+          hosts:
+            - dashboard.${CLUSTER_DOMAIN_NAME}

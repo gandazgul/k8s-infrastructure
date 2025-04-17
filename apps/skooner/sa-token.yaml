@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: skooner-sa-token
-  annotations:
-    kubernetes.io/service-account.name: "skooner"
-type: kubernetes.io/service-account-token

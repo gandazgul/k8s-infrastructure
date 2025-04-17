@@ -4,8 +4,10 @@ kind: Kustomization
 resources:
   - ./secrets/
   - ./RsyncCronJobs.yaml
+  - ../../../apps/ActualBudget.yaml
   - ../../../apps/Bitwarden.yaml
   - ../../../apps/Forecastle.yaml
+  - ../../../apps/Headlamp.yaml
   - ../../../apps/HomeAssistant.yaml
   - ../../../apps/MosquitoMQTTBroker.yaml
   - ../../../apps/Paperless.yaml
@@ -21,6 +23,8 @@ resources:
   - ../../../apps/Radarr.yaml
   - ../../../apps/Sonarr.yaml
   - ../../../apps/Tdarr.yaml
+  - ../../../apps/Readarr.yaml
+  - ../../../apps/Flaresolverr.yaml
   - ../../../apps/Plex.yaml
   - ../../../apps/RDiffWeb.yaml
   - ../../../apps/Harbor.yaml

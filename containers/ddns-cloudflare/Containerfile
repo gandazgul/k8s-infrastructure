@@ -1,0 +1,10 @@
+FROM docker.io/library/node:22
+
+WORKDIR /app
+COPY package.json .
+COPY yarn.lock .
+RUN yarn install --production
+
+COPY app.js index.js
+
+ENTRYPOINT ["node", "/app/index.js"]

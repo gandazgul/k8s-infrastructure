@@ -3,12 +3,7 @@ kind: Service
 metadata:
   name: rdiffweb
   namespace: default
-  labels:
-    app.kubernetes.io/name: rdiffweb
 spec:
-  type: ClusterIP
-  selector:
-    app.kubernetes.io/name: rdiffweb
   ports:
     - name: http
       protocol: TCP

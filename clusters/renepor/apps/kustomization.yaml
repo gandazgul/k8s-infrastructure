@@ -5,8 +5,8 @@ resources:
 - ./secrets/
 - ../../../apps/Bitwarden.yaml
 - ../../../apps/Forecastle.yaml
-- ../../../apps/Photoprism.yaml
+- ../../../apps/Headlamp.yaml
 - ../../../apps/Resilio.yaml
 - ../../../apps/SFTPGo.yaml
-- ../../../apps/skooner/
 - ../../../apps/Plex.yaml
+- ../../../apps/Photoprism.yaml

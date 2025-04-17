@@ -1,0 +1,23 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rdiffweb
+spec:
+  template:
+    spec:
+      containers:
+        - name: container
+          image: docker.io/ikus060/rdiffweb:latest
+          imagePullPolicy: Always
+          env:
+            - name: RDIFFWEB_ADMIN_USER
+              value: gandazgul
+            - name: RDIFFWEB_ADMIN_PASSWORD
+              value: ${ADMIN_PASSWORD}
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /etc/rdiffweb/
+              subPath: configs/rdiffweb
+            - name: backup-volume
+              mountPath: /backups
