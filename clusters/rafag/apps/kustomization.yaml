@@ -12,6 +12,7 @@ resources:
   - ../../../apps/Resilio.yaml
   - ../../../apps/SFTPGo.yaml
   - ../../../apps/Sharry.yaml
+  - ../../../apps/Tdarr.yaml
   #  - ../../../apps/ZWaveJS.yaml
   - ../../../apps/Mealie.yaml
   - ../../../apps/Headlamp.yaml
