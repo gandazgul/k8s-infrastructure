@@ -16,9 +16,6 @@ spec:
         hostPath:
           path: /dev/net/tun
           type: CharDevice
-      - name: mam-cookies
-        hostPath:
-          path: /
       dnsPolicy: ClusterFirst
       dnsConfig: {}
       containers:
@@ -73,8 +70,8 @@ spec:
         - mountPath: /vpn
           name: yasr-volume
           subPath: configs/openvpn/
-        - name: dev-tun
-          mountPath: /dev/net/tun
+        - mountPath: /dev/net/tun
+          name: dev-tun
         - name: yasr-volume
           mountPath: /tmp/gluetun/
           subPath: configs/openvpn/
@@ -134,13 +131,7 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: yasr-volume
-          subPath: configs/transmission
-        - mountPath: /config
-          name: yasr-volume
-          subPath: configs/transmission
-        - mountPath: /watch
-          name: yasr-volume
-          subPath: configs/transmission/watch
+          subPath: configs/transmission/
         ports:
         - name: trs-http
           containerPort: 9091
