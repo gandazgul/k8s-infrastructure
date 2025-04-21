@@ -132,6 +132,9 @@ spec:
         - mountPath: /data
           name: yasr-volume
           subPath: configs/transmission/
+        - mountPath: /config
+          name: yasr-volume
+          subPath: configs/transmission/
         ports:
         - name: trs-http
           containerPort: 9091
