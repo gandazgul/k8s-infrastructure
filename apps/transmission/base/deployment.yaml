@@ -77,7 +77,7 @@ spec:
           subPath: configs/openvpn/
       # Transmission port forward
       - name: transmission-pia-port-forward
-        image: docker.io/gandazgul/transmission-pia-port-forward:v0150413
+        image: docker.io/gandazgul/transmission-pia-port-forward:v93adcbc
         imagePullPolicy: IfNotPresent
         resources:
           requests:
@@ -125,7 +125,7 @@ spec:
           initialDelaySeconds: 10
           periodSeconds: 10
           successThreshold: 1
-          tcpSocket:
+          tcpSocket:x
             port: 9091
           timeoutSeconds: 30
         volumeMounts:
