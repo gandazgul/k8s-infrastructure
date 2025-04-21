@@ -3,18 +3,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: transmission
-  labels:
-    app.kubernetes.io/name: transmission
 spec:
   replicas: 1
   revisionHistoryLimit: 2
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: transmission
   template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: transmission
     spec:
       volumes:
       - name: yasr-volume
@@ -24,15 +16,15 @@ spec:
         hostPath:
           path: /dev/net/tun
           type: CharDevice
-      - name: tz-config
+      - name: mam-cookies
         hostPath:
-          path: /etc/localtime
+          path: /
       dnsPolicy: ClusterFirst
       dnsConfig: {}
       containers:
       # VPN
       - name: vpn
-        image: docker.io/qmcgaw/gluetun:v3.36.0
+        image: docker.io/qmcgaw/gluetun:v3.40.0
         imagePullPolicy: IfNotPresent
         env:
         - name: VPN_SERVICE_PROVIDER
@@ -101,13 +93,10 @@ spec:
         - mountPath: /data
           name: yasr-volume
           subPath: configs/openvpn/
-        - mountPath: /etc/localtime
-          name: tz-config
-          readOnly: true
       # Transmission
       - name: transmission
         image: docker.io/linuxserver/transmission:amd64-latest
-        imagePullPolicy: "Always"
+        imagePullPolicy: Always
         env:
         - name: PGID
           value: "1000"
@@ -152,9 +141,6 @@ spec:
         - mountPath: /watch
           name: yasr-volume
           subPath: configs/transmission/watch
-        - mountPath: /etc/localtime
-          name: tz-config
-          readOnly: true
         ports:
         - name: trs-http
           containerPort: 9091

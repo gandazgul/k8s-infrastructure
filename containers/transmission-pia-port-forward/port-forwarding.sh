@@ -33,7 +33,10 @@ version() {
 }
 
 port_forward_assignment() {
-  TRANSHOST=localhost
+  echo 'Setting the IP for MAM...'
+  curl -c /data/mam.cookies -b /data/mam.cookies https://t.myanonamouse.net/json/dynamicSeedbox.php
+
+  TRANSMISSION_HOST=localhost
 
   echo 'Loading port forward assignment information...'
   PORT=`cat /data/forwarded_port`
@@ -41,12 +44,12 @@ port_forward_assignment() {
   #change transmission port on the fly
   echo "Changing transmission's port to ${PORT}..."
 
-  SESSIONID=$(curl ${TRANSHOST}:9091/transmission/rpc --silent | grep -oE "X-Transmission-Session-Id: ([^<]+)" | awk -F:\  '{print $2}')
+  SESSIONID=$(curl ${TRANSMISSION_HOST}:9091/transmission/rpc --silent | grep -oE "X-Transmission-Session-Id: ([^<]+)" | awk -F:\  '{print $2}')
   echo "SessionID: ${SESSIONID}"
 
   DATA='{"method": "session-set", "arguments": { "peer-port" :'$PORT' } }'
 
-  curl -u "$TRANSUSER:$TRANSPASS" http://${TRANSHOST}:9091/transmission/rpc -d "$DATA" -H "X-Transmission-Session-Id: $SESSIONID"
+  curl -u "$TRANSMISSIONS_USER:$TRANSMISSIONS_PASS" http://${TRANSMISSION_HOST}:9091/transmission/rpc -d "$DATA" -H "X-Transmission-Session-Id: $SESSIONID"
 }
 
 PROGRAM=`basename $0`
