@@ -1,8 +1,8 @@
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress
-  namespace: default
 spec:
   ingressClassName: nginx
   rules:
@@ -13,7 +13,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: rdiffweb
+                name: service
                 port:
                   name: http
   tls:

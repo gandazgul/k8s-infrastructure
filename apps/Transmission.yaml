@@ -6,7 +6,7 @@ metadata:
   namespace: default
 spec:
   interval: 5m
-  path: ./apps/transmission/base/
+  path: ./apps/generic/overlays/transmission/
   prune: true
   sourceRef:
     kind: GitRepository
