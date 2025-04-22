@@ -20,7 +20,7 @@ spec:
             httpGet:
               scheme: HTTP
               path: /
-              port: 8080
+              port: http
             initialDelaySeconds: 30
             timeoutSeconds: 10
           resources:

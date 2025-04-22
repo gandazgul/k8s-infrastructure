@@ -23,6 +23,13 @@ spec:
             - name: main-volume
               mountPath: /data
               subPath: public/Books/
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
           ports:
             - name: http
               $patch: delete
