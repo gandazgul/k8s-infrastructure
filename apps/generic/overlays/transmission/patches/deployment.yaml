@@ -19,9 +19,9 @@ spec:
           image: docker.io/linuxserver/transmission:amd64-latest
           imagePullPolicy: Always
           env:
-            - name: PGID
-              value: "1000"
             - name: PUID
+              value: "1000"
+            - name: PGID
               value: "1000"
             - name: TRANSMISSION_UMASK
               value: "2"

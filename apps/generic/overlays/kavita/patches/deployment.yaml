@@ -15,7 +15,7 @@ spec:
             - name: PGID
               value: "1000"
             - name: TZ
-              value: "${CLUSTER_TIME_ZONE}"
+              value: ${CLUSTER_TIME_ZONE}
           volumeMounts:
             - name: yasr-volume
               mountPath: /config
@@ -23,3 +23,9 @@ spec:
             - name: main-volume
               mountPath: /data
               subPath: public/Books/
+          ports:
+            - name: http
+              $patch: delete
+            - name: http
+              containerPort: 5000
+              protocol: TCP
