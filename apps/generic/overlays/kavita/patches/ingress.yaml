@@ -1,0 +1,9 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kavita
+  annotations:
+    forecastle.stakater.com/appName: "Kavita"
+    forecastle.stakater.com/group: "Media"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/icon: "https://www.kavitareader.com/img/logo.png"

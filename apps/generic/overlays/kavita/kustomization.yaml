@@ -1,0 +1,55 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: default
+resources:
+  - ../../base/
+
+labels:
+  - pairs:
+      app.kubernetes.io/name: kavita
+    includeSelectors: true
+
+patches:
+  - path: patches/deployment.yaml
+    target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: deployment
+      namespace: default
+    options:
+      allowNameChange: true
+  - path: patches/ingress.yaml
+    target:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: ingress
+      namespace: default
+    options:
+      allowNameChange: true
+  - path: patches/service.yaml
+    target:
+      group: ""
+      version: v1
+      kind: Service
+      name: service
+      namespace: default
+    options:
+      allowNameChange: true
+  - patch: |-
+      - op: replace
+        path: /spec/rules/0/http/paths/0/backend/service/name
+        value: kavita
+      - op: replace
+        path: /spec/rules/0/host
+        value: kavita.${CLUSTER_DOMAIN_NAME}
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: kavita.${CLUSTER_DOMAIN_NAME}
+    target:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: kavita

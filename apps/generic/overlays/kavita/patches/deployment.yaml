@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kavita
+spec:
+  template:
+    spec:
+      containers:
+        - name: container
+          image: docker.io/linuxserver/kavita:latest
+          imagePullPolicy: Always
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "${CLUSTER_TIME_ZONE}"
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /config
+              subPath: configs/kavita/
+            - name: main-volume
+              mountPath: /data
+              subPath: public/Books/
