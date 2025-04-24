@@ -63,8 +63,6 @@ spec:
               subPath: configs/transmission/
           ports:
             - name: http
-              $patch: delete
-            - name: http
               containerPort: 9091
               protocol: TCP
         # VPN

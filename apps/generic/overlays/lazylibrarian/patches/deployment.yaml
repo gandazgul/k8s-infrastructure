@@ -37,7 +37,5 @@ spec:
             timeoutSeconds: 10
           ports:
             - name: http
-              $patch: delete
-            - name: http
               containerPort: 5299
               protocol: TCP

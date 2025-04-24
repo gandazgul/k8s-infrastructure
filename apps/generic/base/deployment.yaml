@@ -12,10 +12,6 @@ spec:
         - name: container
           image: changeme
           imagePullPolicy: IfNotPresent
-          ports:
-            - name: http
-              containerPort: 8080
-              protocol: TCP
           livenessProbe:
             httpGet:
               scheme: HTTP
