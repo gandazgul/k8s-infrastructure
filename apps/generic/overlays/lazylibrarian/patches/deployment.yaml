@@ -33,7 +33,7 @@ spec:
               scheme: HTTP
               path: /
               port: http
-            initialDelaySeconds: 120
+            initialDelaySeconds: 300
             timeoutSeconds: 10
           ports:
             - name: http
