@@ -80,10 +80,6 @@ spec:
               value: ${VPN_USER}
             - name: OPENVPN_PASSWORD
               value: ${VPN_PASSWORD}
-            - name: FIREWALL
-              value: "off"
-            - name: OPENVPN_IPV6
-              value: "off"
             - name: TZ
               value: ${CLUSTER_TIME_ZONE}
             - name: VPN_PORT_FORWARDING
@@ -91,6 +87,12 @@ spec:
             - name: HTTPPROXY
               value: "off"
             - name: SHADOWSOCKS
+              value: "off"
+            - name: DOT
+              value: "off"
+            - name: FIREWALL
+              value: "off"
+            - name: OPENVPN_IPV6
               value: "off"
           securityContext:
             privileged: true
