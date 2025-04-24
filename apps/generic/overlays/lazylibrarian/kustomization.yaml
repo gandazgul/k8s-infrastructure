@@ -44,10 +44,10 @@ patches:
         value: lazylibrarian
       - op: replace
         path: /spec/rules/0/host
-        value: read.${CLUSTER_DOMAIN_NAME}
+        value: books1.${CLUSTER_DOMAIN_NAME}
       - op: replace
         path: /spec/tls/0/hosts/0
-        value: read.${CLUSTER_DOMAIN_NAME}
+        value: books1.${CLUSTER_DOMAIN_NAME}
     target:
       group: networking.k8s.io
       version: v1
