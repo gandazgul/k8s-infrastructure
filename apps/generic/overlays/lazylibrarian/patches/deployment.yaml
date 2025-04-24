@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lazylibrarian
+spec:
+  template:
+    spec:
+      containers:
+        - name: container
+          image: docker.io/linuxserver/lazylibrarian:latest
+          imagePullPolicy: Always
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "${CLUSTER_TIME_ZONE}"
+            - name: DOCKER_MODS
+              value: linuxserver/mods:universal-calibre|linuxserver/mods:lazylibrarian-ffmpeg
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /config
+              subPath: configs/lazylibrarian/
+            - name: main-volume
+              mountPath: /books
+              subPath: public/Books/
+            - name: yasr-volume
+              mountPath: /downloads
+              subPath: configs/transmission/books/
+          ports:
+            - name: http
+              $patch: delete
+            - name: http
+              containerPort: 5299
+              protocol: TCP

@@ -17,6 +17,7 @@ resources:
   - ../../../apps/ZWaveJS.yaml
   - ../../../apps/Mealie.yaml
   - ../../../apps/AudioBookShelf.yaml
+  - ../../../apps/LazyLibrarian.yaml
   - ../../../apps/Transmission.yaml
   - ../../../apps/Lidarr.yaml
   - ../../../apps/Overseerr.yaml

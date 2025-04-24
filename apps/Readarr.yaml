@@ -18,7 +18,7 @@ spec:
       interval: 5m
   values:
     image:
-      repository: linuxserver/readarr
+      repository: docker.io/linuxserver/readarr
       tag: nightly
       pullPolicy: Always
     env:

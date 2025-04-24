@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: lazylibrarian
+spec:
+  ports:
+    - name: http
+      port: 5299
+      protocol: TCP
+      targetPort: http

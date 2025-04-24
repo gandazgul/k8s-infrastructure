@@ -22,7 +22,7 @@ spec:
     optional: false
   values:
     image:
-      repository: linuxserver/sonarr
+      repository: docker.io/linuxserver/sonarr
       tag: amd64-latest
       pullPolicy: Always
     env:
