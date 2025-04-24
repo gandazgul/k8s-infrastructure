@@ -6,4 +6,4 @@ metadata:
     forecastle.stakater.com/appName: "LazyLibrarian"
     forecastle.stakater.com/group: "Media"
     forecastle.stakater.com/expose: "true"
-    forecastle.stakater.com/icon: ""
+    forecastle.stakater.com/icon: "https://lazylibrarian.gitlab.io/logo.svg"
