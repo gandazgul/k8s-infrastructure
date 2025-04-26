@@ -1,0 +1,9 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: calibre
+  annotations:
+    forecastle.stakater.com/appName: "Calibre"
+    forecastle.stakater.com/group: "Media"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/icon: "https://calibre-ebook.com/favicon.ico"
