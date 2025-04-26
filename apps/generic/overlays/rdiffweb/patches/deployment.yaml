@@ -12,7 +12,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: RDIFFWEB_ADMIN_USER
-              value: gandazgul
+              value: ${CLUSTER_NAME)
             - name: RDIFFWEB_ADMIN_PASSWORD
               value: ${ADMIN_PASSWORD}
           volumeMounts:
