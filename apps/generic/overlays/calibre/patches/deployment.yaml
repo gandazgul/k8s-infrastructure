@@ -36,9 +36,9 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-            - name: http
+            - name: dunno
               containerPort: 8081
               protocol: TCP
-            - name: http
+            - name: unknown
               containerPort: 8181
               protocol: TCP
