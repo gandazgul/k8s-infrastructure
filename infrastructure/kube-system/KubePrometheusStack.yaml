@@ -49,7 +49,7 @@ spec:
         type: pvc
         enabled: true
         subPath: "configs/grafana"
-        existingClaim: yasr-volume
+        existingClaim: yasr-volume-kube-system
       sidecar:
         enabled: true
         url: "http://prometheus-operated.kube-system:9090"
