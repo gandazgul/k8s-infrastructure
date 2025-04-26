@@ -29,7 +29,7 @@ spec:
   chart:
     spec:
       chart: ./charts/actualbudget
-      version: 1.4.3
+      version: 1.5.0
       sourceRef:
         #        kind: HelmRepository
         kind: GitRepository
@@ -57,7 +57,7 @@ spec:
       annotations:
         forecastle.stakater.com/expose: "true"
         forecastle.stakater.com/appName: "ActualBudget"
-        forecastle.stakater.com/icon: ""
+        forecastle.stakater.com/icon: "https://raw.githubusercontent.com/actualbudget/docs/refs/heads/master/static/img/actual.png"
     persistence:
       enabled: true
       existingClaim: yasr-volume
