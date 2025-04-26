@@ -26,6 +26,7 @@ spec:
       interval: 5m
   values:
     externalURL: https://harbor.${CLUSTER_DOMAIN_NAME}
+    harborAdminPassword: ${ADMIN_PASSWORD}
     secretKey: ${PAPERLESS_SECRET_KEY}
     cache:
       enabled: true
