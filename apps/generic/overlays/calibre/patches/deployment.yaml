@@ -24,6 +24,9 @@ spec:
               subPath: configs/calibre/
             - name: main-volume
               mountPath: /books
+              subPath: public/Books-Calibre/
+            - name: main-volume
+              mountPath: /mybooks
               subPath: public/Books/
           livenessProbe:
             httpGet:
