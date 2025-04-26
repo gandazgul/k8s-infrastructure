@@ -12,7 +12,6 @@ resources:
   - ../../../apps/Resilio.yaml
   - ../../../apps/SFTPGo.yaml
   - ../../../apps/Sharry.yaml
-  - ../../../apps/Tdarr.yaml
   #  - ../../../apps/ZWaveJS.yaml
   - ../../../apps/Mealie.yaml
   - ../../../apps/Headlamp.yaml
@@ -28,3 +27,4 @@ resources:
   # - ../../../apps/OpenWebUI.yaml
   - ../../../apps/Zigbee2mqtt.yaml
   # - ../../../apps/RDiffWeb.yaml
+  - ../../../apps/RDiffWeb.yaml
