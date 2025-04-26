@@ -24,8 +24,6 @@ spec:
       PHOTOS_PATH: rafag/photos
       PHOTOS_UID: "1000"
       PHOTOS_GID: "1000"
-      # The time zone to apply to all containers
-      CLUSTER_TIME_ZONE: America/New_York
       BITWARDEN_SUBDOMAIN: "p"
       HASS_SUBDOMAIN: "hass"
       CLUSTER_NAME: "rafag"

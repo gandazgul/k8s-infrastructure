@@ -37,7 +37,6 @@ spec:
       SMTP_SECURITY: starttls
       SMTP_USERNAME: ${EMAIL}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
-
       SERVER_ADMIN_EMAIL: ${EMAIL}
 
       # YUBI key secrets

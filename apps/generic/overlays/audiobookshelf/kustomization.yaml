@@ -7,7 +7,7 @@ resources:
 
 labels:
   - pairs:
-      app.kubernetes.io/name: rdiffweb
+      app.kubernetes.io/name: audiobookshelf
     includeSelectors: true
 
 patches:
@@ -41,15 +41,15 @@ patches:
   - patch: |-
       - op: replace
         path: /spec/rules/0/http/paths/0/backend/service/name
-        value: rdiffweb
+        value: audiobookshelf
       - op: replace
         path: /spec/rules/0/host
-        value: backups.${CLUSTER_DOMAIN_NAME}
+        value: read.${CLUSTER_DOMAIN_NAME}
       - op: replace
         path: /spec/tls/0/hosts/0
-        value: backups.${CLUSTER_DOMAIN_NAME}
+        value: read.${CLUSTER_DOMAIN_NAME}
     target:
       group: networking.k8s.io
       version: v1
       kind: Ingress
-      name: rdiffweb
+      name: audiobookshelf

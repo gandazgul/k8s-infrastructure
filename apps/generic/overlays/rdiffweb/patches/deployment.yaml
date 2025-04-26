@@ -21,3 +21,7 @@ spec:
               subPath: configs/rdiffweb
             - name: backup-volume
               mountPath: /backups
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP

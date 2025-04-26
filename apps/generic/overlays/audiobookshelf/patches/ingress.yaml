@@ -1,0 +1,9 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: audiobookshelf
+  annotations:
+    forecastle.stakater.com/appName: "AudioBookShelf"
+    forecastle.stakater.com/group: "Media"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/icon: "https://read.${CLUSTER_DOMAIN_NAME}/audiobookshelf/_nuxt/img/icon.d3d4aef.svg"
