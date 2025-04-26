@@ -57,11 +57,6 @@ spec:
       target:
         kind: CronJob
         name: incremental-backups
-  healthChecks:
-    - apiVersion: batch/v1
-      kind: Cronjob
-      name: incremental-backups
-      namespace: default
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -110,8 +105,3 @@ spec:
       target:
         kind: CronJob
         name: clean-incremental-backups
-  healthChecks:
-    - apiVersion: batch/v1
-      kind: Cronjob
-      name: clean-incremental-backups
-      namespace: default
