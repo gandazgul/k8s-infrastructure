@@ -20,23 +20,49 @@ spec:
       IMAGE_REPOSITORY: docker.io/gandazgul/rdiff-backup
       IMAGE_TAG: vfa41640
       NAMESPACE: default
-      ARGS: |
-        - --force
-        - backup
-        - /media/main
-        - /media/backup
-      VOLUMES: |
-        - name: main-volume
-          persistentVolumeClaim:
-            claimName: main-volume
-        - name: backup-volume
-          persistentVolumeClaim:
-            claimName: backup-volume
-      VOLUME_MOUNTS: |
-        - name: main-volume
-          mountPath: /media/main
-        - name: backup-volume
-          mountPath: /media/backup
+  patches:
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/volumes/-
+          value:
+            name: main-volume
+            persistentVolumeClaim:
+              claimName: main-volume
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/volumes/-
+          value:
+            name: backup-volume
+            persistentVolumeClaim:
+              claimName: backup-volume
+      target:
+        kind: CronJob
+        name: incremental-backups
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
+          value:
+            name: main-volume
+            mountPath: /media/main
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
+          value:
+            name: backup-volume
+            mountPath: /media/backup
+      target:
+        kind: CronJob
+        name: incremental-backups
+    - patch: |
+        - op: replace
+          path: /spec/jobTemplate/spec/template/spec/containers/0/args
+          value: ["--force", "backup", "/media/main", "/media/backup"]
+      target:
+        kind: CronJob
+        name: incremental-backups
+  healthChecks:
+    - apiVersion: batch/v1
+      kind: Cronjob
+      name: incremental-backups
+      namespace: default
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -59,15 +85,35 @@ spec:
       SCHEDULE: "0 0 * * *"
       IMAGE_REPOSITORY: docker.io/gandazgul/rdiff-backup
       IMAGE_TAG: vfa41640
-      ARGS: |
-        - remove
-        - increments
-        - --older-than 4W
-        - /media/backup
-      VOLUMES: |
-        - name: backup-volume
-          persistentVolumeClaim:
-            claimName: backup-volume
-      VOLUME_MOUNTS: |
-        - name: backup-volume
-          mountPath: /media/backup
+  patches:
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/volumes/-
+          value:
+            name: backup-volume
+            persistentVolumeClaim:
+              claimName: backup-volume
+      target:
+        kind: CronJob
+        name: clean-incremental-backups
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
+          value:
+            name: backup-volume
+            mountPath: /media/backup
+      target:
+        kind: CronJob
+        name: clean-incremental-backups
+    - patch: |
+        - op: replace
+          path: /spec/jobTemplate/spec/template/spec/containers/0/args
+          value: ["remove", "increments", "--older-than", "4W", "/media/backup"]
+      target:
+        kind: CronJob
+        name: clean-incremental-backups
+  healthChecks:
+    - apiVersion: batch/v1
+      kind: Cronjob
+      name: clean-incremental-backups
+      namespace: default
