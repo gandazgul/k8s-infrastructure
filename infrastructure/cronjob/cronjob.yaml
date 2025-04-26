@@ -25,5 +25,5 @@ spec:
                   mountPath: /etc/localtime
                   readOnly: true
               # env can be added via kustomize patches
-        # initContainers can be added via kustomize patches if needed
-        restartPolicy: OnFailure
+          # initContainers can be added via kustomize patches if needed
+          restartPolicy: OnFailure
