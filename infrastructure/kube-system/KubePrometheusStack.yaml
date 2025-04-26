@@ -49,7 +49,10 @@ spec:
         type: pvc
         enabled: true
         subPath: "configs/grafana"
-        existingClaim: yasr-volume-kube-system
+        existingClaim: yasr-volume
+      sidecar:
+        enabled: true
+        url: "http://prometheus-operated.kube-system:9090"
       ingress:
         enabled: true
         ingressClassName: nginx
@@ -60,9 +63,7 @@ spec:
           forecastle.stakater.com/icon: "https://grafana.${CLUSTER_DOMAIN_NAME}/public/img/grafana_icon.svg"
         hosts:
         - grafana.${CLUSTER_DOMAIN_NAME}
-        paths:
-        - /
-        pathType: ImplementationSpecific
+        path: /
         tls:
         - hosts:
           - grafana.${CLUSTER_DOMAIN_NAME}
