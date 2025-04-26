@@ -17,8 +17,7 @@ spec:
     substitute:
       CRONJOB_NAME: incremental-backups
       SCHEDULE: "0 0,12 * * *"
-      IMAGE_REPOSITORY: docker.io/gandazgul/rdiff-backup
-      IMAGE_TAG: vfa41640
+      IMAGE: docker.io/gandazgul/rdiff-backup:vfa41640
       NAMESPACE: default
   patches:
     - patch: |
@@ -83,8 +82,7 @@ spec:
       CRONJOB_NAME: clean-incremental-backups
       NAMESPACE: default
       SCHEDULE: "0 0 * * *"
-      IMAGE_REPOSITORY: docker.io/gandazgul/rdiff-backup
-      IMAGE_TAG: vfa41640
+      IMAGE: docker.io/gandazgul/rdiff-backup:vfa41640
   patches:
     - patch: |
         - op: add
