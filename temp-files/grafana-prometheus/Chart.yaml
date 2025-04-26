@@ -1,8 +1,0 @@
-apiVersion: v1
-appVersion: "1.0.0"
-description: A chart for installing grafana config maps
-name: grafana-prometheus
-version: 0.1.1
-maintainers:
-- name: gandazgul
-  email: ravelo.carlos@gmail.com
