@@ -19,6 +19,7 @@ spec:
       SCHEDULE: "0 0,12 * * *"
       IMAGE_REPOSITORY: docker.io/gandazgul/rdiff-backup
       IMAGE_TAG: vfa41640
+      NAMESPACE: default
       ARGS: |
         - --force
         - backup
@@ -54,6 +55,7 @@ spec:
   postBuild:
     substitute:
       CRONJOB_NAME: clean-incremental-backups
+      NAMESPACE: default
       SCHEDULE: "0 0 * * *"
       IMAGE_REPOSITORY: docker.io/gandazgul/rdiff-backup
       IMAGE_TAG: vfa41640

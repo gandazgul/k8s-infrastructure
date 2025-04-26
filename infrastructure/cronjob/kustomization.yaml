@@ -6,7 +6,5 @@ resources:
 
 labels:
   - pairs:
-      app.kubernetes.io/name: ${APP_NAME}
+      app.kubernetes.io/name: ${CRONJOB_NAME}
     includeSelectors: true
-
-namePrefix: ${APP_NAME}-
