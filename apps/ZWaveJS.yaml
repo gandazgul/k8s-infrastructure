@@ -48,7 +48,7 @@ spec:
         forecastle.stakater.com/appName: "ZWaveJS"
         forecastle.stakater.com/group: "Management"
         forecastle.stakater.com/expose: "true"
-        forecastle.stakater.com/icon: "https://zwave.${CLUSTER_DOMAIN_NAME}/static/logo.png"
+        forecastle.stakater.com/icon: "https://zwave.${CLUSTER_DOMAIN_NAME}/logo.svg"
     persistence:
       enabled: true
       mountPath: /usr/src/app/store/

@@ -8,8 +8,6 @@ metadata:
   annotations:
     forecastle.stakater.com/appName: "Open WebUI AI"
     forecastle.stakater.com/expose: "true"
-#    forecastle.stakater.com/group: "Media"
-#    forecastle.stakater.com/icon: "https://transmissionbt.com/assets/images/Transmission_icon.png"
 spec:
   ingressClassName: nginx
   rules:
