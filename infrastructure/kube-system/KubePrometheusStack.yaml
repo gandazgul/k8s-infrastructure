@@ -69,6 +69,8 @@ spec:
           - grafana.${CLUSTER_DOMAIN_NAME}
           secretName: internal-ingress-cert
     prometheus:
+      prometheusSpec:
+        secrets: [ 'etcd-client-cert' ]
       ingress:
         enabled: true
         ingressClassName: nginx
@@ -86,3 +88,11 @@ spec:
         - hosts:
           - prometheus.${CLUSTER_DOMAIN_NAME}
           secretName: internal-ingress-cert
+    kubeEtcd:
+      serviceMonitor:
+        scheme: https
+        insecureSkipVerify: false
+        serverName: localhost
+        caFile: /etc/prometheus/secrets/etcd-client-cert/ca.crt
+        certFile: /etc/prometheus/secrets/etcd-client-cert/healthcheck-client.crt
+        keyFile: /etc/prometheus/secrets/etcd-client-cert/healthcheck-client.key
