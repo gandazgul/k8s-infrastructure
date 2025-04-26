@@ -1,0 +1,33 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ${CRONJOB_NAME}
+spec:
+  schedule: "${SCHEDULE}"
+  concurrencyPolicy: Forbid  # Default value, can be customized
+  failedJobsHistoryLimit: 1  # Default value, can be customized
+  successfulJobsHistoryLimit: 3  # Default value, can be customized
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+            - name: tz-config
+              hostPath:
+                path: /etc/localtime
+${VOLUMES}
+          containers:
+            - name: main
+              image: my-image:latest  # This can be customized via kustomize
+              imagePullPolicy: IfNotPresent
+              args:
+${ARGS}
+            volumeMounts:
+              - name: tz-config
+                mountPath: /etc/localtime
+                readOnly: true
+${VOLUME_MOUNTS}
+            # env can be added via kustomize patches
+        # initContainers can be added via kustomize patches if needed
+        restartPolicy: OnFailure

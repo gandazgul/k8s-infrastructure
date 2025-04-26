@@ -13,7 +13,6 @@ spec:
     namespace: kube-system
   prune: true
   postBuild:
-    # constants can be specified like this:
     substitute:
       VOLUME_NAME: main-volume
       VOLUME_CAPACITY: 4Ti

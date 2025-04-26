@@ -1,76 +1,71 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2
-kind: HelmRelease
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
 metadata:
   name: incremental-backups
-  namespace: default
+  namespace: kube-system
 spec:
-  chart:
-    spec:
-      chart: ./charts/cronjob
-      sourceRef:
-        kind: GitRepository
-        name: k8s-infrastructure
-        namespace: kube-system
   interval: 1h0m0s
-  values:
-    # Twice a day at midnight and midday
-    schedule: "0 0,12 * * *"
-    image:
-      repository: docker.io/gandazgul/rdiff-backup
-      tag: vfa41640
-      args:
+  path: ./infrastructure/cronjob/
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  prune: true
+  targetNamespace: default
+  postBuild:
+    substitute:
+      CRONJOB_NAME: incremental-backups
+      SCHEDULE: "0 0,12 * * *"
+      IMAGE_REPOSITORY: docker.io/gandazgul/rdiff-backup
+      IMAGE_TAG: vfa41640
+      ARGS: |
         - --force
         - backup
         - /media/main
         - /media/backup
-    volumes:
-      - name: main-volume
-        persistentVolumeClaim:
-          claimName: main-volume
-      - name: backup-volume
-        persistentVolumeClaim:
-          claimName: backup-volume
-    volumeMounts:
-      - name: main-volume
-        mountPath: /media/main
-      - name: backup-volume
-        mountPath: /media/backup
+      VOLUMES: |
+        - name: main-volume
+          persistentVolumeClaim:
+            claimName: main-volume
+        - name: backup-volume
+          persistentVolumeClaim:
+            claimName: backup-volume
+      VOLUME_MOUNTS: |
+        - name: main-volume
+          mountPath: /media/main
+        - name: backup-volume
+          mountPath: /media/backup
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2
-kind: HelmRelease
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
 metadata:
   name: clean-incremental-backups
-  namespace: default
+  namespace: kube-system
 spec:
-  chart:
-    spec:
-      chart: ./charts/cronjob
-      sourceRef:
-        kind: GitRepository
-        name: k8s-infrastructure
-        namespace: kube-system
   interval: 1h0m0s
-  values:
-    # Every day at midnight
-    schedule: "0 0 * * *"
-    image:
-      repository: docker.io/gandazgul/rdiff-backup
-      tag: vfa41640
-      args:
+  path: ./infrastructure/cronjob/
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  prune: true
+  targetNamespace: default
+  postBuild:
+    substitute:
+      CRONJOB_NAME: clean-incremental-backups
+      SCHEDULE: "0 0 * * *"
+      IMAGE_REPOSITORY: docker.io/gandazgul/rdiff-backup
+      IMAGE_TAG: vfa41640
+      ARGS: |
         - remove
         - increments
         - --older-than 4W
         - /media/backup
-    volumes:
-      - name: main-volume
-        persistentVolumeClaim:
-          claimName: main-volume
-      - name: backup-volume
-        persistentVolumeClaim:
-          claimName: backup-volume
-    volumeMounts:
-      - name: main-volume
-        mountPath: /media/main
-      - name: backup-volume
-        mountPath: /media/backup
+      VOLUMES: |
+        - name: backup-volume
+          persistentVolumeClaim:
+            claimName: backup-volume
+      VOLUME_MOUNTS: |
+        - name: backup-volume
+          mountPath: /media/backup
