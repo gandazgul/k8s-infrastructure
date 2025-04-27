@@ -11,16 +11,22 @@ nodeRegistration:
 ---
 apiVersion: kubeadm.k8s.io/v1beta4
 kind: ClusterConfiguration
+controllerManager:
+  extraArgs:
+    bind-address: "0.0.0.0"
+scheduler:
+  extraArgs:
+    bind-address: "0.0.0.0"
 apiServer:
   extraArgs:
     # This is important to allow any non-root ports to be used for NodePort
     service-node-port-range: 1025-32767
+    authorization-mode: "Node,RBAC"
 # This is super important, without this setting networking won't work
 networking:
   dnsDomain: cluster.local
   podSubnet: 10.244.0.0/16
   serviceSubnet: 10.96.0.0/12
-scheduler: {}
 ---
 apiVersion: kubeproxy.config.k8s.io/v1alpha1
 kind: KubeProxyConfiguration
