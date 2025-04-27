@@ -17,7 +17,7 @@ spec:
               mountPath: /data
               subPath: configs/transmission/
             - name: main-volume
-              mountPath: /music
+              mountPath: /media
               subPath: public/Music/
           livenessProbe:
             httpGet:
