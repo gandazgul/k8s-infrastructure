@@ -39,7 +39,6 @@ spec:
               claimName: main-volume
       target:
         kind: CronJob
-        name: rsync-renepor
     - patch: |
         - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
@@ -53,7 +52,6 @@ spec:
             mountPath: /media/main
       target:
         kind: CronJob
-        name: rsync-renepor
     - patch: |
         - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/command
@@ -63,7 +61,6 @@ spec:
           value: ["rsync -havurz -e 'ssh -l renepor -p 22222 -i /media/main/gandazgul/.ssh/id_rsa -o StrictHostKeyChecking=no' --delete tonydel.sytes.net:/media/main/renepor/ /media/main/renepor/"]
       target:
         kind: CronJob
-        name: rsync-renepor
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -102,7 +99,6 @@ spec:
               claimName: main-volume
       target:
         kind: CronJob
-        name: rsync-movies-rene
     - patch: |
         - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
@@ -116,7 +112,6 @@ spec:
             mountPath: /media/main
       target:
         kind: CronJob
-        name: rsync-movies-rene
     - patch: |
         - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/command
@@ -126,7 +121,6 @@ spec:
           value: ["find /media/main/public/Movies/ -mtime -100 -type f | sed 's~/media/main/public/Movies/~~' | rsync -havurz --files-from=- -e 'ssh -l gandazgul -p 22222 -i /media/main/gandazgul/.ssh/id_rsa -o StrictHostKeyChecking=no' --delete --progress /media/main/public/Movies/ tonydel.sytes.net:/media/main/public/Movies/"]
       target:
         kind: CronJob
-        name: rsync-movies-rene
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -165,7 +159,6 @@ spec:
               claimName: main-volume
       target:
         kind: CronJob
-        name: rsync-gandazgul-rene
     - patch: |
         - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
@@ -179,7 +172,6 @@ spec:
             mountPath: /media/main
       target:
         kind: CronJob
-        name: rsync-gandazgul-rene
     - patch: |
         - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/command
@@ -189,4 +181,3 @@ spec:
           value: ["rsync -havurz -e 'ssh -l gandazgul -p 22222 -i /media/main/gandazgul/.ssh/id_rsa -o StrictHostKeyChecking=no' --delete /media/main/gandazgul/ tonydel.sytes.net:/media/main/gandazgul/"]
       target:
         kind: CronJob
-        name: rsync-gandazgul-rene

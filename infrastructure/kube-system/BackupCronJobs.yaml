@@ -38,7 +38,6 @@ spec:
               claimName: backup-volume
       target:
         kind: CronJob
-        name: incremental-backups
     - patch: |
         - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
@@ -52,14 +51,12 @@ spec:
             mountPath: /media/backup
       target:
         kind: CronJob
-        name: incremental-backups
     - patch: |
         - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/args
           value: ["--force", "backup", "/media/main", "/media/backup"]
       target:
         kind: CronJob
-        name: incremental-backups
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -91,7 +88,6 @@ spec:
               claimName: backup-volume
       target:
         kind: CronJob
-        name: clean-incremental-backups
     - patch: |
         - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
@@ -100,11 +96,9 @@ spec:
             mountPath: /media/backup
       target:
         kind: CronJob
-        name: clean-incremental-backups
     - patch: |
         - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/args
           value: ["remove", "increments", "--older-than", "4W", "/media/backup"]
       target:
         kind: CronJob
-        name: clean-incremental-backups
