@@ -27,6 +27,8 @@ spec:
     probes:
       liveness:
         enabled: true
+        tcpSocket:
+          port: http
         initialDelaySeconds: 300
         failureThreshold: 3
         periodSeconds: 10
