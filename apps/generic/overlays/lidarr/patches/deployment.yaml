@@ -37,5 +37,5 @@ spec:
               value: "${CLUSTER_TIME_ZONE}"
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8686
               protocol: TCP
