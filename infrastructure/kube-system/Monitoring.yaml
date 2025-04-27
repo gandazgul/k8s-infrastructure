@@ -10,7 +10,7 @@ metadata:
 kind: Kustomization
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 metadata:
-  name: crds
+  name: kube-prometheus-crds
   namespace: monitoring
 spec:
   interval: 1h
@@ -36,3 +36,7 @@ spec:
     kind: GitRepository
     name: k8s-infrastructure
     namespace: kube-system
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: secrets
