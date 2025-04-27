@@ -13,6 +13,9 @@ spec:
     namespace: kube-system
   prune: true
   targetNamespace: default
+  dependsOn:
+    - name: backup-volume
+    - name: main-volume
   postBuild:
     substitute:
       CRONJOB_NAME: incremental-backups
