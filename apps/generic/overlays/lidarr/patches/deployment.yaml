@@ -14,8 +14,8 @@ spec:
               mountPath: /config
               subPath: configs/lidarr/
             - name: yasr-volume
-              mountPath: /downloads
-              subPath: configs/transmission/music/
+              mountPath: /data
+              subPath: configs/transmission/
             - name: main-volume
               mountPath: /music
               subPath: public/Music/
