@@ -54,7 +54,7 @@ spec:
         kind: CronJob
         name: incremental-backups
     - patch: |
-        - op: replace
+        - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/args
           value: ["--force", "backup", "/media/main", "/media/backup"]
       target:
@@ -102,7 +102,7 @@ spec:
         kind: CronJob
         name: clean-incremental-backups
     - patch: |
-        - op: replace
+        - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/args
           value: ["remove", "increments", "--older-than", "4W", "/media/backup"]
       target:
