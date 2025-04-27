@@ -17,7 +17,7 @@ spec:
               hostPath:
                 path: /etc/localtime
           containers:
-            - name: main
+            - name: cronjob
               image: ${IMAGE}
               imagePullPolicy: IfNotPresent
               volumeMounts:
