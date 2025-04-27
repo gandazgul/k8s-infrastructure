@@ -1,68 +1,23 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2
-kind: HelmRelease
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
 metadata:
   name: lidarr
   namespace: default
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: lidarr
-      version: 14.2.2
-      sourceRef:
-        kind: HelmRepository
-        name: geek-cookbook
-        namespace: kube-system
-      interval: 5m
-  values:
-    image:
-      repository: docker.io/hotio/lidarr
-      tag: latest
-      pullPolicy: Always
-    env:
-      PUID: "1000"
-      PGID: "1000"
-      TZ: "${CLUSTER_TIME_ZONE}"
-    probes:
-      liveness:
-        enabled: true
-        tcpSocket:
-          port: http
-        initialDelaySeconds: 300
-        failureThreshold: 3
-        periodSeconds: 10
-        timeoutSeconds: 1
-    persistence:
-      config:
-        enabled: true
-        type: pvc
-        existingClaim: yasr-volume
-        subPath:
-        - path: configs/lidarr/
-          mountPath: /config
-        - path: configs/transmission/
-          mountPath: /data
-      media:
-        enabled: true
-        mountPath: /media
-        existingClaim: main-volume
-        subPath: public/Music/
-    ingress:
-      main:
-        enabled: true
-        hosts:
-        - host: music.${CLUSTER_DOMAIN_NAME}
-          paths:
-          - path: /
-            pathType: ImplementationSpecific
-        tls:
-        - hosts:
-          - music.${CLUSTER_DOMAIN_NAME}
-          secretName: internal-ingress-cert
-        annotations:
-          kubernetes.io/ingress.class: "nginx"
-          forecastle.stakater.com/appName: "Music"
-          forecastle.stakater.com/group: "Media"
-          forecastle.stakater.com/expose: "true"
-          forecastle.stakater.com/icon: "https://music.${CLUSTER_DOMAIN_NAME}/Content/Images/logo.svg"
+  path: ./apps/generic/overlays/lidarr/
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: lidarr
+      namespace: default
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: secrets
