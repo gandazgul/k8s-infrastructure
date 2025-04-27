@@ -24,6 +24,13 @@ spec:
       PUID: "1000"
       PGID: "1000"
       TZ: "${CLUSTER_TIME_ZONE}"
+    probes:
+      liveness:
+        enabled: true
+        initialDelaySeconds: 300
+        failureThreshold: 3
+        periodSeconds: 10
+        timeoutSeconds: 1
     persistence:
       config:
         enabled: true
