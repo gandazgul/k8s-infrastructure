@@ -14,7 +14,7 @@ metadata:
   namespace: monitoring
 spec:
   interval: 1h
-  path: ./infrastructure/kube-prometheus/setup/
+  path: ./infrastructure/monitoring/setup/
   prune: true
   sourceRef:
     kind: GitRepository
@@ -28,7 +28,7 @@ metadata:
   namespace: monitoring
 spec:
   interval: 1h
-  path: ./infrastructure/kube-prometheus/grafana/
+  path: ./infrastructure/monitoring/grafana/
   prune: true
   sourceRef:
     kind: GitRepository
@@ -46,7 +46,7 @@ metadata:
   namespace: monitoring
 spec:
   interval: 1h
-  path: ./infrastructure/kube-prometheus/
+  path: ./infrastructure/monitoring/kube-prometheus/
   prune: true
   dependsOn:
     - name: kube-prometheus-crds
