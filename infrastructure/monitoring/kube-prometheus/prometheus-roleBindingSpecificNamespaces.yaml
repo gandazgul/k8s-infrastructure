@@ -8,8 +8,7 @@ items:
       app.kubernetes.io/instance: k8s
       app.kubernetes.io/name: prometheus
       app.kubernetes.io/part-of: kube-prometheus
-      app.kubernetes.io/version: 3.2.1
-    name: prometheus-k8s
+      name: prometheus-k8s
     namespace: default
   roleRef:
     apiGroup: rbac.authorization.k8s.io
@@ -27,8 +26,7 @@ items:
       app.kubernetes.io/instance: k8s
       app.kubernetes.io/name: prometheus
       app.kubernetes.io/part-of: kube-prometheus
-      app.kubernetes.io/version: 3.2.1
-    name: prometheus-k8s
+      name: prometheus-k8s
     namespace: kube-system
   roleRef:
     apiGroup: rbac.authorization.k8s.io
@@ -46,8 +44,7 @@ items:
       app.kubernetes.io/instance: k8s
       app.kubernetes.io/name: prometheus
       app.kubernetes.io/part-of: kube-prometheus
-      app.kubernetes.io/version: 3.2.1
-    name: prometheus-k8s
+      name: prometheus-k8s
     namespace: monitoring
   roleRef:
     apiGroup: rbac.authorization.k8s.io
