@@ -32,7 +32,6 @@ spec:
   prune: true
   dependsOn:
     - name: kube-prometheus-crds
-    - name: sealed-secret
   sourceRef:
     kind: GitRepository
     name: k8s-infrastructure
