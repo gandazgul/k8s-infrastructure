@@ -42,6 +42,26 @@ spec:
 kind: Kustomization
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 metadata:
+  name: alertmanager
+  namespace: monitoring
+spec:
+  interval: 1h
+  path: ./infrastructure/monitoring/alertmanager/
+  prune: true
+  dependsOn:
+    - name: kube-prometheus-crds
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: secrets
+---
+kind: Kustomization
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+metadata:
   name: kube-prometheus
   namespace: monitoring
 spec:
