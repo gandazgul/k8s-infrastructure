@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: alertmanager
+  namespace: monitoring
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: alerts.${CLUSTER_DOMAIN_NAME}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: alertmanager-main
+                port:
+                  name: web
+  tls:
+    - hosts:
+        - alerts.${CLUSTER_DOMAIN_NAME}
+      secretName: internal-ingress-cert
