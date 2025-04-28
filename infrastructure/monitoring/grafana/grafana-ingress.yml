@@ -3,9 +3,8 @@ kind: Ingress
 metadata:
   name: grafana-ingress
   namespace: monitoring
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
   rules:
   - host: grafana.${CLUSTER_DOMAIN_NAME}
     http:
