@@ -27,9 +27,9 @@ spec:
     spec:
       automountServiceAccountToken: false
       containers:
-      - env: []
+        - name: grafana
         image: docker.io/grafana/grafana:11.6.0
-        name: grafana
+          env: [ ]
         ports:
         - containerPort: 3000
           name: http
@@ -168,10 +168,10 @@ spec:
       nodeSelector:
         kubernetes.io/os: linux
       securityContext:
-        fsGroup: 65534
-        runAsGroup: 65534
+        fsGroup: 1000
+        runAsGroup: 1000
         runAsNonRoot: true
-        runAsUser: 65534
+        runAsUser: 1000
       serviceAccountName: grafana
       volumes:
       - name: grafana-storage
