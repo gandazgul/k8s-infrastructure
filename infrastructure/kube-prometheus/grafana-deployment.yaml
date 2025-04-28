@@ -178,7 +178,7 @@ spec:
       volumes:
       - name: grafana-storage
         persistentVolumeClaim:
-          claimName: yasr-volume
+          claimName: yasr-volume-monitoring
       - name: grafana-datasources
         secret:
           secretName: grafana-datasources
