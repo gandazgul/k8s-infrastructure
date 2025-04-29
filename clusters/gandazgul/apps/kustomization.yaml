@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - ./secrets/
   - ./RsyncCronJobs.yaml
-  - ../../../apps/ActualBudget.yaml
+  # - ../../../apps/ActualBudget.yaml
   - ../../../apps/Bitwarden.yaml
   - ../../../apps/Forecastle.yaml
   - ../../../apps/Headlamp.yaml
