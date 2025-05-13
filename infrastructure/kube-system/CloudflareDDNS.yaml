@@ -23,7 +23,7 @@ spec:
   patches:
     - patch: |
         - op: add
-          path: /spec/jobTemplate/spec/template/spec/containers/0/env/-
+          path: /spec/jobTemplate/spec/template/spec/containers/0/env
           value:
             - name: CLUSTER_NAME
               value: ${CLUSTER_NAME}
