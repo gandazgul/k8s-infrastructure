@@ -30,6 +30,8 @@ spec:
   interval: 1h
   path: ./infrastructure/monitoring/grafana/
   prune: true
+  dependsOn:
+    - name: kube-prometheus-crds
   sourceRef:
     kind: GitRepository
     name: k8s-infrastructure

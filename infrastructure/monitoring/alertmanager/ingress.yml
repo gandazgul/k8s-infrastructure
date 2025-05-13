@@ -3,6 +3,11 @@ kind: Ingress
 metadata:
   name: alertmanager
   namespace: monitoring
+  annotations:
+    forecastle.stakater.com/appName: "Alert Manager"
+    forecastle.stakater.com/group: "Management"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/icon: "https://raw.githubusercontent.com/stakater/ForecastleIcons/master/alert-manager.png"
 spec:
   ingressClassName: nginx
   rules:

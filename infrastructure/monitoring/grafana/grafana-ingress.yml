@@ -3,6 +3,11 @@ kind: Ingress
 metadata:
   name: grafana-ingress
   namespace: monitoring
+  annotations:
+    forecastle.stakater.com/appName: "Grafana"
+    forecastle.stakater.com/group: "Management"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/icon: "https://grafana.dumbhome.uk/public/img/grafana_icon.svg"
 spec:
   ingressClassName: nginx
   rules:
