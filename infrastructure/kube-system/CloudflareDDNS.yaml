@@ -35,3 +35,5 @@ spec:
               value: ${CLUSTER_DOMAIN_NAME}
             - name: CLOUDFLARE_ZONE_ID
               value: ${CLOUDFLARE_ZONE_ID}
+      target:
+        kind: CronJob
