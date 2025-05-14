@@ -1,0 +1,9 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lidarr
+  annotations:
+    forecastle.stakater.com/appName: "Music"
+    forecastle.stakater.com/group: "Media"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/icon: "https://music.${CLUSTER_DOMAIN_NAME}/Content/Images/logo.svg"

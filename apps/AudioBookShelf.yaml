@@ -5,7 +5,7 @@ metadata:
   name: audiobookshelf
   namespace: default
 spec:
-  interval: 5m
+  interval: 1h
   path: ./apps/generic/overlays/audiobookshelf/
   prune: true
   sourceRef:

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lidarr
+spec:
+  template:
+    spec:
+      containers:
+        - name: container
+          image: docker.io/linuxserver/lidarr:latest
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /config
+              subPath: configs/lidarr/
+            - name: yasr-volume
+              mountPath: /data
+              subPath: configs/transmission/
+            - name: main-volume
+              mountPath: /media
+              subPath: public/Music/
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /
+              port: http
+            initialDelaySeconds: 300
+            timeoutSeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "${CLUSTER_TIME_ZONE}"
+          ports:
+            - name: http
+              containerPort: 8686
+              protocol: TCP

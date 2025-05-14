@@ -1,32 +1,39 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2
-kind: HelmRelease
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
 metadata:
   name: cloudflare-ddns
   namespace: default
 spec:
-  chart:
-    spec:
-      chart: ./charts/cronjob
-      sourceRef:
-        kind: GitRepository
-        name: k8s-infrastructure
-        namespace: kube-system
   interval: 1h0m0s
-  values:
-    # Every hour
-    schedule: "0 */1 * * *"
-    image:
-      repository: docker.io/gandazgul/ddns-cloudflare
-      tag: vb299a70
-    env:
-      - name: CLUSTER_NAME
-        value: ${CLUSTER_NAME}
-      - name: CLOUDFLARE_API_TOKEN
-        value: ${CLOUDFLARE_API_TOKEN}
-      - name: CLOUDFLARE_API_EMAIL
-        value: ${CLOUDFLARE_API_EMAIL}
-      - name: CLUSTER_DOMAIN_NAME
-        value: ${CLUSTER_DOMAIN_NAME}
-      - name: CLOUDFLARE_ZONE_ID
-        value: ${CLOUDFLARE_ZONE_ID}
+  path: ./infrastructure/cronjob/
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  prune: true
+  targetNamespace: default
+  postBuild:
+    substitute:
+      CRONJOB_NAME: cloudflare-ddns
+      # Every hour
+      SCHEDULE: "0 */1 * * *"
+      IMAGE: docker.io/gandazgul/ddns-cloudflare:vb299a70
+      NAMESPACE: default
+  patches:
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/env
+          value:
+            - name: CLUSTER_NAME
+              value: ${CLUSTER_NAME}
+            - name: CLOUDFLARE_API_TOKEN
+              value: ${CLOUDFLARE_API_TOKEN}
+            - name: CLOUDFLARE_API_EMAIL
+              value: ${CLOUDFLARE_API_EMAIL}
+            - name: CLUSTER_DOMAIN_NAME
+              value: ${CLUSTER_DOMAIN_NAME}
+            - name: CLOUDFLARE_ZONE_ID
+              value: ${CLOUDFLARE_ZONE_ID}
+      target:
+        kind: CronJob
