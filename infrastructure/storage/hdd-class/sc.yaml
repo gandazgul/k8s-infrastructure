@@ -5,7 +5,3 @@ metadata:
   name: hdd
 provisioner: kubernetes.io/no-provisioner
 reclaimPolicy: Retain
-mountOptions:
-  - uid=1000
-  - gid=1000
-#volumeBindingMode: WaitForFirstConsumer

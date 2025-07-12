@@ -1,1 +1,0 @@
-The cron job {{ template "cronjob.fullname" . }} should now be running.

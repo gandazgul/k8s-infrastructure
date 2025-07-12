@@ -38,6 +38,7 @@ spec:
           matchNames:
           - default
           - kube-system
+          - monitoring
         title: Cluster Homepage
         customApps:
           - name: Plex

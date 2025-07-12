@@ -8,7 +8,7 @@ source "$SCRIPT_DIR/requirements.sh"
 message "Generating $CLUSTER_NAME secret..."
 rm -rf "$REPO_ROOT/clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml"
 kubectl create secret generic secrets --dry-run=client --namespace=kube-system --from-env-file="$REPO_ROOT/clusters/$CLUSTER_NAME/secrets.env" -o json |
-  jq '.metadata.annotations |= { "reflector.v1.k8s.emberstack.com/reflection-auto-enabled": "true", "reflector.v1.k8s.emberstack.com/reflection-allowed": "true", "reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces": "default" }' |
+  jq '.metadata.annotations |= { "reflector.v1.k8s.emberstack.com/reflection-auto-enabled": "true", "reflector.v1.k8s.emberstack.com/reflection-allowed": "true", "reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces": "default,monitoring" }' |
   kubeseal -o yaml > "$REPO_ROOT/clusters/$CLUSTER_NAME/sealed-secret/SealedSecret.yaml"
 
 # apply the sealed secret
