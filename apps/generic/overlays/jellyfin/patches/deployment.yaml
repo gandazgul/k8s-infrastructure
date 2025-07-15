@@ -9,6 +9,13 @@ spec:
         - name: container
           image: ghcr.io/jellyfin/jellyfin:10.10
           imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 1
+              memory: 512Mi
+            limits:
+              cpu: 4
+              memory: 4Gi
           volumeMounts:
             - name: yasr-volume
               mountPath: /config
