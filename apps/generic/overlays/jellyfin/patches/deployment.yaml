@@ -15,7 +15,7 @@ spec:
               memory: 512Mi
             limits:
               cpu: 4
-              memory: 4Gi
+              memory: 8Gi
           volumeMounts:
             - name: yasr-volume
               mountPath: /config
