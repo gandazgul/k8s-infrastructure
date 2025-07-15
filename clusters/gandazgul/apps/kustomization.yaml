@@ -28,3 +28,4 @@ resources:
   - ../../../apps/Plex.yaml
   - ../../../apps/RDiffWeb.yaml
   - ../../../apps/Harbor.yaml
+  - ../../../apps/Jellyfin.yaml
