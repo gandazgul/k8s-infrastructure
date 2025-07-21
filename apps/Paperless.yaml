@@ -44,7 +44,7 @@ spec:
       PAPERLESS_DBHOST: paperless-db-rw
       PAPERLESS_DBPORT: "5432"
       PAPERLESS_DBUSER: paperless
-      PAPERLESS_DBPASS: paperless
+      # PAPERLESS_DBPASS: paperless
       PAPERLESS_DBNAME: paperless
       PAPERLESS_ADMIN_USER: admin
       PAPERLESS_ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
