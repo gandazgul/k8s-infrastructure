@@ -45,11 +45,12 @@ spec:
       PAPERLESS_ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
       PAPERLESS_SECRET_KEY: "${PAPERLESS_SECRET_KEY}"
       PAPERLESS_URL: "https://paperless.${CLUSTER_DOMAIN_NAME}"
-    database:
-      host: paperless-db-rw
-      existingSecret:
-        name: paperless-db-app
-        key: password
+    config:
+      database:
+        host: paperless-db-rw
+        existingSecret:
+          name: paperless-db-app
+          key: password
     persistence:
       yasr:
         enabled: true
