@@ -21,11 +21,11 @@ metadata:
 spec:
   chart:
     spec:
-      chart: paperless
-      version: 8.6.0
+      chart: paperless-ngx
+      version: 0.2.1
       sourceRef:
         kind: HelmRepository
-        name: k8s-at-home
+        name: gabe565
         namespace: kube-system
   valuesFrom:
     - kind: Secret
@@ -37,37 +37,39 @@ spec:
       pullPolicy: Always
       tag: latest
     env:
-      USERMAP_UID: "1000"
-      USERMAP_GID: "1000"
       PAPERLESS_TIME_ZONE: "${CLUSTER_TIME_ZONE}"
-      PAPERLESS_REDIS: redis://paperless-redis-master:6379
-      PAPERLESS_DBHOST: paperless-db-rw
+      PAPERLESS_REDIS: "redis://paperless-redis-master:6379"
+      PAPERLESS_DBHOST: "paperless-db-1"
       PAPERLESS_DBPORT: "5432"
-      PAPERLESS_DBUSER: paperless
-      # PAPERLESS_DBPASS: paperless
-      PAPERLESS_DBNAME: paperless
-      PAPERLESS_ADMIN_USER: admin
+      PAPERLESS_DBUSER: "paperless"
+      PAPERLESS_DBNAME: "paperless"
+      PAPERLESS_ADMIN_USER: "admin"
       PAPERLESS_ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
       PAPERLESS_SECRET_KEY: "${PAPERLESS_SECRET_KEY}"
       PAPERLESS_URL: "https://paperless.${CLUSTER_DOMAIN_NAME}"
-    database:
+    externalDatabase:
       existingSecret:
         name: paperless-db-app
         key: password
     persistence:
-      yasr:
+      data:
         enabled: true
         existingClaim: yasr-volume
-        subPath:
-        - path: configs/paperless/data
-          mountPath: /usr/src/paperless/data
-        - path: configs/paperless/media
-          mountPath: /usr/src/paperless/media
-        - path: configs/paperless/export
-          mountPath: /usr/src/paperless/export
+        subPath: "configs/paperless/data"
+      media:
+        enabled: true
+        existingClaim: yasr-volume
+        subPath: "configs/paperless/media"
+      export:
+        enabled: true
+        existingClaim: yasr-volume
+        subPath: "configs/paperless/export"
+      consume:
+        enabled: true
+        existingClaim: main-volume
+        subPath: "btsync/Carlos' Documents/PaperlessConsumer"
     redis:
       enabled: true
-      architecture: standalone
     postgresql:
       enabled: false
     ingress:
