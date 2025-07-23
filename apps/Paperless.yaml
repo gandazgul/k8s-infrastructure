@@ -70,6 +70,9 @@ spec:
         subPath: "btsync/Carlos' Documents/PaperlessConsumer"
     redis:
       enabled: true
+      architecture: standalone
+      global:
+        imageRegistry: public.ecr.aws/bitnami/redis:7.4-debian-12
     postgresql:
       enabled: false
     ingress:
