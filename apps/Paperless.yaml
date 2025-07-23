@@ -73,6 +73,8 @@ spec:
       architecture: standalone
       global:
         imageRegistry: public.ecr.aws
+        security:
+          allowInsecureImages: true
     postgresql:
       enabled: false
     ingress:
