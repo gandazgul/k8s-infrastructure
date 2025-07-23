@@ -21,11 +21,11 @@ metadata:
 spec:
   chart:
     spec:
-      chart: paperless-ngx
-      version: 0.24.1
+      chart: paperless
+      version: 8.6.0
       sourceRef:
         kind: HelmRepository
-        name: gabe565
+        name: k8s-at-home
         namespace: kube-system
   valuesFrom:
     - kind: Secret
@@ -37,44 +37,36 @@ spec:
       pullPolicy: Always
       tag: latest
     env:
+      USERMAP_UID: "1000"
+      USERMAP_GID: "1000"
       PAPERLESS_TIME_ZONE: "${CLUSTER_TIME_ZONE}"
-      PAPERLESS_REDIS: "redis://paperless-redis-master:6379"
-      PAPERLESS_DBHOST: "paperless-db-1"
+      PAPERLESS_REDIS: redis://paperless-redis-master:6379
+      PAPERLESS_DBHOST: paperless-db-rw
       PAPERLESS_DBPORT: "5432"
-      PAPERLESS_DBUSER: "paperless"
-      PAPERLESS_DBNAME: "paperless"
-      PAPERLESS_ADMIN_USER: "admin"
+      PAPERLESS_DBUSER: paperless
+      PAPERLESS_DBPASS: 
+        secretKeyRef:
+          name: paperless-db-app
+          key: password
+      PAPERLESS_DBNAME: paperless
+      PAPERLESS_ADMIN_USER: admin
       PAPERLESS_ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
       PAPERLESS_SECRET_KEY: "${PAPERLESS_SECRET_KEY}"
       PAPERLESS_URL: "https://paperless.${CLUSTER_DOMAIN_NAME}"
-    externalDatabase:
-      existingSecret:
-        name: paperless-db-app
-        key: password
     persistence:
-      data:
+      yasr:
         enabled: true
         existingClaim: yasr-volume
-        subPath: "configs/paperless/data"
-      media:
-        enabled: true
-        existingClaim: yasr-volume
-        subPath: "configs/paperless/media"
-      export:
-        enabled: true
-        existingClaim: yasr-volume
-        subPath: "configs/paperless/export"
-      consume:
-        enabled: true
-        existingClaim: main-volume
-        subPath: "btsync/Carlos' Documents/PaperlessConsumer"
+        subPath:
+        - path: configs/paperless/data
+          mountPath: /usr/src/paperless/data
+        - path: configs/paperless/media
+          mountPath: /usr/src/paperless/media
+        - path: configs/paperless/export
+          mountPath: /usr/src/paperless/export
     redis:
       enabled: true
       architecture: standalone
-      global:
-        imageRegistry: public.ecr.aws
-        security:
-          allowInsecureImages: true
     postgresql:
       enabled: false
     ingress:
