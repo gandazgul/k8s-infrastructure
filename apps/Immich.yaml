@@ -1,0 +1,37 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: immich-postgres
+  namespace: default
+spec:
+  instances: 1
+  storage:
+    size: 10Gi
+  bootstrap:
+    initdb:
+      database: immich
+      owner: immich
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: immich
+  namespace: default
+spec:
+  interval: 1h
+  path: ./apps/generic/overlays/immich/
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: immich
+      namespace: default
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: secrets
