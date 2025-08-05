@@ -9,6 +9,18 @@ spec:
         - name: container
           image: ghcr.io/immich-app/immich-server:release
           imagePullPolicy: Always
+          env:
+            - name: IMMICH_DATABASE_URL
+              value: postgres://immich:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: immich-postgres-app
+                  key: password
+            - name: IMMICH_STORAGE_PATH
+              value: /media
+            - name: IMMICH_PORT
+              value: "3001"
           resources:
             requests:
               cpu: 1
