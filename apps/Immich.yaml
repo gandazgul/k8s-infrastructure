@@ -6,19 +6,20 @@ metadata:
   namespace: default
 spec:
   instances: 1
-  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:17
+  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16.5-v0.3.0@sha256:be3f025d79aa1b747817f478e07e71be43236e14d00d8a9eb3914146245035ba
   postgresql:
     shared_preload_libraries:
       - "vectors.so"
   storage:
-    size: 10Gi
+    size: 8Gi
   bootstrap:
     initdb:
       database: immich
       owner: immich
       postInitSQL:
-        - ALTER SYSTEM SET search_path TO "$user", public, vectors;
         - CREATE EXTENSION IF NOT EXISTS "vectors";
+        - CREATE EXTENSION IF NOT EXISTS "cube" CASCADE;
+        - CREATE EXTENSION IF NOT EXISTS "earthdistance" CASCADE;
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
