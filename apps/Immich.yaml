@@ -6,6 +6,9 @@ metadata:
   namespace: default
 spec:
   instances: 1
+  postgresql:
+    shared_preload_libraries:
+      - "vectors.so"
   storage:
     size: 10Gi
   bootstrap:
