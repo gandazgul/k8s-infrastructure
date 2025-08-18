@@ -13,12 +13,12 @@ spec:
             - name: DB_DATABASE_NAME
               valueFrom:
                 secretKeyRef:
-                  name: immich-postgres-superuser
+                  name: immich-postgres-app
                   key: dbname
             - name: DB_HOSTNAME
               valueFrom:
                 secretKeyRef:
-                  name: immich-postgres-superuser
+                  name: immich-postgres-app
                   key: host
             - name: DB_USERNAME
               valueFrom:
