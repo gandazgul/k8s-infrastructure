@@ -13,22 +13,22 @@ spec:
             - name: DB_DATABASE_NAME
               valueFrom:
                 secretKeyRef:
-                  name: immich-postgres-app
+                  name: immich-postgres-superuser
                   key: dbname
             - name: DB_HOSTNAME
               valueFrom:
                 secretKeyRef:
-                  name: immich-postgres-app
+                  name: immich-postgres-superuser
                   key: host
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: immich-postgres-app
+                  name: immich-postgres-superuser
                   key: username
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: immich-postgres-app
+                  name: immich-postgres-superuser
                   key: password
             - name: IMMICH_STORAGE_PATH
               value: /media
