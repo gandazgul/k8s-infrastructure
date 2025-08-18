@@ -16,7 +16,7 @@ spec:
                   name: immich-postgres-app
                   key: dbname
             - name: DB_HOSTNAME
-              valueFrom
+              valueFrom:
                 secretKeyRef:
                   name: immich-postgres-app
                   key: host
