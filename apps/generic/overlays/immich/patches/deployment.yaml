@@ -60,6 +60,32 @@ spec:
             initialDelaySeconds: 30
             timeoutSeconds: 10
           ports:
-            - name: http
+            - name: server-http
               containerPort: 3001
               protocol: TCP
+        - name: immich-web
+          image: ghcr.io/immich-app/immich-web:release
+          imagePullPolicy: Always
+          env:
+            - name: IMMICH_SERVER_URL
+              value: http://immich.default.svc.cluster.local:3001
+          ports:
+            - name: web-http
+              containerPort: 3000
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 1
+              memory: 512Mi
+            limits:
+              cpu: 4
+              memory: 8Gi
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /config
+              subPath: configs/immich/
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /
+              port: http

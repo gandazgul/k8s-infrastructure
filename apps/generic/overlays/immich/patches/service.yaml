@@ -4,7 +4,11 @@ metadata:
   name: immich
 spec:
   ports:
-    - name: http
+    - name: server-http
       port: 3001
       protocol: TCP
-      targetPort: http
+      targetPort: server-http
+    - name: http
+      port: 3000
+      protocol: TCP
+      targetPort: web-http
