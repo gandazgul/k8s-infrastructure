@@ -10,15 +10,34 @@ spec:
           image: ghcr.io/immich-app/immich-server:release
           imagePullPolicy: Always
           env:
-            - name: IMMICH_DATABASE_URL
+            - name: DB_DATABASE_NAME
               valueFrom:
                 secretKeyRef:
                   name: immich-postgres-app
-                  key: uri
+                  key: dbname
+            - name: DB_HOSTNAME
+              valueFrom
+                secretKeyRef:
+                  name: immich-postgres-app
+                  key: host
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: immich-postgres-app
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: immich-postgres-app
+                  key: password
             - name: IMMICH_STORAGE_PATH
               value: /media
             - name: IMMICH_PORT
               value: "3001"
+            - name: REDIS_HOSTNAME
+              value: paperless-redis-master.default.svc.cluster.local
+            - name: REDIS_DBINDEX
+              value: "8"
           resources:
             requests:
               cpu: 1
