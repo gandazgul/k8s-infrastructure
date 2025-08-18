@@ -68,7 +68,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: IMMICH_SERVER_URL
-              value: http://immich.default.svc.cluster.local:3001
+              value: http://localhost:3001
           ports:
             - name: web-http
               containerPort: 3000
