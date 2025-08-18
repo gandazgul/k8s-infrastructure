@@ -6,6 +6,7 @@ metadata:
   namespace: default
 spec:
   instances: 1
+  image: ghcr.io/tensorchord/cloudnative-pgvecto.rs:17
   postgresql:
     shared_preload_libraries:
       - "vectors.so"
@@ -15,6 +16,9 @@ spec:
     initdb:
       database: immich
       owner: immich
+    postInitSQL:
+      - ALTER SYSTEM SET search_path TO "$user", public, vectors;
+      - CREATE EXTENSION IF NOT EXISTS "vectors";
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
