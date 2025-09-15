@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich
+spec:
+  template:
+    spec:
+      containers:
+        - name: container
+          image: ghcr.io/immich-app/immich-server:release
+          imagePullPolicy: Always
+          env:
+            - name: DB_DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: immich-postgres-app
+                  key: dbname
+            - name: DB_HOSTNAME
+              valueFrom:
+                secretKeyRef:
+                  name: immich-postgres-app
+                  key: host
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: immich-postgres-superuser
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: immich-postgres-superuser
+                  key: password
+            - name: IMMICH_STORAGE_PATH
+              value: /media
+            - name: IMMICH_PORT
+              value: "3001"
+            - name: REDIS_HOSTNAME
+              value: paperless-redis-master.default.svc.cluster.local
+            - name: REDIS_DBINDEX
+              value: "8"
+          resources:
+            requests:
+              cpu: 1
+              memory: 512Mi
+            limits:
+              cpu: 4
+              memory: 8Gi
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /config
+              subPath: configs/immich/
+            - name: main-volume
+              mountPath: /media
+              subPath: public/
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+          ports:
+            - name: server-http
+              containerPort: 3001
+              protocol: TCP
+        - name: immich-web
+          image: ghcr.io/immich-app/immich-web:release
+          imagePullPolicy: Always
+          env:
+            - name: IMMICH_SERVER_URL
+              value: http://localhost:3001
+          ports:
+            - name: web-http
+              containerPort: 3000
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 1
+              memory: 512Mi
+            limits:
+              cpu: 4
+              memory: 8Gi
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /config
+              subPath: configs/immich/
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /
+              port: http

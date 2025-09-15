@@ -1,0 +1,9 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: qdrant
+  annotations:
+    forecastle.stakater.com/appName: "Qdrant"
+    forecastle.stakater.com/group: "AI"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/icon: "https://qdrant.tech/images/logo.svg"

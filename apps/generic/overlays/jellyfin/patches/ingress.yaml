@@ -1,0 +1,9 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jellyfin
+  annotations:
+    forecastle.stakater.com/appName: "Jellyfin"
+    forecastle.stakater.com/group: "Media"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/icon: "https://jellyfin.org/images/logo.svg"
