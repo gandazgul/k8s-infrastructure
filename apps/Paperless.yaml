@@ -1,4 +1,18 @@
 ---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: paperless-db
+  namespace: default
+spec:
+  instances: 1
+  storage:
+    size: 1Gi
+  bootstrap:
+    initdb:
+      database: paperless
+      owner: paperless
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -27,8 +41,24 @@ spec:
       USERMAP_GID: "1000"
       PAPERLESS_TIME_ZONE: "${CLUSTER_TIME_ZONE}"
       PAPERLESS_REDIS: redis://paperless-redis-master:6379
-      PAPERLESS_ADMIN_USER: admin
-      PAPERLESS_ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
+      PAPERLESS_DBHOST:
+        secretKeyRef:
+          name: paperless-db-app
+          key: host
+      PAPERLESS_DBUSER:
+        secretKeyRef:
+          name: paperless-db-app
+          key: username
+      PAPERLESS_DBPASS:
+        secretKeyRef:
+          name: paperless-db-app
+          key: password
+      PAPERLESS_DBNAME:
+        secretKeyRef:
+          name: paperless-db-app
+          key: dbname
+      # PAPERLESS_ADMIN_USER: admin
+      # PAPERLESS_ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
       PAPERLESS_SECRET_KEY: "${PAPERLESS_SECRET_KEY}"
       PAPERLESS_URL: "https://paperless.${CLUSTER_DOMAIN_NAME}"
     persistence:
@@ -46,21 +76,7 @@ spec:
       enabled: true
       architecture: standalone
     postgresql:
-      enabled: true
-      securityContext:
-        enabled: true
-        fsGroup: 1000
-      containerSecurityContext:
-        enabled: true
-        runAsUser: 1000
-      postgresqlUsername: paperless
-      postgresqlPassword: paperless
-      postgresqlDatabase: paperless
-      persistence:
-        enabled: true
-        existingClaim: yasr-volume
-        mountPath: /bitnami/postgresql
-        subPath: configs/paperless/database
+      enabled: false
     ingress:
       main:
         enabled: true

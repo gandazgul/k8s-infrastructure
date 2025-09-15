@@ -29,6 +29,9 @@ spec:
   # All values at https://github.com/stakater/Forecastle/blob/master/deployments/kubernetes/chart/forecastle/values.yaml
   values:
     forecastle:
+      image:
+        repository: stakater/forecastle
+        tag: latest
       deployment:
         securityContext:
           runAsUser: 1000
