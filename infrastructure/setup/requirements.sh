@@ -22,6 +22,7 @@ pause() {
 
 # make sure all required binaries are installed
 need "kubectl"
+need "kubectl-ctx"
 need "flux"
 need "git"
 need "kubeseal"
@@ -37,8 +38,22 @@ fi
 
 # The root of the git repo
 REPO_ROOT=$(git rev-parse --show-toplevel)
+SECRET_FILE="$REPO_ROOT/clusters/$CLUSTER_NAME/secrets.env"
 
-if [ ! -f "$REPO_ROOT/clusters/$CLUSTER_NAME/secrets.env" ]; then
+if [ ! -f "${SECRET_FILE}" ]; then
   echo "The secrets.env file for $CLUSTER_NAME does not exist. Please create it."
   exit 1
 fi
+
+# Enable automatic exporting of all subsequent variables
+set -o allexport
+
+# Source the .env file to load its variables
+# shellcheck source=$REPO_ROOT/clusters/$CLUSTER_NAME/secrets.env
+source "${SECRET_FILE}"
+
+# Disable automatic exporting
+set +o allexport
+
+message "Make sure we are using the right context"
+kubectl-ctx "${KUBECTX_NAME}"
