@@ -2,7 +2,7 @@
 .idea/workspace.xml
 .idea/aws.xml
 .idea/copilot/
-.idea/copilot.data.migration.edit.xml
+.idea/copilot.data.migration*
 
 # docker
 containers/sshd/users.conf
