@@ -28,7 +28,7 @@ spec:
     forecastle:
       image:
         repository: stakater/forecastle
-        tag: latest
+        tag: v1.0.159
       deployment:
         securityContext:
           runAsUser: 1000
