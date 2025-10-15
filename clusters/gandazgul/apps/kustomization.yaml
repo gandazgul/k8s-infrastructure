@@ -29,4 +29,3 @@ resources:
   - ../../../apps/Harbor.yaml
   - ../../../apps/Jellyfin.yaml
   - ../../../apps/Qdrant.yaml
-  - ../../../apps/Immich.yaml

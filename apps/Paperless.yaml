@@ -41,7 +41,7 @@ spec:
       USERMAP_GID: "1000"
       PAPERLESS_TIME_ZONE: "${CLUSTER_TIME_ZONE}"
       PAPERLESS_REDIS: redis://paperless-redis-master:6379
-      PAPERLESS_DBHOST: 
+      PAPERLESS_DBHOST:
         secretKeyRef:
           name: paperless-db-app
           key: host
@@ -49,11 +49,11 @@ spec:
         secretKeyRef:
           name: paperless-db-app
           key: username
-      PAPERLESS_DBPASS: 
+      PAPERLESS_DBPASS:
         secretKeyRef:
           name: paperless-db-app
           key: password
-      PAPERLESS_DBNAME: 
+      PAPERLESS_DBNAME:
         secretKeyRef:
           name: paperless-db-app
           key: dbname
