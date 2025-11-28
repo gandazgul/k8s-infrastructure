@@ -1,0 +1,98 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    pod-security.kubernetes.io/warn: privileged
+    pod-security.kubernetes.io/warn-version: latest
+  name: monitoring
+---
+kind: Kustomization
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+metadata:
+  name: kube-prometheus-crds
+  namespace: monitoring
+spec:
+  interval: 1h
+  path: ./infrastructure/monitoring/setup/
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+---
+kind: Kustomization
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  interval: 1h
+  path: ./infrastructure/monitoring/grafana/
+  prune: true
+  dependsOn:
+    - name: kube-prometheus-crds
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: secrets
+---
+kind: Kustomization
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  interval: 1h
+  path: ./infrastructure/monitoring/prometheus/
+  prune: true
+  dependsOn:
+    - name: kube-prometheus-crds
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: secrets
+---
+kind: Kustomization
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+metadata:
+  name: alertmanager
+  namespace: monitoring
+spec:
+  interval: 1h
+  path: ./infrastructure/monitoring/alertmanager/
+  prune: true
+  dependsOn:
+    - name: kube-prometheus-crds
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: secrets
+---
+kind: Kustomization
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+metadata:
+  name: kube-prometheus
+  namespace: monitoring
+spec:
+  interval: 1h
+  path: ./infrastructure/monitoring/kube-prometheus/
+  prune: true
+  dependsOn:
+    - name: kube-prometheus-crds
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system

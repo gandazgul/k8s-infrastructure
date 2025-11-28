@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qdrant
+spec:
+  template:
+    spec:
+      containers:
+        - name: container
+          image: ghcr.io/qdrant/qdrant/qdrant:v1.14.1
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /qdrant/config/storage
+              subPath: configs/qdrant/
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+          ports:
+            - name: http
+              containerPort: 6333
+              protocol: TCP

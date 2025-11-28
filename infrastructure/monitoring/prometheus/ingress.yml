@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prometheus
+  namespace: monitoring
+  annotations:
+    forecastle.stakater.com/appName: "Prometheus"
+    forecastle.stakater.com/group: "Management"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/icon: "https://raw.githubusercontent.com/stakater/ForecastleIcons/master/prometheus.png"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: prometheus.${CLUSTER_DOMAIN_NAME}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prometheus-k8s
+                port:
+                  name: web
+  tls:
+    - hosts:
+        - prometheus.${CLUSTER_DOMAIN_NAME}
+      secretName: internal-ingress-cert

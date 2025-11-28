@@ -1,76 +1,104 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2
-kind: HelmRelease
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
 metadata:
   name: incremental-backups
-  namespace: default
+  namespace: kube-system
 spec:
-  chart:
-    spec:
-      chart: ./charts/cronjob
-      sourceRef:
-        kind: GitRepository
-        name: k8s-infrastructure
-        namespace: kube-system
   interval: 1h0m0s
-  values:
-    # Twice a day at midnight and midday
-    schedule: "0 0,12 * * *"
-    image:
-      repository: docker.io/gandazgul/rdiff-backup
-      tag: vfa41640
-      args:
-        - --force
-        - backup
-        - /media/main
-        - /media/backup
-    volumes:
-      - name: main-volume
-        persistentVolumeClaim:
-          claimName: main-volume
-      - name: backup-volume
-        persistentVolumeClaim:
-          claimName: backup-volume
-    volumeMounts:
-      - name: main-volume
-        mountPath: /media/main
-      - name: backup-volume
-        mountPath: /media/backup
+  path: ./infrastructure/cronjob/
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  prune: true
+  targetNamespace: default
+  dependsOn:
+    - name: backup-volume
+    - name: main-volume
+  postBuild:
+    substitute:
+      CRONJOB_NAME: incremental-backups
+      SCHEDULE: "0 0,12 * * *"
+      IMAGE: docker.io/gandazgul/rdiff-backup:vfa41640
+      NAMESPACE: default
+  patches:
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/volumes/-
+          value:
+            name: main-volume
+            persistentVolumeClaim:
+              claimName: main-volume
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/volumes/-
+          value:
+            name: backup-volume
+            persistentVolumeClaim:
+              claimName: backup-volume
+      target:
+        kind: CronJob
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
+          value:
+            name: main-volume
+            mountPath: /media/main
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
+          value:
+            name: backup-volume
+            mountPath: /media/backup
+      target:
+        kind: CronJob
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/args
+          value: ["--force", "backup", "/media/main", "/media/backup"]
+      target:
+        kind: CronJob
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2
-kind: HelmRelease
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
 metadata:
   name: clean-incremental-backups
-  namespace: default
+  namespace: kube-system
 spec:
-  chart:
-    spec:
-      chart: ./charts/cronjob
-      sourceRef:
-        kind: GitRepository
-        name: k8s-infrastructure
-        namespace: kube-system
   interval: 1h0m0s
-  values:
-    # Every day at midnight
-    schedule: "0 0 * * *"
-    image:
-      repository: docker.io/gandazgul/rdiff-backup
-      tag: vfa41640
-      args:
-        - remove
-        - increments
-        - --older-than 4W
-        - /media/backup
-    volumes:
-      - name: main-volume
-        persistentVolumeClaim:
-          claimName: main-volume
-      - name: backup-volume
-        persistentVolumeClaim:
-          claimName: backup-volume
-    volumeMounts:
-      - name: main-volume
-        mountPath: /media/main
-      - name: backup-volume
-        mountPath: /media/backup
+  path: ./infrastructure/cronjob/
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  prune: true
+  targetNamespace: default
+  postBuild:
+    substitute:
+      CRONJOB_NAME: clean-incremental-backups
+      NAMESPACE: default
+      SCHEDULE: "0 0 * * *"
+      IMAGE: docker.io/gandazgul/rdiff-backup:vfa41640
+  patches:
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/volumes/-
+          value:
+            name: backup-volume
+            persistentVolumeClaim:
+              claimName: backup-volume
+      target:
+        kind: CronJob
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
+          value:
+            name: backup-volume
+            mountPath: /media/backup
+      target:
+        kind: CronJob
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/args
+          value: ["remove", "increments", "--older-than", "4W", "/media/backup"]
+      target:
+        kind: CronJob
