@@ -27,3 +27,4 @@ resources:
   # - ../../../apps/Ollama.yaml
   # - ../../../apps/OpenWebUI.yaml
   - ../../../apps/Zigbee2mqtt.yaml
+  - ../../../apps/N8N.yaml
