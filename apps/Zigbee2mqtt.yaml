@@ -68,6 +68,6 @@ spec:
     zigbee2mqtt:
       serial:
         port: /dev/ttyUSB0
-        adapter: ezsp
+        adapter: ember
       mqtt:
         server: mqtt://mosquitto.default.svc.cluster.local:1883
