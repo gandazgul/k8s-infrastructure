@@ -69,5 +69,7 @@ spec:
       serial:
         port: /dev/ttyUSB0
         adapter: ember
+      advanced:
+        adapter_delay: 200
       mqtt:
         server: mqtt://mosquitto.default.svc.cluster.local:1883
