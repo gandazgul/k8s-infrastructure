@@ -2,11 +2,11 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: andrenarchy
+  name: zigbee2mqtt
   namespace: kube-system
 spec:
   interval: 1h0m0s
-  url: https://andrenarchy.github.io/helm-charts/
+  url: https://charts.zigbee2mqtt.io
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -18,50 +18,51 @@ spec:
   chart:
     spec:
       chart: zigbee2mqtt
-      version: 9.25.0
+      version: 2.6.0
       sourceRef:
         kind: HelmRepository
-        name: andrenarchy
+        name: zigbee2mqtt
         namespace: kube-system
       interval: 5m
   values:
-    securityContext:
-      privileged: true
-    image:
-      repository: docker.io/koenkk/zigbee2mqtt
-      tag: latest
-    #      pullPolicy: Always
+    statefulset:
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: ""
+      storage:
+        enabled: true
+        existingClaim: yasr-volume
+        subPath: configs/zigbee2mqtt
+      additionalVolumes:
+      - name: usb
+        hostPath:
+          path: /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_e258ac37e35fec11af99305f25bfaa52-if00-port0
+      additionalVolumeMounts:
+      - name: usb
+        mountPath: /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_e258ac37e35fec11af99305f25bfaa52-if00-port0
+    container:
+      securityContext:
+        privileged: true
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
     ingress:
-      main:
-        enabled: true
-        hosts:
-        - host: zigbee.${CLUSTER_DOMAIN_NAME}
-          paths:
-          - path: /
-        tls:
-        - hosts:
-          - zigbee.${CLUSTER_DOMAIN_NAME}
-          secretName: internal-ingress-cert
-        annotations:
-          kubernetes.io/ingress.class: "nginx"
-          forecastle.stakater.com/expose: "true"
-          forecastle.stakater.com/icon: ""
-    persistence:
-      usb:
-        enabled: true
-        type: hostPath
-        hostPath: /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_e258ac37e35fec11af99305f25bfaa52-if00-port0
-      data:
-        enabled: true
-        mountPath: /data
-        existingClaim: yasr-volume
-        subPath: configs/zigbee2mqtt
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchExpressions:
-            - key: node-role.kubernetes.io/control-plane
-              operator: Exists
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        forecastle.stakater.com/expose: "true"
+        forecastle.stakater.com/icon: ""
+      hosts:
+      - host: zigbee.${CLUSTER_DOMAIN_NAME}
+        paths:
+        - path: /
+          pathType: ImplementationSpecific
+        - path: /api
+          pathType: ImplementationSpecific
+      tls:
+      - hosts:
+        - zigbee.${CLUSTER_DOMAIN_NAME}
+        secretName: internal-ingress-cert
+    config:
+      serial:
+        port: /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_e258ac37e35fec11af99305f25bfaa52-if00-port0
+      mqtt:
+        server: mqtt://mosquitto.default.svc.cluster.local:1883
