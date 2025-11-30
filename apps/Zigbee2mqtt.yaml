@@ -31,14 +31,14 @@ spec:
       storage:
         enabled: false
       volumes:
-      - name: data-volume
+      - name: persistent-data
         persistentVolumeClaim:
           claimName: yasr-volume
       - name: usb-device
         hostPath:
           path: /dev/ttyUSB0
       volumeMounts:
-      - name: data-volume
+      - name: persistent-data
         mountPath: /app/data
         subPath: configs/zigbee2mqtt
       - name: usb-device
