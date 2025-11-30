@@ -65,7 +65,7 @@ spec:
       - hosts:
         - zigbee.${CLUSTER_DOMAIN_NAME}
         secretName: internal-ingress-cert
-    config:
+    zigbee2mqtt:
       serial:
         port: /dev/ttyUSB0
         adapter: ezsp
