@@ -28,3 +28,7 @@ resources:
   # - ../../../apps/OpenWebUI.yaml
   - ../../../apps/Zigbee2mqtt.yaml
   - ../../../apps/N8N.yaml
+  - ../../../apps/AudioBookShelf.yaml
+  - ../../../apps/Flaresolverr.yaml
+  - ../../../apps/Harbor.yaml
+  - ../../../apps/Qdrant.yaml
