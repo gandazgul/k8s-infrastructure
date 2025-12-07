@@ -42,16 +42,15 @@ spec:
       - name: persistent-data
         persistentVolumeClaim:
           claimName: yasr-volume
-      - name: host-dev
+      - name: usb-device
         hostPath:
-          path: /dev
-          type: Directory
+          path: /dev/serial/by-id/usb-Nabu_Casa_ZBT-2_DCB4D90C146C-if00
       volumeMounts:
       - name: persistent-data
         mountPath: /app/data
         subPath: configs/zigbee2mqtt
-      - name: host-dev
-        mountPath: /dev
+      - name: usb-device
+        mountPath: /dev/ttyACM0
     container:
       securityContext:
         privileged: true
@@ -78,7 +77,5 @@ spec:
       serial:
         port: /dev/ttyACM0
         adapter: ember
-        baudrate: 115200
-        rtscts: false
       mqtt:
         server: mqtt://mosquitto.default.svc.cluster.local:1883
