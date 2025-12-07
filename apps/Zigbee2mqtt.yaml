@@ -36,13 +36,13 @@ spec:
           claimName: yasr-volume
       - name: usb-device
         hostPath:
-          path: /dev/ttyUSB0
+          path: /dev/ttyACM0
       volumeMounts:
       - name: persistent-data
         mountPath: /app/data
         subPath: configs/zigbee2mqtt
       - name: usb-device
-        mountPath: /dev/ttyUSB0
+        mountPath: /dev/ttyACM0
     container:
       securityContext:
         privileged: true
@@ -67,9 +67,7 @@ spec:
         secretName: internal-ingress-cert
     zigbee2mqtt:
       serial:
-        port: /dev/ttyUSB0
-        adapter: ember
-      advanced:
-        adapter_delay: 200
+        port: /dev/ttyACM0
+        adapter: ezsp
       mqtt:
         server: mqtt://mosquitto.default.svc.cluster.local:1883
