@@ -32,6 +32,8 @@ spec:
     statefulset:
       nodeSelector:
         node-role.kubernetes.io/control-plane: ""
+      podLabels:
+        goharbor.io/harbor-container-webhook-disable: "true"
       storage:
         enabled: false
       volumes:
