@@ -34,6 +34,8 @@ spec:
         node-role.kubernetes.io/control-plane: ""
       podLabels:
         goharbor.io/harbor-container-webhook-disable: "true"
+      podAnnotations:
+        io.kubernetes.cri-o.Devices: "/dev/ttyUSB0"
       hostNetwork: true
       hostPID: true
       storage:
