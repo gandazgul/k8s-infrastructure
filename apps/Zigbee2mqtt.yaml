@@ -40,15 +40,16 @@ spec:
       - name: persistent-data
         persistentVolumeClaim:
           claimName: yasr-volume
-      - name: usb-device
+      - name: host-dev
         hostPath:
-          path: /dev/ttyACM0
+          path: /dev
+          type: Directory
       volumeMounts:
       - name: persistent-data
         mountPath: /app/data
         subPath: configs/zigbee2mqtt
-      - name: usb-device
-        mountPath: /dev/ttyACM0
+      - name: host-dev
+        mountPath: /dev
     container:
       securityContext:
         privileged: true
