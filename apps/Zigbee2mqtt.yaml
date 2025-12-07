@@ -2,11 +2,11 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: zigbee2mqtt
+  name: andrenarchy
   namespace: kube-system
 spec:
   interval: 1h0m0s
-  url: https://charts.zigbee2mqtt.io
+  url: https://andrenarchy.github.io/helm-charts/
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -18,61 +18,50 @@ spec:
   chart:
     spec:
       chart: zigbee2mqtt
-      version: ""  # Use latest
+      version: 9.25.0
       sourceRef:
         kind: HelmRepository
-        name: zigbee2mqtt
+        name: andrenarchy
         namespace: kube-system
       interval: 5m
   values:
-    initContainer:
-      image:
-        repository: docker.io/mikefarah/yq
-        tag: "4.45.1"
-    statefulset:
-      nodeSelector:
-        node-role.kubernetes.io/control-plane: ""
-      podLabels:
-        goharbor.io/harbor-container-webhook-disable: "true"
-      podAnnotations:
-        io.kubernetes.cri-o.Devices: "/dev/ttyUSB0"
-      hostNetwork: true
-      hostPID: true
-      storage:
-        enabled: false
-      volumes:
-      - name: persistent-data
-        persistentVolumeClaim:
-          claimName: yasr-volume
-      volumeMounts:
-      - name: persistent-data
-        mountPath: /app/data
-        subPath: configs/zigbee2mqtt
-    container:
-      securityContext:
-        privileged: true
+    securityContext:
+      privileged: true
+    image:
+      repository: docker.io/koenkk/zigbee2mqtt
+      tag: latest
+    #      pullPolicy: Always
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
     ingress:
-      enabled: true
-      ingressClassName: nginx
-      annotations:
-        forecastle.stakater.com/expose: "true"
-        forecastle.stakater.com/icon: ""
-      hosts:
-      - host: zigbee.${CLUSTER_DOMAIN_NAME}
-        paths:
-        - path: /
-          pathType: ImplementationSpecific
-        - path: /api
-          pathType: ImplementationSpecific
-      tls:
-      - hosts:
-        - zigbee.${CLUSTER_DOMAIN_NAME}
-        secretName: internal-ingress-cert
-    zigbee2mqtt:
-      serial:
-        port: /dev/ttyUSB0
-        adapter: ember
-      mqtt:
-        server: mqtt://mosquitto.default.svc.cluster.local:1883
+      main:
+        enabled: true
+        hosts:
+        - host: zigbee.${CLUSTER_DOMAIN_NAME}
+          paths:
+          - path: /
+        tls:
+        - hosts:
+          - zigbee.${CLUSTER_DOMAIN_NAME}
+          secretName: internal-ingress-cert
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+          forecastle.stakater.com/expose: "true"
+          forecastle.stakater.com/icon: ""
+    persistence:
+      usb:
+        enabled: true
+        type: hostPath
+        hostPath: /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_e258ac37e35fec11af99305f25bfaa52-if00-port0
+      data:
+        enabled: true
+        mountPath: /data
+        existingClaim: yasr-volume
+        subPath: configs/zigbee2mqtt
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: node-role.kubernetes.io/control-plane
+              operator: Exists
