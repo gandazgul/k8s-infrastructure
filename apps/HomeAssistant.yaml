@@ -15,10 +15,6 @@ spec:
         name: k8s-at-home
         namespace: kube-system
       interval: 5m
-  valuesFrom:
-  - kind: Secret
-    name: home-assistant-values
-    optional: true
   values:
     controllerType: deployment
     image:
@@ -29,8 +25,14 @@ spec:
     hostNetwork: true
     securityContext:
       privileged: true
-    # USB device configuration is now cluster-specific via valuesFrom
-    # See clusters/<cluster-name>/apps/values/home-assistant-values.yaml
+    additionalVolumeMounts:
+    - name: usb-zbt2
+      mountPath: /dev/ttyACM0
+    additionalVolumes:
+    - name: usb-zbt2
+      hostPath:
+        path: /dev/serial/by-id/usb-Nabu_Casa_ZBT-2_DCB4D90C146C-if00
+        type: CharDevice
     ingress:
       main:
         enabled: true
