@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n8n
+spec:
+  template:
+    spec:
+      containers:
+        - name: container
+          image: n8nio/n8n:latest
+          imagePullPolicy: Always
+          env:
+            - name: N8N_HOST
+              value: n8n.${CLUSTER_DOMAIN_NAME}
+            - name: N8N_PORT
+              value: "5678"
+            - name: N8N_PROTOCOL
+              value: "https"
+            - name: WEBHOOK_URL
+              value: https://n8n.${CLUSTER_DOMAIN_NAME}/
+            - name: GENERIC_TIMEZONE
+              value: ${CLUSTER_TIME_ZONE}
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: 2
+              memory: 2Gi
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /home/node/.n8n
+              subPath: configs/n8n/
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz
+              port: http
+            initialDelaySeconds: 60
+            timeoutSeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz
+              port: http
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+            periodSeconds: 15
+          ports:
+            - name: http
+              containerPort: 5678
+              protocol: TCP
