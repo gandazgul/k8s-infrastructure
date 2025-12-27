@@ -20,6 +20,8 @@ spec:
               value: https://n8n.${CLUSTER_DOMAIN_NAME}/
             - name: GENERIC_TIMEZONE
               value: ${CLUSTER_TIME_ZONE}
+            - name: N8N_API_ENABLED
+              value: "true"
           resources:
             requests:
               cpu: 200m
