@@ -1,13 +1,4 @@
 ---
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: truecharts
-  namespace: kube-system
-spec:
-  interval: 1m
-  url: "https://charts.truecharts.org"
----
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
