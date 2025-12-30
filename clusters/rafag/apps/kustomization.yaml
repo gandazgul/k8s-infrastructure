@@ -32,3 +32,5 @@ resources:
   - ../../../apps/Flaresolverr.yaml
   - ../../../apps/Harbor.yaml
   - ../../../apps/Qdrant.yaml
+  - ../../../apps/OpenAIWhisper.yaml
+  - ../../../apps/WyomingPiper.yaml
