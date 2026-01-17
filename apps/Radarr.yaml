@@ -46,6 +46,7 @@ spec:
           name: paperless-db-app
           key: password
       RADARR__POSTGRES__MAINDB: "radarr_main"
+      RADARR__POSTGRES__LOGDB: "radarr_log"
     resources:
       requests:
         memory: 512Mi
