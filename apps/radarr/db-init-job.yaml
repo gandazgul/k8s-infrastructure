@@ -1,0 +1,70 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: radarr-db-init-script
+  namespace: default
+data:
+  init-db.sql: |
+    -- Create database for radarr main (configuration and history)
+    CREATE DATABASE radarr_main WITH OWNER = paperless;
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: radarr-db-init
+  namespace: default
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: psql
+        image: postgres:16-alpine
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Waiting for PostgreSQL to be ready..."
+          until pg_isready -h $PGHOST -U $PGUSER; do
+            echo "Waiting for database..."
+            sleep 2
+          done
+          echo "PostgreSQL is ready. Running initialization script..."
+          psql -f /scripts/init-db.sql
+          echo "Database initialization complete!"
+        env:
+        - name: PGHOST
+          valueFrom:
+            secretKeyRef:
+              name: paperless-db-app
+              key: host
+        - name: PGPORT
+          valueFrom:
+            secretKeyRef:
+              name: paperless-db-app
+              key: port
+        - name: PGUSER
+          valueFrom:
+            secretKeyRef:
+              name: paperless-db-app
+              key: username
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: paperless-db-app
+              key: password
+        - name: PGDATABASE
+          valueFrom:
+            secretKeyRef:
+              name: paperless-db-app
+              key: dbname
+        volumeMounts:
+        - name: init-script
+          mountPath: /scripts
+          readOnly: true
+      volumes:
+      - name: init-script
+        configMap:
+          name: radarr-db-init-script

@@ -29,6 +29,30 @@ spec:
       PUID: "1000"
       PGID: "1000"
       TZ: "${CLUSTER_TIME_ZONE}"
+      RADARR__POSTGRES__HOST:
+        secretKeyRef:
+          name: paperless-db-app
+          key: host
+      RADARR__POSTGRES__PORT:
+        secretKeyRef:
+          name: paperless-db-app
+          key: port
+      RADARR__POSTGRES__USER:
+        secretKeyRef:
+          name: paperless-db-app
+          key: username
+      RADARR__POSTGRES__PASSWORD:
+        secretKeyRef:
+          name: paperless-db-app
+          key: password
+      RADARR__POSTGRES__MAINDB: "radarr_main"
+    resources:
+      requests:
+        memory: 512Mi
+        cpu: 500m
+      limits:
+        memory: 2Gi
+        cpu: 2000m
     persistence:
       config:
         enabled: true

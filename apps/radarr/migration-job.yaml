@@ -1,0 +1,68 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: radarr-db-migration
+  namespace: default
+spec:
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: pgloader
+        image: ghcr.io/roxedus/pgloader:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Starting Radarr database migration to PostgreSQL..."
+          echo "Source: /config/radarr.db (SQLite)"
+          echo "Target: postgresql://$PGUSER:$PGPASSWORD@$PGHOST:$PGPORT/radarr_main"
+          echo ""
+          
+          # Run pgloader for main database
+          pgloader --with "quote identifiers" --with "data only" \
+            /config/radarr.db \
+            "postgresql://$PGUSER:$PGPASSWORD@$PGHOST:$PGPORT/radarr_main"
+          
+          RESULT=$?
+          if [ $RESULT -eq 0 ]; then
+            echo ""
+            echo "✓ Migration completed successfully!"
+            echo "Radarr main database has been migrated to PostgreSQL."
+            echo "Logs database remains in SQLite at /config/logs.db"
+          else
+            echo ""
+            echo "✗ Migration failed with exit code: $RESULT"
+            exit $RESULT
+          fi
+        env:
+        - name: PGHOST
+          valueFrom:
+            secretKeyRef:
+              name: paperless-db-app
+              key: host
+        - name: PGPORT
+          valueFrom:
+            secretKeyRef:
+              name: paperless-db-app
+              key: port
+        - name: PGUSER
+          valueFrom:
+            secretKeyRef:
+              name: paperless-db-app
+              key: username
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: paperless-db-app
+              key: password
+        volumeMounts:
+        - name: radarr-config
+          mountPath: /config
+          subPath: configs/radarr
+      volumes:
+      - name: radarr-config
+        persistentVolumeClaim:
+          claimName: yasr-volume

@@ -1,0 +1,533 @@
+{
+  "name": "Home Assistant Calendar Agent with Memory",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ha-calendar",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "ha-cal-webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "msg1",
+              "name": "user_message",
+              "type": "string",
+              "value": "={{ $json.body.query || $json.body.message || $json.query || $json.message }}"
+            },
+            {
+              "id": "conv1",
+              "name": "conversation_id",
+              "type": "string",
+              "value": "={{ $json.body.conversation_id || $json.conversation_id || 'default' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract-msg",
+      "name": "Extract Message & Conversation ID",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT history FROM n8n.conversations WHERE conversation_id = $1",
+        "options": {
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "1",
+                "value": "={{ $json.conversation_id }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "get-memory",
+      "name": "Get Conversation Memory",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [640, 300],
+      "continueOnFail": true,
+      "credentials": {
+        "postgres": {
+          "id": "{{POSTGRES_CREDENTIAL_ID}}",
+          "name": "N8N Conversations DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "cond1",
+              "leftValue": "={{ $json.length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ]
+        }
+      },
+      "id": "check-exists",
+      "name": "Check If Memory Exists",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [840, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "hist1",
+              "name": "conversation_history",
+              "type": "string",
+              "value": "={{ $json[0].history }}"
+            },
+            {
+              "id": "msg2",
+              "name": "user_message",
+              "type": "string",
+              "value": "={{ $('Extract Message & Conversation ID').item.json.user_message }}"
+            },
+            {
+              "id": "conv2",
+              "name": "conversation_id",
+              "type": "string",
+              "value": "={{ $('Extract Message & Conversation ID').item.json.conversation_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "load-history",
+      "name": "Load Existing History",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [1040, 200]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "hist2",
+              "name": "conversation_history",
+              "type": "string",
+              "value": "[]"
+            },
+            {
+              "id": "msg3",
+              "name": "user_message",
+              "type": "string",
+              "value": "={{ $('Extract Message & Conversation ID').item.json.user_message }}"
+            },
+            {
+              "id": "conv3",
+              "name": "conversation_id",
+              "type": "string",
+              "value": "={{ $('Extract Message & Conversation ID').item.json.conversation_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "new-history",
+      "name": "Initialize New History",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [1040, 400]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.user_message }}",
+        "options": {
+          "systemMessage": "=You are a Google Calendar assistant for Home Assistant.\nYour primary goal is to assist the user in managing their calendar effectively. You can perform three actions: retrieve events, create events, and delete events. Always base your responses on the current date: {{ DateTime.local().toFormat('cccc d LLLL yyyy') }}.\n\nGeneral Guidelines:\n- Be concise and direct in your responses\n- Always confirm actions taken\n- If information is missing, ask for it clearly\n- When you need confirmation for an action, ask the user clearly\n- After receiving confirmation, execute the action immediately\n\nConversation History:\n{{ $json.conversation_history }}\n\nTool: Event Creation\nWhen asked to create an event:\n1. Request the start and end dates/times if not provided\n2. Date format: YYYY-MM-DD HH:mm:ss\n3. Collect: start_date, end_date, event_title, event_description\n4. Create the event and confirm\n\nTool: Event Retrieval\nWhen asked to retrieve events:\n1. Determine the date range\n2. Format dates as YYYY-MM-DD HH:mm:ss\n3. Return a clear list of events\n\nTool: Event Deletion\nIMPORTANT deletion rules:\n1. ALWAYS call Get Events first to search for matching events\n2. Extract the event's id field\n3. Store in variable event_id (NOT google_event_id)\n4. If multiple match, list them and ask which to delete\n5. ONLY after confirmation, call Delete with event_id\n6. Confirm deletion to user"
+        }
+      },
+      "id": "agent-1",
+      "name": "Calendar AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [1240, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "openai-1",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [1040, 500],
+      "credentials": {
+        "openAiApi": {
+          "id": "{{OPENAI_CREDENTIAL_ID}}",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool to retrieve events from Google Calendar. Call this FIRST when the user wants to delete an event.",
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "gilfamilyhouse@gmail.com",
+          "mode": "list",
+          "cachedResultName": "gilfamilyhouse@gmail.com"
+        },
+        "returnAll": true,
+        "options": {
+          "timeMin": "={{ $fromAI('start_date') }}",
+          "timeMax": "={{ $fromAI('end_date') }}"
+        }
+      },
+      "id": "get-events",
+      "name": "Google Calendar - Get Events",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.2,
+      "position": [1448, 200],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "{{GCAL_CREDENTIAL_ID}}",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool to create a new event in Google Calendar.",
+        "calendar": {
+          "__rl": true,
+          "value": "gilfamilyhouse@gmail.com",
+          "mode": "list",
+          "cachedResultName": "gilfamilyhouse@gmail.com"
+        },
+        "start": "={{ $fromAI('start_date') }}",
+        "end": "={{ $fromAI('end_date') }}",
+        "useDefaultReminders": false,
+        "additionalFields": {
+          "attendees": [],
+          "description": "={{ $fromAI('event_description') }}",
+          "summary": "={{ $fromAI('event_title') }}"
+        }
+      },
+      "id": "create-event",
+      "name": "Google Calendar - Create Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.2,
+      "position": [1640, 200],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "{{GCAL_CREDENTIAL_ID}}",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool to delete an event from Google Calendar. The event_id MUST come from the Get Events tool response.",
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "gilfamilyhouse@gmail.com",
+          "mode": "list",
+          "cachedResultName": "gilfamilyhouse@gmail.com"
+        },
+        "eventId": "={{ $fromAI('event_id') }}",
+        "options": {
+          "sendUpdates": ""
+        }
+      },
+      "id": "delete-event",
+      "name": "Google Calendar - Delete Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [1848, 200],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "{{GCAL_CREDENTIAL_ID}}",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "out1",
+              "name": "output",
+              "type": "string",
+              "value": "={{ $json.text || $json.output || 'No response' }}"
+            },
+            {
+              "id": "conv4",
+              "name": "conversation_id",
+              "type": "string",
+              "value": "={{ $('Extract Message & Conversation ID').item.json.conversation_id }}"
+            },
+            {
+              "id": "usermsg",
+              "name": "user_message",
+              "type": "string",
+              "value": "={{ $('Extract Message & Conversation ID').item.json.user_message }}"
+            },
+            {
+              "id": "hist3",
+              "name": "conversation_history",
+              "type": "string",
+              "value": "={{ $json.conversation_history }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "format-response",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [1448, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get input data\nconst conversationId = $input.item.json.conversation_id;\nconst userMessage = $input.item.json.user_message;\nconst assistantResponse = $input.item.json.output;\nconst historyStr = $input.item.json.conversation_history || '[]';\n\n// Parse existing history\nlet history = [];\ntry {\n  history = JSON.parse(historyStr);\n} catch (e) {\n  history = [];\n}\n\n// Add new messages to history\nhistory.push({\n  role: 'user',\n  content: userMessage,\n  timestamp: new Date().toISOString()\n});\n\nhistory.push({\n  role: 'assistant',\n  content: assistantResponse,\n  timestamp: new Date().toISOString()\n});\n\n// Keep only last 20 messages (10 exchanges)\nif (history.length > 20) {\n  history = history.slice(-20);\n}\n\nreturn {\n  conversation_id: conversationId,\n  history: JSON.stringify(history),\n  updated_at: new Date().toISOString()\n};"
+      },
+      "id": "update-history",
+      "name": "Update Conversation History",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1640, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO n8n.conversations (conversation_id, history, updated_at) VALUES ($1, $2, $3) ON CONFLICT (conversation_id) DO UPDATE SET history = EXCLUDED.history, updated_at = EXCLUDED.updated_at",
+        "options": {
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "1",
+                "value": "={{ $json.conversation_id }}"
+              },
+              {
+                "name": "2",
+                "value": "={{ $json.history }}"
+              },
+              {
+                "name": "3",
+                "value": "={{ $json.updated_at }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "save-memory",
+      "name": "Save Conversation Memory",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1848, 300],
+      "continueOnFail": true,
+      "credentials": {
+        "postgres": {
+          "id": "{{POSTGRES_CREDENTIAL_ID}}",
+          "name": "N8N Conversations DB"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { output: $json.output } }}",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2048, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Message & Conversation ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Message & Conversation ID": {
+      "main": [
+        [
+          {
+            "node": "Get Conversation Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Conversation Memory": {
+      "main": [
+        [
+          {
+            "node": "Check If Memory Exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check If Memory Exists": {
+      "main": [
+        [
+          {
+            "node": "Load Existing History",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Initialize New History",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Existing History": {
+      "main": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize New History": {
+      "main": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calendar AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar - Get Events": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar - Create Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar - Delete Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Conversation History",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Conversation History": {
+      "main": [
+        [
+          {
+            "node": "Save Conversation Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {}
+}
