@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: youtarr
+  name: tubesync
   annotations:
-    forecastle.stakater.com/appName: "Youtarr"
+    forecastle.stakater.com/appName: "TubeSync"
     forecastle.stakater.com/group: "Media"
     forecastle.stakater.com/expose: "true"

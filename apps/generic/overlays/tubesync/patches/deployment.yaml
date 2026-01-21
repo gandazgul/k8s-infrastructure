@@ -1,24 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: youtarr
+  name: tubesync
 spec:
   template:
     spec:
       containers:
         - name: container
-          image: dialmaster/youtarr:latest
+          image: ghcr.io/meeb/tubesync:latest
           imagePullPolicy: Always
           volumeMounts:
             - name: yasr-volume
               mountPath: /config
-              subPath: configs/youtarr
-            - name: yasr-volume
-              mountPath: /data
-              subPath: configs/transmission/
+              subPath: configs/tubesync/
             - name: main-volume
-              mountPath: /media
-              subPath: public/youtube
+              mountPath: /downloads
+              subPath: public/youtube/
           env:
             - name: PUID
               value: "1000"
@@ -26,9 +23,7 @@ spec:
               value: "1000"
             - name: TZ
               value: "${CLUSTER_TIME_ZONE}"
-            - name: YOUTUBE_OUTPUT_DIR
-              value: "/media"
           ports:
             - name: http
-              containerPort: 3087
+              containerPort: 4848
               protocol: TCP
