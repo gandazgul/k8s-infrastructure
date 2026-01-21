@@ -1,4 +1,3 @@
----
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: default
@@ -7,7 +6,7 @@ resources:
 
 labels:
   - pairs:
-      app.kubernetes.io/name: lidarr
+      app.kubernetes.io/name: youtarr
     includeSelectors: true
 
 patches:
@@ -41,15 +40,15 @@ patches:
   - patch: |-
       - op: replace
         path: /spec/rules/0/http/paths/0/backend/service/name
-        value: lidarr
+        value: youtarr
       - op: replace
         path: /spec/rules/0/host
-        value: music.${CLUSTER_DOMAIN_NAME}
+        value: youtarr.${CLUSTER_DOMAIN_NAME}
       - op: replace
         path: /spec/tls/0/hosts/0
-        value: music.${CLUSTER_DOMAIN_NAME}
+        value: youtarr.${CLUSTER_DOMAIN_NAME}
     target:
       group: networking.k8s.io
       version: v1
       kind: Ingress
-      name: lidarr
+      name: youtarr
