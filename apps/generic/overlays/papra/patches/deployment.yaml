@@ -29,6 +29,8 @@ spec:
               value: "true"
             - name: AUTH_IS_REGISTRATION_ENABLED
               value: "true"
+            - name: CLIENT_BASE_URL
+              value: "https://docs.${CLUSTER_DOMAIN_NAME}"
           ports:
             - name: http
               containerPort: 1221
