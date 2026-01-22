@@ -11,16 +11,16 @@ spec:
           imagePullPolicy: Always
           volumeMounts:
             - name: yasr-volume
-              mountPath: /app/app-data
+              mountPath: /app-data
               subPath: configs/papra
             - name: main-volume
-              mountPath: /app/documents
+              mountPath: /documents
               subPath: "btsync/Carlos' Documents/"
           env:
             - name: PORT
               value: "1221"
             - name: DOCUMENT_STORAGE_FILESYSTEM_ROOT
-              value: /app/documents
+              value: /documents
             - name: TZ
               value: "${CLUSTER_TIME_ZONE}"
             - name: AUTH_SECRET
