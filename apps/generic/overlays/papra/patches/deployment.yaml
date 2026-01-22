@@ -23,6 +23,8 @@ spec:
               value: /app/documents
             - name: TZ
               value: "${CLUSTER_TIME_ZONE}"
+            - name: AUTH_SECRET
+              value: "${PAPRA_AUTH_SECRET}"
           ports:
             - name: http
               containerPort: 1221
