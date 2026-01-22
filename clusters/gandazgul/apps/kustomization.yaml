@@ -11,6 +11,7 @@ resources:
   - ../../../apps/HomeAssistant.yaml
   # - ../../../apps/MosquitoMQTTBroker.yaml
   - ../../../apps/Paperless.yaml
+  - ../../../apps/Papra.yaml
   - ../../../apps/Resilio.yaml
   - ../../../apps/SFTPGo.yaml
   # - ../../../apps/Sharry.yaml

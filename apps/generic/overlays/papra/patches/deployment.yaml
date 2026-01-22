@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: papra
+spec:
+  template:
+    spec:
+      containers:
+        - name: container
+          image: ghcr.io/papra-hq/papra:latest
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /app/app-data
+              subPath: configs/papra
+            - name: main-volume
+              mountPath: /app/documents
+              subPath: "btsync/Carlos' Documents/"
+          env:
+            - name: PORT
+              value: "1221"
+            - name: DOCUMENT_STORAGE_FILESYSTEM_ROOT
+              value: /app/documents
+            - name: TZ
+              value: "${CLUSTER_TIME_ZONE}"
+          ports:
+            - name: http
+              containerPort: 1221
+              protocol: TCP
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
