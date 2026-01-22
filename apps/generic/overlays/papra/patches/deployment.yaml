@@ -11,7 +11,7 @@ spec:
           imagePullPolicy: Always
           volumeMounts:
             - name: yasr-volume
-              mountPath: /app-data
+              mountPath: /app/app-data
               subPath: configs/papra
             - name: main-volume
               mountPath: /documents
@@ -32,3 +32,4 @@ spec:
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
+        fsGroup: 1000
