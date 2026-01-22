@@ -5,6 +5,6 @@ metadata:
 spec:
   ports:
     - name: http
-      port: 80
-      targetPort: 1221
+      port: 1221
       protocol: TCP
+      targetPort: http
