@@ -25,6 +25,10 @@ spec:
               value: "${CLUSTER_TIME_ZONE}"
             - name: AUTH_SECRET
               value: "${PAPRA_AUTH_SECRET}"
+            - name: AUTH_FIRST_USER_AS_ADMIN
+              value: "true"
+            - name: AUTH_IS_REGISTRATION_ENABLED
+              value: "true"
           ports:
             - name: http
               containerPort: 1221
