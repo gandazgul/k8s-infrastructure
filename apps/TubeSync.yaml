@@ -1,0 +1,23 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: tubesync
+  namespace: default
+spec:
+  interval: 1h
+  path: ./apps/generic/overlays/tubesync/
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: tubesync
+      namespace: default
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: secrets
