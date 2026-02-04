@@ -15,6 +15,10 @@ spec:
         name: k8s-at-home
         namespace: kube-system
       interval: 5m
+  valuesFrom:
+  - kind: Secret
+    name: home-assistant-values
+    optional: true
   values:
     controllerType: deployment
     image:
@@ -23,6 +27,10 @@ spec:
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
     hostNetwork: true
+    securityContext:
+      privileged: true
+    # USB device configuration is now cluster-specific via valuesFrom
+    # See clusters/<cluster-name>/apps/values/home-assistant-values.yaml
     ingress:
       main:
         enabled: true
