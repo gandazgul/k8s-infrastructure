@@ -23,6 +23,10 @@ spec:
   patches:
     - patch: |
         - op: add
+          path: /spec/jobTemplate/spec/template/metadata/labels
+          value:
+            goharbor.io/harbor-container-webhook-disable: "true"
+        - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/env
           value:
             - name: CLUSTER_NAME
