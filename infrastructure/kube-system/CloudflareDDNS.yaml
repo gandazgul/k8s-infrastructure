@@ -18,7 +18,7 @@ spec:
       CRONJOB_NAME: cloudflare-ddns
       # Every hour
       SCHEDULE: "0 */1 * * *"
-      IMAGE: docker.io/gandazgul/ddns-cloudflare:vb299a70
+      IMAGE: docker.io/rafaelgil83/ddns-cloudflare:vaf00940
       NAMESPACE: default
   patches:
     - patch: |

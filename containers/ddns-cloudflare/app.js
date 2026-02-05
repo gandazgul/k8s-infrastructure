@@ -26,24 +26,39 @@ const apiEmail = process.env.CLOUDFLARE_API_EMAIL; // Cloudflare account email
 const apiToken = process.env.CLOUDFLARE_API_TOKEN;
 const zoneId = process.env.CLOUDFLARE_ZONE_ID; // Zone ID for the domain
 
-// Get the IP address
-const response = await fetch('https://ifconfig.co/ip');
-const responseText = await response.text();
-const ipAddress = responseText.toString().replace('\n', '').trim();
+// Get the IP address using multiple fallback services
+const ipServices = [
+    'https://api.ipify.org',
+    'https://icanhazip.com',
+    'https://checkip.amazonaws.com',
+];
 
-if (
-    !apiEmail ||
-    !apiToken ||
-    !clusterDomain ||
-    !zoneId ||
-    !ipAddress
-) {
-    console.error('Missing required environment variables.');
+let ipAddress = null;
+for (const service of ipServices) {
+    try {
+        const response = await fetch(service, {
+            headers: { 'User-Agent': 'cloudflare-ddns/1.0' }
+        });
+        if (response.ok) {
+            ipAddress = (await response.text()).trim();
+            if (/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipAddress)) {
+                console.log(`Got IP ${ipAddress} from ${service}`);
+                break;
+            }
+        }
+    } catch (e) {
+        console.warn(`Failed to get IP from ${service}:`, e.message);
+    }
+    ipAddress = null;
+}
+
+if (!ipAddress) {
+    console.error('Failed to get public IP from any service');
     process.exit(1);
 }
 
-if (!/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipAddress)) {
-    console.error('IP response from ifconfig.co is not a valid IP address: ', ipAddress);
+if (!apiEmail || !apiToken || !clusterDomain || !zoneId) {
+    console.error('Missing required environment variables (CLOUDFLARE_API_EMAIL, CLOUDFLARE_API_TOKEN, CLUSTER_DOMAIN_NAME, or CLOUDFLARE_ZONE_ID)');
     process.exit(1);
 }
 
