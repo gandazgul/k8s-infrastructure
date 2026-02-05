@@ -25,7 +25,7 @@ spec:
         apiVersion: batch/v1
         kind: CronJob
         metadata:
-          name: ${CRONJOB_NAME}
+          name: cloudflare-ddns
         spec:
           jobTemplate:
             spec:
