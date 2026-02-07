@@ -18,7 +18,7 @@ spec:
   chart:
     spec:
       chart: forecastle
-      version: "1.0.159"
+      version: "1.2.0"
       sourceRef:
         kind: HelmRepository
         name: stakater-charts
@@ -26,9 +26,6 @@ spec:
   # All values at https://github.com/stakater/Forecastle/blob/master/deployments/kubernetes/chart/forecastle/values.yaml
   values:
     forecastle:
-      image:
-        repository: stakater/forecastle
-        tag: v1.0.159
       deployment:
         securityContext:
           runAsUser: 1000
