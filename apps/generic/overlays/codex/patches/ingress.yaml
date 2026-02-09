@@ -6,3 +6,4 @@ metadata:
     forecastle.stakater.com/appName: "Comics"
     forecastle.stakater.com/group: "Media"
     forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/icon: "https://raw.githubusercontent.com/ajslater/codex/refs/heads/main/codex/static_src/img/logo.svg"
