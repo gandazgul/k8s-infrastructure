@@ -118,7 +118,7 @@ spec:
               subPath: configs/openvpn/
         # Transmission port forward
         - name: transmission-pia-port-forward
-          image: docker.io/gandazgul/transmission-pia-port-forward:v3dfdd0f
+          image: docker.io/gandazgul/transmission-pia-port-forward:v4476ea2
           imagePullPolicy: IfNotPresent
           resources:
             requests:
