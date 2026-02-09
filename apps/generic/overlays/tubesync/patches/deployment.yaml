@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tubesync
+spec:
+  template:
+    spec:
+      containers:
+        - name: container
+          image: ghcr.io/meeb/tubesync:latest
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /config
+              subPath: configs/tubesync/
+            - name: main-volume
+              mountPath: /downloads
+              subPath: public/youtube/
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "${CLUSTER_TIME_ZONE}"
+          ports:
+            - name: http
+              containerPort: 4848
+              protocol: TCP

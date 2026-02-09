@@ -18,7 +18,7 @@ spec:
   values:
     image:
       repository: vaultwarden/server
-      tag: 1.32.3
+      tag: 1.35.2
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
       DATA_FOLDER: "/config"

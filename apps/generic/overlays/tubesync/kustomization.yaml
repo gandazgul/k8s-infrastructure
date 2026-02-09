@@ -7,7 +7,7 @@ resources:
 
 labels:
   - pairs:
-      app.kubernetes.io/name: lidarr
+      app.kubernetes.io/name: tubesync
     includeSelectors: true
 
 patches:
@@ -41,15 +41,15 @@ patches:
   - patch: |-
       - op: replace
         path: /spec/rules/0/http/paths/0/backend/service/name
-        value: lidarr
+        value: tubesync
       - op: replace
         path: /spec/rules/0/host
-        value: music.${CLUSTER_DOMAIN_NAME}
+        value: tubesync.${CLUSTER_DOMAIN_NAME}
       - op: replace
         path: /spec/tls/0/hosts/0
-        value: music.${CLUSTER_DOMAIN_NAME}
+        value: tubesync.${CLUSTER_DOMAIN_NAME}
     target:
       group: networking.k8s.io
       version: v1
       kind: Ingress
-      name: lidarr
+      name: tubesync
