@@ -7,3 +7,15 @@ metadata:
     forecastle.stakater.com/group: "Media"
     forecastle.stakater.com/expose: "true"
     forecastle.stakater.com/icon: "https://immich.app/img/logo.svg"
+spec:
+  rules:
+    - host: ${INGRESS_HOSTNAME}
+      http:
+        paths:
+          - path: /api
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: service
+                port:
+                  name: server-http
