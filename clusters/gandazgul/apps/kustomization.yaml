@@ -9,11 +9,9 @@ resources:
   - ../../../apps/Forecastle.yaml
   - ../../../apps/Headlamp.yaml
   - ../../../apps/HomeAssistant.yaml
-  # - ../../../apps/MosquitoMQTTBroker.yaml
   - ../../../apps/Paperless.yaml
   - ../../../apps/Resilio.yaml
   - ../../../apps/SFTPGo.yaml
-  # - ../../../apps/Sharry.yaml
   - ../../../apps/ZWaveJS.yaml
   - ../../../apps/Mealie.yaml
   - ../../../apps/AudioBookShelf.yaml
@@ -29,5 +27,5 @@ resources:
   - ../../../apps/Plex.yaml
   - ../../../apps/RDiffWeb.yaml
   - ../../../apps/Harbor.yaml
-  # - ../../../apps/Jellyfin.yaml
   - ../../../apps/Qdrant.yaml
+  - ../../../apps/Immich.yaml

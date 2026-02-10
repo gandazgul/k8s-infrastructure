@@ -40,4 +40,4 @@ spec:
           forecastle.stakater.com/appName: "Resilio"
           forecastle.stakater.com/group: "File Sharing"
           forecastle.stakater.com/expose: "true"
-          forecastle.stakater.com/icon: "https://www.resilio.com/images/logo.svg"
+          forecastle.stakater.com/icon: "https://www.resilio.com/images/sync-logo-horizontal-digital-full-color.svg"
