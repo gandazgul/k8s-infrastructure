@@ -32,6 +32,8 @@ spec:
                   key: password
             - name: UPLOAD_LOCATION
               value: /media
+            - name: IMMICH_PORT
+              value: "3001"
             - name: REDIS_HOSTNAME
               value: paperless-redis-master.default.svc.cluster.local
             - name: REDIS_DBINDEX
