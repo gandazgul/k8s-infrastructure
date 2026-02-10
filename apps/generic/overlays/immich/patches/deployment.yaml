@@ -49,7 +49,7 @@ spec:
               memory: 8Gi
           volumeMounts:
             - name: yasr-volume
-              mountPath: /config
+              mountPath: /data
               subPath: configs/immich/
             - name: main-volume
               mountPath: /media
