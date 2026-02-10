@@ -6,3 +6,4 @@ metadata:
     forecastle.stakater.com/appName: "TubeSync"
     forecastle.stakater.com/group: "Media"
     forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/icon: "https://github.com/meeb/tubesync/blob/main/tubesync/common/static/images/tubesync.png"
