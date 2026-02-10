@@ -30,16 +30,16 @@ spec:
                 secretKeyRef:
                   name: immich-postgres-superuser
                   key: password
-            - name: IMMICH_STORAGE_PATH
+            - name: UPLOAD_LOCATION
               value: /media
-            - name: IMMICH_PORT
-              value: "3001"
             - name: REDIS_HOSTNAME
               value: paperless-redis-master.default.svc.cluster.local
             - name: REDIS_DBINDEX
               value: "8"
             - name: DB_VECTOR_EXTENSION
               value: "pgvector"
+            - name: IMMICH_IGNORE_MOUNT_CHECK_ERRORS
+              value: "true"
           resources:
             requests:
               cpu: 1
@@ -53,7 +53,7 @@ spec:
               subPath: configs/immich/
             - name: main-volume
               mountPath: /media
-              subPath: public/
+              subPath: public/Pictures/
           livenessProbe:
             httpGet:
               scheme: HTTP
