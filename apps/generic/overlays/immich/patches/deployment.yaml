@@ -40,8 +40,6 @@ spec:
               value: "8"
             - name: DB_VECTOR_EXTENSION
               value: "pgvector"
-            - name: IMMICH_IGNORE_MOUNT_CHECK_ERRORS
-              value: "true"
           resources:
             requests:
               cpu: 1
@@ -55,7 +53,7 @@ spec:
               subPath: configs/immich/
             - name: main-volume
               mountPath: /media
-              subPath: public/Pictures/
+              subPath: gandazgul/Pictures/
           livenessProbe:
             httpGet:
               scheme: HTTP
