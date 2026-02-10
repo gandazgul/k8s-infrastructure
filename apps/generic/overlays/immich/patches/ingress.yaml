@@ -12,10 +12,17 @@ spec:
     - host: ${INGRESS_HOSTNAME}
       http:
         paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: immich
+                port:
+                  name: http
           - path: /api
             pathType: ImplementationSpecific
             backend:
               service:
-                name: service
+                name: immich
                 port:
                   name: server-http
