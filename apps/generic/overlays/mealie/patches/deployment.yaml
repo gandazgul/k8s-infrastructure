@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mealie
+spec:
+  template:
+    spec:
+      volumes:
+        - name: tz-config
+          hostPath:
+            path: /etc/localtime
+      containers:
+        - name: container
+          image: ghcr.io/mealie-recipes/mealie:latest
+          imagePullPolicy: Always
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: ${CLUSTER_TIME_ZONE}
+            - name: ALLOW_SIGNUP
+              value: "false"
+            - name: BASE_URL
+              value: https://recipes.${CLUSTER_DOMAIN_NAME}
+            - name: DEFAULT_EMAIL
+              value: ${EMAIL}
+            - name: SMTP_HOST
+              value: smtp.gmail.com
+            - name: SMTP_PORT
+              value: "587"
+            - name: SMTP_FROM_EMAIL
+              value: mealie@${CLUSTER_DOMAIN_NAME}
+            - name: SMTP_USER
+              value: ${EMAIL}
+            - name: SMTP_PASSWORD
+              value: ${SMTP_PASSWORD}
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /
+              port: 9000
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 250Mi
+            limits:
+              cpu: 500m
+              memory: 500Mi
+          volumeMounts:
+            - name: tz-config
+              mountPath: /etc/localtime
+              readOnly: true
+            - name: yasr-volume
+              mountPath: /app/data
+              subPath: configs/mealie
+          ports:
+            - name: http
+              containerPort: 9000
+              protocol: TCP
