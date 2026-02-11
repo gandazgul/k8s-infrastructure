@@ -1,0 +1,14 @@
+{
+    "name": "immich-backup",
+    "version": "1.0.0",
+    "description": "Backs up the immich-postgres PVC data by finding the PV via the K8s API and rsyncing the local folder",
+    "main": "app.js",
+    "repository": "https://github.com/gandazgul/k8s-infrastructure.git",
+    "author": "Carlos Ravelo",
+    "license": "MIT",
+    "private": true,
+    "type": "module",
+    "dependencies": {
+        "@kubernetes/client-node": "^1.0.0"
+    }
+}

@@ -1,0 +1,52 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: immich-backup
+  namespace: kube-system
+spec:
+  interval: 1h0m0s
+  path: ./infrastructure/cronjob/
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  prune: true
+  targetNamespace: default
+  postBuild:
+    substitute:
+      CRONJOB_NAME: immich-backup
+      NAMESPACE: default
+      SCHEDULE: "0 2 * * *"
+      IMAGE: docker.io/gandazgul/immich-backup:latest
+  patches:
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/volumes/-
+          value:
+            name: kubernetes-data
+            hostPath:
+              path: /var/kubernetes
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/volumes/-
+          value:
+            name: main-volume
+            persistentVolumeClaim:
+              claimName: main-volume
+      target:
+        kind: CronJob
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
+          value:
+            name: kubernetes-data
+            mountPath: /var/kubernetes
+            readOnly: true
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
+          value:
+            name: main-volume
+            mountPath: /media/backup
+            subPath: immich-backup
+      target:
+        kind: CronJob

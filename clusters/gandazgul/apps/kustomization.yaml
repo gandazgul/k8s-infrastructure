@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - ./secrets/
   - ./RsyncCronJobs.yaml
+  - ./ImmichBackupCronJob.yaml
   - ../../../apps/ActualBudget.yaml
   - ../../../apps/Bitwarden.yaml
   - ../../../apps/Forecastle.yaml
