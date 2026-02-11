@@ -1,4 +1,32 @@
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: immich-backup-sa
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: immich-backup-pvc-reader
+rules:
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims", "persistentvolumes"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: immich-backup-pvc-reader-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: immich-backup-pvc-reader
+subjects:
+  - kind: ServiceAccount
+    name: immich-backup-sa
+    namespace: default
+---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -20,6 +48,12 @@ spec:
       SCHEDULE: "0 2 * * *"
       IMAGE: docker.io/gandazgul/immich-backup:latest
   patches:
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/serviceAccountName
+          value: immich-backup-sa
+      target:
+        kind: CronJob
     - patch: |
         - op: add
           path: /spec/jobTemplate/spec/template/spec/volumes/-
