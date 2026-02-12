@@ -2,11 +2,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: tdarr
+  name: codex
   namespace: default
 spec:
-  interval: 5m
-  path: ./apps/generic/overlays/tdarr
+  interval: 1h
+  path: ./apps/generic/overlays/codex/
   prune: true
   sourceRef:
     kind: GitRepository
@@ -15,7 +15,7 @@ spec:
   healthChecks:
     - apiVersion: apps/v1
       kind: Deployment
-      name: tdarr
+      name: codex
       namespace: default
   postBuild:
     substituteFrom:

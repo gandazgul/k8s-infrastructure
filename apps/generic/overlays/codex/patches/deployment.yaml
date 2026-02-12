@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: codex
+spec:
+  template:
+    spec:
+      containers:
+        - name: container
+          image: docker.io/ajslater/codex:latest
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /config
+              subPath: configs/codex/
+            - name: main-volume
+              mountPath: /comics
+              subPath: public/Books/
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /
+              port: http
+            initialDelaySeconds: 300
+            timeoutSeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "${CLUSTER_TIME_ZONE}"
+            - name: CODEX_CONFIG_DIR
+              value: "/config"
+          ports:
+            - name: http
+              containerPort: 9810
+              protocol: TCP

@@ -34,12 +34,16 @@ version() {
 
 port_forward_assignment() {
   echo 'Setting the IP for MAM...'
-  curl -c /data/mam.cookies -b /data/mam.cookies https://t.myanonamouse.net/json/dynamicSeedbox.php
+  curl -c /data/mam.cookies -b "$(cat /data/mam.session)" https://t.myanonamouse.net/json/dynamicSeedbox.php
 
   TRANSMISSION_HOST=localhost
 
   echo 'Loading port forward assignment information...'
   PORT=`cat /data/forwarded_port`
+
+  if [ -z "$PORT" ]; then
+    error "No port found in /data/forwarded_port"
+  fi
 
   #change transmission port on the fly
   echo "Changing transmission's port to ${PORT}..."

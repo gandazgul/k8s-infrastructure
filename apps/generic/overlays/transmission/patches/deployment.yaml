@@ -16,7 +16,7 @@ spec:
       containers:
         # Transmission
         - name: container
-          image: docker.io/linuxserver/transmission:amd64-latest
+          image: docker.io/linuxserver/transmission:4.0.6
           imagePullPolicy: Always
           env:
             - name: PUID
@@ -118,7 +118,7 @@ spec:
               subPath: configs/openvpn/
         # Transmission port forward
         - name: transmission-pia-port-forward
-          image: docker.io/gandazgul/transmission-pia-port-forward:v93adcbc
+          image: docker.io/gandazgul/transmission-pia-port-forward:v8801db4
           imagePullPolicy: IfNotPresent
           resources:
             requests:

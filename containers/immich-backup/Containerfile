@@ -1,0 +1,12 @@
+FROM docker.io/library/node:22
+
+RUN apt-get update && apt-get install -y rsync && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY package.json .
+COPY yarn.lock .
+RUN yarn install --production
+
+COPY app.js index.js
+
+ENTRYPOINT ["node", "/app/index.js"]

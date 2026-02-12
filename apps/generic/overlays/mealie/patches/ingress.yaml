@@ -1,0 +1,9 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mealie
+  annotations:
+    forecastle.stakater.com/appName: "Mealie"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/group: "Media"
+    forecastle.stakater.com/icon: "https://raw.githubusercontent.com/hay-kot/mealie/mealie-next/frontend/static/icon.png"

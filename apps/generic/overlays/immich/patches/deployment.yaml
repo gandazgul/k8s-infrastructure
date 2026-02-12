@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich
+spec:
+  template:
+    spec:
+      containers:
+        - name: container
+          image: ghcr.io/immich-app/immich-server:release
+          imagePullPolicy: Always
+          env:
+            - name: DB_DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: immich-postgres-app
+                  key: dbname
+            - name: DB_HOSTNAME
+              valueFrom:
+                secretKeyRef:
+                  name: immich-postgres-app
+                  key: host
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: immich-postgres-superuser
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: immich-postgres-superuser
+                  key: password
+            - name: UPLOAD_LOCATION
+              value: /media
+            - name: IMMICH_PORT
+              value: "3001"
+            - name: REDIS_HOSTNAME
+              value: paperless-redis-master.default.svc.cluster.local
+            - name: REDIS_DBINDEX
+              value: "8"
+            - name: DB_VECTOR_EXTENSION
+              value: "pgvector"
+          resources:
+            requests:
+              cpu: 1
+              memory: 512Mi
+            limits:
+              cpu: 4
+              memory: 8Gi
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /data
+              subPath: configs/immich/
+            - name: main-volume
+              mountPath: /media
+              subPath: gandazgul/Pictures/
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+          ports:
+            - name: http
+              containerPort: 3001
+              protocol: TCP
