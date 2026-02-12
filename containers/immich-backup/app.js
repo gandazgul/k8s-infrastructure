@@ -13,9 +13,12 @@ async function main() {
 
     try {
         kc.loadFromCluster();
+
         console.log('Loaded in-cluster K8s config');
-    } catch {
+    }
+    catch {
         kc.loadFromDefault();
+
         console.log('Loaded default K8s config (local dev)');
     }
 
@@ -29,8 +32,7 @@ async function main() {
         namespace: NAMESPACE,
     });
 
-    const pvc = pvcResponse;
-    const pvName = pvc.spec?.volumeName;
+    const pvName = pvcResponse.spec?.volumeName;
 
     if (!pvName) {
         console.error(`PVC "${PVC_NAME}" has no bound volume (spec.volumeName is empty).`);
@@ -56,8 +58,11 @@ async function main() {
 
     try {
         execSync(rsyncCommand, { stdio: [process.stdin, process.stdout, process.stderr] });
+        execSync(`chmod 750 "${BACKUP_DEST}"`, { stdio: [process.stdin, process.stdout, process.stderr] });
+
         console.log('Backup completed successfully.');
-    } catch (err) {
+    }
+    catch (err) {
         console.error('rsync failed:', err.message);
         process.exit(1);
     }
