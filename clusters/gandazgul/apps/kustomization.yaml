@@ -5,6 +5,7 @@ resources:
   - ./secrets/
   - ./RsyncCronJobs.yaml
   - ./ImmichBackupCronJob.yaml
+#  - ./PlexBackupCronJob.yaml
   - ../../../apps/ActualBudget.yaml
   - ../../../apps/Bitwarden.yaml
   - ../../../apps/Forecastle.yaml
@@ -30,3 +31,4 @@ resources:
   - ../../../apps/Harbor.yaml
   - ../../../apps/Qdrant.yaml
   - ../../../apps/Immich.yaml
+  - ../../../apps/OpenWebUI.yaml
