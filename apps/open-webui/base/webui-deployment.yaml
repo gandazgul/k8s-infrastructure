@@ -23,7 +23,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: OLLAMA_BASE_URL
-              value: "http://10.1.1.3:1434"
+              value: "http://10.1.1.3:1234"
             - name: RAG_EMBEDDING_MODEL_AUTO_UPDATE
               value: "true"
             - name: ENABLE_SIGNUP
