@@ -5,3 +5,5 @@ resources:
   - webui-deployment.yaml
   - webui-service.yaml
   - webui-ingress.yaml
+  - docling-deployment.yaml
+  - docling-service.yaml

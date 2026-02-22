@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docling
+  namespace: default
+  labels:
+    app.kubernetes.io/name: docling
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: docling
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: docling
+    spec:
+      containers:
+        - name: docling
+          image: ghcr.io/docling-project/docling-serve-cpu:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 5001
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 250Mi
+            limits:
+              cpu: 1000m
+              memory: 2000Mi
