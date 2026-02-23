@@ -22,6 +22,8 @@ spec:
           image: ghcr.io/open-webui/open-webui:main
           imagePullPolicy: Always
           env:
+            - name: DOCLING_SERVE_MAX_SYNC_WAIT
+              value: "10000"
             - name: ENABLE_SIGNUP
               value: "false"
           ports:
