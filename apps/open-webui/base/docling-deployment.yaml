@@ -25,15 +25,13 @@ spec:
             - name: http
               containerPort: 5001
               protocol: TCP
-          livenessProbe:
-            tcpSocket:
-              port: http
-            initialDelaySeconds: 30
-            timeoutSeconds: 10
+          env:
+            - name: DOCLING_SERVE_ENABLE_UI
+              value: "1"
           resources:
             requests:
               cpu: 100m
               memory: 250Mi
             limits:
               cpu: 1000m
-              memory: 2000Mi
+              memory: 8000Mi
