@@ -23,7 +23,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: DOCLING_SERVE_MAX_SYNC_WAIT
-              value: "10000"
+              value: "100000"
             - name: ENABLE_SIGNUP
               value: "false"
           ports:
