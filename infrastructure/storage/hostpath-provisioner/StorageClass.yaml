@@ -6,5 +6,5 @@ metadata:
   annotations:
     storageclass.kubernetes.io/is-default-class: "true"
 provisioner: kubevirt.io/hostpath-provisioner
-reclaimPolicy: {{ .Values.pvReclaimPolicy }}
+reclaimPolicy: Retain
 volumeBindingMode: WaitForFirstConsumer
