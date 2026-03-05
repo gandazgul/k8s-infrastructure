@@ -1,0 +1,71 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: headlamp
+  namespace: kube-system
+spec:
+  interval: 1h0m0s
+  url: https://kubernetes-sigs.github.io/headlamp/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: headlamp
+  namespace: kube-system
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: headlamp
+      version: 0.40.0
+      sourceRef:
+        kind: HelmRepository
+        name: headlamp
+        namespace: kube-system
+  values:
+    config:
+      watchPlugins: true
+    pluginsManager:
+      enabled: true
+      configContent: |
+        plugins:
+          - name: flux
+            source: https://artifacthub.io/packages/headlamp/headlamp-plugins/headlamp_flux
+            version: 0.5.0
+          - name: cert-manager
+            source: https://artifacthub.io/packages/headlamp/headlamp-plugins/headlamp_cert-manager
+            version: 0.1.0
+        installOptions:
+          parallel: true
+          maxConcurrent: 2
+    volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: yasr-volume
+    volumeMounts:
+      - name: config
+        mountPath: /home/headlamp/.config/Headlamp/plugins/
+        subPath: configs/headlamp/plugins/
+      - name: config
+        mountPath: /home/headlamp/.config/Headlamp/kubeconfigs/
+        subPath: configs/headlamp/kube/
+    service:
+      port: 4466
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        forecastle.stakater.com/appName: "Headlamp"
+        forecastle.stakater.com/group: "Management"
+        forecastle.stakater.com/expose: "true"
+        forecastle.stakater.com/icon: "https://headlamp.dev/img/logo.svg"
+      hosts:
+        - host: dashboard.${CLUSTER_DOMAIN_NAME}
+          paths:
+            - path: /
+              type: ImplementationSpecific
+      tls:
+        - secretName: internal-ingress-cert
+          hosts:
+            - dashboard.${CLUSTER_DOMAIN_NAME}

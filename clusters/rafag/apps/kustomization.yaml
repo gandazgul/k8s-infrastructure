@@ -14,7 +14,6 @@ resources:
   - ../../../apps/Sharry.yaml
   #  - ../../../apps/ZWaveJS.yaml
   - ../../../apps/Mealie.yaml
-  - ../../../apps/Headlamp.yaml
   - ../../../apps/Transmission.yaml
   - ../../../apps/Lidarr.yaml
   #- ../../../apps/Overseerr.yaml

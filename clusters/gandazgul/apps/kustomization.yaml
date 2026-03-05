@@ -9,7 +9,6 @@ resources:
   - ../../../apps/ActualBudget.yaml
   - ../../../apps/Bitwarden.yaml
   - ../../../apps/Forecastle.yaml
-  - ../../../apps/Headlamp.yaml
   - ../../../apps/HomeAssistant.yaml
   - ../../../apps/Paperless.yaml
   - ../../../apps/Resilio.yaml
