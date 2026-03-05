@@ -31,10 +31,10 @@ spec:
     volumeMounts:
       - name: config
         mountPath: /headlamp/plugins
-        subPath: configs/headlamp
+        subPath: configs/headlamp/plugins/
       - name: config
-        mountPath: /home/headlamp/.config/Headlamp/kubeconfigs/config
-        subPath: configs/headlamp
+        mountPath: /home/headlamp/.config/Headlamp/kubeconfigs/
+        subPath: configs/headlamp/kube/
     service:
       port: 4466
     ingress:
