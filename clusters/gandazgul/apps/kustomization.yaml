@@ -4,28 +4,31 @@ kind: Kustomization
 resources:
   - ./secrets/
   - ./RsyncCronJobs.yaml
+  - ./ImmichBackupCronJob.yaml
+#  - ./PlexBackupCronJob.yaml
   - ../../../apps/ActualBudget.yaml
   - ../../../apps/Bitwarden.yaml
   - ../../../apps/Forecastle.yaml
   - ../../../apps/Headlamp.yaml
   - ../../../apps/HomeAssistant.yaml
-  - ../../../apps/MosquitoMQTTBroker.yaml
   - ../../../apps/Paperless.yaml
   - ../../../apps/Resilio.yaml
   - ../../../apps/SFTPGo.yaml
-  - ../../../apps/Sharry.yaml
   - ../../../apps/ZWaveJS.yaml
   - ../../../apps/Mealie.yaml
   - ../../../apps/AudioBookShelf.yaml
+  - ../../../apps/Codex.yaml
   - ../../../apps/Transmission.yaml
   - ../../../apps/Lidarr.yaml
   - ../../../apps/Overseerr.yaml
   - ../../../apps/Prowlarr.yaml
   - ../../../apps/Radarr.yaml
   - ../../../apps/Sonarr.yaml
+  - ../../../apps/TubeSync.yaml
   - ../../../apps/Tdarr.yaml
   - ../../../apps/Plex.yaml
   - ../../../apps/RDiffWeb.yaml
   - ../../../apps/Harbor.yaml
-  - ../../../apps/Jellyfin.yaml
   - ../../../apps/Qdrant.yaml
+  - ../../../apps/Immich.yaml
+  - ../../../apps/OpenWebUI.yaml

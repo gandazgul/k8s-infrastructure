@@ -20,21 +20,21 @@ patches:
       namespace: default
     options:
       allowNameChange: true
-  - path: patches/ingress.yaml
-    target:
-      group: networking.k8s.io
-      version: v1
-      kind: Ingress
-      name: ingress
-      namespace: default
-    options:
-      allowNameChange: true
   - path: patches/service.yaml
     target:
       group: ""
       version: v1
       kind: Service
       name: service
+      namespace: default
+    options:
+      allowNameChange: true
+  - path: patches/ingress.yaml
+    target:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: ingress
       namespace: default
     options:
       allowNameChange: true

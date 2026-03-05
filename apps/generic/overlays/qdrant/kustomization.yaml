@@ -4,10 +4,13 @@ kind: Kustomization
 namespace: default
 resources:
   - ../../base/
+  - service-nodeport.yaml
+
 labels:
   - pairs:
       app.kubernetes.io/name: qdrant
     includeSelectors: true
+
 patches:
   - path: patches/deployment.yaml
     target:

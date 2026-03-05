@@ -1,0 +1,8 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: gabe565
+  namespace: kube-system
+spec:
+  interval: 1h
+  url: https://charts.gabe565.com

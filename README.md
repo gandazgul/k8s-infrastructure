@@ -1,9 +1,8 @@
 # K8s Infrastructure Config
 
-This is a collection of scripts to deploy kubernetes v1.32.x on Fedora. Tested on Fedora 39.
+This is a collection of scripts to deploy kubernetes v1.34.x on Fedora. Tested on Fedora 39.
 
-It's also a collection of helm charts that I developed or customized, as well as
-[flux v2](https://toolkit.fluxcd.io/) objects to deploy all the supported applications.
+It's also a collection of [flux v2](https://toolkit.fluxcd.io/) objects to deploy all the supported applications.
 
 We handled storage with PersistenceVolumes mapped to mount points on the host and pre-existing claims created that pods
 can use as volumes. There's a k8s cron job included to make differential backups between the main mount point and the
@@ -19,11 +18,7 @@ A small business server running the control plane node and worker. I plan to add
 a "cluster" and to try to automate node on-boarding. I've tested the manual node on-boarding with VMs, and it works
 well. Look at this script [https://github.com/gandazgul/k8s-infrastructure/blob/main/install-k8s/2-configK8SNode.sh]()
 
-```bash
-helm repo add gandazgul https://gandazgul.github.io/k8s-infrastructure/
-```
 
-Here is the [index.yaml](https://gandazgul.github.io/k8s-infrastructure/index.yaml)
 
 ## What is YASR? I see it mentioned everywhere
 

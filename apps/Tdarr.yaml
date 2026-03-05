@@ -6,7 +6,7 @@ metadata:
   namespace: default
 spec:
   interval: 5m
-  path: ./apps/tdarr/base/
+  path: ./apps/generic/overlays/tdarr
   prune: true
   sourceRef:
     kind: GitRepository
