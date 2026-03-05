@@ -37,13 +37,6 @@ spec:
         subPath: configs/headlamp/kube/
     service:
       port: 4466
-    securityContext:
-      runAsUser: 1000
-      runAsNonRoot: true
-      allowPrivilegeEscalation: false
-      capabilities:
-        drop:
-          - ALL
     ingress:
       enabled: true
       ingressClassName: nginx
