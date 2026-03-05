@@ -194,28 +194,6 @@ entries:
     urls:
     - https://github.com/gandazgul/k8s-infrastructure/releases/download/mealie-0.1.1/mealie-0.1.1.tgz
     version: 0.1.1
-  mosca:
-  - apiVersion: v1
-    appVersion: 2.8.3
-    created: "2021-04-04T05:01:01.959915839Z"
-    description: A Helm chart for the Mosca.io MQTT Broker
-    digest: 3fa379db379be1058a06c2601981e9253a50a26baf6c07a258004fc4cacb0b99
-    maintainers:
-    - email: ravelo.carlos@gmail.com
-      name: gandazgul
-    name: mosca
-    urls:
-    - https://github.com/gandazgul/k8s-infrastructure/releases/download/mosca-0.2.1/mosca-0.2.1.tgz
-    version: 0.2.1
-  - apiVersion: v1
-    appVersion: 2.8.3
-    created: "2020-12-07T06:44:32.354240825Z"
-    description: A Helm chart for the Mosca.io MQTT Broker
-    digest: e6f2073110a2c2065e2e94f25916be2ab0f87b058f6d0068053797aee828627b
-    name: mosca
-    urls:
-    - https://github.com/gandazgul/k8s-infrastructure/releases/download/mosca-0.2.0/mosca-0.2.0.tgz
-    version: 0.2.0
   nest-mqtt-bridge:
   - apiVersion: v1
     appVersion: 1.0.0
