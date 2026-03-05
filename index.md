@@ -1,7 +1,6 @@
 # K8s Infrastructure Config
 
 install-k8s/ - This is a collection of scripts to deploy kubernetes v1.24.x on Fedora. Tested on Fedora 37.
-charts/ - Is a collection of helm charts that I developed or customized.
 
 The rest is a GitOps setup using [Flux CD](https://fluxcd.io/flux/get-started/) to deploy all infra and the supported applications.
 
@@ -21,19 +20,7 @@ node to learn to manage a "cluster" and to try to automate node on-boarding. I'v
 manual node on-boarding with VMs, and it works well.
 Look at this script [https://github.com/gandazgul/k8s-infrastructure/blob/main/install-k8s/2-configK8SNode.sh]()
 
-# [Helm](https://helm.sh) Charts
 
-Most of these I created because I couldn't find them or were super specific. Some are based on official charts I needed to modify.
-
-I publish my charts as a helm repo. To use them add this url to helm and run update.
-
-```bash
-helm repo add gandazgul https://gandazgul.github.io/k8s-infrastructure/
-```
-
-Here is the [index.yaml](https://gandazgul.github.io/k8s-infrastructure/index.yaml)
-
----
 
 ## Getting started
 

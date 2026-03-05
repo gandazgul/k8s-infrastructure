@@ -8,9 +8,6 @@
 containers/sshd/users.conf
 containers/size-checker/ssmtp.conf
 
-# chart deps
-charts/gogs/charts/
-
 # secrets and private files
 secrets.sh
 secrets.env
