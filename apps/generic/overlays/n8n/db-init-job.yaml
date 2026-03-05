@@ -1,0 +1,95 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: n8n-db-init-script
+  namespace: default
+data:
+  init-db.sql: |
+    -- Create schema for n8n conversations in paperless database
+    CREATE SCHEMA IF NOT EXISTS n8n;
+
+    -- Create conversations table in n8n schema
+    CREATE TABLE IF NOT EXISTS n8n.conversations (
+        conversation_id VARCHAR(255) PRIMARY KEY,
+        history TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- Create index on updated_at for efficient cleanup queries
+    CREATE INDEX IF NOT EXISTS idx_conversations_updated_at ON n8n.conversations(updated_at);
+
+    -- Create a cleanup function to remove old conversations (older than 30 days)
+    CREATE OR REPLACE FUNCTION n8n.cleanup_old_conversations()
+    RETURNS void AS $$
+    BEGIN
+        DELETE FROM n8n.conversations 
+        WHERE updated_at < NOW() - INTERVAL '30 days';
+    END;
+    $$ LANGUAGE plpgsql;
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: n8n-db-init
+  namespace: default
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: psql
+        image: postgres:16-alpine
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Waiting for PostgreSQL to be ready..."
+          until pg_isready -h $PGHOST -U $PGUSER; do
+            echo "Waiting for database..."
+            sleep 2
+          done
+          echo "PostgreSQL is ready. Running initialization script..."
+          psql -f /scripts/init-db.sql
+          echo "Database initialization complete!"
+        env:
+        - name: PGHOST
+          valueFrom:
+            secretKeyRef:
+              name: paperless-db-app
+              key: host
+        - name: PGPORT
+          valueFrom:
+            secretKeyRef:
+              name: paperless-db-app
+              key: port
+        - name: PGUSER
+          valueFrom:
+            secretKeyRef:
+              name: paperless-db-app
+              key: username
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: paperless-db-app
+              key: password
+        - name: PGDATABASE
+          valueFrom:
+            secretKeyRef:
+              name: paperless-db-app
+              key: dbname
+        - name: N8N_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: N8N_DB_PASSWORD
+        volumeMounts:
+        - name: init-script
+          mountPath: /scripts
+          readOnly: true
+      volumes:
+      - name: init-script
+        configMap:
+          name: n8n-db-init-script
