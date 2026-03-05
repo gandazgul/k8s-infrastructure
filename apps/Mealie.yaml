@@ -6,7 +6,7 @@ metadata:
   namespace: default
 spec:
   interval: 5m
-  path: ./apps/mealie/base/
+  path: ./apps/generic/overlays/mealie/
   prune: true
   sourceRef:
     kind: GitRepository
