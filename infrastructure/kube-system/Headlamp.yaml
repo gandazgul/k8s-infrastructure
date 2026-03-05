@@ -45,7 +45,7 @@ spec:
           claimName: yasr-volume
     volumeMounts:
       - name: config
-        mountPath: /headlamp/plugins/
+        mountPath: /home/headlamp/.config/headlamp/plugins/
         subPath: configs/headlamp/plugins/
       - name: config
         mountPath: /home/headlamp/.config/Headlamp/kubeconfigs/
