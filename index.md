@@ -1,6 +1,6 @@
 # K8s Infrastructure Config
 
-install-k8s/ - This is a collection of scripts to deploy kubernetes v1.24.x on Fedora. Tested on Fedora 37.
+install-k8s/ - This is a collection of scripts to deploy kubernetes v1.34.x on Fedora. Tested on Fedora 39.
 
 The rest is a GitOps setup using [Flux CD](https://fluxcd.io/flux/get-started/) to deploy all infra and the supported applications.
 
@@ -26,7 +26,7 @@ Look at this script [https://github.com/gandazgul/k8s-infrastructure/blob/main/i
 
 By following these steps you will install a fully functioning kubernetes control plane/worker where you can run all of your applications.
 
-1. Install Fedora 37
+1. Install Fedora 39
     1. During install set the hostname, this will be the name of this node, you can do this after install
     2. Create a user, kubectl doesn't like running as root for good reason
     3. Remove the swap, kubernetes is not compatible with swap at the moment and will complain about it.
@@ -115,22 +115,24 @@ volume it gets deleted, is just a warning.
 
 It's fairly easy and I've done it before successfully.
 
-1. `yum list --showduplicates kubeadm --disableexcludes=kubernetes` find the latest of the next version in the list it should look like 1.XY.x-0, where x is the latest patch
-2. Install kubeadm replace x in 1.21.x-0 with the latest patch version `yum install -y kubeadm-1.XY.x-0 --disableexcludes=kubernetes`
+1. `dnf list --showduplicates kubeadm --disableexcludes=kubernetes` find the latest of the next version in the list it
+   should look like 1.XY.x-0, where x is the latest patch
+2. Install kubeadm replace x in 1.34.x-0 with the latest patch version
+   `dnf install -y kubeadm-1.XY.x-0 --disableexcludes=kubernetes`
    1. Verify that the download works and has the expected version: `kubeadm version`
    2. Verify the upgrade plan: `kubeadm upgrade plan` This command checks that your cluster can be upgraded, and fetches the versions you can upgrade to. It also shows a table with the component config version states.
 3. Choose a version to upgrade to, and run the appropriate command. For example:
 `sudo kubeadm upgrade apply v1.XY.x`
 Once the command finishes you should see:
-`[upgrade/successful] SUCCESS! Your cluster was upgraded to "v1.21.x". Enjoy!`
+   `[upgrade/successful] SUCCESS! Your cluster was upgraded to "v1.34.x". Enjoy!`
 4. Drain the node `kubectl drain k8s-master --ignore-daemonsets --delete-emptydir-data`
 5. Upgrade kubelet and kubectl
-`yum install -y kubelet-1.XY.x-0 kubectl-1.XY.x-0 --disableexcludes=kubernetes`
+   `dnf install -y kubelet-1.XY.x-0 kubectl-1.XY.x-0 --disableexcludes=kubernetes`
 6. Restart the kubelet:
    1. `sudo systemctl daemon-reload`
    2. `sudo systemctl restart kubelet`
 7. Uncordon the node `kubectl uncordon k8s-master`
-8. Full instructions here https://v1-21.docs.kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/
+8. Full instructions here https://v1-34.docs.kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/
 
 ## License
 

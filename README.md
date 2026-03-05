@@ -1,6 +1,6 @@
 # K8s Infrastructure Config
 
-This is a collection of scripts to deploy kubernetes v1.32.x on Fedora. Tested on Fedora 39.
+This is a collection of scripts to deploy kubernetes v1.34.x on Fedora. Tested on Fedora 39.
 
 It's also a collection of [flux v2](https://toolkit.fluxcd.io/) objects to deploy all the supported applications.
 
