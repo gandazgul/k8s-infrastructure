@@ -94,7 +94,7 @@ achieved by statically validating Kubernetes YAML manifests and ensuring Bash/JS
   ```javascript
   try {
       process.chdir(`containers/${imageName}`);
-  } 
+  }
   catch (err) {
       console.error('CONTAINER:BUILD', 'Chdir failed', err);
       process.exit(1);
@@ -125,6 +125,7 @@ achieved by statically validating Kubernetes YAML manifests and ensuring Bash/JS
 
 - **Context Gathering:** Before making significant changes, execute `grep` and `glob` searches to understand custom
   patterns, especially how persistent volumes (`pvc.yaml`) interact with applications.
+  - When you need to search docs, use `context7` mcp tools.
 - **Proactive Scaffolding:** When asked to add a new application, draft the full `HelmRelease` configuration, suggest
   appropriate persistent volume claims, configure an Ingress route if applicable, and run a dry-run validation using
   Kustomize/Kubectl.
@@ -132,6 +133,9 @@ achieved by statically validating Kubernetes YAML manifests and ensuring Bash/JS
   clearly state the application being updated or the specific infrastructure change.
 - **Immutability:** Treat existing cluster components as immutable unless an upgrade is explicitly requested. Do not
   modify global `HelmRepository` resources if an app-specific setup works perfectly.
+- To search the web use `tavily` mcp tools. Search and scrape sites like StackOverflow, GitHub Issues, and official
+  documentation for Kubernetes, Flux, and related tools. Always
+  verify the credibility of sources and cross-reference information when possible.
 
 ## 5. Directory Structure Overview
 
