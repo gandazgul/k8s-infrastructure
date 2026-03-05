@@ -64,10 +64,12 @@ kubernetes-client in Fedora)
 2. Modify ClusterKustomization to change the name and the path, you can also here add variables to replace that are unique to your deployment under postBuild:
 3. run `cp ./infrastructure/setup/secrets.env.example ./clusters/[YOUR NAME HERE]/secrets.env`
 4. Fill in secrets with your passwords and other settings
-5. make a directory in your cluster folder called apps and create a kustomization.yaml inside, look at the clusters in this repo 
+5. make a directory in your cluster folder called apps and create a kustomization.yaml inside, look at the clusters in
+   this repo
     1. Add in each app you'd like to deploy
-    2. You can create other HelmRealeases, Kustomizations, or plain k8s files in this folder they will all be synced up to your k8s cluster   
-6. Install flux and configure your cluster by running `./infrastructure/setup/install-flux.sh [your folder name here]` 
+   2. You can create other HelmRealeases, Kustomizations, or plain k8s files in this folder they will all be synced up
+      to your k8s cluster
+6. Install flux and configure your cluster by running `./infrastructure/setup/install-flux.sh [your folder name here]`
 7. A SealedSecret.yaml file will be created in your folder, you can commit this file, your secrets.env should be ignored. The values haven been encrypted with a cert stored in your cluster.
 8. Finally add the GitRepo with `kubectl apply -f ./infrastructure/setup/GitRepoSync.yaml`
 

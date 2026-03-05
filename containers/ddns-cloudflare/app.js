@@ -28,6 +28,7 @@ const zoneId = process.env.CLOUDFLARE_ZONE_ID; // Zone ID for the domain
 
 // Get the IP address using multiple fallback services
 const ipServices = [
+    'https://ifconfig.co/ip',
     'https://api.ipify.org',
     'https://icanhazip.com',
     'https://checkip.amazonaws.com',
@@ -41,12 +42,14 @@ for (const service of ipServices) {
         });
         if (response.ok) {
             ipAddress = (await response.text()).trim();
-            if (/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipAddress)) {
+            if (/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(
+                ipAddress)) {
                 console.log(`Got IP ${ipAddress} from ${service}`);
                 break;
             }
         }
-    } catch (e) {
+    }
+    catch (e) {
         console.warn(`Failed to get IP from ${service}:`, e.message);
     }
     ipAddress = null;
@@ -58,7 +61,8 @@ if (!ipAddress) {
 }
 
 if (!apiEmail || !apiToken || !clusterDomain || !zoneId) {
-    console.error('Missing required environment variables (CLOUDFLARE_API_EMAIL, CLOUDFLARE_API_TOKEN, CLUSTER_DOMAIN_NAME, or CLOUDFLARE_ZONE_ID)');
+    console.error(
+        'Missing required environment variables (CLOUDFLARE_API_EMAIL, CLOUDFLARE_API_TOKEN, CLUSTER_DOMAIN_NAME, or CLOUDFLARE_ZONE_ID)');
     process.exit(1);
 }
 

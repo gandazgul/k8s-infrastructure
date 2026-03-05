@@ -42,25 +42,25 @@ if [ ! -d "$BACKUP_LOC" ]; then
 fi
 
 # switching to a directory where I should have enough space
-pushd "$PMS_DIR"
+pushd "$PMS_DIR" || exit 1
 
 BK_PREFIX="pms-backup-$(date '+%Y-%m-%d-%H%M%S')"
 # tar components (loop)
 for i in "${PMS_LIST[@]}"; do
     sendMsg "Backing up $i ..." "1"
-    
+
     # add conditional filename change for directory with space
     if [ "$i" == "Plug-in Support" ]; then
         FILENAME="$PMS_DIR/$BK_PREFIX-Plug-in_Support.tar.gz"
     else
-        FILENAME="$PMS_DIR/$BK_PREFIX-$i.tar.gz"  
+        FILENAME="$PMS_DIR/$BK_PREFIX-$i.tar.gz"
     fi
     # make archive
     # uncomment below for verbose flag
     #tar -czvf "$FILENAME" "$i"
     # comment out if using the verbose flag above
     tar -czf "$FILENAME" "$i"
-    
+
     if [ -d "$BACKUP_LOC" ]; then
         mv "$FILENAME" "$BACKUP_LOC/"
     else
@@ -68,7 +68,7 @@ for i in "${PMS_LIST[@]}"; do
     fi
 done
 
-popd
+popd || exit 1
 sendMsg "Backup Completed" "1"
 
 # start pms service

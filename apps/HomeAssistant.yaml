@@ -16,9 +16,9 @@ spec:
         namespace: kube-system
       interval: 5m
   valuesFrom:
-  - kind: Secret
-    name: home-assistant-values
-    optional: true
+    - kind: Secret
+      name: home-assistant-values
+      optional: true
   values:
     controllerType: deployment
     image:

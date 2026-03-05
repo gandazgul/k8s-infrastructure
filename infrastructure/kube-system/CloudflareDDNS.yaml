@@ -18,34 +18,22 @@ spec:
       CRONJOB_NAME: cloudflare-ddns
       # Every hour
       SCHEDULE: "0 */1 * * *"
-      IMAGE: docker.io/rafaelgil83/ddns-cloudflare:vaf00940-amd64
+      IMAGE: docker.io/gandazgul/ddns-cloudflare:v4c4c251
       NAMESPACE: default
   patches:
     - patch: |
-        apiVersion: batch/v1
-        kind: CronJob
-        metadata:
-          name: cloudflare-ddns
-        spec:
-          jobTemplate:
-            spec:
-              template:
-                metadata:
-                  labels:
-                    goharbor.io/harbor-container-webhook-disable: "true"
-                spec:
-                  containers:
-                    - name: cronjob
-                      env:
-                        - name: CLUSTER_NAME
-                          value: ${CLUSTER_NAME}
-                        - name: CLOUDFLARE_API_TOKEN
-                          value: ${CLOUDFLARE_API_TOKEN}
-                        - name: CLOUDFLARE_API_EMAIL
-                          value: ${CLOUDFLARE_API_EMAIL}
-                        - name: CLUSTER_DOMAIN_NAME
-                          value: ${CLUSTER_DOMAIN_NAME}
-                        - name: CLOUDFLARE_ZONE_ID
-                          value: ${CLOUDFLARE_ZONE_ID}
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/env
+          value:
+            - name: CLUSTER_NAME
+              value: ${CLUSTER_NAME}
+            - name: CLOUDFLARE_API_TOKEN
+              value: ${CLOUDFLARE_API_TOKEN}
+            - name: CLOUDFLARE_API_EMAIL
+              value: ${CLOUDFLARE_API_EMAIL}
+            - name: CLUSTER_DOMAIN_NAME
+              value: ${CLUSTER_DOMAIN_NAME}
+            - name: CLOUDFLARE_ZONE_ID
+              value: ${CLOUDFLARE_ZONE_ID}
       target:
         kind: CronJob
