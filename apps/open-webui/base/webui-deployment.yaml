@@ -22,10 +22,8 @@ spec:
           image: ghcr.io/open-webui/open-webui:main
           imagePullPolicy: Always
           env:
-            - name: OLLAMA_BASE_URL
-              value: "http://ollama.default.svc.cluster.local:11434"
-            - name: RAG_EMBEDDING_MODEL_AUTO_UPDATE
-              value: "true"
+            - name: DOCLING_SERVE_MAX_SYNC_WAIT
+              value: "100000"
             - name: ENABLE_SIGNUP
               value: "false"
           ports:
@@ -39,13 +37,22 @@ spec:
               port: 8080
             initialDelaySeconds: 30
             timeoutSeconds: 10
+          startupProbe:
+            httpGet:
+              scheme: HTTP
+              path: /
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 30
           resources:
             requests:
               cpu: 100m
               memory: 250Mi
             limits:
               cpu: 1000m
-              memory: 2000Mi
+              memory: 4Gi
           volumeMounts:
             - name: tz-config
               mountPath: /etc/localtime
