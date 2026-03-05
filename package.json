@@ -8,16 +8,12 @@
     "private": true,
     "scripts": {
         "docker:build": "node containers/docker-build.js",
-        "docker:run": "node containers/docker-run.js",
-        "docs": "helm-docs"
+        "docker:run": "node containers/docker-run.js"
     },
     "dependencies": {
         "minimist": "^1.2.8",
         "pre-commit": "^1.2.2"
     },
-    "pre-commit": [
-        "docs"
-    ],
     "resolutions": {
         "cross-spawn": "6.0.6"
     }
