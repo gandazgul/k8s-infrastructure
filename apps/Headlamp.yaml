@@ -1,14 +1,12 @@
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: GitRepository
+kind: HelmRepository
 metadata:
   name: headlamp
   namespace: kube-system
 spec:
   interval: 1h0m0s
-  url: https://github.com/kubernetes-sigs/headlamp.git
-  ref:
-    branch: main
+  url: https://kubernetes-sigs.github.io/headlamp/
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -19,26 +17,24 @@ spec:
   interval: 1h
   chart:
     spec:
-      chart: ./charts/headlamp
+      chart: headlamp
+      version: 0.40.0
       sourceRef:
-        kind: GitRepository
+        kind: HelmRepository
         name: headlamp
         namespace: kube-system
   values:
-    config:
-      oidc:
-        clientID: ${HEADLAMP_GOOGLE_CLIENT_ID}
-        clientSecret: ${HEADLAMP_GOOGLE_CLIENT_SECRET}
-        issuerURL: https://accounts.google.com
-        scopes: openid,email,profile
     volumes:
       - name: config
         persistentVolumeClaim:
           claimName: yasr-volume
     volumeMounts:
-      - name: config
+      - name: plugins
         mountPath: /headlamp/plugins
         subPath: configs/headlamp
+      - name: kubeconfig
+        mountPath: /home/headlamp/.config/Headlamp/kubeconfigs/config
+        subPath: configs/headlamp/kubeconfig
     service:
       port: 4466
     ingress:
