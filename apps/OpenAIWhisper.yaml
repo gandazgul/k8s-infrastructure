@@ -24,7 +24,7 @@ spec:
         name: truecharts
         namespace: kube-system
   #https://github.com/truecharts/charts/blob/master/charts/stable/wyoming-whisper/values.yaml
-  values: 
+  values:
     key1: value1
     key2:
       subkey1: value2

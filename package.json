@@ -11,8 +11,7 @@
         "docker:run": "node containers/docker-run.js"
     },
     "dependencies": {
-        "minimist": "^1.2.8",
-        "pre-commit": "^1.2.2"
+        "minimist": "^1.2.8"
     },
     "resolutions": {
         "cross-spawn": "6.0.6"
