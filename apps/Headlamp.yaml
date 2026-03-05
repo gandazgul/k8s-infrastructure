@@ -34,7 +34,7 @@ spec:
         subPath: configs/headlamp
       - name: config
         mountPath: /home/headlamp/.config/Headlamp/kubeconfigs/config
-        subPath: configs/headlamp/kubeconfig
+        subPath: configs/headlamp
     service:
       port: 4466
     ingress:
