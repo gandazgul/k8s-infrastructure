@@ -29,10 +29,10 @@ spec:
         persistentVolumeClaim:
           claimName: yasr-volume
     volumeMounts:
-      - name: plugins
+      - name: config
         mountPath: /headlamp/plugins
         subPath: configs/headlamp
-      - name: kubeconfig
+      - name: config
         mountPath: /home/headlamp/.config/Headlamp/kubeconfigs/config
         subPath: configs/headlamp/kubeconfig
     service:
