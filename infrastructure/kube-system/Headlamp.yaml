@@ -26,6 +26,7 @@ spec:
   values:
     config:
       watchPlugins: true
+      pluginsDir: /home/headlamp/.config/headlamp/plugins/
     pluginsManager:
       enabled: true
       configContent: |
@@ -39,6 +40,10 @@ spec:
         installOptions:
           parallel: true
           maxConcurrent: 2
+      volumeMounts:
+        - name: config
+          mountPath: /home/headlamp/.config/headlamp/plugins/
+          subPath: configs/headlamp/plugins/
     volumes:
       - name: config
         persistentVolumeClaim:
