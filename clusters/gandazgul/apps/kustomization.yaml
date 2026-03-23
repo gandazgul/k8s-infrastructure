@@ -31,3 +31,4 @@ resources:
   - ../../../apps/Qdrant.yaml
   - ../../../apps/Immich.yaml
   - ../../../apps/OpenWebUI.yaml
+  - ../../../apps/Goaly.yaml

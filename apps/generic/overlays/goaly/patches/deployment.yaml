@@ -1,0 +1,29 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goaly
+spec:
+  template:
+    spec:
+      containers:
+        - name: container
+          image: ghcr.io/gandazgul/goaly:latest
+          imagePullPolicy: Always
+          env:
+            - name: GOOGLE_CLIENT_ID
+              value: "${GOALY_GOOGLE_CLIENT_ID}"
+            - name: GOOGLE_CLIENT_SECRET
+              value: "${GOALY_GOOGLE_CLIENT_SECRET}"
+            - name: PUBLIC_URL
+              value: "https://goaly.${CLUSTER_DOMAIN_NAME}"
+            - name: DB_PATH
+              value: "/data/goaly.db"
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /data
+              subPath: configs/goaly/
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
