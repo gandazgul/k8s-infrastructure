@@ -1,0 +1,50 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gotify
+spec:
+  template:
+    spec:
+      volumes:
+        - name: tz-config
+          hostPath:
+            path: /etc/localtime
+      containers:
+        - name: container
+          image: ghcr.io/gotify/server:latest
+          imagePullPolicy: Always
+          env:
+            - name: TZ
+              value: ${CLUSTER_TIME_ZONE}
+            - name: GOTIFY_DEFAULTUSER_NAME
+              value: admin
+            - name: GOTIFY_DEFAULTUSER_PASS
+              value: ${ADMIN_PASSWORD}
+            - name: GOTIFY_REGISTRATION
+              value: "false"
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 50m
+              memory: 100Mi
+            limits:
+              cpu: 500m
+              memory: 500Mi
+          volumeMounts:
+            - name: tz-config
+              mountPath: /etc/localtime
+              readOnly: true
+            - name: yasr-volume
+              mountPath: /app/data
+              subPath: configs/gotify
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP

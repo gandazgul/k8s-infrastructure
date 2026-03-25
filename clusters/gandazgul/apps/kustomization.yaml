@@ -32,3 +32,4 @@ resources:
   - ../../../apps/Immich.yaml
   - ../../../apps/OpenWebUI.yaml
   - ../../../apps/Goaly.yaml
+  - ../../../apps/Gotify.yaml
