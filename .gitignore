@@ -1,9 +1,3 @@
-# Injellij
-.idea/workspace.xml
-.idea/aws.xml
-.idea/copilot/
-.idea/copilot.data.migration*
-
 # docker
 containers/sshd/users.conf
 containers/size-checker/ssmtp.conf
@@ -20,3 +14,5 @@ yarn-error.log
 
 # Mac
 .DS_Store
+
+.opencode/.beacon/
