@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: overture
+spec:
+  template:
+    spec:
+      volumes:
+        - name: tz-config
+          hostPath:
+            path: /etc/localtime
+      containers:
+        - name: container
+          image: ghcr.io/gandazgul/overture:latest
+          imagePullPolicy: Always
+          env:
+            - name: TZ
+              value: ${CLUSTER_TIME_ZONE}
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /
+              port: 8080
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 250Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          volumeMounts:
+            - name: tz-config
+              mountPath: /etc/localtime
+              readOnly: true
+            - name: yasr-volume
+              mountPath: /app/data
+              subPath: configs/overture
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP

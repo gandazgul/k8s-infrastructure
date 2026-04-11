@@ -33,3 +33,4 @@ resources:
   - ../../../apps/OpenWebUI.yaml
   - ../../../apps/Goaly.yaml
   - ../../../apps/Gotify.yaml
+  - ../../../apps/Overture.yaml
