@@ -12,7 +12,7 @@ spec:
             path: /etc/localtime
       containers:
         - name: container
-          image: ghcr.io/gandazgul/overture:latest
+          image: ghcr.io/gandazgul/overture:dev
           imagePullPolicy: Always
           env:
             - name: TZ
