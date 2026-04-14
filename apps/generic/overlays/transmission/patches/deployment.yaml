@@ -138,6 +138,10 @@ spec:
           env:
             - name: TZ
               value: ${CLUSTER_TIME_ZONE}
+          ports:
+            - name: mousehole
+              containerPort: 5010
+              protocol: TCP
           volumeMounts:
             - name: yasr-volume
               mountPath: /srv/mousehole
