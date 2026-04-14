@@ -33,9 +33,6 @@ version() {
 }
 
 port_forward_assignment() {
-  echo 'Setting the IP for MAM...'
-  curl -c /data/mam.cookies -b "$(cat /data/mam.session)" https://t.myanonamouse.net/json/dynamicSeedbox.php
-
   TRANSMISSION_HOST=localhost
 
   echo 'Loading port forward assignment information...'
