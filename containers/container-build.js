@@ -1,9 +1,9 @@
 const { execSync } = require('child_process');
 const argv = require('minimist')(process.argv.slice(2));
 
-const imageName = argv.image;
+const imageName = argv.i;
 if (!imageName) {
-    console.error('CONTAINER:BUILD', 'Please specify an image name with --image=');
+    console.error('CONTAINER:BUILD', 'Please specify an image name with --i=');
     process.exit(1);
 }
 
@@ -18,7 +18,7 @@ catch (err) {
 
 const ioOptions = { stdio: [process.stdin, process.stdout, process.stderr] };
 
-const username = execSync('whoami').toString('ascii').trim();
+const username = argv.u || execSync('whoami').toString('ascii').trim();
 const version = execSync('git log -n 1 --pretty=format:%h').toString('ascii').trim();
 const fullImageName = `docker.io/${username}/${imageName}:v${version}`;
 const imageNameLatest = `docker.io/${username}/${imageName}:latest`;
@@ -44,13 +44,17 @@ function run() {
 function build() {
     // Build and then tag the image with the current version AND "latest"
     const loginCommand = `podman login --username=${username} docker.io`
-    const buildCommand = `podman build -t ${fullImageName} -t ${imageNameLatest} .`;
-    const pushCommand = `podman push ${fullImageName}`;
-    const pushCommandLatest = `podman push ${imageNameLatest}`;
+
+    const buildCommand = `podman build --platform linux/amd64,linux/arm64 --manifest ${fullImageName} .`;
+    const retagCommand = `podman tag ${fullImageName} ${imageNameLatest}`;
+    const pushCommand = `podman manifest push ${fullImageName}`;
+    const pushCommandLatest = `podman manifest push ${imageNameLatest}`;
 
     try {
         console.info('CONTAINER:BUILD', `Running: ${buildCommand}`);
         execSync(buildCommand, ioOptions);
+        console.info('CONTAINER:BUILD', `Running: ${retagCommand}`);
+        execSync(retagCommand, ioOptions);
         console.info('CONTAINER:BUILD', `Running: ${loginCommand}`);
         execSync(loginCommand, ioOptions);
         console.info('CONTAINER:BUILD', `Running: ${pushCommand}`);
