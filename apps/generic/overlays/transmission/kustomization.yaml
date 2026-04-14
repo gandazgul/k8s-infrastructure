@@ -49,6 +49,16 @@ patches:
       - op: replace
         path: /spec/tls/0/hosts/0
         value: transmission.${CLUSTER_DOMAIN_NAME}
+      - op: add
+        path: /spec/rules/0/http/paths/-
+        value:
+          path: /mousehole
+          pathType: Prefix
+          backend:
+            service:
+              name: transmission
+              port:
+                name: mousehole
     target:
       group: networking.k8s.io
       version: v1

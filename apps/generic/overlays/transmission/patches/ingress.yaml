@@ -8,15 +8,3 @@ metadata:
     forecastle.stakater.com/group: "Media"
     forecastle.stakater.com/expose: "true"
     forecastle.stakater.com/icon: "https://transmissionbt.com/assets/images/Transmission_icon.png"
-spec:
-  rules:
-    - host: transmission.dumbhome.uk
-      http:
-        paths:
-          - path: /mousehole
-            pathType: Prefix
-            backend:
-              service:
-                name: transmission
-                port:
-                  name: mousehole
