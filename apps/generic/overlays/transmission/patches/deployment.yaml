@@ -131,3 +131,21 @@ spec:
             - name: yasr-volume
               mountPath: /data
               subPath: configs/openvpn/
+        # Mousehole
+        - name: mousehole
+          image: tmmrtn/mousehole:latest
+          imagePullPolicy: Always
+          env:
+            - name: TZ
+              value: ${CLUSTER_TIME_ZONE}
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /srv/mousehole
+              subPath: configs/openvpn/
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
