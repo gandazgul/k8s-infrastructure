@@ -17,6 +17,10 @@ spec:
           env:
             - name: TZ
               value: ${CLUSTER_TIME_ZONE}
+            - name: ANALYTICS_BASIC_AUTH_USER
+              value: ${EMAIL}
+            - name: ANALYTICS_BASIC_AUTH_PASS
+              value: ${ADMIN_PASSWORD}
           livenessProbe:
             httpGet:
               scheme: HTTP
