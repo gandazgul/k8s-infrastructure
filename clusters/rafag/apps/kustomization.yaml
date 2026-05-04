@@ -32,4 +32,3 @@ resources:
   - ../../../apps/Flaresolverr.yaml
   - ../../../apps/Harbor.yaml
   - ../../../apps/Qdrant.yaml
-  - ../../../apps/WyomingPiper.yaml
