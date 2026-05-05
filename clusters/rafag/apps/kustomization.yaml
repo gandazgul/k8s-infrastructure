@@ -32,3 +32,6 @@ resources:
   - ../../../apps/Flaresolverr.yaml
   - ../../../apps/Harbor.yaml
   - ../../../apps/Qdrant.yaml
+  - ../../../apps/SearXNG.yaml
+  - ../../../apps/Wallabag.yaml
+  - ../../../apps/FreshRSS.yaml
