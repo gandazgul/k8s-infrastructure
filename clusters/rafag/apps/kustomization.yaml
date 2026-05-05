@@ -35,3 +35,4 @@ resources:
   - ../../../apps/SearXNG.yaml
   - ../../../apps/Wallabag.yaml
   - ../../../apps/FreshRSS.yaml
+  - ../../../apps/KokoroTTS.yaml
