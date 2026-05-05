@@ -12,6 +12,8 @@ spec:
           env:
             - name: SEARXNG_BASE_URL
               value: https://search.${CLUSTER_DOMAIN_NAME}/
+            - name: SEARXNG_PORT
+              value: "8080"
           volumeMounts:
             - name: yasr-volume
               mountPath: /etc/searxng
