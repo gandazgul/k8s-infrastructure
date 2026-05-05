@@ -13,6 +13,21 @@ spec:
       targetPort: 8880
   type: ClusterIP
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kokoro-tts-nodeport
+  namespace: default
+spec:
+  selector:
+    app: kokoro-tts
+  ports:
+    - protocol: TCP
+      port: 8880
+      targetPort: 8880
+      nodePort: 8880
+  type: NodePort
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
