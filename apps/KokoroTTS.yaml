@@ -52,11 +52,11 @@ spec:
           protocol: TCP
         resources:
           requests:
-            memory: "1Gi"
-            cpu: "200m"
-          limits:
             memory: "2Gi"
-            cpu: "2"
+            cpu: "500m"
+          limits:
+            memory: "4Gi"
+            cpu: "4"
         livenessProbe:
           httpGet:
             path: /health
