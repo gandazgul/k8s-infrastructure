@@ -34,5 +34,5 @@ resources:
   - ../../../apps/Qdrant.yaml
   - ../../../apps/SearXNG.yaml
   - ../../../apps/Wallabag.yaml
-  - ../../../apps/FreshRSS.yaml
+#  - ../../../apps/FreshRSS.yaml
   - ../../../apps/KokoroTTS.yaml
