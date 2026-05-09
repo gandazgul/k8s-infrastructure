@@ -26,6 +26,7 @@ spec:
       PHOTOS_GID: "1000"
       BITWARDEN_SUBDOMAIN: "pass"
       HASS_SUBDOMAIN: "ha"
+      AUDIOBOOKSHELF_SUBDOMAIN: "read"
       CLUSTER_NAME: "gandazgul"
     substituteFrom:
     # substitutions can also come from a config map or secret
