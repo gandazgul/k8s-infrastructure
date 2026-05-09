@@ -18,6 +18,8 @@ spec:
       name: audiobookshelf
       namespace: default
   postBuild:
+    substitute:
+      AUDIOBOOKSHELF_SUBDOMAIN: "${AUDIOBOOKSHELF_SUBDOMAIN}"
     substituteFrom:
       - kind: Secret
         name: secrets
