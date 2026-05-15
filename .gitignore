@@ -15,4 +15,4 @@ yarn-error.log
 # Mac
 .DS_Store
 
-.opencode/.beacon/
+.history/

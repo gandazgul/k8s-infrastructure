@@ -5,15 +5,21 @@
     "repository": "git@github.com:gandazgul/my-infrastructure.git",
     "author": "Carlos Ravelo <ravelo.carlos@gmail.com>",
     "license": "MIT",
+    "type": "module",
     "private": true,
     "scripts": {
-        "docker:build": "node containers/docker-build.js",
-        "docker:run": "node containers/docker-run.js"
+        "build": "node containers/container-build.js",
+        "run": "node containers/container-run.js",
+        "lint": "node scripts/pre-commit.js",
+        "prepare": "husky"
     },
     "dependencies": {
         "minimist": "^1.2.8"
     },
     "resolutions": {
         "cross-spawn": "6.0.6"
+    },
+    "devDependencies": {
+        "husky": "^9.1.7"
     }
 }

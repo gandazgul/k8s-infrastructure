@@ -1,5 +1,7 @@
-const { spawn: exec, execSync } = require('child_process');
-const argv = require('minimist')(process.argv.slice(2));
+import { spawn as exec, execSync } from 'node:child_process';
+import minimist from 'minimist';
+
+const argv = minimist(process.argv.slice(2));
 
 console.log(argv);
 

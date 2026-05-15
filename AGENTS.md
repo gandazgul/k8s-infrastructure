@@ -8,24 +8,24 @@ adhere to these rules when analyzing, modifying, or creating code in this projec
 
 ### 1.1 Linting
 
-The codebase relies on `pre-commit` hooks for validation. Agent tasks should ensure code passes these pre-commit checks
-before completing operations.
+The codebase uses [husky](https://typicode.github.io/husky/) to manage a JS-native pre-commit hook that runs
+`scripts/pre-commit.js`. Agent tasks should ensure code passes these checks before completing operations.
 
-- **Run all pre-commit hooks:**
+- **Run the pre-commit checks manually (on staged files):**
   ```bash
-  pre-commit run --all-files
+  node scripts/pre-commit.js
   ```
-- **Lint a specific file:**
+- **Run checks on all files (not just staged):**
   ```bash
-  pre-commit run --files path/to/file.yaml
+  node scripts/pre-commit.js --all
   ```
 - **YAML specific linting (recommended prior to committing):**
   ```bash
   yamllint path/to/file.yaml
   ```
 
-If formatting errors occur, rely on `end-of-file-fixer` and `trailing-whitespace` automatic corrections by running the
-hook again.
+If formatting errors occur (trailing whitespace, missing final newline), the hook auto-fixes them and re-stages the
+files. Simply re-run the commit.
 
 ### 1.2 Container Builds
 
@@ -81,7 +81,7 @@ achieved by statically validating Kubernetes YAML manifests and ensuring Bash/JS
 
 ### 2.2 JavaScript (Container Build Tools)
 
-- **Environment:** Node.js CommonJS format (use `const module = require('module')`, do not use ES6 `import`).
+- **Environment:** Node.js ESM format (use `import` statements, do not use `require`).
 - **Formatting:**
     - Use 4 spaces for indentation inside `.js` files.
     - add `else`, `catch`, and `finally` blocks on new lines for better readability.

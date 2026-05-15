@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: container
-          image: ghcr.io/gandazgul/goaly:latest
+          image: ghcr.io/gandazgul/goaly:dev
           imagePullPolicy: Always
           env:
             - name: GOOGLE_CLIENT_ID

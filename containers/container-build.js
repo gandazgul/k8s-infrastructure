@@ -1,5 +1,7 @@
-const { execSync } = require('child_process');
-const argv = require('minimist')(process.argv.slice(2));
+import { execSync } from 'node:child_process';
+import minimist from 'minimist';
+
+const argv = minimist(process.argv.slice(2));
 
 const imageName = argv.i;
 if (!imageName) {
