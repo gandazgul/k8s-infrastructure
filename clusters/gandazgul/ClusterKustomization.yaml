@@ -27,6 +27,7 @@ spec:
       BITWARDEN_SUBDOMAIN: "pass"
       HASS_SUBDOMAIN: "ha"
       AUDIOBOOKSHELF_SUBDOMAIN: "read"
+      AUDIOBOOKSHELF_BOOKS_PATH: "public/Books"
       CLUSTER_NAME: "gandazgul"
     substituteFrom:
     # substitutions can also come from a config map or secret

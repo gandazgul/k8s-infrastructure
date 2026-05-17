@@ -20,6 +20,7 @@ spec:
   postBuild:
     substitute:
       AUDIOBOOKSHELF_SUBDOMAIN: "${AUDIOBOOKSHELF_SUBDOMAIN}"
+      AUDIOBOOKSHELF_BOOKS_PATH: "${AUDIOBOOKSHELF_BOOKS_PATH}"
     substituteFrom:
       - kind: Secret
         name: secrets
