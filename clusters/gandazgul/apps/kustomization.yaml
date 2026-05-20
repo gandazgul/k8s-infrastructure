@@ -34,3 +34,4 @@ resources:
   - ../../../apps/Goaly.yaml
   - ../../../apps/Gotify.yaml
   - ../../../apps/Overture.yaml
+  - ../../../apps/BerenstainBears.yaml
