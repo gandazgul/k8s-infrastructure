@@ -12,6 +12,13 @@ spec:
         - name: container
           image: ghcr.io/gandazgul/berenstain-bears:dev
           imagePullPolicy: Always
+          env:
+            - name: TZ
+              value: ${CLUSTER_TIME_ZONE}
+            - name: BASIC_AUTH_USER
+              value: ${BEARS_USER}
+            - name: BASIC_AUTH_PASS
+              value: ${BEARS_PASSWORD}
           livenessProbe:
             httpGet:
               scheme: HTTP
