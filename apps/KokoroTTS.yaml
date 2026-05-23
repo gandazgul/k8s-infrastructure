@@ -35,6 +35,10 @@ metadata:
   namespace: default
 spec:
   replicas: 1
+  revisionHistoryLimit: 2
+  progressDeadlineSeconds: 600
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: kokoro-tts
@@ -44,30 +48,37 @@ spec:
         app: kokoro-tts
     spec:
       containers:
-      - name: kokoro-tts
-        image: ghcr.io/remsky/kokoro-fastapi-cpu:latest
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 8880
-          protocol: TCP
-        resources:
-          requests:
-            memory: "2Gi"
-            cpu: "500m"
-          limits:
-            memory: "4Gi"
-            cpu: "4"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8880
-          initialDelaySeconds: 120
-          timeoutSeconds: 10
-          periodSeconds: 30
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8880
-          initialDelaySeconds: 60
-          timeoutSeconds: 10
-          periodSeconds: 15
+        - name: kokoro-tts
+          image: ghcr.io/remsky/kokoro-fastapi-cpu@sha256:d7df384acb57929f88a696d892c1a2e0c6b60fa934802ebec9a88626003b8e9a
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8880
+              protocol: TCP
+          resources:
+            requests:
+              memory: "4Gi"
+              cpu: "1"
+            limits:
+              memory: "8Gi"
+              cpu: "4"
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8880
+            timeoutSeconds: 10
+            periodSeconds: 10
+            failureThreshold: 60
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8880
+            timeoutSeconds: 10
+            periodSeconds: 30
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8880
+            timeoutSeconds: 10
+            periodSeconds: 15
+            failureThreshold: 4
