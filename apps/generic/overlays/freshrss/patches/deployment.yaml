@@ -20,16 +20,16 @@ spec:
 
               repo_dir="$(mktemp -d)"
 
-              git init "${repo_dir}"
-              git -C "${repo_dir}" remote add origin https://github.com/cn-tools/cntools_FreshRssExtensions.git
-              git -C "${repo_dir}" fetch --depth 1 origin "${CNTOOLS_FRESHRSS_EXTENSIONS_REF}"
-              git -C "${repo_dir}" checkout --detach FETCH_HEAD
+              git init "$repo_dir"
+              git -C "$repo_dir" remote add origin https://github.com/cn-tools/cntools_FreshRssExtensions.git
+              git -C "$repo_dir" fetch --depth 1 origin "$CNTOOLS_FRESHRSS_EXTENSIONS_REF"
+              git -C "$repo_dir" checkout --detach FETCH_HEAD
 
-              for extension_path in "${repo_dir}"/xExtension-*; do
-                  if [ -d "${extension_path}" ]; then
-                      extension_name="$(basename "${extension_path}")"
-                      rm -rf "/extensions/${extension_name}"
-                      cp -R "${extension_path}" "/extensions/${extension_name}"
+              for extension_path in "$repo_dir"/xExtension-*; do
+                  if [ -d "$extension_path" ]; then
+                      extension_name="$(basename "$extension_path")"
+                      rm -rf "/extensions/$extension_name"
+                      cp -R "$extension_path" "/extensions/$extension_name"
                   fi
               done
 
