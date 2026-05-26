@@ -5,6 +5,39 @@ metadata:
 spec:
   template:
     spec:
+      initContainers:
+        - name: install-cntools-extensions
+          image: alpine/git:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: CNTOOLS_FRESHRSS_EXTENSIONS_REF
+              value: ae40a34e260e0609e49d1a338e42284383e9703b
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+
+              repo_dir="$(mktemp -d)"
+
+              git init "${repo_dir}"
+              git -C "${repo_dir}" remote add origin https://github.com/cn-tools/cntools_FreshRssExtensions.git
+              git -C "${repo_dir}" fetch --depth 1 origin "${CNTOOLS_FRESHRSS_EXTENSIONS_REF}"
+              git -C "${repo_dir}" checkout --detach FETCH_HEAD
+
+              for extension_path in "${repo_dir}"/xExtension-*; do
+                  if [ -d "${extension_path}" ]; then
+                      extension_name="$(basename "${extension_path}")"
+                      rm -rf "/extensions/${extension_name}"
+                      cp -R "${extension_path}" "/extensions/${extension_name}"
+                  fi
+              done
+
+              chmod -R a+rX /extensions
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /extensions
+              subPath: configs/freshrss/extensions/
       containers:
         - name: container
           image: freshrss/freshrss:latest
