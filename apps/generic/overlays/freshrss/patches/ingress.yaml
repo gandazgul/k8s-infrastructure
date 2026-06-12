@@ -1,0 +1,9 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: freshrss
+  annotations:
+    forecastle.stakater.com/appName: "FreshRSS"
+    forecastle.stakater.com/group: "Tools"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/icon: "https://freshrss.org/favicon.ico"

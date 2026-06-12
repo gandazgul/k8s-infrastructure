@@ -1,0 +1,9 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: searxng
+  annotations:
+    forecastle.stakater.com/appName: "SearXNG"
+    forecastle.stakater.com/group: "Tools"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/icon: "https://docs.searxng.org/_static/searxng-wordmark.svg"

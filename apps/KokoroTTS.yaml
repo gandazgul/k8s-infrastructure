@@ -1,0 +1,87 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kokoro-tts
+  namespace: default
+spec:
+  selector:
+    app: kokoro-tts
+  ports:
+    - protocol: TCP
+      port: 8880
+      targetPort: 8880
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kokoro-tts-nodeport
+  namespace: default
+spec:
+  selector:
+    app: kokoro-tts
+  ports:
+    - protocol: TCP
+      port: 8880
+      targetPort: 8880
+      nodePort: 8880
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kokoro-tts
+  namespace: default
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  progressDeadlineSeconds: 600
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: kokoro-tts
+  template:
+    metadata:
+      labels:
+        app: kokoro-tts
+    spec:
+      containers:
+        - name: kokoro-tts
+          image: ghcr.io/remsky/kokoro-fastapi-cpu@sha256:d7df384acb57929f88a696d892c1a2e0c6b60fa934802ebec9a88626003b8e9a
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8880
+              protocol: TCP
+          resources:
+            requests:
+              memory: "4Gi"
+              cpu: "1"
+            limits:
+              memory: "8Gi"
+              cpu: "4"
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8880
+            timeoutSeconds: 10
+            periodSeconds: 10
+            failureThreshold: 60
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8880
+            timeoutSeconds: 10
+            periodSeconds: 30
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8880
+            timeoutSeconds: 10
+            periodSeconds: 15
+            failureThreshold: 4
