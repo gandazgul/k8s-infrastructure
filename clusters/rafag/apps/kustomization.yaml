@@ -35,4 +35,5 @@ resources:
   - ../../../apps/Wallabag.yaml
   - ../../../apps/FreshRSS.yaml
   - ../../../apps/KokoroTTS.yaml
+  - ../../../apps/WyomingOpenAI.yaml
   - ../../../apps/YouTubeOperationalAPI.yaml
