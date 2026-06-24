@@ -1,0 +1,9 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: n8n
+  annotations:
+    forecastle.stakater.com/appName: "n8n"
+    forecastle.stakater.com/group: "Automation"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/icon: "https://n8n.io/favicon.ico"

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: searxng
+spec:
+  template:
+    spec:
+      containers:
+        - name: container
+          image: searxng/searxng:latest
+          imagePullPolicy: Always
+          env:
+            - name: SEARXNG_BASE_URL
+              value: https://search.${CLUSTER_DOMAIN_NAME}/
+            - name: SEARXNG_PORT
+              value: "8080"
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /etc/searxng
+              subPath: configs/searxng/
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz
+              port: http
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 1
+              memory: 512Mi
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP

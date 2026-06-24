@@ -26,6 +26,9 @@ spec:
       PHOTOS_GID: "1000"
       BITWARDEN_SUBDOMAIN: "p"
       HASS_SUBDOMAIN: "hass"
+      AUDIOBOOKSHELF_SUBDOMAIN: "listen"
+      AUDIOBOOKSHELF_BOOKS_PATH: "public/books-podcast-media"
+      AUDIOBOOKSHELF_MOUNT_PATH: "/data/books-podcast-media"
       CLUSTER_NAME: "rafag"
     substituteFrom:
     # substitutions can also come from a config map or secret

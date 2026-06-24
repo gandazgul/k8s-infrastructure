@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wallabag
+spec:
+  template:
+    spec:
+      containers:
+        - name: container
+          image: wallabag/wallabag:latest
+          imagePullPolicy: Always
+          env:
+            - name: SYMFONY__ENV__DATABASE_DRIVER
+              value: "pdo_sqlite"
+            - name: SYMFONY__ENV__DATABASE_NAME
+              value: "wallabag"
+            - name: SYMFONY__ENV__DATABASE_TABLE_PREFIX
+              value: "wallabag_"
+            - name: SYMFONY__ENV__DOMAIN_NAME
+              value: "https://wallabag.${CLUSTER_DOMAIN_NAME}"
+            - name: SYMFONY__ENV__SERVER_NAME
+              value: "Wallabag"
+            - name: POPULATE_DATABASE
+              value: "false"
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /var/www/wallabag/data
+              subPath: configs/wallabag/data/
+            - name: yasr-volume
+              mountPath: /var/www/wallabag/web/assets/images
+              subPath: configs/wallabag/images/
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /
+              port: http
+            initialDelaySeconds: 60
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP

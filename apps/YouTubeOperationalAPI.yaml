@@ -1,0 +1,69 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: youtube-operational-api
+  namespace: default
+  labels:
+    app.kubernetes.io/name: youtube-operational-api
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: youtube-operational-api
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: youtube-operational-api
+  namespace: default
+  labels:
+    app.kubernetes.io/name: youtube-operational-api
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: youtube-operational-api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: youtube-operational-api
+    spec:
+      containers:
+        - name: youtube-operational-api
+          image: benjaminloison/youtube-operational-api@sha256:db67b999dd938a2929e010907e4f829125cf94a6f3d35949c2a6f17aa055e86f
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+            failureThreshold: 12
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 30
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 60
+            failureThreshold: 3
