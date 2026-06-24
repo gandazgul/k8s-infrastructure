@@ -35,3 +35,4 @@ resources:
   - ../../../apps/Gotify.yaml
   - ../../../apps/Overture.yaml
   - ../../../apps/BerenstainBears.yaml
+  - ../../../apps/WarmCorner.yaml

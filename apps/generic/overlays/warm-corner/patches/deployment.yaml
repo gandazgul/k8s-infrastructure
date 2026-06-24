@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: warm-corner
+spec:
+  template:
+    spec:
+      imagePullSecrets:
+        - name: ghcr-creds
+      containers:
+        - name: container
+          image: ghcr.io/gandazgul/theawake/warm-corner:sha-12fc874
+          imagePullPolicy: Always
+          env:
+            - name: TZ
+              value: ${CLUSTER_TIME_ZONE}
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz
+              port: http
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 50m
+              memory: 50Mi
+            limits:
+              cpu: 200m
+              memory: 200Mi
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
