@@ -16,3 +16,4 @@ yarn-error.log
 .DS_Store
 
 .history/
+.wld/worktrees.json
