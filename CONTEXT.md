@@ -44,13 +44,13 @@ DNS and NGINX Ingress with cert-manager (Let's Encrypt + Cloudflare DNS-01).
 
 ### Config Files
 
-| File                      | Purpose                                                                           |
-| ------------------------- | --------------------------------------------------------------------------------- |
-| `AGENTS.md`               | Master agent instructions for AI coding assistants                                |
-| `_config.yml`             | Jekyll config for GitHub Pages documentation site                                 |
-| `.husky/pre-commit`       | Husky git hook that runs `scripts/pre-commit.js` on every commit                        |
-| `scripts/pre-commit.js`   | JS-native pre-commit checks: trailing-whitespace, end-of-file-fixer, check-added-large-files |
-| `package.json`            | Node project metadata; dependencies: `minimist`, `husky` (dev)                        |
+| File                    | Purpose                                                                                      |
+| ----------------------- | -------------------------------------------------------------------------------------------- |
+| `AGENTS.md`             | Master agent instructions for AI coding assistants                                           |
+| `_config.yml`           | Jekyll config for GitHub Pages documentation site                                            |
+| `.husky/pre-commit`     | Husky git hook that runs `scripts/pre-commit.js` on every commit                             |
+| `scripts/pre-commit.js` | JS-native pre-commit checks: trailing-whitespace, end-of-file-fixer, check-added-large-files |
+| `package.json`          | Node project metadata; dependencies: `minimist`, `husky` (dev)                               |
 
 ### Documentation
 
@@ -143,8 +143,8 @@ DNS and NGINX Ingress with cert-manager (Let's Encrypt + Cloudflare DNS-01).
 
 ### Linting & Validation
 
-- Pre-commit hooks (JS-native via husky): `trailing-whitespace`, `end-of-file-fixer`,
-  `check-added-large-files` — see `scripts/pre-commit.js`
+- Pre-commit hooks (JS-native via husky): `trailing-whitespace`,
+  `end-of-file-fixer`, `check-added-large-files` — see `scripts/pre-commit.js`
 - `yamllint` for manual YAML validation
 - `kubectl apply --dry-run=client -f <file>` for manifest validation
 - `kustomize build <dir>` for overlay validation

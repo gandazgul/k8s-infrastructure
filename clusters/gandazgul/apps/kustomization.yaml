@@ -5,14 +5,14 @@ resources:
   - ./secrets/
   - ./RsyncCronJobs.yaml
   - ./ImmichBackupCronJob.yaml
-#  - ./PlexBackupCronJob.yaml
+  #  - ./PlexBackupCronJob.yaml
   - ../../../apps/ActualBudget.yaml
   - ../../../apps/Bitwarden.yaml
   - ../../../apps/Forecastle.yaml
   - ../../../apps/HomeAssistant.yaml
   - ../../../apps/Paperless.yaml
   - ../../../apps/Resilio.yaml
-  - ../../../apps/SFTPGo.yaml
+  # - ../../../apps/SFTPGo.yaml
   - ../../../apps/ZWaveJS.yaml
   - ../../../apps/Mealie.yaml
   - ../../../apps/AudioBookShelf.yaml
@@ -28,9 +28,9 @@ resources:
   - ../../../apps/Plex.yaml
   - ../../../apps/RDiffWeb.yaml
   - ../../../apps/Harbor.yaml
-  - ../../../apps/Qdrant.yaml
+  # - ../../../apps/Qdrant.yaml
   - ../../../apps/Immich.yaml
-  - ../../../apps/OpenWebUI.yaml
+  # - ../../../apps/OpenWebUI.yaml
   - ../../../apps/Goaly.yaml
   - ../../../apps/Gotify.yaml
   - ../../../apps/Overture.yaml
