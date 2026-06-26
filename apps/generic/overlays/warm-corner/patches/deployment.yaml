@@ -10,7 +10,7 @@ spec:
         - name: ghcr-creds
       containers:
         - name: container
-          image: ghcr.io/gandazgul/theawake/warm-corner:sha-12fc874
+          image: ghcr.io/gandazgul/theawake/warm-corner:dev
           imagePullPolicy: Always
           env:
             - name: TZ
