@@ -62,7 +62,7 @@ patches:
         value: /.well-known/appspecific/com.tesla.3p.public-key.pem
       - op: replace
         path: /spec/rules/0/http/paths/0/pathType
-        value: Exact
+        value: ImplementationSpecific
       - op: replace
         path: /spec/rules/0/http/paths/0/backend/service/name
         value: tesla-public-key
