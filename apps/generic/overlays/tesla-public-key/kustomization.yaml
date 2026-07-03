@@ -1,0 +1,76 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: default
+resources:
+  - ../../base/
+  - configmap.yaml
+
+labels:
+  - pairs:
+      app.kubernetes.io/name: tesla-public-key
+    includeSelectors: true
+
+patches:
+  - path: patches/deployment.yaml
+    target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: deployment
+      namespace: default
+    options:
+      allowNameChange: true
+  - path: patches/ingress.yaml
+    target:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: ingress
+      namespace: default
+    options:
+      allowNameChange: true
+  - path: patches/service.yaml
+    target:
+      group: ""
+      version: v1
+      kind: Service
+      name: service
+      namespace: default
+    options:
+      allowNameChange: true
+  # The generic base attaches yasr/backup/main PVCs; this static server only
+  # needs the public-key ConfigMap, so replace the volumes list entirely.
+  - patch: |-
+      - op: replace
+        path: /spec/template/spec/volumes
+        value:
+          - name: pubkey
+            configMap:
+              name: tesla-public-key
+    target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: tesla-public-key
+  - patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: tesla.${CLUSTER_DOMAIN_NAME}
+      - op: replace
+        path: /spec/rules/0/http/paths/0/path
+        value: /.well-known/appspecific/com.tesla.3p.public-key.pem
+      - op: replace
+        path: /spec/rules/0/http/paths/0/pathType
+        value: ImplementationSpecific
+      - op: replace
+        path: /spec/rules/0/http/paths/0/backend/service/name
+        value: tesla-public-key
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: tesla.${CLUSTER_DOMAIN_NAME}
+    target:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: tesla-public-key
