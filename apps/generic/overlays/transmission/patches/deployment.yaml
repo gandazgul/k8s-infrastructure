@@ -17,7 +17,7 @@ spec:
         # Transmission
         - name: container
           image: docker.io/linuxserver/transmission:4.0.6
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: PUID
               value: "1000"
