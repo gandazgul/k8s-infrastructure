@@ -126,3 +126,62 @@ spec:
           value: ["--force", "backup", "/media/main/angela", "/media/backup/angela"]
       target:
         kind: CronJob
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: miki-backup
+  namespace: kube-system
+spec:
+  interval: 1h0m0s
+  path: ./infrastructure/cronjob/
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  prune: true
+  targetNamespace: default
+  dependsOn:
+    - name: main-volume
+    - name: backup-volume
+  postBuild:
+    substitute:
+      CRONJOB_NAME: miki-backup
+      SCHEDULE: "0 3,15 * * *"
+      IMAGE: docker.io/gandazgul/rdiff-backup:vfa41640
+      NAMESPACE: default
+  patches:
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/volumes/-
+          value:
+            name: main-volume
+            persistentVolumeClaim:
+              claimName: main-volume
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/volumes/-
+          value:
+            name: backup-volume
+            persistentVolumeClaim:
+              claimName: backup-volume
+      target:
+        kind: CronJob
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
+          value:
+            name: main-volume
+            mountPath: /media/main
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
+          value:
+            name: backup-volume
+            mountPath: /media/backup
+      target:
+        kind: CronJob
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/args
+          value: ["--force", "backup", "/media/main/miki", "/media/backup/miki"]
+      target:
+        kind: CronJob
