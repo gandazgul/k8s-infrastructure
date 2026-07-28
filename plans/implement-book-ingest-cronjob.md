@@ -1,4 +1,5 @@
 ---
+planId: "498db2dd-2ed6-4ecb-8f25-a6222b8cacfa"
 classification: "PLANNED_CHANGE"
 workKind: "FEATURE"
 complexity: "MEDIUM"
@@ -11,14 +12,18 @@ affectedPaths:
 executionAgent: "engineer"
 collaborationRecommendation: "autonomous"
 createdAt: "2026-07-27T22:01:05-04:00"
-updatedAt: "2026-07-28T03:06:47.813Z"
+updatedAt: "2026-07-28T03:06:55.169Z"
 status: "verified"
 origin: "internal"
 implementedAt: "2026-07-28T02:52:06.221Z"
 verifiedAt: "2026-07-28T03:06:47.813Z"
 userVerifiedAt: null
-userVerificationNote: null
 executionReport: "- Implemented `containers/book-ingest` Node ESM CronJob container with Transmission RPC session-id retry, torrent inbox/archive handling, completed `/data/books` discovery, metadata/heuristic classification, `_needs-review` fallback, per-file JSONL import state, archive/temporary skip logging, collision-safe copy behavior, and dry-run support.\n- Added focused unit tests for extension handling, sanitization, metadata confidence/grouping, `_needs-review`, state idempotence, Transmission completion filtering, and collision suffix planning.\n- Added `clusters/gandazgul/apps/BookIngestCronJob.yaml`, included it in `clusters/gandazgul/apps/kustomization.yaml`, and documented stable book-ingest vocabulary/paths in `CONTEXT.md`.\n- Verification passed: `cd containers/book-ingest && npm test` (10 passed); `kustomize build --load-restrictor LoadRestrictionsNone clusters/gandazgul/apps`; `kubectl apply --dry-run=client -f /tmp/book-ingest-kustomize.yaml` (warnings only about existing live resources missing last-applied annotations); local dry-run execution against a mock Transmission RPC copied/planned correctly and exited 0.\n- Repository pre-commit command was attempted: `node scripts/pre-commit.js --all` returned `pre-commit: no staged files to check`.\n- Image build verification partially failed: `node containers/container-build.js --i=book-ingest --force` completed the multi-arch podman build/tag steps, then failed at non-interactive `podman login --username=gandazgul docker.io`; pushing the image and moving to a published pinned tag remain blocked by Docker Hub credentials."
+workRecord:
+    status: "generated"
+    recordId: "f1fb6977-ade0-49de-899d-cb5713c69896"
+    path: "docs/work-records/2026-07-28-book-ingest-cronjob-implemented.md"
+    lastAttemptAt: "2026-07-28T03:06:48.505Z"
 humanReviewMode: "ask"
 humanReviewDecision: "approved"
 humanReviewedAt: "2026-07-28T03:06:47.713Z"
