@@ -11,20 +11,24 @@ affectedPaths:
 executionAgent: "engineer"
 collaborationRecommendation: "autonomous"
 createdAt: "2026-07-27T22:01:05-04:00"
-updatedAt: "2026-07-28T02:48:16.535Z"
-status: "ready_for_work"
+updatedAt: "2026-07-28T03:06:47.813Z"
+status: "verified"
 origin: "internal"
+implementedAt: "2026-07-28T02:52:06.221Z"
+verifiedAt: "2026-07-28T03:06:47.813Z"
 userVerifiedAt: null
 userVerificationNote: null
-humanReviewMode: null
-humanReviewDecision: null
+executionReport: "- Implemented `containers/book-ingest` Node ESM CronJob container with Transmission RPC session-id retry, torrent inbox/archive handling, completed `/data/books` discovery, metadata/heuristic classification, `_needs-review` fallback, per-file JSONL import state, archive/temporary skip logging, collision-safe copy behavior, and dry-run support.\n- Added focused unit tests for extension handling, sanitization, metadata confidence/grouping, `_needs-review`, state idempotence, Transmission completion filtering, and collision suffix planning.\n- Added `clusters/gandazgul/apps/BookIngestCronJob.yaml`, included it in `clusters/gandazgul/apps/kustomization.yaml`, and documented stable book-ingest vocabulary/paths in `CONTEXT.md`.\n- Verification passed: `cd containers/book-ingest && npm test` (10 passed); `kustomize build --load-restrictor LoadRestrictionsNone clusters/gandazgul/apps`; `kubectl apply --dry-run=client -f /tmp/book-ingest-kustomize.yaml` (warnings only about existing live resources missing last-applied annotations); local dry-run execution against a mock Transmission RPC copied/planned correctly and exited 0.\n- Repository pre-commit command was attempted: `node scripts/pre-commit.js --all` returned `pre-commit: no staged files to check`.\n- Image build verification partially failed: `node containers/container-build.js --i=book-ingest --force` completed the multi-arch podman build/tag steps, then failed at non-interactive `podman login --username=gandazgul docker.io`; pushing the image and moving to a published pinned tag remain blocked by Docker Hub credentials."
+humanReviewMode: "ask"
+humanReviewDecision: "approved"
+humanReviewedAt: "2026-07-28T03:06:47.713Z"
 executionMode: "worktree"
-executionBaselineTree: "70ec20b94c6f486cee817669f782617c8f5acfd0"
-worktreeId: "5cfe3701"
-worktreePath: "/Users/gandazgul/.wld/worktrees/--Users-gandazgul-Documents-web-k8s-infrastructure--/k8s-infrastructure-runwield-implement-book-ingest-cronjob-5cfe3701"
-worktreeBranch: "runwield/worktree/implement-book-ingest-cronjob-5cfe3701"
-worktreeBaseBranch: "plex-backup"
-worktreeStatus: "active"
+deliveryEvidence:
+    version: 1
+    mode: "worktree_merge"
+    executionCommit: "a4b602d04a91592bed70cbea25d37df8b266f30e"
+    targetBranch: "plex-backup"
+    targetHeadBeforeMerge: "f09434d3e33a3a514b1452bc62d89f1a497ea7fc"
 ---
 
 # Implement Book Ingest CronJob
