@@ -5,6 +5,7 @@ resources:
   - ./secrets/
   - ./RsyncCronJobs.yaml
   - ./ImmichBackupCronJob.yaml
+  - ./BookIngestCronJob.yaml
   #  - ./PlexBackupCronJob.yaml
   - ../../../apps/ActualBudget.yaml
   - ../../../apps/Bitwarden.yaml

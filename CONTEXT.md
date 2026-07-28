@@ -25,6 +25,9 @@ DNS and NGINX Ingress with cert-manager (Let's Encrypt + Cloudflare DNS-01).
 | **Reflector**            | The emberstack/reflector add-on that auto-mirrors Secrets across namespaces via annotations                                   |                  |
 | **Cluster config**       | A per-user directory under `clusters/<username>/` containing `ClusterKustomization.yaml`, `secrets.env`, and `sealed-secret/` |                  |
 | **Hostpath Provisioner** | kubevirt/hostpath-provisioner DaemonSet that dynamically provisions local PVs from `StorageClass: hostpath`                   |                  |
+| **book-ingest**          | Copy-only CronJob that submits book `.torrent` files to Transmission and imports completed supported files into Audiobookshelf |                  |
+| **Torrent inbox**        | YASR-backed drop folder at `/media/yasr/configs/book-ingest/inbox` mounted into `book-ingest` as `/inbox`                     |                  |
+| **_needs-review**        | Audiobookshelf review folder at `/media/main/public/Books/_needs-review` for imports whose author/book layout is uncertain   |                  |
 | **CNPG**                 | CloudNative PostgreSQL operator — manages PostgreSQL clusters via `postgresql.cnpg.io/v1.Cluster` resources                   |                  |
 | **Forecastle**           | Service discovery dashboard (stakater/Forecastle) that lists apps via ingress annotations                                     |                  |
 | **ACME**                 | Let's Encrypt certificate issuance; this cluster uses DNS-01 via Cloudflare API                                               |                  |
@@ -92,6 +95,15 @@ DNS and NGINX Ingress with cert-manager (Let's Encrypt + Cloudflare DNS-01).
   - Strategic merge patches to add volumes, volumeMounts, env vars, and args
 - Examples: `BackupCronJobs.yaml` (rdiff-backup), `CloudflareDDNS.yaml`,
   `ImmichBackupCronJob.yaml`, `PlexBackupCronJob.yaml`
+- `book-ingest` is a `clusters/gandazgul/apps/BookIngestCronJob.yaml` instance
+  that runs every 10 minutes, submits top-level `.torrent` files from the
+  torrent inbox to Transmission with `download-dir=/data/books`, and then
+  copy-only imports completed supported ebook/audio/video files from the YASR
+  Transmission books source into Audiobookshelf's Books library. It must not
+  stop, remove, move, or clean up Transmission torrents so seeding can continue.
+  Metadata and conservative folder-name heuristics route confident imports to
+  `Author/Book/`; uncertain imports go under `_needs-review/<torrent-or-folder>`.
+  Compressed archives are logged and ignored, not extracted.
 
 ### Storage Convention
 
@@ -103,6 +115,11 @@ DNS and NGINX Ingress with cert-manager (Let's Encrypt + Cloudflare DNS-01).
   substitution)
 - PVCs in `infrastructure/storage/pvc/pvc.yaml` (same template)
 - `StorageClass: hdd` maps to the hostpath-provisioner
+- `book-ingest` uses YASR subPaths for `/inbox`
+  (`configs/book-ingest/inbox`), `/state` (`configs/book-ingest/state`), and
+  `/transmission` (`configs/transmission/`, where `/transmission/books`
+  corresponds to Transmission's `/data/books`). Its Audiobookshelf destination
+  is `main-volume` `subPath: public/Books` mounted as `/books`.
 
 ### Secrets Management
 
