@@ -20,6 +20,12 @@ spec:
     name: resilio-values
     optional: false
   values:
+    resources:
+      requests:
+        cpu: 250m
+        memory: 2Gi
+      limits:
+        memory: 4Gi
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
       PUID: "1000"

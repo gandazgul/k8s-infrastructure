@@ -7,6 +7,7 @@ resources:
   - ../../../apps/Bitwarden.yaml
   - ../../../apps/Forecastle.yaml
   - ../../../apps/HomeAssistant.yaml
+  - ../../../apps/TeslaPublicKey.yaml
   - ../../../apps/MosquitoMQTTBroker.yaml
   - ../../../apps/Paperless.yaml
   - ../../../apps/Photoprism.yaml

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tesla-public-key
+spec:
+  template:
+    spec:
+      containers:
+        - name: container
+          image: nginx:alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - name: pubkey
+              mountPath: /usr/share/nginx/html/.well-known/appspecific/com.tesla.3p.public-key.pem
+              subPath: com.tesla.3p.public-key.pem
+              readOnly: true
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /.well-known/appspecific/com.tesla.3p.public-key.pem
+              port: http
+            initialDelaySeconds: 10
+            timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /.well-known/appspecific/com.tesla.3p.public-key.pem
+              port: http
+            initialDelaySeconds: 5
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi

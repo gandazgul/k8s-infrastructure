@@ -20,6 +20,12 @@ spec:
       name: home-assistant-values
       optional: true
   values:
+    resources:
+      requests:
+        cpu: 200m
+        memory: 1Gi
+      limits:
+        memory: 4Gi
     controllerType: deployment
     image:
       tag: stable
