@@ -141,8 +141,9 @@ spec:
             - name: MOUSEHOLE_INSECURE_ALLOW_NO_AUTH
               value: "true"
             - name: MOUSEHOLE_ALLOWED_HOSTS
-              value: "mousehole.${CLUSTER_DOMAIN_NAME}"
-
+              value: "localhost,127.0.0.1,mousehole.${CLUSTER_DOMAIN_NAME}"
+            - name: MOUSEHOLE_ALLOWED_ORIGINS
+              value: "http://localhost:5010,http://127.0.0.1:5010,https://mousehole.${CLUSTER_DOMAIN_NAME}"
           ports:
             - name: mousehole
               containerPort: 5010
