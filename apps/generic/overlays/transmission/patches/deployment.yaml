@@ -138,6 +138,8 @@ spec:
           env:
             - name: TZ
               value: ${CLUSTER_TIME_ZONE}
+            - name: MOUSEHOLE_INSECURE_ALLOW_NO_AUTH
+              value: "true"
           ports:
             - name: mousehole
               containerPort: 5010
