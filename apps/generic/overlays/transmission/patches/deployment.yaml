@@ -140,6 +140,9 @@ spec:
               value: ${CLUSTER_TIME_ZONE}
             - name: MOUSEHOLE_INSECURE_ALLOW_NO_AUTH
               value: "true"
+            - name: MOUSEHOLE_ALLOWED_HOSTS
+              value: "mousehole.${CLUSTER_DOMAIN_NAME}"
+
           ports:
             - name: mousehole
               containerPort: 5010
