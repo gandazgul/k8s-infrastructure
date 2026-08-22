@@ -31,6 +31,7 @@ resources:
   - ../../../apps/AudioBookShelf.yaml
   - ../../../apps/Flaresolverr.yaml
   - ../../../apps/Harbor.yaml
+  - ../../../apps/HarborBootstrap.yaml
   - ../../../apps/Qdrant.yaml
   - ../../../apps/SearXNG.yaml
   - ../../../apps/Wallabag.yaml

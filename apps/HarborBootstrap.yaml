@@ -1,0 +1,125 @@
+---
+# Harbor bootstrap: idempotently (re)creates the Docker Hub proxy-cache setup that the
+# harbor-container-webhook depends on (docker.io/* -> harbor.dumbhome.uk/dockerproxy/*).
+# This state lives inside Harbor's DB and is NOT otherwise captured in Git, so a Harbor
+# reset silently breaks every fresh docker.io image pull cluster-wide. This CronJob
+# self-heals that within one schedule interval.
+#
+# Notes:
+# * Talks to Harbor in-cluster over HTTP (http://harbor-core) to avoid ingress DNS/TLS.
+# * Uses a mirror.gcr.io base image on purpose: the webhook only rewrites `docker.io/*`,
+#   so this job never routes through the (possibly-broken) dockerproxy it is repairing.
+# * Idempotent: treats HTTP 201 (created) and 409 (already exists) as success.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: harbor-bootstrap
+  namespace: default
+  labels:
+    app: harbor-bootstrap
+  annotations:
+    # The script uses shell ${VARS} and the runtime ${ADMIN_PASSWORD} env var. Disable Flux
+    # post-build var substitution so it neither empties these nor bakes the password in here.
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+data:
+  bootstrap.sh: |
+    #!/bin/sh
+    set -eu
+    API="http://harbor-core/api/v2.0"
+    AUTH="admin:${ADMIN_PASSWORD}"
+
+    echo "Waiting for Harbor API to be healthy..."
+    i=0
+    until curl -sf -o /dev/null "${API}/health"; do
+      i=$((i + 1))
+      if [ "${i}" -gt 60 ]; then
+        echo "ERROR: Harbor API not healthy after ~5m; giving up."
+        exit 1
+      fi
+      sleep 5
+    done
+    echo "Harbor API is healthy."
+
+    # 1) Ensure the Docker Hub proxy registry endpoint exists (201 created / 409 exists).
+    reg_code=$(curl -s -o /dev/null -w '%{http_code}' -u "${AUTH}" -X POST "${API}/registries" \
+      -H 'Content-Type: application/json' \
+      -d '{"name":"docker-hub","type":"docker-hub","url":"https://hub.docker.com","insecure":false}')
+    echo "ensure registry docker-hub -> HTTP ${reg_code}"
+    if [ "${reg_code}" != "201" ] && [ "${reg_code}" != "409" ]; then
+      echo "ERROR: unexpected status creating registry: ${reg_code}"
+      exit 1
+    fi
+
+    # 2) Resolve the registry id.
+    reg_id=$(curl -s -u "${AUTH}" "${API}/registries?name=docker-hub" \
+      | jq -r '.[] | select(.name=="docker-hub") | .id' | head -n1)
+    if [ -z "${reg_id}" ] || [ "${reg_id}" = "null" ]; then
+      echo "ERROR: could not resolve docker-hub registry id"
+      exit 1
+    fi
+    echo "docker-hub registry id: ${reg_id}"
+
+    # 3) Ensure the public 'dockerproxy' proxy-cache project exists (201 created / 409 exists).
+    proj_code=$(curl -s -o /dev/null -w '%{http_code}' -u "${AUTH}" -X POST "${API}/projects" \
+      -H 'Content-Type: application/json' \
+      -d "{\"project_name\":\"dockerproxy\",\"registry_id\":${reg_id},\"public\":true,\"metadata\":{\"public\":\"true\"}}")
+    echo "ensure project dockerproxy -> HTTP ${proj_code}"
+    if [ "${proj_code}" != "201" ] && [ "${proj_code}" != "409" ]; then
+      echo "ERROR: unexpected status creating project: ${proj_code}"
+      exit 1
+    fi
+
+    echo "OK: dockerproxy proxy-cache project ensured (public, upstream=Docker Hub)."
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: harbor-bootstrap
+  namespace: default
+  labels:
+    app: harbor-bootstrap
+spec:
+  # Runs every 15 minutes so a Harbor reset self-heals within one interval.
+  schedule: "*/15 * * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 120
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 3
+      template:
+        metadata:
+          labels:
+            app: harbor-bootstrap
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: bootstrap
+              # mirror.gcr.io is NOT rewritten by harbor-container-webhook (only docker.io is),
+              # so this job can always pull even when dockerproxy is broken.
+              image: mirror.gcr.io/library/alpine:3.20
+              command:
+                - /bin/sh
+                - -c
+                - apk add --no-cache curl jq >/dev/null && sh /scripts/bootstrap.sh
+              env:
+                - name: ADMIN_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: secrets
+                      key: ADMIN_PASSWORD
+              volumeMounts:
+                - name: script
+                  mountPath: /scripts
+              resources:
+                requests:
+                  cpu: 25m
+                  memory: 32Mi
+                limits:
+                  memory: 64Mi
+          volumes:
+            - name: script
+              configMap:
+                name: harbor-bootstrap
+                defaultMode: 0755
