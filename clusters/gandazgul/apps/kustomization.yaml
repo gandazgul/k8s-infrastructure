@@ -28,7 +28,6 @@ resources:
   - ../../../apps/Tdarr.yaml
   - ../../../apps/Plex.yaml
   - ../../../apps/RDiffWeb.yaml
-  - ../../../apps/Harbor.yaml
   # - ../../../apps/Qdrant.yaml
   - ../../../apps/Immich.yaml
   # - ../../../apps/OpenWebUI.yaml
