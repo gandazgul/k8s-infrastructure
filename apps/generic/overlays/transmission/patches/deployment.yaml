@@ -118,7 +118,7 @@ spec:
               subPath: configs/openvpn/
         # Transmission port forward
         - name: transmission-pia-port-forward
-          image: docker.io/gandazgul/transmission-pia-port-forward:v8801db4
+          image: docker.io/gandazgul/transmission-pia-port-forward:v27cad21
           imagePullPolicy: IfNotPresent
           resources:
             requests:
@@ -131,3 +131,31 @@ spec:
             - name: yasr-volume
               mountPath: /data
               subPath: configs/openvpn/
+        # Mousehole
+        - name: mousehole
+          image: tmmrtn/mousehole:latest
+          imagePullPolicy: Always
+          env:
+            - name: TZ
+              value: ${CLUSTER_TIME_ZONE}
+            - name: MOUSEHOLE_INSECURE_ALLOW_NO_AUTH
+              value: "true"
+            - name: MOUSEHOLE_ALLOWED_HOSTS
+              value: "localhost,127.0.0.1,mousehole.${CLUSTER_DOMAIN_NAME}"
+            - name: MOUSEHOLE_ALLOWED_ORIGINS
+              value: "http://localhost:5010,http://127.0.0.1:5010,https://mousehole.${CLUSTER_DOMAIN_NAME}"
+          ports:
+            - name: mousehole
+              containerPort: 5010
+              protocol: TCP
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /srv/mousehole
+              subPath: configs/openvpn/
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"

@@ -1,0 +1,126 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: book-ingest
+  namespace: kube-system
+spec:
+  interval: 10m0s
+  path: ./infrastructure/cronjob/
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  prune: true
+  targetNamespace: default
+  postBuild:
+    substitute:
+      CRONJOB_NAME: book-ingest
+      NAMESPACE: default
+      SCHEDULE: "*/10 * * * *"
+      IMAGE: docker.io/gandazgul/book-ingest:latest
+  patches:
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/activeDeadlineSeconds
+          value: 1200
+        - op: add
+          path: /spec/jobTemplate/spec/backoffLimit
+          value: 1
+      target:
+        kind: CronJob
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/securityContext
+          value:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+      target:
+        kind: CronJob
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/volumes/-
+          value:
+            name: yasr-volume
+            persistentVolumeClaim:
+              claimName: yasr-volume
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/volumes/-
+          value:
+            name: main-volume
+            persistentVolumeClaim:
+              claimName: main-volume
+      target:
+        kind: CronJob
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/securityContext
+          value:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/resources
+          value:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/env
+          value:
+            - name: TRANSMISSION_RPC_URL
+              value: http://transmission.default.svc.cluster.local:9091/transmission/rpc
+            - name: TRANSMISSION_DOWNLOAD_DIR
+              value: /data/books
+            - name: TRANSMISSION_BOOKS_PATH
+              value: /transmission/books
+            - name: TORRENT_INBOX
+              value: /inbox
+            - name: TORRENT_ARCHIVE
+              value: /inbox/archive
+            - name: STATE_DIR
+              value: /state
+            - name: BOOKS_DEST
+              value: /books
+            - name: NEEDS_REVIEW_DIR
+              value: /books/_needs-review
+            - name: LOG_LEVEL
+              value: info
+            - name: METADATA_TIMEOUT_MS
+              value: "10000"
+      target:
+        kind: CronJob
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
+          value:
+            name: yasr-volume
+            mountPath: /transmission
+            subPath: configs/transmission/
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
+          value:
+            name: yasr-volume
+            mountPath: /inbox
+            subPath: configs/book-ingest/inbox
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
+          value:
+            name: yasr-volume
+            mountPath: /state
+            subPath: configs/book-ingest/state
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
+          value:
+            name: main-volume
+            mountPath: /books
+            subPath: public/Books
+      target:
+        kind: CronJob

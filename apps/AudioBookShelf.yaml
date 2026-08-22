@@ -18,10 +18,6 @@ spec:
       name: audiobookshelf
       namespace: default
   postBuild:
-    substitute:
-      AUDIOBOOKSHELF_SUBDOMAIN: "${AUDIOBOOKSHELF_SUBDOMAIN}"
-      AUDIOBOOKSHELF_BOOKS_PATH: "${AUDIOBOOKSHELF_BOOKS_PATH}"
-      AUDIOBOOKSHELF_MOUNT_PATH: "${AUDIOBOOKSHELF_MOUNT_PATH:=/data}"
     substituteFrom:
       - kind: Secret
         name: secrets

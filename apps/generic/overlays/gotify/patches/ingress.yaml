@@ -1,0 +1,11 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gotify
+  annotations:
+    forecastle.stakater.com/appName: "Gotify"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/group: "Media"
+    # yamllint disable-line rule:line-length
+    forecastle.stakater.com/icon: "https://raw.githubusercontent.com/gotify/logo/master/gotify-logo-small.png"

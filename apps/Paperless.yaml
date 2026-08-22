@@ -75,6 +75,10 @@ spec:
     redis:
       enabled: true
       architecture: standalone
+      image:
+        registry: docker.io
+        repository: bitnamilegacy/redis
+        tag: "6.2"
     postgresql:
       enabled: false
     ingress:

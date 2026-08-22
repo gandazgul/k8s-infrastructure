@@ -5,6 +5,7 @@ namespace: default
 
 resources:
   - ../../base/
+  - ingress-mousehole.yaml
 
 labels:
   - pairs:
