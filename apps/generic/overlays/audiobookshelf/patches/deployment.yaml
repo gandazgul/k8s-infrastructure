@@ -17,7 +17,7 @@ spec:
               mountPath: /metadata
               subPath: configs/audiobookshelf/
             - name: main-volume
-              mountPath: ${AUDIOBOOKSHELF_MOUNT_PATH:=/data/books}
+              mountPath: ${AUDIOBOOKSHELF_MOUNT_PATH:=/data}
               subPath: ${AUDIOBOOKSHELF_BOOKS_PATH:=public/Books}
           livenessProbe:
             httpGet:
