@@ -46,12 +46,12 @@ spec:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: immich-postgres-app
+                  name: immich-postgres-superuser
                   key: username
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: immich-postgres-app
+                  name: immich-postgres-superuser
                   key: password
             - name: BACKUP_DIR
               value: /backups
