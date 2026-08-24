@@ -6,3 +6,7 @@ metadata:
     forecastle.stakater.com/appName: "BookOrbit"
     forecastle.stakater.com/group: "Media"
     forecastle.stakater.com/expose: "true"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+    nginx.ingress.kubernetes.io/proxy-buffers-size: "256k"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m" # Helps if uploading epubs
