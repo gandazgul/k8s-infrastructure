@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookorbit
+spec:
+  template:
+    spec:
+      containers:
+        - name: container
+          image: ghcr.io/bookorbit/bookorbit:latest
+          imagePullPolicy: Always
+          env:
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: bookorbit-db-app
+                  key: host
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: bookorbit-db-app
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bookorbit-db-app
+                  key: password
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: bookorbit-db-app
+                  key: dbname
+            - name: JWT_SECRET
+              value: "${BOOKORBIT_JWT_SECRET}"
+            - name: SETUP_BOOTSTRAP_TOKEN
+              value: "${BOOKORBIT_SETUP_BOOTSTRAP_TOKEN}"
+            - name: APP_URL
+              value: "https://read1.${CLUSTER_DOMAIN_NAME}"
+            - name: LIBRARY_BROWSE_ROOT
+              value: /books
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "${CLUSTER_TIME_ZONE}"
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 2
+              memory: 3Gi
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /data
+              subPath: configs/bookorbit/
+            - name: main-volume
+              mountPath: /books
+              subPath: ${AUDIOBOOKSHELF_BOOKS_PATH:=public/Books}
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /api/v1/health
+              port: http
+            initialDelaySeconds: 60
+            timeoutSeconds: 10
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
