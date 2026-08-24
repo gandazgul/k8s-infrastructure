@@ -5,7 +5,7 @@ metadata:
   name: book-ingest
   namespace: kube-system
 spec:
-  interval: 10m0s
+  interval: 1h0m0s
   path: ./infrastructure/cronjob/
   sourceRef:
     kind: GitRepository
