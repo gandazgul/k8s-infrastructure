@@ -35,7 +35,7 @@ spec:
   values:
     image:
       pullPolicy: Always
-      tag: latest
+      tag: 2.20.15
     env:
       USERMAP_UID: "1000"
       USERMAP_GID: "1000"
