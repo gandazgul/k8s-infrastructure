@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
         - name: container
-          image: ghcr.io/advplyr/audiobookshelf:latest
+          image: ghcr.io/advplyr/audiobookshelf:2.36.0
           imagePullPolicy: Always
           volumeMounts:
             - name: yasr-volume
@@ -17,8 +17,8 @@ spec:
               mountPath: /metadata
               subPath: configs/audiobookshelf/
             - name: main-volume
-              mountPath: ${AUDIOBOOKSHELF_MOUNT_PATH}
-              subPath: ${AUDIOBOOKSHELF_BOOKS_PATH}
+              mountPath: ${AUDIOBOOKSHELF_MOUNT_PATH:=/data/books}
+              subPath: ${AUDIOBOOKSHELF_BOOKS_PATH:=public/Books}
           livenessProbe:
             httpGet:
               scheme: HTTP
