@@ -17,7 +17,7 @@ spec:
     substitute:
       CRONJOB_NAME: book-ingest
       NAMESPACE: default
-      SCHEDULE: "*/10 * * * *"
+      SCHEDULE: "0,10,20,30,40,50 * * * *"
       IMAGE: docker.io/gandazgul/book-ingest:latest
   patches:
     - patch: |
