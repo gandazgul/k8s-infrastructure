@@ -35,7 +35,7 @@ spec:
             - name: SETUP_BOOTSTRAP_TOKEN
               value: "${BOOKORBIT_SETUP_BOOTSTRAP_TOKEN}"
             - name: APP_URL
-              value: "https://read1.${CLUSTER_DOMAIN_NAME}"
+              value: "https://read.${CLUSTER_DOMAIN_NAME}"
             - name: LIBRARY_BROWSE_ROOT
               value: /books
             - name: PUID
@@ -57,7 +57,7 @@ spec:
               subPath: configs/bookorbit/
             - name: main-volume
               mountPath: /books
-              subPath: ${AUDIOBOOKSHELF_BOOKS_PATH:=public/Books}
+              subPath: ${BOOKS_PATH:=public/Books}
           livenessProbe:
             httpGet:
               scheme: HTTP

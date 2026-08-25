@@ -17,7 +17,6 @@ resources:
   # - ../../../apps/SFTPGo.yaml
   - ../../../apps/ZWaveJS.yaml
   - ../../../apps/Mealie.yaml
-  - ../../../apps/AudioBookShelf.yaml
   - ../../../apps/BookOrbit.yaml
   - ../../../apps/Codex.yaml
   - ../../../apps/Transmission.yaml
