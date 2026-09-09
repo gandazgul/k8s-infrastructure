@@ -1,0 +1,85 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flower-shop
+spec:
+  strategy:
+    type: Recreate
+  template:
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - $patch: replace
+        - name: yasr-volume
+          persistentVolumeClaim:
+            claimName: yasr-volume
+      initContainers:
+        - name: prepare-saves
+          image: docker.io/library/busybox:1.37.0
+          command:
+            - sh
+            - -ec
+            - mkdir -p /yasr/configs/flower-shop; chown 1000:1000 /yasr/configs/flower-shop; chmod 700 /yasr/configs/flower-shop
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 0
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - CHOWN
+                - FOWNER
+                - DAC_OVERRIDE
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /yasr
+      containers:
+        - name: container
+          image: harbor.dumbhome.uk/library/flower-shop:b3e1d8e@sha256:bd4bf078e77f978b2a27a81e0abc8cb224dd484f4c7a25cb4525ae4d88dea121
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: PUBLIC_ORIGIN
+              value: https://flowers.dumbhome.uk
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /data
+              subPath: configs/flower-shop
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 5
+            timeoutSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 15
+            timeoutSeconds: 3
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi

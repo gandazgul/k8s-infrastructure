@@ -37,4 +37,5 @@ resources:
   - ../../../apps/Overture.yaml
   - ../../../apps/BerenstainBears.yaml
   - ../../../apps/Daybook.yaml
+  - ../../../apps/FlowerShop.yaml
 #  - ../../../apps/WarmCorner.yaml
