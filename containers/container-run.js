@@ -12,7 +12,7 @@ if (!imageName) {
 }
 
 const stdio = [process.stdin, process.stdout, process.stderr];
-const ioOptions = { detached: true, shell: true, stdio };
+const ioOptions = { detached: true, stdio };
 const username = execSync('whoami').toString('ascii').trim();
 const imageNameLatest = `docker.io/${username}/${imageName}:latest`;
 
