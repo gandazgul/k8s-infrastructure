@@ -6,7 +6,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/auth-type: basic
     nginx.ingress.kubernetes.io/auth-secret: flower-shop-auth
-    nginx.ingress.kubernetes.io/auth-realm: "Flower Shop - come play!"
+    nginx.ingress.kubernetes.io/auth-realm: "Flower Shop"
     nginx.ingress.kubernetes.io/satisfy: "any"
     nginx.ingress.kubernetes.io/whitelist-source-range: "10.1.1.0/24"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
