@@ -44,7 +44,7 @@ spec:
               mountPath: /yasr
       containers:
         - name: container
-          image: harbor.dumbhome.uk/library/flower-shop:20260909-privacy@sha256:e3dbbd232f1d76f7a0156b8ed247a7c3d4704f38b5fe7cb8c362a6ccfb1da9d9
+          image: harbor.dumbhome.uk/library/flower-shop:6d84e14@sha256:023024e0e529546c345cbca2fe4396232990cbbc7a7983b020eb3d4dfc8d7bc4
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
