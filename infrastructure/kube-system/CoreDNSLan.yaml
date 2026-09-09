@@ -1,0 +1,105 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: coredns
+  namespace: kube-system
+spec:
+  interval: 1h
+  url: https://coredns.github.io/helm
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: coredns-lan
+  namespace: kube-system
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: coredns
+      version: 1.47.1
+      sourceRef:
+        kind: HelmRepository
+        name: coredns
+        namespace: kube-system
+  values:
+    fullnameOverride: coredns-lan
+    # Separate from kubeadm's coredns deployment and kube-dns selectors.
+    isClusterService: false
+    replicaCount: 2
+    rbac:
+      create: false
+    serviceAccount:
+      create: false
+    automountServiceAccountToken: false
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 65532
+      runAsGroup: 65532
+      seccompProfile:
+        type: RuntimeDefault
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        # The upstream binary carries this file capability, required at exec.
+        add:
+        - NET_BIND_SERVICE
+        drop:
+        - ALL
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+    resources:
+      requests:
+        cpu: 25m
+        memory: 32Mi
+      limits:
+        cpu: 250m
+        memory: 128Mi
+    serviceType: ClusterIP
+    service:
+      externalIPs:
+      - ${CONTROL_PLANE_IP}
+      externalTrafficPolicy: Local
+    readinessProbe:
+      initialDelaySeconds: 2
+    livenessProbe:
+      initialDelaySeconds: 10
+    servers:
+    - zones:
+      - zone: .
+        use_tcp: true
+      port: 1053
+      servicePort: 53
+      plugins:
+      - name: errors
+      - name: health
+        configBlock: |-
+          lameduck 5s
+      - name: ready
+      - name: header
+        configBlock: |-
+          response set ra
+      - name: acl
+        configBlock: |-
+          allow net ${LAN_DNS_ALLOWED_CIDR} 127.0.0.1/32 ::1/128
+          block
+      # No fallthrough: existing IPv4 names return local NODATA for AAAA/HTTPS.
+      # Other domains are outside these zones and proceed to the forward plugin.
+      - name: hosts
+        parameters: /dev/null flowers.${CLUSTER_DOMAIN_NAME} bears.${CLUSTER_DOMAIN_NAME}
+        configBlock: |-
+          ${CONTROL_PLANE_IP} flowers.${CLUSTER_DOMAIN_NAME} bears.${CLUSTER_DOMAIN_NAME}
+          ttl 60
+          no_reverse
+      - name: forward
+        # Explicit public upstreams avoid a resolver loop when eero uses us.
+        parameters: . 1.1.1.1 1.0.0.1
+        configBlock: |-
+          max_concurrent 1000
+      # CoreDNS runs cache before acl; omit caching so every query is checked.
+      - name: loop
+      - name: reload
+      - name: loadbalance
