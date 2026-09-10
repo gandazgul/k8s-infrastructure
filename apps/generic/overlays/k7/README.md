@@ -10,6 +10,21 @@ K7 runs at `https://k7.dumbhome.uk` as a trial media server. It does not replace
 - Public URL: `https://k7.${CLUSTER_DOMAIN_NAME}`
 - Required secret key: `K7_APIKEYS_HASH_SECRET` in the reflected `secrets` Secret
 
+## Secret preparation
+
+Before first run, make sure `K7_APIKEYS_HASH_SECRET` exists in `clusters/gandazgul/secrets.env`. This file is
+ignored by Git. Keep the same value for the life of the trial so existing API keys stay valid. If the key is missing,
+add a stable random value with at least 32 random bytes. Do not print the value in logs, issues, or reports.
+
+After you add or change the value, run the existing sealing workflow:
+
+```bash
+./infrastructure/setup/configure-cluster.sh gandazgul
+```
+
+Review the generated `clusters/gandazgul/sealed-secret/SealedSecret.yaml` before commit. Do not commit
+`clusters/gandazgul/secrets.env`.
+
 K7 uses YASR for app-owned files:
 
 | Purpose | PVC | SubPath | Mount path | Access |
@@ -35,11 +50,11 @@ logs, and transcode work files under `/data` on YASR.
 4. Create the first administrator account with the setup token.
 5. In the K7 admin UI, add these libraries:
 
-   | Library | Path |
-   |---|---|
-   | TV | `/media/tv` |
-   | Movies | `/media/movies` |
-   | Music | `/media/music` |
+   | Library | Content type | Path |
+   |---|---|---|
+   | TV | TV | `/media/tv` |
+   | Movies | Movies | `/media/movies` |
+   | Music | Music | `/media/music` |
 
 6. Scan the libraries.
 7. Test one TV episode, one movie, and one music track.

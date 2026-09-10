@@ -3,8 +3,9 @@ kind: Ingress
 metadata:
   name: k7
   annotations:
+    # Disable inherited nginx error interception so K7 returns its own auth and API responses.
+    nginx.ingress.kubernetes.io/disable-proxy-intercept-errors: "true"
     forecastle.stakater.com/appName: "K7"
     forecastle.stakater.com/group: "Media"
     forecastle.stakater.com/expose: "true"
     forecastle.stakater.com/icon: "https://raw.githubusercontent.com/kaybi-gh/K7/main/branding/logo-on-light.svg"
-    nginx.ingress.kubernetes.io/custom-http-errors: "404,500,503"
