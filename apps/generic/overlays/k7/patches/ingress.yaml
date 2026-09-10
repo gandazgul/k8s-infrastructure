@@ -1,0 +1,10 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: k7
+  annotations:
+    forecastle.stakater.com/appName: "K7"
+    forecastle.stakater.com/group: "Media"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/icon: "https://raw.githubusercontent.com/kaybi-gh/K7/main/branding/logo-on-light.svg"
+    nginx.ingress.kubernetes.io/custom-http-errors: "404,500,503"

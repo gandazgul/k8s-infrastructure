@@ -1,0 +1,37 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: k7-db
+  namespace: default
+spec:
+  instances: 1
+  storage:
+    size: 10Gi
+  bootstrap:
+    initdb:
+      database: k7
+      owner: k7
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: k7
+  namespace: default
+spec:
+  interval: 1h
+  path: ./apps/generic/overlays/k7/
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: k7
+      namespace: default
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: secrets

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: k7
+spec:
+  ports:
+    - name: http
+      port: 7080
+      protocol: TCP
+      targetPort: http
