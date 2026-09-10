@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k7
+spec:
+  strategy:
+    type: Recreate
+  template:
+    spec:
+      containers:
+        - name: container
+          image: ghcr.io/kaybi-gh/k7:1.10.0
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+          env:
+            - name: Database__Provider
+              value: Postgres
+            - name: Database__Server
+              valueFrom:
+                secretKeyRef:
+                  name: k7-db-app
+                  key: host
+            - name: Database__Port
+              value: "5432"
+            - name: Database__UserID
+              valueFrom:
+                secretKeyRef:
+                  name: k7-db-app
+                  key: username
+            - name: Database__Password
+              valueFrom:
+                secretKeyRef:
+                  name: k7-db-app
+                  key: password
+            - name: Database__Name
+              valueFrom:
+                secretKeyRef:
+                  name: k7-db-app
+                  key: dbname
+            - name: Security__ApiKeys__HashSecret
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: K7_APIKEYS_HASH_SECRET
+            - name: BaseUrl
+              value: "https://k7.${CLUSTER_DOMAIN_NAME}"
+            - name: Security__ForceHttps
+              value: "true"
+            - name: Paths__Config
+              value: /data/config
+            - name: Paths__Metadatas
+              value: /data/metadatas
+            - name: Paths__Logs
+              value: /data/logs
+            - name: Paths__Transcoding
+              value: /data/transcoding
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "${CLUSTER_TIME_ZONE}"
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 2
+              memory: 2Gi
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /data
+              subPath: configs/k7/
+            - name: main-volume
+              mountPath: /media/tv
+              subPath: public/TV
+              readOnly: true
+            - name: main-volume
+              mountPath: /media/movies
+              subPath: public/Movies
+              readOnly: true
+            - name: main-volume
+              mountPath: /media/music
+              subPath: public/Music
+              readOnly: true
+          startupProbe:
+            httpGet:
+              scheme: HTTP
+              path: /alive
+              port: http
+            failureThreshold: 60
+            periodSeconds: 5
+            timeoutSeconds: 10
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /alive
+              port: http
+            initialDelaySeconds: 300
+            timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+          ports:
+            - name: http
+              containerPort: 7080
+              protocol: TCP
