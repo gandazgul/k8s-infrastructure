@@ -5,6 +5,7 @@ containers/size-checker/ssmtp.conf
 # secrets and private files
 secrets.sh
 secrets.env
+.env.bookorbit
 
 # node
 node_modules/
