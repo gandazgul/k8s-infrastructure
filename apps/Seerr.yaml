@@ -16,7 +16,7 @@ metadata:
   name: seerr
   namespace: default
 spec:
-  suspend: true
+  suspend: false
   interval: 5m
   chartRef:
     kind: OCIRepository
