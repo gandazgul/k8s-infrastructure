@@ -14,7 +14,7 @@ if ! git ls-remote --exit-code origin "$CURRENT_BRANCH" &> /dev/null; then
 fi
 
 message "Changing branch to ${CURRENT_BRANCH}"
-< "$SCRIPT_DIR"/GitRepoSync.yaml.templ sed "s/main/${CURRENT_BRANCH}/g" | kubectl apply -f -
+< "$SCRIPT_DIR"/GitRepoSync.yaml.templ sed "s|main|${CURRENT_BRANCH}|g" | kubectl apply -f -
 
 message "Reconciling..."
 flux reconcile kustomization --with-source kube-system -n kube-system && flux reconcile kustomization ${CLUSTER_NAME} -n kube-system

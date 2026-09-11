@@ -1,0 +1,68 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: seerr
+  namespace: kube-system
+spec:
+  interval: 5m0s
+  url: oci://ghcr.io/seerr-team/seerr/seerr-chart
+  ref:
+    tag: "3.9.1"
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: seerr
+  namespace: default
+spec:
+  suspend: false
+  interval: 5m
+  chartRef:
+    kind: OCIRepository
+    name: seerr
+    namespace: kube-system
+  values:
+    fullnameOverride: seerr
+    image:
+      registry: ghcr.io
+      repository: seerr-team/seerr
+      tag: v3.4.1
+      pullPolicy: IfNotPresent
+    serviceAccount:
+      automount: false
+    podSecurityContext:
+      fsGroup: null
+      fsGroupChangePolicy: null
+    extraEnv:
+      - name: TZ
+        value: "${CLUSTER_TIME_ZONE}"
+    config:
+      persistence:
+        existingClaim: yasr-volume
+        subPath: configs/overseerr
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - host: media.${CLUSTER_DOMAIN_NAME}
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - hosts:
+            - media.${CLUSTER_DOMAIN_NAME}
+          secretName: internal-ingress-cert
+      annotations:
+        forecastle.stakater.com/appName: "Seerr"
+        forecastle.stakater.com/group: "Media"
+        forecastle.stakater.com/expose: "true"
+        forecastle.stakater.com/icon: "https://media.${CLUSTER_DOMAIN_NAME}/apple-touch-icon.png"
+    probes:
+      startupProbe:
+        httpGet:
+          path: /api/v1/settings/public
+          port: http
+        periodSeconds: 10
+        failureThreshold: 60
+        timeoutSeconds: 3
