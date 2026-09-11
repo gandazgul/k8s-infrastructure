@@ -22,6 +22,7 @@ resources:
   - ../../../apps/Transmission.yaml
   - ../../../apps/Lidarr.yaml
   - ../../../apps/Overseerr.yaml
+  - ../../../apps/Seerr.yaml
   - ../../../apps/Prowlarr.yaml
   - ../../../apps/Radarr.yaml
   - ../../../apps/Sonarr.yaml
