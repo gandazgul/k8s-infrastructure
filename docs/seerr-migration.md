@@ -47,6 +47,16 @@ mkdir -p "${BACKUP_DIR}"
 chmod 700 "${BACKUP_DIR}"
 ```
 
+Record the old Git desired state before you apply migration commits. Use a
+revision from before this migration, not `main` after the migration is merged.
+
+```bash
+git fetch origin main
+git rev-parse origin/main > "${BACKUP_DIR}/pre-migration-git-revision.txt"
+git show "$(cat "${BACKUP_DIR}/pre-migration-git-revision.txt"):apps/Overseerr.yaml" >/dev/null
+git show "$(cat "${BACKUP_DIR}/pre-migration-git-revision.txt"):clusters/gandazgul/apps/kustomization.yaml" >/dev/null
+```
+
 Record the old release and workload data:
 
 ```bash
@@ -80,7 +90,7 @@ POD="$(kubectl --context "${CTX}" get pod -n "${NS}" \
   -o jsonpath='{.items[0].metadata.name}')"
 
 kubectl --context "${CTX}" exec -n "${NS}" "${POD}" -- \
-  sh -c 'id; find /app/config -maxdepth 3 -exec stat -c "%u:%g %a %n" {} \\; | sed -n "1,80p"' \
+  sh -c 'id; find /app/config -maxdepth 3 -exec stat -c "%u:%g %a %n" {} \; | sed -n "1,80p"' \
   | tee "${BACKUP_DIR}/config-ownership-sample.txt"
 
 kubectl --context "${CTX}" exec -n "${NS}" "${POD}" -- \
@@ -88,13 +98,23 @@ kubectl --context "${CTX}" exec -n "${NS}" "${POD}" -- \
   | tee "${BACKUP_DIR}/config-file-sample.txt"
 ```
 
-If the app uses SQLite, the database is usually under `/app/config/db`. Record
-counts only. Do not export tokens or passwords.
+Confirm that the app uses the expected local SQLite database. This runbook does
+not include an external database dump and restore procedure.
 
 ```bash
-kubectl --context "${CTX}" exec -n "${NS}" "${POD}" -- \
-  sh -c 'find /app/config -maxdepth 4 -name "*.sqlite*" -o -name "*.db*"'
+kubectl --context "${CTX}" exec -n "${NS}" "${POD}" -- sh -c '
+  set -e
+  echo "External database environment keys:"
+  env | cut -d= -f1 | grep -Ei "^(DATABASE|DB|POSTGRES|MYSQL|MARIADB)" || true
+  echo "SQLite and database-like files:"
+  find /app/config -maxdepth 4 \( -name "*.sqlite*" -o -name "*.db*" \) -print
+  test -f /app/config/db/db.sqlite3
+'
 ```
+
+Stop if any external database environment key is present, or if
+`/app/config/db/db.sqlite3` is missing. Get a revised procedure with a
+consistent dump and restore for that external database before you continue.
 
 If `sqlite3` is present in the pod, record a small baseline:
 
@@ -231,14 +251,28 @@ tar -xzf "${BACKUP_DIR}/overseerr-config.tgz" -C "${BACKUP_DIR}/restore-test"
 find "${BACKUP_DIR}/restore-test" -maxdepth 3 -type f | sed -n '1,80p'
 ```
 
-If SQLite is present and local `sqlite3` is available, run integrity check:
+Validate the stopped backup before you change permissions or start Seerr. The
+expected layout is a settings file and `db/db.sqlite3`. The archive includes any
+SQLite sidecar files, such as `db.sqlite3-wal` and `db.sqlite3-shm`, because it
+contains the full config directory.
 
 ```bash
+SETTINGS="${BACKUP_DIR}/restore-test/settings.json"
 DB="${BACKUP_DIR}/restore-test/db/db.sqlite3"
-if [ -f "${DB}" ] && command -v sqlite3 >/dev/null; then
-  sqlite3 "${DB}" 'PRAGMA integrity_check;'
-fi
+test -s "${SETTINGS}"
+test -f "${DB}"
+command -v sqlite3 >/dev/null
+INTEGRITY="$(sqlite3 "${DB}" 'PRAGMA integrity_check;')"
+test "${INTEGRITY}" = "ok"
+sqlite3 "${DB}" 'SELECT count(*) FROM user;'
+sqlite3 "${DB}" 'SELECT count(*) FROM media_request;'
 ```
+
+Stop if `settings.json` or `db/db.sqlite3` is missing, if `sqlite3` is not
+available, if integrity output is not exactly `ok`, or if the count queries
+fail. Install local `sqlite3` or make a new stopped backup before you continue.
+Do not run the permission correction or start Seerr with an unchecked,
+unexpected, or corrupt backup.
 
 ## Correct Scoped Permissions
 
@@ -247,7 +281,7 @@ change `/media/yasr` or other app directories. Do not follow symlinks.
 
 ```bash
 kubectl --context "${CTX}" exec -n "${NS}" seerr-backup -- \
-  find -P /data -xdev -exec chown -h 1000:1000 {} +
+  find /data -xdev -exec chown -h 1000:1000 {} +
 ```
 
 Remove the helper pod after the backup and permission check:
@@ -340,14 +374,168 @@ Kustomization is ready.
 ## Rollback
 
 Rollback discards requests made after the backup. Get user approval before you
-restore.
+restore. Do not point old Overseerr at a database that Seerr already migrated.
 
-1. Suspend the parent Flux Kustomization and Seerr HelmRelease.
-2. Stop Seerr and wait for its pod to terminate.
-3. Restore the full pre-migration `overseerr-config.tgz` to `configs/overseerr`
-   with numeric ownership.
-4. Restore the old HelmRelease values and old Git desired state.
-5. Reconcile the old Overseerr release.
-6. Verify login, settings, and request history from the restored backup.
+Suspend Flux and stop Seerr:
 
-Do not point old Overseerr at a database that Seerr already migrated.
+```bash
+flux --context "${CTX}" suspend kustomization "${CLUSTER}" -n kube-system
+flux --context "${CTX}" suspend helmrelease seerr -n "${NS}" || true
+kubectl --context "${CTX}" scale statefulset seerr -n "${NS}" --replicas=0 || true
+kubectl --context "${CTX}" wait -n "${NS}" --for=delete pod \
+  -l app.kubernetes.io/instance=seerr --timeout=5m || true
+```
+
+Delete the Seerr release and its Service and Ingress before Overseerr returns:
+
+```bash
+kubectl --context "${CTX}" delete helmrelease seerr -n "${NS}" --wait=true || true
+kubectl --context "${CTX}" get deploy,statefulset,svc,ingress -n "${NS}" \
+  | grep -Ei 'seerr' || true
+```
+
+Expected result: no Seerr resource remains in the command output. Stop if a
+Seerr Service or Ingress remains, because it conflicts with Overseerr.
+
+Create a restore helper pod that mounts only the old config directory:
+
+```bash
+cat > "${BACKUP_DIR}/restore-pod.yaml" <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: overseerr-restore
+  namespace: ${NS}
+spec:
+  restartPolicy: Never
+  containers:
+    - name: restore
+      image: alpine:3.20
+      command: ["sleep", "3600"]
+      volumeMounts:
+        - name: config
+          mountPath: /data
+          subPath: configs/overseerr
+  volumes:
+    - name: config
+      persistentVolumeClaim:
+        claimName: yasr-volume
+EOF
+kubectl --context "${CTX}" apply -f "${BACKUP_DIR}/restore-pod.yaml"
+kubectl --context "${CTX}" wait -n "${NS}" --for=condition=Ready pod/overseerr-restore --timeout=2m
+```
+
+Replace the migrated files, including SQLite sidecars, with the stopped
+pre-migration archive. Keep the numeric ownership from the archive.
+
+```bash
+kubectl --context "${CTX}" cp \
+  "${BACKUP_DIR}/overseerr-config.tgz" \
+  "${NS}/overseerr-restore:/tmp/overseerr-config.tgz"
+kubectl --context "${CTX}" exec -n "${NS}" overseerr-restore -- sh -c '
+  set -e
+  rm -rf /data/* /data/.[!.]* /data/..?*
+  tar --numeric-owner -xzf /tmp/overseerr-config.tgz -C /data
+  test -s /data/settings.json
+  test -f /data/db/db.sqlite3
+  find /data -maxdepth 3 -exec stat -c "%u:%g %a %n" {} \; | sed -n "1,80p"
+'
+kubectl --context "${CTX}" delete pod overseerr-restore -n "${NS}" --wait=true
+```
+
+Read the recorded old runtime from the baseline:
+
+```bash
+export OLD_IMAGE_REF="$(awk 'NF {print $3; exit}' "${BACKUP_DIR}/old-image-id.txt" | sed 's#^[^/]\+://##')"
+export OLD_REPO="${OLD_IMAGE_REF%@*}"
+export OLD_DIGEST="${OLD_IMAGE_REF#*@}"
+test "${OLD_IMAGE_REF}" != "${OLD_DIGEST}"
+printf '%s\n' "${OLD_IMAGE_REF}"
+```
+
+Restore the old Helm values to the live release and pin the recorded old
+runtime. The parent Flux Kustomization is still suspended.
+
+```bash
+helm repo add k8s-at-home https://k8s-at-home.com/charts/ || true
+helm repo update k8s-at-home
+helm --kube-context "${CTX}" upgrade --install overseerr k8s-at-home/overseerr \
+  --namespace "${NS}" \
+  --version 5.4.2 \
+  --values "${BACKUP_DIR}/overseerr-helm-values.yaml" \
+  --set image.repository="${OLD_REPO}" \
+  --set image.tag="latest@${OLD_DIGEST}" \
+  --set image.pullPolicy=IfNotPresent
+```
+
+Restore the old Git desired state from the recorded pre-migration revision.
+Then add a gandazgul-only patch that keeps the recorded old runtime selected by
+Flux. Do not pin the shared `apps/Overseerr.yaml` image in Git because rafag also
+uses that file.
+
+```bash
+PRE_MIGRATION_REV="$(cat "${BACKUP_DIR}/pre-migration-git-revision.txt")"
+git restore --source="${PRE_MIGRATION_REV}" -- \
+  apps/Overseerr.yaml \
+  clusters/gandazgul/apps/kustomization.yaml
+git rm -f apps/Seerr.yaml
+cat > clusters/gandazgul/apps/OverseerrRuntimePin.yaml <<EOF
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: overseerr
+  namespace: default
+spec:
+  values:
+    image:
+      repository: ${OLD_REPO}
+      tag: latest@${OLD_DIGEST}
+      pullPolicy: IfNotPresent
+EOF
+cat <<'EOF' >> clusters/gandazgul/apps/kustomization.yaml
+
+patches:
+  - path: OverseerrRuntimePin.yaml
+    target:
+      group: helm.toolkit.fluxcd.io
+      version: v2
+      kind: HelmRelease
+      name: overseerr
+      namespace: default
+EOF
+kustomize build --load-restrictor=LoadRestrictionsNone clusters/gandazgul/apps \
+  | awk '/name: overseerr/{show=1} show && /repository:|tag:|pullPolicy:/{print}'
+git diff -- apps/Overseerr.yaml clusters/gandazgul/apps/kustomization.yaml \
+  clusters/gandazgul/apps/OverseerrRuntimePin.yaml apps/Seerr.yaml
+```
+
+Commit and push this rollback state after review. Then reconcile the old
+Overseerr release:
+
+```bash
+flux --context "${CTX}" reconcile source git k8s-infrastructure -n kube-system
+flux --context "${CTX}" resume kustomization "${CLUSTER}" -n kube-system
+flux --context "${CTX}" reconcile kustomization "${CLUSTER}" -n kube-system
+flux --context "${CTX}" reconcile helmrelease overseerr -n "${NS}"
+kubectl --context "${CTX}" rollout status deployment overseerr -n "${NS}" --timeout=10m
+```
+
+Verify rollback from the restored backup and the recorded old runtime:
+
+```bash
+kubectl --context "${CTX}" get helmrelease overseerr -n "${NS}"
+kubectl --context "${CTX}" get helmrelease seerr -n "${NS}"
+kubectl --context "${CTX}" get helmrelease overseerr -n "${NS}" \
+  -o jsonpath='{.spec.values.image.repository}{"\n"}{.spec.values.image.tag}{"\n"}{.spec.values.image.pullPolicy}{"\n"}'
+kubectl --context "${CTX}" get pods -n "${NS}" \
+  -l app.kubernetes.io/instance=overseerr \
+  -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{range .status.containerStatuses[*]}{.imageID}{"\n"}{end}{end}'
+kubectl --context "${CTX}" get ingress -n "${NS}" | grep -Ei 'overseerr|seerr' || true
+```
+
+Expected result: Overseerr is ready, Seerr is absent, the HelmRelease image
+values match `${OLD_REPO}`, `latest@${OLD_DIGEST}`, and `IfNotPresent`, and the
+running pod image ID contains `${OLD_DIGEST}`. Only the Overseerr Ingress serves
+`https://media.${CLUSTER_DOMAIN_NAME}`. Log in and compare settings, users, and
+request history with the pre-migration baseline.

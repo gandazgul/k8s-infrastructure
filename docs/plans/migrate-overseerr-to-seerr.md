@@ -11,7 +11,7 @@ affectedPaths:
 executionAgent: "engineer"
 collaborationRecommendation: "pair"
 createdAt: "2026-09-10"
-status: "implemented"
+status: "validated_reviewer"
 origin: "internal"
 userVerifiedAt: null
 targetBranch: "main"
@@ -98,7 +98,7 @@ Do not change shared PVCs, PVs, other applications, `rafag`, `renepor`, the glob
    - HTTP startup probe at `/api/v1/settings/public`, named port `http`, period 10 seconds, failure threshold 60, timeout 3 seconds. Keep the chart HTTP readiness/liveness probes. Migration gets up to ten minutes before startup failures cause a restart; an overrun requires inspection.
    - `spec.suspend: true` for the preparation stage only. The gandazgul app list adds this resource while retaining Overseerr. Existing apps remain unchanged after this stage is reconciled.
 
-3. **The operator runbook defines a safe, executable cutover and restore path.** Include commands with explicit context/namespace placeholders, how to find the actual old workload, and checks at every gate. Backups contain the complete stopped config directory, including SQLite sidecars and settings, preserve numeric ownership, and have restricted access. Check archive contents and a checksum; test extraction and SQLite integrity on an isolated copy where applicable. If the installed database is external, include its consistent dump/restore or stop for a revised procedure. Do not assume existing backup CronJobs cover YASR. Restore must use the pre-migration data and recorded old runtime, not just a Git revert.
+3. **The operator runbook defines a safe, executable cutover and restore path.** Include commands with explicit context/namespace placeholders, how to find the actual old workload, and checks at every gate. Backups contain the complete stopped config directory, including SQLite sidecars and settings, preserve numeric ownership, and have restricted access. Check archive contents and a checksum; test extraction and SQLite integrity on an isolated copy where applicable. If the installed database is external, include its consistent dump/restore or stop for a revised procedure. Do not assume existing backup CronJobs cover YASR. Restore must use the pre-migration data and recorded old runtime, not just a Git revert. The rollback Git state must keep the recorded old runtime selected for gandazgul with a gandazgul-local patch; do not pin the shared `apps/Overseerr.yaml`, because rafag also uses it.
 
 4. **Gandazgul completes this sequence without concurrent writers.** Publish/reconcile the suspended preparation stage only after user confirmation. Then process gandazgul:
    ```text
