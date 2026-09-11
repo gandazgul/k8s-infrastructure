@@ -11,9 +11,14 @@ affectedPaths:
 executionAgent: "engineer"
 collaborationRecommendation: "pair"
 createdAt: "2026-09-10"
-status: "validated_reviewer"
+status: "validated"
 origin: "internal"
 userVerifiedAt: null
+workRecord:
+  status: "generated"
+  recordId: "2d4661e2-ca9b-46cf-93ef-22c07d789160"
+  path: "docs/work-records/2026-09-11-migrated-gandazgul-to-seerr.md"
+  lastAttemptAt: "2026-09-11T03:36:28.319Z"
 targetBranch: "main"
 ---
 
