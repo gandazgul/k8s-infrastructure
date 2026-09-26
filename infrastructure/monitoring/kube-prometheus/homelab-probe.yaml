@@ -22,9 +22,9 @@ spec:
         environment: homelab
         monitor: homelab-endpoints
       static:
-      - https://budget.${CLUSTER_DOMAIN_NAME}
-      - https://grafana.${CLUSTER_DOMAIN_NAME}
-      - https://harbor.${CLUSTER_DOMAIN_NAME}
-      - https://home.${CLUSTER_DOMAIN_NAME}
-      - https://n8n.${CLUSTER_DOMAIN_NAME}
-      - https://paperless.${CLUSTER_DOMAIN_NAME}
+      - https://budget.dumbhome.uk
+      - https://grafana.dumbhome.uk
+      - https://harbor.dumbhome.uk
+      - https://home.dumbhome.uk
+      - https://n8n.dumbhome.uk
+      - https://paperless.dumbhome.uk
