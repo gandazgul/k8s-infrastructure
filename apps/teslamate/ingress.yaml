@@ -1,0 +1,26 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: teslamate-grafana
+  annotations:
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/appName: TeslaMate Grafana
+    forecastle.stakater.com/group: Monitoring
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: tesla-grafana.${CLUSTER_DOMAIN_NAME}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: teslamate-grafana
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - tesla-grafana.${CLUSTER_DOMAIN_NAME}
+      secretName: internal-ingress-cert
