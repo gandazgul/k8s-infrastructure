@@ -1,0 +1,125 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/component: prometheus
+    app.kubernetes.io/instance: k8s
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/part-of: kube-prometheus
+    prometheus: k8s
+    role: alert-rules
+  name: homelab-rules
+  namespace: monitoring
+spec:
+  groups:
+  - name: homelab-recording
+    rules:
+    - expr: |
+        max by (namespace, persistentvolumeclaim) (
+          1 - kubelet_volume_stats_available_bytes
+            / kubelet_volume_stats_capacity_bytes
+        )
+      record: homelab:pvc_used_ratio
+    - expr: |
+        max by (instance, mountpoint) (
+          1 - node_filesystem_avail_bytes{fstype!~"tmpfs|overlay",mountpoint="/"}
+            / node_filesystem_size_bytes{fstype!~"tmpfs|overlay",mountpoint="/"}
+        )
+      record: homelab:root_filesystem_used_ratio
+  - name: homelab-storage
+    rules:
+    - alert: HomelabDataVolumeNearlyFull
+      annotations:
+        description: The shared data volume is {{ $value | humanizePercentage }} full. Capacity cleanup or expansion should be planned.
+        summary: Shared data volume is more than 90% full.
+      expr: |
+        homelab:pvc_used_ratio{namespace="default",persistentvolumeclaim="main-volume"} > 0.90
+        and
+        homelab:pvc_used_ratio{namespace="default",persistentvolumeclaim="main-volume"} <= 0.95
+      for: 15m
+      labels:
+        severity: warning
+    - alert: HomelabDataVolumeCritical
+      annotations:
+        description: The shared data volume is {{ $value | humanizePercentage }} full. Free space immediately.
+        summary: Shared data volume is more than 95% full.
+      expr: |
+        homelab:pvc_used_ratio{namespace="default",persistentvolumeclaim="main-volume"} > 0.95
+      for: 15m
+      labels:
+        severity: critical
+    - alert: HomelabRootFilesystemNearlyFull
+      annotations:
+        description: The Kubernetes node root filesystem is {{ $value | humanizePercentage }} full.
+        summary: Node root filesystem is more than 80% full.
+      expr: |
+        homelab:root_filesystem_used_ratio > 0.80
+        and
+        homelab:root_filesystem_used_ratio <= 0.90
+      for: 30m
+      labels:
+        severity: warning
+    - alert: HomelabRootFilesystemCritical
+      annotations:
+        description: The Kubernetes node root filesystem is {{ $value | humanizePercentage }} full. Free space immediately.
+        summary: Node root filesystem is more than 90% full.
+      expr: |
+        homelab:root_filesystem_used_ratio > 0.90
+      for: 15m
+      labels:
+        severity: critical
+  - name: homelab-backups
+    rules:
+    - alert: HomelabBackupStale
+      annotations:
+        description: CronJob {{$labels.cronjob}} has not completed successfully for {{ $value | humanizeDuration }}.
+        summary: A twice-daily backup is overdue.
+      expr: |
+        time() - kube_cronjob_status_last_successful_time{
+          namespace="default",
+          cronjob=~"angela-backup|incremental-backups|miki-backup|yasr-backup"
+        } > 93600
+      for: 15m
+      labels:
+        severity: critical
+    - alert: HomelabBackupCleanupStale
+      annotations:
+        description: Backup retention cleanup has not completed successfully for {{ $value | humanizeDuration }}.
+        summary: Daily backup retention cleanup is overdue.
+      expr: |
+        time() - kube_cronjob_status_last_successful_time{
+          namespace="default",
+          cronjob="clean-incremental-backups"
+        } > 172800
+      for: 15m
+      labels:
+        severity: critical
+  - name: homelab-endpoints
+    rules:
+    - alert: HomelabEndpointDown
+      annotations:
+        description: Endpoint {{$labels.instance}} has failed external HTTP probes for five minutes.
+        summary: A critical homelab endpoint is unavailable.
+      expr: |
+        probe_success{monitor="homelab-endpoints"} == 0
+      for: 5m
+      labels:
+        severity: critical
+    - alert: HomelabTLSCertificateExpiring
+      annotations:
+        description: TLS certificate for {{$labels.instance}} expires in {{ $value | humanizeDuration }}.
+        summary: A homelab TLS certificate expires within 14 days.
+      expr: |
+        probe_ssl_earliest_cert_expiry{monitor="homelab-endpoints"} - time() < 1209600
+      for: 30m
+      labels:
+        severity: warning
+    - alert: HomelabTLSCertificateCritical
+      annotations:
+        description: TLS certificate for {{$labels.instance}} expires in {{ $value | humanizeDuration }}.
+        summary: A homelab TLS certificate expires within three days.
+      expr: |
+        probe_ssl_earliest_cert_expiry{monitor="homelab-endpoints"} - time() < 259200
+      for: 15m
+      labels:
+        severity: critical

@@ -81,6 +81,9 @@ spec:
             - mountPath: /grafana-dashboard-definitions/0/grafana-overview
               name: grafana-dashboard-grafana-overview
               readOnly: false
+            - mountPath: /grafana-dashboard-definitions/0/homelab-overview
+              name: grafana-dashboard-homelab-overview
+              readOnly: false
             - mountPath: /grafana-dashboard-definitions/0/k8s-resources-cluster
               name: grafana-dashboard-k8s-resources-cluster
               readOnly: false
@@ -201,6 +204,9 @@ spec:
       - configMap:
           name: grafana-dashboard-grafana-overview
         name: grafana-dashboard-grafana-overview
+      - configMap:
+          name: grafana-dashboard-homelab-overview
+        name: grafana-dashboard-homelab-overview
       - configMap:
           name: grafana-dashboard-k8s-resources-cluster
         name: grafana-dashboard-k8s-resources-cluster
