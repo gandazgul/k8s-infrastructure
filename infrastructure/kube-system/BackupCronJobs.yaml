@@ -99,6 +99,6 @@ spec:
     - patch: |
         - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/args
-          value: ["remove", "increments", "--older-than", "4W", "${BACKUP_DEST:=/media/backup}"]
+          value: ["--force", "remove", "increments", "--older-than", "4W", "${BACKUP_DEST:=/media/backup}"]
       target:
         kind: CronJob
