@@ -121,7 +121,7 @@ data:
           "gridPos": {"h": 4, "w": 4, "x": 8, "y": 0},
           "id": 3,
           "options": {"colorMode": "value", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "showPercentChange": false, "textMode": "auto", "wideLayout": true},
-          "targets": [{"expr": "100 * avg(probe_success{monitor=\"homelab-endpoints\"})", "refId": "A"}],
+          "targets": [{"expr": "100 * avg(probe_success{monitor=\"homelab-endpoints\",instance=~\"https://.*[.]dumbhome[.]uk\"})", "refId": "A"}],
           "title": "Endpoint availability",
           "type": "stat"
         },
@@ -249,7 +249,7 @@ data:
           "gridPos": {"h": 8, "w": 12, "x": 0, "y": 22},
           "id": 13,
           "options": {"alignValue": "left", "legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "mergeValues": true, "rowHeight": 0.9, "showValue": "auto", "tooltip": {"mode": "single", "sort": "none"}},
-          "targets": [{"expr": "probe_success{monitor=\"homelab-endpoints\"}", "legendFormat": "{{instance}}", "refId": "A"}],
+          "targets": [{"expr": "probe_success{monitor=\"homelab-endpoints\",instance=~\"https://.*[.]dumbhome[.]uk\"}", "legendFormat": "{{instance}}", "refId": "A"}],
           "title": "Endpoint status",
           "type": "state-timeline"
         },
@@ -259,7 +259,7 @@ data:
           "gridPos": {"h": 8, "w": 12, "x": 12, "y": 22},
           "id": 14,
           "options": {"legend": {"calcs": ["lastNotNull", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
-          "targets": [{"expr": "probe_duration_seconds{monitor=\"homelab-endpoints\"}", "legendFormat": "{{instance}}", "refId": "A"}],
+          "targets": [{"expr": "probe_duration_seconds{monitor=\"homelab-endpoints\",instance=~\"https://.*[.]dumbhome[.]uk\"}", "legendFormat": "{{instance}}", "refId": "A"}],
           "title": "Endpoint probe duration",
           "type": "timeseries"
         },
@@ -299,7 +299,7 @@ data:
           "gridPos": {"h": 8, "w": 12, "x": 0, "y": 38},
           "id": 18,
           "options": {"displayMode": "gradient", "maxVizHeight": 300, "minVizHeight": 16, "minVizWidth": 8, "namePlacement": "auto", "orientation": "horizontal", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "showUnfilled": true, "sizing": "auto", "valueMode": "color"},
-          "targets": [{"expr": "(probe_ssl_earliest_cert_expiry{monitor=\"homelab-endpoints\"} - time()) / 86400", "instant": true, "legendFormat": "{{instance}}", "refId": "A"}],
+          "targets": [{"expr": "(probe_ssl_earliest_cert_expiry{monitor=\"homelab-endpoints\",instance=~\"https://.*[.]dumbhome[.]uk\"} - time()) / 86400", "instant": true, "legendFormat": "{{instance}}", "refId": "A"}],
           "title": "TLS certificate days remaining",
           "type": "bargauge"
         },

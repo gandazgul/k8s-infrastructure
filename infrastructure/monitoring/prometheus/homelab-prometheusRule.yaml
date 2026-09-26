@@ -101,7 +101,7 @@ spec:
         description: Endpoint {{$labels.instance}} has failed external HTTP probes for five minutes.
         summary: A critical homelab endpoint is unavailable.
       expr: |
-        probe_success{monitor="homelab-endpoints"} == 0
+        probe_success{monitor="homelab-endpoints",instance=~"https://.*[.]dumbhome[.]uk"} == 0
       for: 5m
       labels:
         severity: critical
@@ -110,7 +110,7 @@ spec:
         description: TLS certificate for {{$labels.instance}} expires in {{ $value | humanizeDuration }}.
         summary: A homelab TLS certificate expires within 14 days.
       expr: |
-        probe_ssl_earliest_cert_expiry{monitor="homelab-endpoints"} - time() < 1209600
+        probe_ssl_earliest_cert_expiry{monitor="homelab-endpoints",instance=~"https://.*[.]dumbhome[.]uk"} - time() < 1209600
       for: 30m
       labels:
         severity: warning
@@ -119,7 +119,7 @@ spec:
         description: TLS certificate for {{$labels.instance}} expires in {{ $value | humanizeDuration }}.
         summary: A homelab TLS certificate expires within three days.
       expr: |
-        probe_ssl_earliest_cert_expiry{monitor="homelab-endpoints"} - time() < 259200
+        probe_ssl_earliest_cert_expiry{monitor="homelab-endpoints",instance=~"https://.*[.]dumbhome[.]uk"} - time() < 259200
       for: 15m
       labels:
         severity: critical
