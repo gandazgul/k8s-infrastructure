@@ -1,0 +1,3 @@
+{
+  "verification_command": "node scripts/pre-commit.js"
+}

@@ -34,6 +34,8 @@ spec:
             prometheus.io/port: "10254"
       service:
         type: NodePort
+        # Keep client addresses for LAN-only authentication bypasses.
+        externalTrafficPolicy: Local
         externalIPs:
         - ${CONTROL_PLANE_IP}
       extraArgs:

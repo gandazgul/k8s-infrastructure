@@ -1,9 +1,3 @@
-# Injellij
-.idea/workspace.xml
-.idea/aws.xml
-.idea/copilot/
-.idea/copilot.data.migration*
-
 # docker
 containers/sshd/users.conf
 containers/size-checker/ssmtp.conf
@@ -11,6 +5,7 @@ containers/size-checker/ssmtp.conf
 # secrets and private files
 secrets.sh
 secrets.env
+.env.bookorbit
 
 # node
 node_modules/
@@ -20,3 +15,19 @@ yarn-error.log
 
 # Mac
 .DS_Store
+
+.history/
+.wld/worktrees.json
+# BEGIN RunWield owned runtime state
+.wld/plan-locks
+.wld/plan-transitions
+.wld/plan-backups
+.wld/plan-staging
+.wld/worktrees
+.wld/debug
+.wld/controller
+.wld/worktrees.json
+.wld/worktrees.lock
+.wld/worktree-registry-migration-issues.json
+.wld/collaboration-secrets.json
+# END RunWield owned runtime state

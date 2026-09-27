@@ -12,7 +12,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: harbor
-  namespace: default
+  namespace: kube-system
 spec:
   interval: 5m
   chart:
@@ -51,72 +51,21 @@ spec:
       enabled: true
       persistentVolumeClaim:
         registry:
-          existingClaim: yasr-volume
+          existingClaim: yasr-volume-kube-system
           subPath: configs/harbor/registry
         database:
-          existingClaim: yasr-volume
+          existingClaim: yasr-volume-kube-system
           subPath: configs/harbor/database
         trivy:
-          existingClaim: yasr-volume
+          existingClaim: yasr-volume-kube-system
           subPath: configs/harbor/trivy
     imageChartStorage:
       type: filesystem
       filesystem:
         rootdirectory: /storage
-    redis:
-      type: external
-      external:
-        addr: paperless-redis-master.default.svc.cluster.local:6379
-        coreDatabaseIndex: "2"
-        jobserviceDatabaseIndex: "3"
-        registryDatabaseIndex: "4"
-        trivyAdapterIndex: "5"
-        harborDatabaseIndex: "6"
-        cacheLayerDatabaseIndex: "7"
     containerSecurityContext:
       allowPrivilegeEscalation: true
       runAsNonRoot: false
       privileged: true
       runAsUser: 1000
       runAsGroup: 472
----
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: harbor-container-webhook
-  namespace: kube-system
-spec:
-  interval: 1h0m0s
-  url: "https://indeedeng.github.io/harbor-container-webhook/"
----
-apiVersion: helm.toolkit.fluxcd.io/v2
-kind: HelmRelease
-metadata:
-  name: harbor-container-webhook
-  namespace: default
-spec:
-  interval: 5m
-  chart:
-    spec:
-      chart: harbor-container-webhook
-      version: 0.7.1
-      sourceRef:
-        kind: HelmRepository
-        name: harbor-container-webhook
-        namespace: kube-system
-      interval: 5m
-  values:
-    image:
-      pullPolicy: Always
-    rules:
-      - name: 'docker.io replace rule'
-        matches:
-          - '^docker.io\/'
-        excludes:
-          - '^docker.io\/goharbor\/'
-        replace: 'harbor.dumbhome.uk/dockerproxy'
-        checkUpstream: false
-      - name: 'harbor images'
-        matches:
-          - '^docker.io\/goharbor\/'
-        replace: 'mirror.gcr.io'

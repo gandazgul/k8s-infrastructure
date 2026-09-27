@@ -1,0 +1,11 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: warm-corner
+  annotations:
+    forecastle.stakater.com/appName: "Warm Corner"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/group: "Games"
+    # yamllint disable-line rule:line-length
+    forecastle.stakater.com/icon: "https://raw.githubusercontent.com/phaserjs/phaser/master/.github/phaser-logo.png"

@@ -1,0 +1,11 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: goaly
+  annotations:
+    forecastle.stakater.com/appName: "Goaly"
+    forecastle.stakater.com/group: "Productivity"
+    forecastle.stakater.com/expose: "true"
+    # yamllint disable-line rule:line-length
+    forecastle.stakater.com/icon: "https://raw.githubusercontent.com/gandazgul/goaly/main/public/favicon.svg"
