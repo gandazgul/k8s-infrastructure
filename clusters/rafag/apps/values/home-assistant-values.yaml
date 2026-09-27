@@ -1,8 +1,14 @@
-additionalVolumeMounts:
-- name: usb-zbt2
-  mountPath: /dev/ttyACM0
-additionalVolumes:
-- name: usb-zbt2
-  hostPath:
-    path: /dev/serial/by-id/usb-Nabu_Casa_ZBT-2_DCB4D90C146C-if00
-    type: CharDevice
+persistence:
+  usb-zbt2:
+    enabled: true
+    type: hostPath
+    hostPath: /dev/serial/by-id/usb-Nabu_Casa_ZBT-2_DCB4D90C146C-if00
+    hostPathType: CharDevice
+    mountPath: /dev/ttyACM0
+  dbus:
+    enabled: true
+    type: hostPath
+    hostPath: /run/dbus
+    hostPathType: Directory
+    mountPath: /run/dbus
+    readOnly: true

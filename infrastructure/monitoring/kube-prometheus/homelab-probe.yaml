@@ -1,0 +1,30 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  labels:
+    app.kubernetes.io/component: blackbox
+    app.kubernetes.io/name: homelab-endpoints
+    app.kubernetes.io/part-of: kube-prometheus
+  name: homelab-endpoints
+  namespace: monitoring
+spec:
+  interval: 30s
+  jobName: homelab-endpoints
+  module: http_2xx
+  prober:
+    path: /probe
+    scheme: http
+    url: blackbox-exporter.monitoring.svc:19115
+  scrapeTimeout: 10s
+  targets:
+    staticConfig:
+      labels:
+        environment: homelab
+        monitor: homelab-endpoints
+      static:
+      - https://budget.dumbhome.uk
+      - https://grafana.dumbhome.uk
+      - https://harbor.dumbhome.uk
+      - https://home.dumbhome.uk
+      - https://n8n.dumbhome.uk
+      - https://paperless.dumbhome.uk

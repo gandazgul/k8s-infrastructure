@@ -1,0 +1,116 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: teslamate-postgresql
+spec:
+  clusterIP: None
+  ports:
+    - name: postgresql
+      port: 5432
+      targetPort: postgresql
+  selector:
+    app.kubernetes.io/name: teslamate-postgresql
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: teslamate-postgresql
+spec:
+  serviceName: teslamate-postgresql
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: teslamate-postgresql
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: teslamate-postgresql
+        app.kubernetes.io/component: database
+    spec:
+      securityContext:
+        fsGroup: 999
+        fsGroupChangePolicy: OnRootMismatch
+      initContainers:
+        - name: initialize-data-directory
+          image: busybox:1.37.0
+          command:
+            - sh
+            - -c
+            - mkdir -p /yasr/configs/teslamate/database && chown -R 999:999 /yasr/configs/teslamate/database
+          securityContext:
+            runAsUser: 0
+          resources:
+            requests:
+              cpu: 5m
+              memory: 8Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+          volumeMounts:
+            - name: yasr
+              mountPath: /yasr
+      containers:
+        - name: postgresql
+          image: postgres:18-trixie
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POSTGRES_DB
+              value: teslamate
+            - name: POSTGRES_USER
+              value: teslamate
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: teslamate-secrets
+                  key: database-password
+          ports:
+            - name: postgresql
+              containerPort: 5432
+          startupProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - pg_isready -U teslamate -d teslamate
+            failureThreshold: 30
+            periodSeconds: 5
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - pg_isready -U teslamate -d teslamate
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - pg_isready -U teslamate -d teslamate
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            runAsGroup: 999
+            runAsNonRoot: true
+            runAsUser: 999
+          volumeMounts:
+            - name: yasr
+              mountPath: /var/lib/postgresql
+              subPath: configs/teslamate/database
+      terminationGracePeriodSeconds: 60
+      volumes:
+        - name: yasr
+          persistentVolumeClaim:
+            claimName: yasr-volume
