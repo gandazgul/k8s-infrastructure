@@ -54,7 +54,7 @@ spec:
     - patch: |
         - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/args
-          value: ["--force", "backup", "/media/main", "/media/backup"]
+          value: ["--force", "backup", "${BACKUP_SOURCE:=/media/main}", "${BACKUP_DEST:=/media/backup}"]
       target:
         kind: CronJob
 ---
@@ -99,6 +99,6 @@ spec:
     - patch: |
         - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/args
-          value: ["remove", "increments", "--older-than", "4W", "/media/backup"]
+          value: ["remove", "increments", "--older-than", "4W", "${BACKUP_DEST:=/media/backup}"]
       target:
         kind: CronJob
