@@ -35,7 +35,7 @@ spec:
   values:
     image:
       pullPolicy: Always
-      tag: latest
+      tag: 2.20.15
     env:
       USERMAP_UID: "1000"
       USERMAP_GID: "1000"
@@ -75,6 +75,10 @@ spec:
     redis:
       enabled: true
       architecture: standalone
+      image:
+        registry: docker.io
+        repository: bitnamilegacy/redis
+        tag: "6.2"
     postgresql:
       enabled: false
     ingress:

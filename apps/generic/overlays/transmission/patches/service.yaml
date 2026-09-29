@@ -8,3 +8,7 @@ spec:
       port: 9091
       protocol: TCP
       targetPort: http
+    - name: mousehole
+      port: 5010
+      protocol: TCP
+      targetPort: mousehole

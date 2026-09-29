@@ -1,0 +1,11 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: daybook
+  annotations:
+    forecastle.stakater.com/appName: "Daybook"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/group: "Games"
+    forecastle.stakater.com/url: "https://puzzle.dumbhome.uk"
+    forecastle.stakater.com/icon: "https://puzzle.dumbhome.uk/favicon.svg"

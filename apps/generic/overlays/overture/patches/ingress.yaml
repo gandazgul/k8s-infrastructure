@@ -1,0 +1,9 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: overture
+  annotations:
+    forecastle.stakater.com/appName: "Overture"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/group: "Apps"

@@ -1,0 +1,71 @@
+# Regenerate this file after DOCKERHUB_TOKEN changes.
+# This reads credentials from clusters/gandazgul/secrets.env; do not hardcode the token.
+# Username uses CLUSTER_NAME. Email uses EMAIL. Password uses DOCKERHUB_TOKEN.
+#
+#   eval "$(python3 - <<'PY'
+#   from pathlib import Path
+#   import shlex
+#   wanted = {"CLUSTER_NAME", "EMAIL", "DOCKERHUB_TOKEN"}
+#   for line in Path("clusters/gandazgul/secrets.env").read_text().splitlines():
+#       if not line or line.lstrip().startswith("#") or "=" not in line:
+#           continue
+#       key, value = line.split("=", 1)
+#       if key in wanted:
+#           print(f"{key}={shlex.quote(value)}")
+#   PY
+#   )"
+#   for ns in default kube-system monitoring; do
+#     kubectl create secret docker-registry dockerhub-creds \
+#       --namespace="${ns}" \
+#       --docker-server=https://index.docker.io/v1/ \
+#       --docker-username="${CLUSTER_NAME}" \
+#       --docker-password="${DOCKERHUB_TOKEN}" \
+#       --docker-email="${EMAIL}" \
+#       --dry-run=client -o yaml \
+#     | kubeseal -o yaml
+#   done > clusters/gandazgul/sealed-secret/DockerHubCreds.yaml
+#
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: dockerhub-creds
+  namespace: default
+spec:
+  encryptedData:
+    .dockerconfigjson: AgC1q7uISC5Ui51f2StrYUzKpLsqQnPTSdhx9AKA/pfAfR0gx6TSTHe9Vj+uOKtF02hiuVB9MX1oj5jRcaugMzjDCjQFOcOCo2aA7Yao25+FA0W+Exz+5jfcI5p4h50PokN6h/jhPlqy9qf9ucVFHRypRkmaa8hSuux4atC/2O0BQ6KtRJn9ou96BHvtFUoiCDm/RMv+R9CeLAWjWZ/v0wJ4z4MVV8bGQac/DUGeodY8omqnY3VDVtEc1Co1eTY5ebd3bIJz7vd2zRbaDmCDIR8x41ra/OP/xLNpoc/ecIQT/dBfMeESksLW/dim6HCbhHBs2iESEmroZDVmcJSNMdN1fRTkXa3PuLJdTYZo32h4g7SbMcYKaS/DA4DTUbwA2CkbKxM48I/C/EykZ/DUHDn/LWp8ygdgr45+Y83DUCjMWjk+LBtRLJpaNCetOQHoCT/ru1Sha78SVj483wSojMV63qCJ4lj7+eW8NLLq8RrKy72Iykmn9uT/P7zng6zF+f/Y4B6FDcMoRVSaoF4PKk7rzBK1od6NOWlIzWovXivXC4zRDgECFPO0YvRMoE0EZlikwC23NqB5D2v07p4z+RL5plBkdw2dxvVCTnDAMbfBrilV023K7f0xD5IkjBh0ZOx8voVgIZdMED5+daQomgQvLPvZcAfPOKz6rBDbB6i3HAM7nhRUKLCuQgmqzfZDTVqHSXAmi9uTer3fJA3C1IkXJ5JskQy1RS73w5buA+YfGRmuygOrmamaTz7+5WLgcFu2NO2/P62bWvV8ygXYhAVixh0K5t4gzV+mmyyJddF9U3H3GwFiv70FLzqgjSX0wVWNiv6sWSFOVE5Prbu963KsOp5kZLi5/zbkkLLTDDwXSoW7vF7v1AS8fVNHTZUv8rQ7oIhJrIC9wQvRXg4uaTkSMUyvZgXYBeQbYnnBgM1SQN8l4y9SmBELoirhKtsKfar7+IbLXzuwfbrRzYb3gYboTvaDtdmPrj5gyBBnOZfpaA==
+  template:
+    metadata:
+      name: dockerhub-creds
+      namespace: default
+    type: kubernetes.io/dockerconfigjson
+
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: dockerhub-creds
+  namespace: kube-system
+spec:
+  encryptedData:
+    .dockerconfigjson: AgAMAxa4uN2MApSZ7zdb6IzFcsUiOBK9ds/ZtLcl06wtgPXyiZfXFRKdv8gyvolIlMiHDSGHSs4axyAEO1vOBT5FHUkxoo7apIfCbAWznwlQJ+z84iA8Ume4tvxs8IVly09YO65PEDuZEizVx4ftADJezjimY6kmSRFFLYiv7BzAoYSLggSLc2MXBKDniLRdmuiyIEgj5mpgwMjHAv+Eu1LPi9aBaCrHDnGRrY3aec9zut3ILEFJGI9fH9dRK6d5q1lC3a18rqKqLyObarmkGYp2AMg/RrXCz5MZXoveO9J6Z/qdIM8hfwszlcQpB31iT1Y4MV5a/7Aq7bbUtYvW9rp+cIu4h14n4Z6zW/UyPyMCxAf4AJsaT8+x5zhJz3TA5YHeBk0XQnFNXsh5iVSvBl80yCw6TYbAzEytErOLjIc8y0nrjmAe70O8cucmHhsRq2W/Wzy47U6ISJ1SzG02aDjAHQcr7r+J3dsrHhj8L9YYLi2RCmbs7THBVBQgvioeM7ealfX+EJddscRjckjgkB+B70QIvWnslkOtI6KGeK9FY1LruvXT3gl5jqfhLXwOXgSMfczRP3EGwwkV82Zntn/KNaH87424dQHf/qO8+DFcOywC41ooU7YcMHwlRR4HYv0EGUM+/E/9lvJiOiRIAqh2VN8kzTpxRvNJ7Nrpnich7fpAVMKf10ztr3fUpuxyB0F8m7YYoAsfM6eLRLAMRnyuvQQBGUUD5Zzhdn+zaYH+Nz6D9Mn57i7JIO0Xn00BgLJmzRTeOoXALwbsvtB2wrx+8hN/rLKyWPaJnf9Nc5U+Bfm1KF0lgs4whCEEg7H2+pJHvJ2wY7C2tSft1BT0kWUZSCnApMlZlNICbrrcssbe0glHWpbjXjyJD6V1228ZfLc+sG/PHYBF8bBA/Nn9RRkqHQDXAtEXjrl4Nu55+vqBqDEtBv5bM4OS8s7Ct0XnSjNcKaQHMK6AZEpbd1bKyXMojT4s2Pnlyq/RU8ycRLa71Q==
+  template:
+    metadata:
+      name: dockerhub-creds
+      namespace: kube-system
+    type: kubernetes.io/dockerconfigjson
+
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: dockerhub-creds
+  namespace: monitoring
+spec:
+  encryptedData:
+    .dockerconfigjson: AgBVn/3gEOsnhZ870RC8R6/sZbdUyGWO0GrbANyg5A+bWxbFXs6IDcYtflgym49mP74Ti+7OXdx0JD+E1wn4SyuuZcMmcRt35BVT16qjOf825dAbqZM+EV6wkmQgkrIBlCny4qj9QW2+8rlpCkDz4gXUOB0JLb/01GZlOSdt4rXfiCV0NOiraCO4iCceDKX72EVGI36MKJY2H+zbzUMYLzwhA+oBcrehB+2lVGZCyuwN+7FjiNiRQ2paImZd81uxsbgVVqYWxmxNV5i+0+N8+9lUUby65lt7Dnr9Q2+V3rhBjSPfqgSWlxdcPWgNW4RmKFOboVVFqSxbOkVY2FwCbHFvcPJJ8GlPAH6ifCS+rjoh1LBHGIWBUNMQUvyV2goS1HvSjT6SlzOEexpU9Z4w8gImbPd+RR2foKEAUy4cVk9D6HCCzQx54m6S9s+FbaEyxN86ZNCBzNPGmuKqGbj1J+SrOM4WwDdC0EzAsdd2EUm3ejGUDV6gQJFDvQymz/Jzb8Cgs81qL5KB4Npql7wY/0Gi5XGRSkW9Wi+puzLv9TrM3NB5iHul8d0DSTEbwrO508m8G2LYg7gnjaIHtJBV6sygGRxbZL2ZMNGBGdGVY+H8ZKfSPLNqK0Inc0vDtSUk+dFQUmsJH0EJebljPq+MMdIbclYrNMwWiAakD1ItG7iNDjlqj2dDN6KFBd+3J4PHTH1PY0NfCoNqGdpm5BRrA2kNNg0xb8nDKuFdJFhVQv0ctA49XfBaU1iIEL7fomacWqPzYWJxIaTArNJjjgkUGRRXOEMCjIYacHB90crwOyVgLvMhsis5/Mn/qIZObqDqRBZeRY1bxOzryAGD+9k0vFFU/hilIqXjz3g/7OO9vQlms3PNd+eMu9tUCPRCXOxKVOu+IhFaaY7n46SGgEvvjzD0Yar0kDpaOEZFkcmFJ+972dO5yTKH00E8uJ1nBXZJ8dEJcM83vRasTh6A5wnfbek4dBbJKyF2dfYjbdQnnqDMsQ==
+  template:
+    metadata:
+      name: dockerhub-creds
+      namespace: monitoring
+    type: kubernetes.io/dockerconfigjson
