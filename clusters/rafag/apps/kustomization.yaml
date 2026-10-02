@@ -8,6 +8,7 @@ resources:
   - ../../../apps/Forecastle.yaml
   - ../../../apps/HomeAssistant.yaml
   - ../../../apps/TeslaPublicKey.yaml
+  - ../../../apps/Teslamate.yaml
   - ../../../apps/MosquitoMQTTBroker.yaml
   - ../../../apps/Paperless.yaml
   - ../../../apps/Photoprism.yaml

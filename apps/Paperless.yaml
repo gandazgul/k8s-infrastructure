@@ -61,6 +61,14 @@ spec:
       # PAPERLESS_ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
       PAPERLESS_SECRET_KEY: "${PAPERLESS_SECRET_KEY}"
       PAPERLESS_URL: "https://paperless.${CLUSTER_DOMAIN_NAME}"
+      PAPERLESS_GMAIL_OAUTH_CLIENT_ID:
+        secretKeyRef:
+          name: paperless-gmail-oauth
+          key: client-id
+      PAPERLESS_GMAIL_OAUTH_CLIENT_SECRET:
+        secretKeyRef:
+          name: paperless-gmail-oauth
+          key: client-secret
     persistence:
       yasr:
         enabled: true
