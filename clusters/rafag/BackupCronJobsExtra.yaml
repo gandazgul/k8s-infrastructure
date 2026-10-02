@@ -6,9 +6,8 @@
 # pair and should only exist on the rafag cluster:
 #   - /media/yasr        -> /media/backup/yasr    (separate disk, yasr-volume PVC)
 #   - /media/main/angela -> /media/backup/angela  (under main-volume)
-# NOTE: retention/pruning (rdiff-backup "remove increments") is intentionally
-# not wired here yet; increments will grow until that is added. There is ample
-# free space (~2.3 TB) for the initial ~343 GB plus a month of increments.
+#   - /media/main/miki   -> /media/backup/miki    (under main-volume)
+# YASR is pruned independently because it is a separate rdiff-backup repository.
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -64,7 +63,74 @@ spec:
     - patch: |
         - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/args
-          value: ["--force", "backup", "/media/yasr", "/media/backup/yasr"]
+          value:
+            - "--force"
+            - "backup"
+            - "--exclude"
+            - "/media/yasr/configs/transmission/downloading"
+            - "--exclude"
+            - "/media/yasr/configs/transmission/downloads"
+            - "--exclude"
+            - "/media/yasr/configs/transmission/radarr"
+            - "--exclude"
+            - "/media/yasr/configs/transmission/sonarr"
+            - "--exclude"
+            - "/media/yasr/configs/transmission/films_flex"
+            - "--exclude"
+            - "/media/yasr/configs/transmission/series_flex"
+            - "--exclude"
+            - "/media/yasr/configs/transmission/games"
+            - "--exclude"
+            - "/media/yasr/configs/transmission/mejorenvo"
+            - "/media/yasr"
+            - "/media/backup/yasr"
+      target:
+        kind: CronJob
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: clean-yasr-backups
+  namespace: kube-system
+spec:
+  interval: 1h0m0s
+  path: ./infrastructure/cronjob/
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  prune: true
+  targetNamespace: default
+  dependsOn:
+    - name: backup-volume
+  postBuild:
+    substitute:
+      CRONJOB_NAME: clean-yasr-backups
+      SCHEDULE: "0 4 * * *"
+      IMAGE: docker.io/gandazgul/rdiff-backup:vfa41640
+      NAMESPACE: default
+  patches:
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/volumes/-
+          value:
+            name: backup-volume
+            persistentVolumeClaim:
+              claimName: backup-volume
+      target:
+        kind: CronJob
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
+          value:
+            name: backup-volume
+            mountPath: /media/backup
+      target:
+        kind: CronJob
+    - patch: |
+        - op: add
+          path: /spec/jobTemplate/spec/template/spec/containers/0/args
+          value: ["--force", "remove", "increments", "--older-than", "4W", "/media/backup/yasr"]
       target:
         kind: CronJob
 ---
