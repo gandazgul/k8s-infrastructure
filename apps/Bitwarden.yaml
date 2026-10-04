@@ -17,8 +17,10 @@ spec:
       interval: 5m
   values:
     image:
-      repository: vaultwarden/server
-      tag: 1.37.3
+      # Vaultwarden 1.37.3 plus upstream PR #7571, which returns a valid
+      # revisionDate for organization policies required by current clients.
+      repository: harbor.dumbhome.uk/library/vaultwarden
+      tag: 1.37.3-pr7571-7049ec7
     env:
       TZ: "${CLUSTER_TIME_ZONE}"
       DATA_FOLDER: "/config"
