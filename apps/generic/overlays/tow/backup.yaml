@@ -1,0 +1,56 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: tow-backup
+spec:
+  schedule: "0 4 * * *"
+  timeZone: ${CLUSTER_TIME_ZONE}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1993
+            runAsGroup: 1993
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: backup
+              image: harbor.dumbhome.uk/library/tow:20261004-deploy@sha256:731c899283f7745c6ea45281aeffc859fb4d93ffc9ab8a5060d85733d12d2130
+              command: ["sh", "-ec"]
+              args:
+                - >-
+                  deno run -A --cached-only scripts/backup_db.ts
+                  "/backups/tow-$(date -u +%Y%m%dT%H%M%SZ).db";
+                  find /backups -name 'tow-*.db' -type f -mtime +30 -delete
+              env:
+                - name: DB_PATH
+                  value: /data/chores.db
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
+              volumeMounts:
+                - name: data
+                  mountPath: /data
+                  subPath: configs/tow
+                  readOnly: true
+                - name: backups
+                  mountPath: /backups
+                  subPath: apps/tow
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: yasr-volume
+            - name: backups
+              persistentVolumeClaim:
+                claimName: backup-volume

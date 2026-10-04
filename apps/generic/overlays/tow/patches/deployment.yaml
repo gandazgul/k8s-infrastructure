@@ -1,0 +1,124 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tow
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1993
+        runAsGroup: 1993
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        - name: data-permissions
+          image: docker.io/library/busybox:1.37.0
+          command: ["sh", "-ec"]
+          args:
+            - >-
+              mkdir -p /yasr/configs/tow /backup/apps/tow &&
+              chown 1993:1993 /yasr/configs/tow /backup/apps/tow &&
+              chmod 700 /yasr/configs/tow /backup/apps/tow
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 0
+            runAsGroup: 0
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+              add: ["CHOWN", "DAC_OVERRIDE", "FOWNER"]
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /yasr
+            - name: backup-volume
+              mountPath: /backup
+      containers:
+        - name: container
+          image: harbor.dumbhome.uk/library/tow:20261004-deploy@sha256:731c899283f7745c6ea45281aeffc859fb4d93ffc9ab8a5060d85733d12d2130
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          env:
+            - name: DB_PATH
+              value: /data/chores.db
+            - name: DB_ENV
+              value: production
+            - name: PUBLIC_ORIGIN
+              value: https://todo.${CLUSTER_DOMAIN_NAME}
+            - name: ENABLE_AUTH
+              value: "true"
+            - name: COOKIE_SECURE
+              value: "true"
+            - name: GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: TOW_GOOGLE_CLIENT_ID
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: TOW_SESSION_SECRET
+            - name: ALLOWED_EMAILS
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: TOW_ALLOWED_EMAILS
+            - name: HOUSEHOLD_TZ
+              value: ${CLUSTER_TIME_ZONE}
+            - name: ENABLE_NOTIFICATIONS
+              value: "true"
+            - name: GOTIFY_URL
+              value: https://notify.${CLUSTER_DOMAIN_NAME}
+            - name: QUIET_HOURS_START
+              value: "21:00"
+            - name: QUIET_HOURS_END
+              value: "08:00"
+            - name: POOL_BLAST_LEAD_HOURS
+              value: "0"
+          ports:
+            - name: http
+              containerPort: 8080
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 2
+            failureThreshold: 60
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+          volumeMounts:
+            - name: yasr-volume
+              mountPath: /data
+              subPath: configs/tow
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: main-volume
+          $patch: delete
+        - name: tmp
+          emptyDir: {}

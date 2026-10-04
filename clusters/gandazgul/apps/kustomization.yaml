@@ -35,6 +35,7 @@ resources:
   # - ../../../apps/OpenWebUI.yaml
   - ../../../apps/Goaly.yaml
   - ../../../apps/Gotify.yaml
+  - ../../../apps/Tow.yaml
   - ../../../apps/Overture.yaml
   - ../../../apps/BerenstainBears.yaml
   - ../../../apps/Daybook.yaml

@@ -1,0 +1,11 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tow
+  annotations:
+    forecastle.stakater.com/appName: "Tow"
+    forecastle.stakater.com/expose: "true"
+    forecastle.stakater.com/group: "Home"
+    forecastle.stakater.com/url: "https://todo.${CLUSTER_DOMAIN_NAME}"
+    forecastle.stakater.com/icon: "https://todo.${CLUSTER_DOMAIN_NAME}/icon.png"
