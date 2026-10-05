@@ -17,7 +17,7 @@ spec:
       volumes: null
       containers:
         - name: container
-          image: harbor.dumbhome.uk/library/daybook:855ddd0@sha256:6bd138cfdda3ef0010be4d0fe9f4f58e1f5b53df043d02934f58548a9b8e0014
+          image: harbor.dumbhome.uk/library/daybook:a3d9529@sha256:5819ccca4ae162bbc9c8f23f84ae23666bf50c52374a1e3256788212ca6a1218
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
