@@ -52,8 +52,11 @@ spec:
     spec:
       containers:
         - name: kokoro-tts
-          image: ghcr.io/remsky/kokoro-fastapi-cpu@sha256:d7df384acb57929f88a696d892c1a2e0c6b60fa934802ebec9a88626003b8e9a
+          image: ghcr.io/remsky/kokoro-fastapi-cpu@sha256:ee3111d6a2c903ed62f3b4fa19543c6901205ed39fce3c177e895b34a8386b9c
           imagePullPolicy: IfNotPresent
+          env:
+            - name: WEB_CONCURRENCY
+              value: "2"
           ports:
             - containerPort: 8880
               protocol: TCP
@@ -62,7 +65,7 @@ spec:
               memory: "4Gi"
               cpu: "1"
             limits:
-              memory: "8Gi"
+              memory: "10Gi"
               cpu: "4"
           startupProbe:
             httpGet:
@@ -72,8 +75,7 @@ spec:
             periodSeconds: 10
             failureThreshold: 60
           livenessProbe:
-            httpGet:
-              path: /health
+            tcpSocket:
               port: 8880
             timeoutSeconds: 10
             periodSeconds: 30
