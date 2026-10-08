@@ -24,7 +24,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: backup
-              image: harbor.dumbhome.uk/library/tow:20261004-deploy@sha256:731c899283f7745c6ea45281aeffc859fb4d93ffc9ab8a5060d85733d12d2130
+              image: ghcr.io/gandazgul/chores-app:sha-a8418a36734d6dd33eea2b1eb4bee3dd80ac6e3c@sha256:f2cd355ec98716240848e063de4e9cff5e7e4daef46f7383f938f81f587e4e73
               command: ["sh", "-ec"]
               args:
                 - >-
