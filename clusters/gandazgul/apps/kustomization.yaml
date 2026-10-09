@@ -38,6 +38,7 @@ resources:
   - ../../../apps/Tow.yaml
   - ../../../apps/Overture.yaml
   - ../../../apps/BerenstainBears.yaml
+  - ../../../apps/DrawingGame.yaml
   - ../../../apps/Daybook.yaml
   - ../../../apps/FlowerShop.yaml
 #  - ../../../apps/WarmCorner.yaml
