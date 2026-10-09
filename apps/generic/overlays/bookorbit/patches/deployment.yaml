@@ -62,7 +62,7 @@ spec:
               subPath: configs/bookorbit/
             - name: yasr-volume
               mountPath: /downloads
-              subPath: configs/transmission/books
+              subPath: configs/transmission/downloads/books
             - name: main-volume
               mountPath: /books
               subPath: ${BOOKS_PATH:=public/Books}
