@@ -34,6 +34,11 @@ spec:
               value: "${BOOKORBIT_JWT_SECRET}"
             - name: SETUP_BOOTSTRAP_TOKEN
               value: "${BOOKORBIT_SETUP_BOOTSTRAP_TOKEN}"
+            - name: BOOK_REQUEST_ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: BOOKORBIT_BOOK_REQUEST_ENCRYPTION_KEY
             - name: APP_URL
               value: "https://read.${CLUSTER_DOMAIN_NAME}"
             - name: LIBRARY_BROWSE_ROOT
