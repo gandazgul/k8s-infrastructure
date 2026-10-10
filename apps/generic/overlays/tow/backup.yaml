@@ -24,7 +24,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: backup
-              image: ghcr.io/gandazgul/chores-app:sha-a8418a36734d6dd33eea2b1eb4bee3dd80ac6e3c@sha256:f2cd355ec98716240848e063de4e9cff5e7e4daef46f7383f938f81f587e4e73
+              image: ghcr.io/gandazgul/chores-app:sha-d956e2fb0a7f39b38d4c4f4e91c90e26ec07b491@sha256:bc6ed1decd57d042e140ca2422a7dbc8afc0237739fd42b1ff35c2f9a97f0e95
               command: ["sh", "-ec"]
               args:
                 - >-
