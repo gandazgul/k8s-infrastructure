@@ -40,7 +40,7 @@ spec:
               mountPath: /backup
       containers:
         - name: container
-          image: ghcr.io/gandazgul/chores-app:sha-d956e2fb0a7f39b38d4c4f4e91c90e26ec07b491@sha256:bc6ed1decd57d042e140ca2422a7dbc8afc0237739fd42b1ff35c2f9a97f0e95
+          image: ghcr.io/gandazgul/chores-app:sha-dd64251a12542a78bb500a23b0454ecd36abddec@sha256:f964f12d32ffbb0d9128e272049dbc7685d19b9cf7ccdb103bb35e304ee57575
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -76,8 +76,13 @@ spec:
               value: ${CLUSTER_TIME_ZONE}
             - name: ENABLE_NOTIFICATIONS
               value: "true"
-            - name: GOTIFY_URL
-              value: https://notify.${CLUSTER_DOMAIN_NAME}
+            - name: NOTIFICATION_PROVIDER
+              value: pushover
+            - name: PUSHOVER_APP_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: TOW_PUSHOVER_APP_TOKEN
             - name: QUIET_HOURS_START
               value: "21:00"
             - name: QUIET_HOURS_END
