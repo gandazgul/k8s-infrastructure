@@ -11,6 +11,8 @@ spec:
           hostPath:
             path: /dev/net/tun
             type: CharDevice
+        - name: watch-dir
+          emptyDir: {}
       dnsPolicy: ClusterFirst
       dnsConfig: { }
       containers:
@@ -61,6 +63,8 @@ spec:
             - name: yasr-volume
               mountPath: /config
               subPath: configs/transmission/
+            - name: watch-dir
+              mountPath: /watch
           ports:
             - name: http
               containerPort: 9091
