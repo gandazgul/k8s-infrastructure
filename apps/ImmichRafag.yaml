@@ -30,6 +30,7 @@ spec:
       postInitApplicationSQL:
         - CREATE EXTENSION IF NOT EXISTS vector;
         - CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
+        - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE;
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
