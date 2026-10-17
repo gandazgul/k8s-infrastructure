@@ -22,6 +22,7 @@ spec:
       UID: "${PHOTOS_UID}"
       GID: "${PHOTOS_GID}"
       TZ: "${CLUSTER_TIME_ZONE}"
+      PHOTOPRISM_DISABLE_CHOWN: "true"
       PHOTOPRISM_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     persistence:
       config:
