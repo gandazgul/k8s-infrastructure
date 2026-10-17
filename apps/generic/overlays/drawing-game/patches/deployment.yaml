@@ -18,7 +18,7 @@ spec:
       containers:
         - name: container
           # yamllint disable-line rule:line-length
-          image: harbor.dumbhome.uk/library/drawing-game:20261017-village-snow-v13@sha256:f42e3395c96e6982b720cde57088b20c46d1900448bf25dcdf4e4972a1ddb4b4
+          image: harbor.dumbhome.uk/library/drawing-game:20261017-water-fullscreen-v14@sha256:245d9e935d77d8a096813e73c2d86eabae691714336ed25c91e6d9175ecb922a
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
