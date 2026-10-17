@@ -27,7 +27,8 @@ spec:
     initdb:
       database: immich
       owner: immich
-      postInitSQL:
+      postInitApplicationSQL:
+        - CREATE EXTENSION IF NOT EXISTS vector;
         - CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
