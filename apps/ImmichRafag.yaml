@@ -121,11 +121,6 @@ spec:
           globalMounts:
             - path: /data
               subPath: rafag/immich-library
-        external-photos:
-          enabled: true
-          type: persistentVolumeClaim
-          existingClaim: main-volume
-          globalMounts:
             - path: /external/photos
               subPath: rafag/photos
               readOnly: true
