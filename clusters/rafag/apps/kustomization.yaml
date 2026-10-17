@@ -11,6 +11,7 @@ resources:
   - ../../../apps/MosquitoMQTTBroker.yaml
   - ../../../apps/Paperless.yaml
   - ../../../apps/Photoprism.yaml
+  - ../../../apps/ImmichRafag.yaml
   - ../../../apps/Resilio.yaml
   - ../../../apps/SFTPGo.yaml
   - ../../../apps/Sharry.yaml

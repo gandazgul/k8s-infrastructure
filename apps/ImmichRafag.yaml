@@ -1,0 +1,171 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: OCIRepository
+metadata:
+  name: immich-chart
+  namespace: kube-system
+spec:
+  interval: 24h
+  url: oci://ghcr.io/immich-app/immich-charts/immich
+  ref:
+    digest: sha256:9957cfe69ed64f4d4550f39b369c6cf3b2b040bb4d9a5abdced9a60c1153093f
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: immich-db
+  namespace: default
+spec:
+  instances: 1
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:16.9-0.4.3@sha256:bf0c731659d3eb1d7df97cb9ee85672627cb574c1679175013a06ac1062ecbe0
+  storage:
+    size: 8Gi
+  postgresql:
+    shared_preload_libraries:
+      - vchord.so
+  bootstrap:
+    initdb:
+      database: immich
+      owner: immich
+      postInitSQL:
+        - CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: immich
+  namespace: default
+spec:
+  interval: 30m
+  timeout: 15m
+  chartRef:
+    kind: OCIRepository
+    name: immich-chart
+    namespace: kube-system
+  dependsOn:
+    - name: cnpg
+      namespace: kube-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+      strategy: rollback
+  values:
+    controllers:
+      main:
+        containers:
+          main:
+            env:
+              TZ: "${CLUSTER_TIME_ZONE}"
+    immich:
+      metrics:
+        enabled: true
+      persistence:
+        library:
+          existingClaim: main-volume
+    valkey:
+      enabled: true
+      controllers:
+        main:
+          containers:
+            main:
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 64Mi
+                limits:
+                  cpu: 500m
+                  memory: 512Mi
+    server:
+      controllers:
+        main:
+          containers:
+            main:
+              image:
+                tag: v3.3.3@sha256:8c94984724f79503eb431dfd34ea58b57111c186df8030a66f39ffacf51d7c81
+              env:
+                DB_HOSTNAME:
+                  valueFrom:
+                    secretKeyRef:
+                      name: immich-db-app
+                      key: host
+                DB_DATABASE_NAME:
+                  valueFrom:
+                    secretKeyRef:
+                      name: immich-db-app
+                      key: dbname
+                DB_USERNAME:
+                  valueFrom:
+                    secretKeyRef:
+                      name: immich-db-app
+                      key: username
+                DB_PASSWORD:
+                  valueFrom:
+                    secretKeyRef:
+                      name: immich-db-app
+                      key: password
+              resources:
+                requests:
+                  cpu: 500m
+                  memory: 512Mi
+                limits:
+                  cpu: 4
+                  memory: 4Gi
+      persistence:
+        data:
+          type: persistentVolumeClaim
+          existingClaim: main-volume
+          globalMounts:
+            - path: /data
+              subPath: rafag/immich-library
+        external-photos:
+          enabled: true
+          type: persistentVolumeClaim
+          existingClaim: main-volume
+          globalMounts:
+            - path: /external/photos
+              subPath: rafag/photos
+              readOnly: true
+      ingress:
+        main:
+          enabled: true
+          annotations:
+            forecastle.stakater.com/appName: Immich
+            forecastle.stakater.com/group: Media
+            forecastle.stakater.com/expose: "true"
+            forecastle.stakater.com/icon: https://immich.app/img/favicon.png
+            nginx.ingress.kubernetes.io/proxy-body-size: "0"
+          hosts:
+            - host: immich.${CLUSTER_DOMAIN_NAME}
+              paths:
+                - path: /
+                  service:
+                    identifier: main
+          tls:
+            - secretName: internal-ingress-cert
+              hosts:
+                - immich.${CLUSTER_DOMAIN_NAME}
+    machine-learning:
+      controllers:
+        main:
+          containers:
+            main:
+              image:
+                tag: v3.3.3@sha256:0c0905ace426c490471e206707eb027c3ed46a5bd1fbf7e48f7c3536ec7384d0
+              resources:
+                requests:
+                  cpu: 500m
+                  memory: 1Gi
+                limits:
+                  cpu: 4
+                  memory: 8Gi
+      persistence:
+        cache:
+          type: persistentVolumeClaim
+          existingClaim: yasr-volume
+          globalMounts:
+            - path: /cache
+              subPath: configs/immich/model-cache
