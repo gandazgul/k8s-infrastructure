@@ -23,6 +23,12 @@ spec:
       IMAGE: docker.io/gandazgul/rdiff-backup:vfa41640
       NAMESPACE: default
   patches:
+    - target:
+        kind: CronJob
+      patch: |
+        - op: add
+          path: /spec/suspend
+          value: ${RDIFF_BACKUPS_SUSPENDED:=false}
     - patch: |
         - op: add
           path: /spec/jobTemplate/spec/template/spec/volumes/-
@@ -79,6 +85,12 @@ spec:
       SCHEDULE: "0 0 * * *"
       IMAGE: docker.io/gandazgul/rdiff-backup:vfa41640
   patches:
+    - target:
+        kind: CronJob
+      patch: |
+        - op: add
+          path: /spec/suspend
+          value: ${RDIFF_BACKUPS_SUSPENDED:=false}
     - patch: |
         - op: add
           path: /spec/jobTemplate/spec/template/spec/volumes/-

@@ -6,6 +6,10 @@ metadata:
 spec:
   template:
     spec:
+      volumes:
+        - name: backup-volume
+          persistentVolumeClaim:
+            claimName: backup-volume
       containers:
         - name: container
           image: docker.io/ikus060/rdiffweb:2.11.0

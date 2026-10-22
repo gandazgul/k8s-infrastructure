@@ -123,6 +123,9 @@ spec:
             - name: tmp
               mountPath: /tmp
       volumes:
+        - name: backup-volume
+          persistentVolumeClaim:
+            claimName: backup-volume
         - name: main-volume
           $patch: delete
         - name: tmp
