@@ -15,6 +15,7 @@ metadata:
   namespace: kube-system
 spec:
   interval: 5m
+  timeout: 15m
   chart:
     spec:
       chart: harbor
@@ -24,6 +25,35 @@ spec:
         name: harbor
         namespace: kube-system
       interval: 5m
+  postRenderers:
+  - kustomize:
+      patches:
+      - target:
+          kind: StatefulSet
+          name: harbor-database
+        patch: |
+          apiVersion: apps/v1
+          kind: StatefulSet
+          metadata:
+            name: harbor-database
+          spec:
+            template:
+              spec:
+                # Let the pod sandbox reap orphaned probes instead of PostgreSQL.
+                shareProcessNamespace: true
+                containers:
+                - name: database
+                  startupProbe:
+                    exec:
+                      command:
+                      - /docker-healthcheck.sh
+                    periodSeconds: 10
+                    timeoutSeconds: 5
+                    failureThreshold: 60
+                  livenessProbe:
+                    timeoutSeconds: 5
+                  readinessProbe:
+                    timeoutSeconds: 5
   values:
     externalURL: https://harbor.${CLUSTER_DOMAIN_NAME}
     harborAdminPassword: ${ADMIN_PASSWORD}
