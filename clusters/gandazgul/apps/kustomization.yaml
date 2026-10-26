@@ -13,7 +13,7 @@ resources:
   - ../../../apps/Forecastle.yaml
   - ../../../apps/HomeAssistant.yaml
   - ../../../apps/Paperless.yaml
-  - ../../../apps/Resilio.yaml
+  # - ../../../apps/Resilio.yaml
   # - ../../../apps/SFTPGo.yaml
   - ../../../apps/ZWaveJS.yaml
   - ../../../apps/Mealie.yaml
