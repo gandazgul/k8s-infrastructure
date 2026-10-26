@@ -25,16 +25,16 @@ resources:
   - ../../../apps/Prowlarr.yaml
   - ../../../apps/Radarr.yaml
   - ../../../apps/Sonarr.yaml
-  - ../../../apps/TubeSync.yaml
+  # - ../../../apps/TubeSync.yaml
   - ../../../apps/Tdarr.yaml
   - ../../../apps/Plex.yaml
-  - ../../../apps/K7.yaml
+  # - ../../../apps/K7.yaml
   - ../../../apps/RDiffWeb.yaml
   # - ../../../apps/Qdrant.yaml
   - ../../../apps/Immich.yaml
   # - ../../../apps/OpenWebUI.yaml
   - ../../../apps/Goaly.yaml
-  - ../../../apps/Gotify.yaml
+  # - ../../../apps/Gotify.yaml
   - ../../../apps/Tow.yaml
   - ../../../apps/Overture.yaml
   - ../../../apps/BerenstainBears.yaml
