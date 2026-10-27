@@ -6,12 +6,10 @@ metadata:
 spec:
   template:
     spec:
-      imagePullSecrets:
-        - name: ghcr-creds
       containers:
         - name: container
-          image: ghcr.io/gandazgul/berenstain-bears:dev
-          imagePullPolicy: Always
+          image: harbor.dumbhome.uk/library/berenstain-bears:e4fc215@sha256:bd11db8ba0dbce054e13882c51cab99b4b0152a78e15ba65d4d236ab72b5fe4b
+          imagePullPolicy: IfNotPresent
           env:
             - name: TZ
               value: ${CLUSTER_TIME_ZONE}
