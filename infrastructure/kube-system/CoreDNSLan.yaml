@@ -84,7 +84,8 @@ spec:
           response set ra
       - name: acl
         configBlock: |-
-          allow net ${LAN_DNS_ALLOWED_CIDR} 127.0.0.1/32 ::1/128
+          # Cluster CoreDNS forwards here through the node's resolver settings.
+          allow net ${LAN_DNS_ALLOWED_CIDR} 10.244.0.0/16 127.0.0.1/32 ::1/128
           block
       # No fallthrough: existing IPv4 names return local NODATA for AAAA/HTTPS.
       # Other domains are outside these zones and proceed to the forward plugin.

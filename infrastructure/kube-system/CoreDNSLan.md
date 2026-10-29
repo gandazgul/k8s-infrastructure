@@ -24,10 +24,13 @@ cluster resolver. The recursion-available response flag is set for client
 compatibility, including local answers.
 
 The Service preserves source addresses with `externalTrafficPolicy: Local`.
-CoreDNS ACLs allow the secret-defined LAN subnet and loopback, and refuse other
-sources. Do not forward port 53 from the internet. Response caching is omitted
-because CoreDNS executes its cache plugin before the ACL plugin; every request
-must reach the ACL. Eero/client/upstream caches still operate normally.
+CoreDNS ACLs allow the secret-defined LAN subnet, the cluster pod subnet
+(`10.244.0.0/16`, from `install-k8s/kubeadm.yaml`), and loopback. They refuse other
+sources. Cluster CoreDNS can forward through this resolver when the node uses it
+as its upstream DNS server. Do not forward port 53 from the internet. Response
+caching is omitted because CoreDNS executes its cache plugin before the ACL
+plugin; every request must reach the ACL. Eero/client/upstream caches still
+operate normally.
 
 ## Eero setup
 
