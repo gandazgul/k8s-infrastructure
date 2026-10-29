@@ -24,7 +24,7 @@ spec:
   values:
     image:
       repository: plexinc/pms-docker
-      tag: plexpass
+      tag: 1.43.5.11029-6bf8af3f0
       pullPolicy: Always
     service:
       main:
