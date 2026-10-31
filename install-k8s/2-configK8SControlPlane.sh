@@ -1,14 +1,19 @@
 #!/bin/bash
 
-./configNode.sh || exit 1
+set -e
+
+# The directory where this script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+"$SCRIPT_DIR/configNode.sh" || exit 1
 
 printf "\nInstalling kubernetes ===================================================================================\n"
 # Check if kubeadm already ran, do kubeadm reset to re-run
 if [[ ! -f "/etc/kubernetes/kubelet.conf" ]]; then
     sudo systemctl enable kubelet.service
     sudo hostnamectl set-hostname --static k8s-control-plane
-    sudo kubeadm config images pull
-    sudo kubeadm init --config=./kubeadm.yaml || exit 1
+    sudo kubeadm config validate --config="$SCRIPT_DIR/kubeadm.yaml"
+    sudo kubeadm config images pull --config="$SCRIPT_DIR/kubeadm.yaml"
+    sudo kubeadm init --config="$SCRIPT_DIR/kubeadm.yaml" || exit 1
 else
     printf "\nNOTE: Looks like kubeadm init already ran. If you want to run it again, run kubeadm reset ===============\n"
 fi;
@@ -19,7 +24,7 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 printf "\nInstalling flannel =======================================================================================\n"
-kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+kubectl apply -f https://github.com/flannel-io/flannel/releases/download/v0.28.10/kube-flannel.yml
 
 printf "\n\n=========================================================================================================\n"
 printf "Kubernetes is now installed. Please check the status of flannel and kubelet to make sure the network is ready before we proceed to the next step."
