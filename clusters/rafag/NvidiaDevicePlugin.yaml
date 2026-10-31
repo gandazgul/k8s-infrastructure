@@ -1,0 +1,112 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: nvidia-device-plugin
+  namespace: kube-system
+spec:
+  interval: 1h0m0s
+  url: https://nvidia.github.io/k8s-device-plugin
+---
+apiVersion: node.k8s.io/v1
+kind: RuntimeClass
+metadata:
+  name: nvidia
+handler: nvidia
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: nvidia-device-plugin
+  namespace: kube-system
+spec:
+  releaseName: nvidia-device-plugin
+  chart:
+    spec:
+      chart: nvidia-device-plugin
+      version: 0.20.1
+      sourceRef:
+        kind: HelmRepository
+        name: nvidia-device-plugin
+        namespace: kube-system
+  interval: 1h0m0s
+  postRenderers:
+  - kustomize:
+      patches:
+      - target:
+          kind: DaemonSet
+          name: nvidia-device-plugin-mps-control-daemon
+        patch: |-
+          $patch: delete
+          apiVersion: apps/v1
+          kind: DaemonSet
+          metadata:
+            name: nvidia-device-plugin-mps-control-daemon
+            namespace: kube-system
+      - target:
+          kind: DaemonSet
+          name: nvidia-device-plugin
+        patch: |-
+          apiVersion: apps/v1
+          kind: DaemonSet
+          metadata:
+            name: nvidia-device-plugin
+            namespace: kube-system
+          spec:
+            template:
+              spec:
+                containers:
+                - name: nvidia-device-plugin-ctr
+                  volumeMounts:
+                  - name: driver-libraries
+                    mountPath: /driver-root/usr/lib64
+                    readOnly: true
+                  - name: driver-cache
+                    mountPath: /driver-root/etc/ld.so.cache
+                    readOnly: true
+                  - name: driver-smi
+                    mountPath: /driver-root/usr/bin/nvidia-smi
+                    readOnly: true
+                volumes:
+                - name: driver-libraries
+                  hostPath:
+                    path: /usr/lib64
+                    type: Directory
+                - name: driver-cache
+                  hostPath:
+                    path: /etc/ld.so.cache
+                    type: File
+                - name: driver-smi
+                  hostPath:
+                    path: /usr/bin/nvidia-smi
+                    type: File
+  values:
+    # Only the plugin needs runtime injection before it can allocate GPUs.
+    # Workloads use native CRI-O CDI with the unchanged default crun runtime.
+    runtimeClassName: nvidia
+    migStrategy: none
+    failOnInitError: true
+    deviceListStrategy: cdi-cri
+    deviceIDStrategy: uuid
+    nodeSelector:
+      kubernetes.io/hostname: k8s-control-plane
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+              - k8s-control-plane
+    tolerations: []
+    gfd:
+      enabled: false
+    nfd:
+      enabled: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        memory: 256Mi
