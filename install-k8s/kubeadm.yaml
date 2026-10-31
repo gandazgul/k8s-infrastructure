@@ -11,22 +11,31 @@ nodeRegistration:
 ---
 apiVersion: kubeadm.k8s.io/v1beta4
 kind: ClusterConfiguration
+kubernetesVersion: v1.36.5
 controllerManager:
   extraArgs:
-    bind-address: "0.0.0.0"
+  - name: bind-address
+    value: "0.0.0.0"
 scheduler:
   extraArgs:
-    bind-address: "0.0.0.0"
+  - name: bind-address
+    value: "0.0.0.0"
 apiServer:
   extraArgs:
     # This is important to allow any non-root ports to be used for NodePort
-    service-node-port-range: 1025-32767
-    authorization-mode: "Node,RBAC"
+  - name: service-node-port-range
+    value: 1025-32767
+  - name: authorization-mode
+    value: "Node,RBAC"
     # OIDC configuration
-    oidc-issuer-url: "https://accounts.google.com"
-    oidc-client-id: "399292359639-no3v1g6obqns0r1anqsb6hn520r6cu79.apps.googleusercontent.com"
-    oidc-username-claim: "sub"
-    oidc-username-prefix: "oidc:"
+  - name: oidc-issuer-url
+    value: "https://accounts.google.com"
+  - name: oidc-client-id
+    value: "399292359639-no3v1g6obqns0r1anqsb6hn520r6cu79.apps.googleusercontent.com"
+  - name: oidc-username-claim
+    value: "sub"
+  - name: oidc-username-prefix
+    value: "oidc:"
 # This is super important, without this setting networking won't work
 networking:
   dnsDomain: cluster.local
