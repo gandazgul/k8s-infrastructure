@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Deliberately exclude apps/, sealed-secret/ and BackupCronJobsExtra.yaml:
+# their legacy declarations do not yet describe the recovered live workloads.
+# Do not expand this list without reviewing ownership, data and rollout impact.
+resources:
+- GitRepository.yaml
+- ClusterKustomization.yaml
+- NvidiaDevicePlugin.yaml

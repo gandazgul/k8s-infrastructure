@@ -5,36 +5,21 @@ metadata:
   name: rafag
   namespace: kube-system
 spec:
-  dependsOn:
-  - name: sealed-secret
-  - name: kube-system
-  - name: main-volume
-  - name: backup-volume
-  - name: yasr-volume
+  # The explicit root currently adopts only the source, itself and the
+  # already-running GPU plugin. Legacy app/storage/infra roots remain excluded.
   interval: 10m0s
+  retryInterval: 1m0s
+  timeout: 2m0s
   path: ./clusters/rafag/
-  prune: true
+  prune: false
+  deletionPolicy: Orphan
+  force: false
   sourceRef:
     kind: GitRepository
     name: k8s-infrastructure
     namespace: kube-system
-  postBuild:
-    # constants can be specified like this:
-    substitute:
-      PHOTOS_PATH: rafag/photos
-      PHOTOS_UID: "1000"
-      PHOTOS_GID: "1000"
-      BITWARDEN_SUBDOMAIN: "p"
-      HASS_SUBDOMAIN: "hass"
-      AUDIOBOOKSHELF_SUBDOMAIN: "listen"
-      AUDIOBOOKSHELF_BOOKS_PATH: "public/books-podcast-media"
-      AUDIOBOOKSHELF_MOUNT_PATH: "/data/books-podcast-media"
-      CLUSTER_NAME: "rafag"
-    substituteFrom:
-    # substitutions can also come from a config map or secret
-    #    - kind: ConfigMap
-    #      name: cluster-vars
-    - kind: Secret
-      name: secrets
-
-  # use ${var:=default} or ${var} in the files to place variables
+  healthChecks:
+  - apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    name: nvidia-device-plugin
+    namespace: kube-system
