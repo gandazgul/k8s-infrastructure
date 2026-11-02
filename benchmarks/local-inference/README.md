@@ -6,10 +6,12 @@ privacy. Building, downloading, applying resources and running these commands
 requires the separate concrete experiment approval. No experiment was run while
 preparing these files. Do not use the generic container helpers: they publish.
 
+ApprovalB was recorded in Discord1566606024822096095 (2026-11-01 19:13EST). This grants only the bounded isolated experiment, not production/app changes.
+
 These commands are reviewed lifecycle instructions, **not a run-all script**.
 They run on the GPU host through the verified SSH/admin path. Transfer of the
 reviewed source to that host, if needed, is a separate explicit operator step.
-Use `set -euo pipefail`; never run with shell tracing around credential steps.
+Use an approved root shell on the GPU host (`sudo -n -s`) for these lifecycle snippets, then `set -euo pipefail`; never run with shell tracing around credential steps.
 Stop at every failed check. Do not install host packages, change runtime/driver
 configuration, change production Flux roots, or substitute models/dependencies.
 
@@ -70,7 +72,6 @@ cd /path/to/reviewed/k8s-infrastructure
 BENCHMARK_RUN=$(mktemp -d /var/tmp/local-inference-benchmark.XXXXXXXX)
 export BENCHMARK_RUN
 chmod 700 "${BENCHMARK_RUN}"
-date -u +%Y-%m-%dT%H:%M:%SZ > "${BENCHMARK_RUN}/experiment-start.txt"
 kb() { sudo -n kubectl --kubeconfig=/etc/kubernetes/admin.conf --request-timeout=10s "$@"; }
 ```
 
@@ -82,28 +83,20 @@ other container projects, or ignored `secrets.env` files:
 
 ```bash
 python3 - <<'PY'
-import json, os, pathlib, shutil, subprocess, tempfile
+import hashlib, os, pathlib, subprocess
 root = pathlib.Path.cwd()
-lock = json.loads((root / 'benchmarks/local-inference/artifacts.lock.json').read_text())
-build = lock['build']
-run = pathlib.Path(os.environ['BENCHMARK_RUN'])
-with tempfile.TemporaryDirectory(prefix='local-inference-build-') as temporary:
-    context = pathlib.Path(temporary)
-    target = context / 'containers/local-inference'
-    target.mkdir(parents=True)
-    for name in ('Containerfile', 'cuda-sm75-check.cu', 'benchmark_proxy.py'):
-        shutil.copyfile(root / 'containers/local-inference' / name, target / name)
-    command = ['sudo', '-n', 'podman', 'build', '--platform=linux/amd64',
-               '--cpus=4', '--memory=12g', '--memory-swap=12g',
-               '--tag=localhost/local-inference-benchmark:reviewed-sm75',
-               '--iidfile=' + str(run / 'image-id.txt'),
-               '--build-arg=UBUNTU_SNAPSHOT=' + build['ubuntu_snapshot'],
-               '--build-arg=BUILD_PACKAGES=' + ' '.join(build['build_packages']),
-               '--build-arg=RUNTIME_PACKAGES=' + ' '.join(build['runtime_packages']),
-               '-f', str(target / 'Containerfile'), str(context)]
-    subprocess.run(command, check=True)
+run = pathlib.Path(os.environ['BENCHMARK_RUN']) / 'build'
+run.mkdir(mode=0o700)
+lock = root / 'benchmarks/local-inference/artifacts.lock.json'
+subprocess.run([
+    'python3', str(root / 'benchmarks/local-inference/build_image.py'),
+    '--source-directory', str(root), '--run-directory', str(run),
+    '--lock', str(lock), '--lock-sha256', hashlib.sha256(lock.read_bytes()).hexdigest(),
+], check=True)
 PY
 ```
+
+The reviewed wrapper uses a temporary127.0.0.1 CONNECT-only proxy for exact public build hosts, caps aggregate opaque tunnel payload at20GB, reserves25.1GB against the overall60GB accounting, and meters all default-route interfaces. It stops early at16GiB image-store or total-root allocated growth,85GiB root free,24GiB host memory sustained30s, or3600s. These margins/observations are not filesystem/network quotas. It records proxy use and rejects unexplained ingress; missing legitimate CDN hosts fail closed for review. The proxy closes on every exit and changes no host routing/firewall. The private source context contains only the three allowlisted files.
 
 No registry push/login/pull fallback is permitted. A failed build stops the
 phase. The build records CMake inputs, source identity/tree digest, full dpkg
@@ -169,9 +162,26 @@ PY
 Review the rendered diff/resource identities. Do **not** apply this whole
 directory: choose one server file only, after the CUDA/storage gates.
 
+## Runtime guard (required for every live GPU workload)
+
+Run `runtime_guard.py` as a separate owned root process immediately after the
+named Job/Deployment exists; wait for its fsynced first `owned` event before
+continuing. Required arguments: `--workload job/cuda-sm75-gate` or
+`deployment/benchmark-runtime`, `--experiment-start` (one unchanged UTC start),
+`--gpu-uuid`, `--run-directory`, distinct private `--stop-file`, `--finish-file`
+and `--output`. It checks one-second telemetry, node pressure/Ready, Xid,
+root/RAM/temp, report budget, actual GPU PID pod cgroups and common six-hour
+budget. A stop/signal/telemetry failure triggers only UID-preconditioned
+foreground deletion of its named workload and verifies owned pods gone.
+Creating its finish file also deletes that workload; exit0 requires explicit
+finish and verified cleanup. It never deletes cache/PV/PVC/namespace/Secret.
+Do not stop or replace this guard while a GPU workload is active.
+
 ## 3. Numerical CUDA gate (before cache creation or staging)
 
 ```bash
+date -u +%Y-%m-%dT%H:%M:%SZ > "${BENCHMARK_RUN}/experiment-start.txt"
+# Preserve this exact first-GPU start across every profile/restart.
 kb apply -f benchmarks/local-inference/Namespace.yaml
 kb apply -f "${BENCHMARK_RUN}/rendered/CudaGate.yaml"
 if ! kb -n local-inference-benchmark wait --for=condition=complete job/cuda-sm75-gate --timeout=190s; then
@@ -213,6 +223,8 @@ sudo -n python3 benchmarks/local-inference/stage_models.py \
   --directory /var/lib/local-inference-benchmark/models \
   --state "${BENCHMARK_RUN}/model-transfer-state.json"
 ```
+
+Before the first stager call, seed its state with the validated four-model canonical SHA-256 identity and `transferred_bytes:25100000000`, preserving the build reservation. Never initialize a new zero counter for model-only accounting.
 
 Require PVC `models` Bound specifically to PV
 `local-inference-benchmark-models`, with the correct node affinity/path and
