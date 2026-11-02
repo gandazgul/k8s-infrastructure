@@ -117,6 +117,7 @@ patches:
             name: not-used
             annotations:
               kustomize.toolkit.fluxcd.io/substitute: disabled
+      path: ./clusters/rafag/apps/tesla-public-key/
   target:
     group: kustomize.toolkit.fluxcd.io
     version: v1
@@ -366,6 +367,7 @@ patches:
             name: not-used
             annotations:
               kustomize.toolkit.fluxcd.io/substitute: disabled
+      path: ./clusters/rafag/apps/freshrss/
   target:
     group: kustomize.toolkit.fluxcd.io
     version: v1
@@ -608,6 +610,7 @@ patches:
             name: not-used
             annotations:
               kustomize.toolkit.fluxcd.io/substitute: disabled
+      path: ./clusters/rafag/apps/lidarr/
   target:
     group: kustomize.toolkit.fluxcd.io
     version: v1
@@ -775,6 +778,7 @@ patches:
             name: not-used
             annotations:
               kustomize.toolkit.fluxcd.io/substitute: disabled
+      path: ./clusters/rafag/apps/qdrant/
   target:
     group: kustomize.toolkit.fluxcd.io
     version: v1
@@ -975,6 +979,7 @@ patches:
             name: not-used
             annotations:
               kustomize.toolkit.fluxcd.io/substitute: disabled
+      path: ./clusters/rafag/apps/searxng/
   target:
     group: kustomize.toolkit.fluxcd.io
     version: v1
@@ -1213,6 +1218,7 @@ patches:
             name: not-used
             annotations:
               kustomize.toolkit.fluxcd.io/substitute: disabled
+      path: ./clusters/rafag/apps/wallabag/
   target:
     group: kustomize.toolkit.fluxcd.io
     version: v1
@@ -1453,6 +1459,7 @@ patches:
             name: not-used
             annotations:
               kustomize.toolkit.fluxcd.io/substitute: disabled
+      path: ./clusters/rafag/apps/mealie/
   target:
     group: kustomize.toolkit.fluxcd.io
     version: v1
@@ -1724,6 +1731,7 @@ patches:
             name: not-used
             annotations:
               kustomize.toolkit.fluxcd.io/substitute: disabled
+      path: ./clusters/rafag/apps/n8n/
   target:
     group: kustomize.toolkit.fluxcd.io
     version: v1

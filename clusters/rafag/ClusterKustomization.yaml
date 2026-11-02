@@ -59,4 +59,36 @@ spec:
     kind: HelmRelease
     name: sharry
     namespace: default
+  - apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    name: freshrss
+    namespace: default
+  - apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    name: lidarr
+    namespace: default
+  - apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    name: mealie
+    namespace: default
+  - apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    name: n8n
+    namespace: default
+  - apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    name: qdrant
+    namespace: default
+  - apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    name: searxng
+    namespace: default
+  - apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    name: tesla-public-key
+    namespace: default
+  - apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    name: wallabag
+    namespace: default
   suspend: false
