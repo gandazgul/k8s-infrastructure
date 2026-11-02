@@ -116,12 +116,6 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       volumes:
-      - name: yasr-volume
-        persistentVolumeClaim:
-          claimName: yasr-volume
-      - name: backup-volume
-        persistentVolumeClaim:
-          claimName: backup-volume
       - name: main-volume
         persistentVolumeClaim:
           claimName: main-volume
