@@ -1,0 +1,431 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: home-assistant
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: home-assistant
+    app.kubernetes.io/version: 2021.6.3
+    helm.sh/chart: home-assistant-11.1.0
+  name: home-assistant
+  namespace: default
+  annotations:
+    meta.helm.sh/release-name: home-assistant
+    meta.helm.sh/release-namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: home-assistant
+      app.kubernetes.io/name: home-assistant
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/restartedAt: '2026-10-29T15:25:43-04:00'
+      labels:
+        app.kubernetes.io/instance: home-assistant
+        app.kubernetes.io/name: home-assistant
+    spec:
+      containers:
+      - env:
+        - name: TZ
+          value: America/New_York
+        image: ghcr.io/home-assistant/home-assistant:2026.10.2@sha256:d30d46d24d55c43f1122ab04fdf04d2d31144815b983b07feb075f3a18814239
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 6
+          httpGet:
+            path: /
+            port: 8123
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: home-assistant
+        readinessProbe:
+          failureThreshold: 6
+          httpGet:
+            path: /
+            port: 8123
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources:
+          limits:
+            memory: 4Gi
+          requests:
+            cpu: 200m
+            memory: 1Gi
+        securityContext:
+          privileged: true
+        startupProbe:
+          failureThreshold: 60
+          httpGet:
+            path: /
+            port: 8123
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /config
+          name: config
+          subPath: configs/hass
+        - mountPath: /dev/ttyACM0
+          name: usb
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: true
+      initContainers:
+      - command:
+        - python3
+        - -c
+        - 'import json, os, pathlib, sys
+
+          p = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else ''/config'')
+
+          assert p.is_dir() and not p.is_symlink(), ''configuration directory missing''
+
+          assert (p / ''configuration.yaml'').is_file(), ''saved configuration missing''
+
+          assert (p / ''.HA_VERSION'').read_text().strip() == ''2026.10.2'', ''saved
+          version mismatch''
+
+          assert (p / ''home-assistant_v2.db'').stat().st_size > 1000000, ''saved
+          recorder missing''
+
+          a = json.loads((p / ''.storage/auth'').read_text())[''data'']
+
+          assert len(a[''users'']) >= 8 and len(a[''credentials'']) >= 5, ''saved
+          authentication missing''
+
+          b = json.loads((p / ''.storage/onboarding'').read_text())[''data'']
+
+          assert set([''user'', ''core_config'', ''analytics'', ''integration''])
+          <= set(b[''done'']), ''onboarding incomplete''
+
+          e = json.loads((p / ''.storage/core.config_entries'').read_text())[''data''][''entries'']
+
+          assert len(e) >= 104 and any(x[''domain''] == ''zha'' for x in e), ''saved
+          integrations missing''
+
+          d = pathlib.Path(''/yasr-device/b52443c5-0f4b-43a3-a689-b444ea6c3683'')
+
+          assert d.is_symlink(), ''YASR UUID missing''
+
+          name = pathlib.Path(os.readlink(d)).name
+
+          major, minor = map(int, pathlib.Path(''/sys/class/block'', name, ''dev'').read_text().split('':''))
+
+          assert p.stat().st_dev == os.makedev(major, minor), ''wrong configuration
+          filesystem''
+
+          assert pathlib.Path(''/dev/ttyACM0'').is_char_device(), ''saved USB device
+          missing''
+
+          print(''Saved configuration, authentication, onboarding, integrations, UUID
+          and USB verified'')
+
+          '
+        image: ghcr.io/home-assistant/home-assistant:2026.10.2@sha256:d30d46d24d55c43f1122ab04fdf04d2d31144815b983b07feb075f3a18814239
+        imagePullPolicy: IfNotPresent
+        name: saved-state-guard
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /config
+          name: config
+          readOnly: true
+          subPath: configs/hass
+        - mountPath: /yasr-device
+          name: yasr-device
+          readOnly: true
+        - mountPath: /dev/ttyACM0
+          name: usb
+          readOnly: true
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: default
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: yasr-volume
+      - hostPath:
+          path: /dev/serial/by-id/usb-Nabu_Casa_ZBT-2_DCB4D90C146C-if00
+          type: CharDevice
+        name: usb
+      - hostPath:
+          path: /dev/disk/by-uuid
+          type: Directory
+        name: yasr-device
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: home-assistant-public
+  namespace: default
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http
+    port: 8123
+    protocol: TCP
+    targetPort: 8123
+  selector:
+    app.kubernetes.io/instance: home-assistant
+    app.kubernetes.io/name: home-assistant
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: home-assistant-public
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: hass.dumbhome.uk
+    http:
+      paths:
+      - backend:
+          service:
+            name: home-assistant-public
+            port:
+              number: 8123
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - hass.dumbhome.uk
+    secretName: internal-ingress-cert
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: home-assistant
+  namespace: default
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+spec:
+  chart:
+    spec:
+      chart: home-assistant
+      interval: 5m
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: kube-system
+      version: 11.1.0
+  interval: 1h
+  suspend: true
+  values:
+    addons:
+      codeserver:
+        args:
+        - --auth
+        - none
+        - --user-data-dir
+        - /config/.vscode
+        - --extensions-dir
+        - /config/.vscode
+        enabled: false
+        ingress:
+          annotations:
+            forecastle.stakater.com/appName: Config Editor
+            forecastle.stakater.com/expose: 'true'
+            forecastle.stakater.com/group: Management
+            forecastle.stakater.com/icon: https://raw.githubusercontent.com/coder/code-server/main/src/browser/media/pwa-icon-512.png
+            kubernetes.io/ingress.class: nginx
+          enabled: true
+          hosts:
+          - host: configs.${CLUSTER_DOMAIN_NAME}
+            paths:
+            - path: /
+          tls:
+          - hosts:
+            - configs.${CLUSTER_DOMAIN_NAME}
+            secretName: internal-ingress-cert
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        workingDir: /config
+    controller:
+      strategy: Recreate
+      type: deployment
+    controllerType: deployment
+    dnsPolicy: ClusterFirst
+    env:
+      TZ: ${CLUSTER_TIME_ZONE}
+    hostNetwork: false
+    image:
+      pullPolicy: IfNotPresent
+      repository: ghcr.io/home-assistant/home-assistant
+      tag: 2026.10.2@sha256:d30d46d24d55c43f1122ab04fdf04d2d31144815b983b07feb075f3a18814239
+    ingress:
+      main:
+        annotations:
+          forecastle.stakater.com/appName: Home Assistant
+          forecastle.stakater.com/expose: 'true'
+          forecastle.stakater.com/icon: https://${HASS_SUBDOMAIN}.${CLUSTER_DOMAIN_NAME}/static/icons/favicon-192x192.png
+          kubernetes.io/ingress.class: nginx
+          nginx.org/websocket-services: home-assistant
+        enabled: false
+        hosts:
+        - host: ${HASS_SUBDOMAIN}.${CLUSTER_DOMAIN_NAME}
+          paths:
+          - path: /
+        tls:
+        - hosts:
+          - ${HASS_SUBDOMAIN}.${CLUSTER_DOMAIN_NAME}
+          secretName: internal-ingress-cert
+    initContainers:
+      saved-state-guard:
+        command:
+        - python3
+        - -c
+        - 'import json, os, pathlib, sys
+
+          p = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else ''/config'')
+
+          assert p.is_dir() and not p.is_symlink(), ''configuration directory missing''
+
+          assert (p / ''configuration.yaml'').is_file(), ''saved configuration missing''
+
+          assert (p / ''.HA_VERSION'').read_text().strip() == ''2026.10.2'', ''saved
+          version mismatch''
+
+          assert (p / ''home-assistant_v2.db'').stat().st_size > 1000000, ''saved
+          recorder missing''
+
+          a = json.loads((p / ''.storage/auth'').read_text())[''data'']
+
+          assert len(a[''users'']) >= 8 and len(a[''credentials'']) >= 5, ''saved
+          authentication missing''
+
+          b = json.loads((p / ''.storage/onboarding'').read_text())[''data'']
+
+          assert set([''user'', ''core_config'', ''analytics'', ''integration''])
+          <= set(b[''done'']), ''onboarding incomplete''
+
+          e = json.loads((p / ''.storage/core.config_entries'').read_text())[''data''][''entries'']
+
+          assert len(e) >= 104 and any(x[''domain''] == ''zha'' for x in e), ''saved
+          integrations missing''
+
+          d = pathlib.Path(''/yasr-device/b52443c5-0f4b-43a3-a689-b444ea6c3683'')
+
+          assert d.is_symlink(), ''YASR UUID missing''
+
+          name = pathlib.Path(os.readlink(d)).name
+
+          major, minor = map(int, pathlib.Path(''/sys/class/block'', name, ''dev'').read_text().split('':''))
+
+          assert p.stat().st_dev == os.makedev(major, minor), ''wrong configuration
+          filesystem''
+
+          assert pathlib.Path(''/dev/ttyACM0'').is_char_device(), ''saved USB device
+          missing''
+
+          print(''Saved configuration, authentication, onboarding, integrations, UUID
+          and USB verified'')
+
+          '
+        image: ghcr.io/home-assistant/home-assistant:2026.10.2@sha256:d30d46d24d55c43f1122ab04fdf04d2d31144815b983b07feb075f3a18814239
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - mountPath: /config
+          name: config
+          readOnly: true
+          subPath: configs/hass
+        - mountPath: /yasr-device
+          name: yasr-device
+          readOnly: true
+        - mountPath: /dev/ttyACM0
+          name: usb
+          readOnly: true
+    metrics:
+      enabled: false
+    persistence:
+      config:
+        enabled: true
+        existingClaim: yasr-volume
+        subPath: configs/hass
+      usb:
+        enabled: true
+        hostPath: /dev/serial/by-id/usb-Nabu_Casa_ZBT-2_DCB4D90C146C-if00
+        hostPathType: CharDevice
+        mountPath: /dev/ttyACM0
+        type: hostPath
+      yasr-device:
+        enabled: true
+        hostPath: /dev/disk/by-uuid
+        hostPathType: Directory
+        mountPath: '-'
+        type: hostPath
+    probes:
+      liveness:
+        custom: true
+        enabled: true
+        spec:
+          failureThreshold: 6
+          httpGet:
+            path: /
+            port: 8123
+          periodSeconds: 10
+          timeoutSeconds: 5
+      readiness:
+        custom: true
+        enabled: true
+        spec:
+          failureThreshold: 6
+          httpGet:
+            path: /
+            port: 8123
+          periodSeconds: 10
+          timeoutSeconds: 5
+      startup:
+        custom: true
+        enabled: true
+        spec:
+          failureThreshold: 60
+          httpGet:
+            path: /
+            port: 8123
+          periodSeconds: 10
+          timeoutSeconds: 5
+    resources:
+      limits:
+        memory: 4Gi
+      requests:
+        cpu: 200m
+        memory: 1Gi
+    securityContext:
+      privileged: true
+    service:
+      main:
+        enabled: false
+  valuesFrom: []
