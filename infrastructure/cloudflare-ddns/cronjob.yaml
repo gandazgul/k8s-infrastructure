@@ -8,8 +8,8 @@ metadata:
 spec:
   schedule: "0 * * * *"
   timeZone: Etc/UTC
-  # Keep suspended until a read-only first-run check has passed.
-  suspend: true
+  # Enabled after the guarded first sync and public HA verification.
+  suspend: false
   concurrencyPolicy: Forbid
   startingDeadlineSeconds: 600
   failedJobsHistoryLimit: 3
