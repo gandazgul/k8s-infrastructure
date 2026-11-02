@@ -23,6 +23,44 @@ resources:
 - home-assistant/Ingress.yaml
 - sftpgo/SFTPGo.yaml
 patches:
+- target:
+    group: kustomize.toolkit.fluxcd.io
+    version: v1
+    kind: Kustomization
+    name: mealie
+    namespace: default
+  patch: |
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: mealie
+      namespace: default
+    spec:
+      patches:
+      - target:
+          group: apps
+          version: v1
+          kind: Deployment
+          name: mealie
+          namespace: default
+        patch: |
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: mealie
+            namespace: default
+          spec:
+            template:
+              spec:
+                containers:
+                - name: container
+                  env:
+                  - name: SMTP_PASSWORD
+                    value: null
+                    valueFrom:
+                      secretKeyRef:
+                        name: mealie-smtp
+                        key: SMTP_PASSWORD
 - patch: |
     apiVersion: kustomize.toolkit.fluxcd.io/v1
     kind: Kustomization
@@ -154,39 +192,6 @@ patches:
     version: v1
     kind: Kustomization
     name: wallabag
-    namespace: default
-- patch: |
-    apiVersion: kustomize.toolkit.fluxcd.io/v1
-    kind: Kustomization
-    metadata:
-      name: mealie
-      namespace: default
-      annotations:
-        kustomize.toolkit.fluxcd.io/substitute: disabled
-    spec:
-      dependsOn:
-      - name: kube-system
-        namespace: kube-system
-      - name: main-volume
-        namespace: kube-system
-      - name: yasr-volume
-        namespace: kube-system
-      - name: sealed-secret
-        namespace: kube-system
-      prune: false
-      deletionPolicy: Orphan
-      force: false
-      healthChecks:
-      - apiVersion: apps/v1
-        kind: Deployment
-        name: mealie-private
-        namespace: default
-      path: ./clusters/rafag/apps/mealie/
-  target:
-    group: kustomize.toolkit.fluxcd.io
-    version: v1
-    kind: Kustomization
-    name: mealie
     namespace: default
 - patch: |
     apiVersion: kustomize.toolkit.fluxcd.io/v1
