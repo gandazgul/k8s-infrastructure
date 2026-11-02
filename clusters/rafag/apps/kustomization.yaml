@@ -126,39 +126,6 @@ patches:
     apiVersion: kustomize.toolkit.fluxcd.io/v1
     kind: Kustomization
     metadata:
-      name: searxng
-      namespace: default
-      annotations:
-        kustomize.toolkit.fluxcd.io/substitute: disabled
-    spec:
-      dependsOn:
-      - name: kube-system
-        namespace: kube-system
-      - name: main-volume
-        namespace: kube-system
-      - name: yasr-volume
-        namespace: kube-system
-      - name: sealed-secret
-        namespace: kube-system
-      prune: false
-      deletionPolicy: Orphan
-      force: false
-      healthChecks:
-      - apiVersion: apps/v1
-        kind: Deployment
-        name: searxng
-        namespace: default
-      path: ./clusters/rafag/apps/searxng/
-  target:
-    group: kustomize.toolkit.fluxcd.io
-    version: v1
-    kind: Kustomization
-    name: searxng
-    namespace: default
-- patch: |
-    apiVersion: kustomize.toolkit.fluxcd.io/v1
-    kind: Kustomization
-    metadata:
       name: wallabag
       namespace: default
       annotations:
