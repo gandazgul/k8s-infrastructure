@@ -1,0 +1,80 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cloudflare-ddns
+  labels:
+    app.kubernetes.io/name: cloudflare-ddns
+spec:
+  schedule: "0 * * * *"
+  timeZone: Etc/UTC
+  # Keep suspended until a read-only first-run check has passed.
+  suspend: true
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 600
+  failedJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 180
+      backoffLimit: 1
+      ttlSecondsAfterFinished: 86400
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: cloudflare-ddns
+        spec:
+          automountServiceAccountToken: false
+          restartPolicy: Never
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: updater
+              # Same legacy runtime, now pinned to its verified image digest.
+              image: docker.io/gandazgul/ddns-cloudflare:v4c4c251@sha256:dd95600ffc69b96ce222374cfa1d924d05b7c3fef1cf1fa6189faa904febda43
+              imagePullPolicy: IfNotPresent
+              command: [node, /opt/ddns/app.mjs]
+              env:
+                - name: CLUSTER_NAME
+                  value: ${CLUSTER_NAME}
+                - name: CLUSTER_DOMAIN_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: secrets
+                      key: CLUSTER_DOMAIN_NAME
+                - name: CLOUDFLARE_API_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: secrets
+                      key: CLOUDFLARE_API_TOKEN
+                - name: CLOUDFLARE_ZONE_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: secrets
+                      key: CLOUDFLARE_ZONE_ID
+                - name: DRY_RUN
+                  value: "false"
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 32Mi
+                limits:
+                  cpu: 200m
+                  memory: 128Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: [ALL]
+              volumeMounts:
+                - name: code
+                  mountPath: /opt/ddns
+                  readOnly: true
+          volumes:
+            - name: code
+              configMap:
+                name: cloudflare-ddns-code

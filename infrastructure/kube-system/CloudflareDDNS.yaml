@@ -6,7 +6,8 @@ metadata:
   namespace: default
 spec:
   interval: 1h0m0s
-  path: ./infrastructure/cronjob/
+  # Narrow recovery root: does not adopt other kube-system infrastructure.
+  path: ./infrastructure/cloudflare-ddns/
   sourceRef:
     kind: GitRepository
     name: k8s-infrastructure
@@ -15,25 +16,6 @@ spec:
   targetNamespace: default
   postBuild:
     substitute:
-      CRONJOB_NAME: cloudflare-ddns
-      # Every hour
-      SCHEDULE: "0 */1 * * *"
-      IMAGE: docker.io/gandazgul/ddns-cloudflare:v4c4c251
-      NAMESPACE: default
-  patches:
-    - patch: |
-        - op: add
-          path: /spec/jobTemplate/spec/template/spec/containers/0/env
-          value:
-            - name: CLUSTER_NAME
-              value: ${CLUSTER_NAME}
-            - name: CLOUDFLARE_API_TOKEN
-              value: ${CLOUDFLARE_API_TOKEN}
-            - name: CLOUDFLARE_API_EMAIL
-              value: ${CLOUDFLARE_API_EMAIL}
-            - name: CLUSTER_DOMAIN_NAME
-              value: ${CLUSTER_DOMAIN_NAME}
-            - name: CLOUDFLARE_ZONE_ID
-              value: ${CLOUDFLARE_ZONE_ID}
-      target:
-        kind: CronJob
+      CLUSTER_NAME: ${CLUSTER_NAME}
+  timeout: 3m0s
+  wait: true
