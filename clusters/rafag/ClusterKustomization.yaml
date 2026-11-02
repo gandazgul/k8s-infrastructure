@@ -5,8 +5,8 @@ metadata:
   name: rafag
   namespace: kube-system
 spec:
-  # The explicit root currently adopts only the source, itself and the
-  # already-running GPU plugin. Legacy app/storage/infra roots remain excluded.
+  # Adopt the control/GPU baseline plus the reviewed native YouTube API objects.
+  # Legacy app/storage/infra trees remain excluded.
   interval: 10m0s
   retryInterval: 1m0s
   timeout: 2m0s
@@ -23,3 +23,7 @@ spec:
     kind: HelmRelease
     name: nvidia-device-plugin
     namespace: kube-system
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: youtube-operational-api
+    namespace: default
