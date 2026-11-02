@@ -1,0 +1,30 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: k8s-at-home
+  namespace: kube-system
+spec:
+  interval: 1h0m0s
+  provider: generic
+  url: https://k8s-at-home.com/charts/
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: staged-sftpgo-skm
+  namespace: kube-system
+spec:
+  interval: 1h
+  provider: generic
+  url: https://charts.sagikazarmark.dev
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: stakater-charts
+  namespace: kube-system
+spec:
+  interval: 1440m0s
+  provider: generic
+  url: https://stakater.github.io/stakater-charts/

@@ -1,0 +1,42 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: recovered-helm
+  namespace: default
+spec:
+  dependsOn:
+  - name: recovered-app-secrets
+  - name: main-volume
+    namespace: kube-system
+  - name: yasr-volume
+    namespace: kube-system
+  - name: kube-system
+    namespace: kube-system
+  interval: 10m0s
+  retryInterval: 1m0s
+  timeout: 5m0s
+  path: ./clusters/${CLUSTER_NAME}/recovered-helm/
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  prune: false
+  deletionPolicy: Orphan
+  force: false
+  healthChecks:
+  - apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    name: bitwarden
+    namespace: default
+  - apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    name: forecastle
+    namespace: default
+  - apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    name: mosquitto
+    namespace: default
+  - apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    name: plex
+    namespace: default

@@ -7,3 +7,4 @@ resources:
 - StorageRoots.yaml
 - EncryptedCredentials.yaml
 - CredentialAdoption.yaml
+- AppChartSources.yaml

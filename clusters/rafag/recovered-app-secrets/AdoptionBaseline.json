@@ -1,0 +1,43 @@
+{
+  "existingSecrets": {
+    "mealie-recovery-env": {
+      "dataSha256": "fa973352d7bc38065685dfdcfd9dd7ce085defca5388a3f3cdf0f4b09cc75dc3",
+      "uid": "5e8ae4ae-41c8-406b-a2fd-cf4740f35b85"
+    },
+    "n8n-private-existing-key": {
+      "dataSha256": "2b185e893f4de157f7896a7fe434e16c7fbde5c7b880cff9d90025ef8dbdcbba",
+      "uid": "0fde34a3-406f-4c2b-9bba-d36b7ecf5a43"
+    },
+    "plex-values": {
+      "dataSha256": "46f420dd6315385dedf3d5a334aca20f4033ec12e397cf4dea519473e23be004",
+      "uid": "e06ea71a-b40e-4576-829c-ef25c51f7acd"
+    }
+  },
+  "helmReleases": {
+    "bitwarden": {
+      "controllerConfigDigest": "sha256:df9c8cedd8c75f9c6016261d1ebfbf0e6a7929da886535baa1ae74142691fbe3",
+      "inlineValuesSha256": "f1f4322acba325f82dd64969fc803b349ca08f1c4519a712ff6c59b387f27052",
+      "uid": "e8a1ad0d-19c4-4397-9034-cc247e3eccda"
+    },
+    "forecastle": {
+      "controllerConfigDigest": "sha256:917f7f4015f9bbc4774f8cb458266c131f9454b5d16a1b06b88a27cd77c867f1",
+      "inlineValuesSha256": "0a9b98c86762f89f986d75473cb5d927e033617d12eb7459b6f448a08e0e59bf",
+      "uid": "84ec2786-0ef5-4c54-a1bf-8cb0ab43893c"
+    },
+    "mosquitto": {
+      "controllerConfigDigest": "sha256:66fbf2e3bb45cc62a6c7bd898fcdbf96eefc1036b8a8dea12c32c6f6df924a0a",
+      "inlineValuesSha256": "7184b881f004f33f34bf236ec99f20041ea623aa08cab6d09e0e1c8d35669a69",
+      "uid": "79624e31-e1fc-443e-829d-484353978931"
+    },
+    "plex": {
+      "controllerConfigDigest": "sha256:72454146ae0027c11f556065c83cec46712f6190366fe62028cab64a29290198",
+      "inlineValuesSha256": "3e612985a74145353ef7dd2add4cfef5338809f7e428f809e9b617126d6022ad",
+      "uid": "eebd9f08-9b71-4c7b-9847-f6f17d5bbb37"
+    },
+    "sftpgo": {
+      "controllerConfigDigest": "sha256:77a9f88d190a0bcba0d6fdd3d4ac6f923c2648a561aaba47f8f74bee3dcd695e",
+      "inlineValuesSha256": "83bf675230e76a2f0b5ce03b0e5e1cfc9eacd763cf3c9adc086f4e5d6df6ff11",
+      "uid": "f56a8990-8ce2-40fb-81e0-7c43b035205f"
+    }
+  }
+}
