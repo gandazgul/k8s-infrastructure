@@ -1,6 +1,7 @@
 """No Podman/network/build calls: inspect command bounds and resource stops."""
 import importlib.util
 import json
+import os
 from pathlib import Path
 import signal
 import socket
@@ -26,11 +27,14 @@ class BuildTests(unittest.TestCase):
 
     def test_command_enforces_reviewed_limits_and_never_pushes(self):
         command = build.build_command(LOCK, Path('/private-run'))
-        for flag in ('--cpus=4', '--memory=12g', '--memory-swap=12g', '--platform=linux/amd64',
+        for flag in ('--cpu-period=100000', '--cpu-quota=400000', '--jobs=1', '--memory=12g', '--memory-swap=12g', '--platform=linux/amd64',
                      '--layers=false', '--force-rm', '--network=host', '--tls-verify=true', '--http-proxy=true'):
             self.assertIn(flag, command)
         self.assertNotIn('push', command)
         self.assertNotIn('--privileged', command)
+        values = dict(item[2:].split('=', 1) for item in command if item.startswith('--') and '=' in item)
+        self.assertEqual(int(values['cpu-quota']) / int(values['cpu-period']), 4)
+        self.assertFalse(any(item.startswith('--cpus') for item in command))
         self.assertEqual(command[command.index('--authfile') + 1], '/private-run/auth.json')
         self.assertIn('LLAMA_COMMIT=' + LOCK['source']['commit'], command)
         self.assertIn('BUILD_PACKAGES=' + ' '.join(LOCK['build']['build_packages']), command)
@@ -80,6 +84,49 @@ class BuildTests(unittest.TestCase):
             self.assertEqual(environment[key], 'http://127.0.0.1:12345')
         self.assertFalse(any(key.lower() in ('all_proxy', 'no_proxy', 'ftp_proxy') for key in environment))
         self.assertEqual(environment['TMPDIR'], '/private-run/tmp')
+
+    def test_previous_ingress_is_carried_into_transfer_limit(self):
+        baseline = {**self.baseline(), 'previous_attempt_ingress_bytes': 15283}
+        limits = build.Limits(baseline, 0)
+        current = {**baseline, 'rx_bytes': baseline['rx_bytes'] + build.RX_LIMIT - 15283}
+        self.assertEqual(limits.ingress(current), build.RX_LIMIT)
+        self.assertEqual(limits.reason(current, 1), 'non_model_transfer_ceiling')
+
+    def test_only_exact_zero_network_cli_failure_can_be_manually_retried(self):
+        actual_stat = Path.stat
+        def root_stat(path, *args, **kwargs):
+            fields = list(actual_stat(path, *args, **kwargs))
+            fields[4] = 0
+            return os.stat_result(fields)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            original = {'status': 'stopped', 'reason': 'build_nonzero', 'exit_code': 125,
+                        'proxy_payload_bytes': 0, 'proxy_connections': 0, 'proxy_failure': None,
+                        'default_interface_rx_bytes': 15283}
+            (root / 'attempt.json').write_text(json.dumps({'lock_sha256': 'a' * 64,
+                    'status': 'attempt_consumed_no_automatic_retry'}))
+            (root / 'baseline.json').write_text(json.dumps({'rx_bytes': 50000}))
+            (root / 'transfer-reservation.json').write_text(json.dumps({'non_model_reserved_bytes': build.TRANSFER_RESERVATION}))
+            (root / 'build.log').write_text("Error: unknown flag: --cpus\nSee 'podman build --help'\n")
+            outcome_path = root / 'outcome.json'
+            outcome_path.write_text(json.dumps(original))
+            with patch.object(Path, 'stat', new=root_stat):
+                prior = build.previous_attempt(root)
+                self.assertEqual(prior['carried_ingress_bytes'], 15283)
+                self.assertEqual(prior['lock_sha256'], 'a' * 64)
+                for changed in ({'proxy_payload_bytes': 1}, {'proxy_connections': 1}, {'exit_code': 1},
+                                {'proxy_download_bytes': 1}, {'reason': 'other_failure'}):
+                    outcome_path.write_text(json.dumps({**original, **changed}))
+                    with self.subTest(changed=changed), self.assertRaises(ValueError):
+                        build.previous_attempt(root)
+                outcome_path.write_text(json.dumps(original))
+                (root / 'build.log').write_text('Error: another problem\n')
+                with self.assertRaises(ValueError):
+                    build.previous_attempt(root)
+                (root / 'build.log').write_text("Error: unknown flag: --cpus\nSee 'podman build --help'\n")
+                (root / 'compatibility-retry-claim.json').write_text('{}')
+                with self.assertRaises(ValueError):
+                    build.previous_attempt(root)
 
     def test_only_owned_group_term_then_kill_on_timeout(self):
         class Process:

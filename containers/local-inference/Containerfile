@@ -1,6 +1,6 @@
 # Use the three-file allowlisted build context documented in the benchmark README,
 # never the generic publishing/multiarch helper. No host CUDA/compiler install.
-FROM --platform=linux/amd64 nvidia/cuda:12.8.1-devel-ubuntu24.04@sha256:4b9ed5fa8361736996499f64ecebf25d4ec37ff56e4d11323ccde10aa36e0c43 AS builder
+FROM --platform=linux/amd64 docker.io/nvidia/cuda:12.8.1-devel-ubuntu24.04@sha256:4b9ed5fa8361736996499f64ecebf25d4ec37ff56e4d11323ccde10aa36e0c43 AS builder
 
 ARG UBUNTU_SNAPSHOT
 ARG BUILD_PACKAGES
@@ -67,7 +67,7 @@ RUN set -eu; \
     grep -q 'sm_75' /opt/local-inference/receipts/cuda-gate-elf.txt; \
     grep -q 'sm_75' /opt/local-inference/receipts/ggml-cuda-elf.txt
 
-FROM --platform=linux/amd64 nvidia/cuda:12.8.1-runtime-ubuntu24.04@sha256:828c4d878adcaa4265d80c95d8ec877149b49bb2419a4cf3bb6aa889bbb7ca2e AS runtime
+FROM --platform=linux/amd64 docker.io/nvidia/cuda:12.8.1-runtime-ubuntu24.04@sha256:828c4d878adcaa4265d80c95d8ec877149b49bb2419a4cf3bb6aa889bbb7ca2e AS runtime
 
 ARG UBUNTU_SNAPSHOT
 ARG RUNTIME_PACKAGES

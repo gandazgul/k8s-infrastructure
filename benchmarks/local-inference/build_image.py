@@ -317,7 +317,7 @@ class Limits:
         for device, value in self.baseline.get('rx_by_interface', {}).items():
             if current['rx_by_interface'][device] < value:
                 return 'rx_counter_reset'
-        if current['rx_bytes'] - self.baseline['rx_bytes'] >= RX_LIMIT:
+        if self.ingress(current) >= RX_LIMIT:
             return 'non_model_transfer_ceiling'
         if current['store_bytes'] - self.baseline['store_bytes'] >= STORE_STOP:
             return 'image_store_growth_ceiling'
@@ -328,7 +328,7 @@ class Limits:
         if current.get('proxy_failure'):
             return current['proxy_failure']
         if 'proxy_download_bytes' in current:
-            ingress = current['rx_bytes'] - self.baseline['rx_bytes']
+            ingress = self.ingress(current)
             accounted = current['proxy_download_bytes']
             if ingress - accounted > max(256 * 1024 ** 2, accounted // 10):
                 return 'unattributed_ingress_or_proxy_bypass'
@@ -342,6 +342,10 @@ class Limits:
         else:
             self.low_mem_since = None
         return None
+
+    def ingress(self, current):
+        return (current['rx_bytes'] - self.baseline['rx_bytes']
+                + self.baseline.get('previous_attempt_ingress_bytes', 0))
 
 
 def stop_owned_group(process, *, killpg=os.killpg):
@@ -396,7 +400,7 @@ def validate_lock(lock):
         if not build[group] or any(not re.fullmatch(r'[a-z0-9.+-]+=[A-Za-z0-9.:+~_-]+', value) for value in build[group]):
             raise ValueError('unversioned package input')
     for field in ('builder_image', 'runtime_image'):
-        if not re.fullmatch(r'nvidia/cuda@sha256:[a-f0-9]{64}', build[field]):
+        if not re.fullmatch(r'docker.io/nvidia/cuda@sha256:[a-f0-9]{64}', build[field]):
             raise ValueError('unpinned base image')
 
 
@@ -410,7 +414,8 @@ def build_command(lock, run, lock_sha256=None):
     validate_lock(lock)
     build = lock['build']
     lock_sha256 = lock_sha256 or hashlib.sha256(json.dumps(lock, sort_keys=True).encode()).hexdigest()
-    return ['podman', '--root', str(STORE), 'build', '--cpus=4', '--memory=12g', '--memory-swap=12g',
+    return ['podman', '--root', str(STORE), 'build', '--cpu-period=100000', '--cpu-quota=400000', '--jobs=1',
+            '--memory=12g', '--memory-swap=12g',
             '--platform=linux/amd64', '--layers=false', '--force-rm', '--network=host', '--tls-verify=true', '--http-proxy=true',
             '--tag', local_tag(lock_sha256),
             '--authfile', str(run / 'auth.json'), '--iidfile', str(run / 'image.iid'),
@@ -449,12 +454,56 @@ def inspect_identity(iid, tag):
             'repo_digests': image.get('RepoDigests') or []}
 
 
+def previous_attempt(path):
+    """One explicit operator-selected CLI-compatibility retry, never automatic.
+
+    Only the exact pre-network unknown--cpus/125 attempt qualifies. Preserve
+    original receipts and reservation; a changed reviewed lock is recorded, not
+    assumed equal (the registry qualification fix legitimately changes its hash).
+    """
+    path = checked_path(path)
+    if not path.is_dir() or stat.S_IMODE(path.stat().st_mode) != 0o700 or path.stat().st_uid != 0:
+        raise ValueError('previous attempt must be a private root-owned directory')
+    if (path / 'compatibility-retry-claim.json').exists() or (path / 'image.iid').exists():
+        raise ValueError('previous attempt already retried or produced an image identity')
+    values, hashes = {}, {}
+    for name in ('attempt.json', 'baseline.json', 'outcome.json', 'transfer-reservation.json', 'build.log'):
+        receipt = checked_path(path / name)
+        if not receipt.is_file() or receipt.stat().st_size > 1024 ** 2:
+            raise ValueError('missing or oversized previous-attempt receipt')
+        raw = receipt.read_bytes()
+        hashes[name] = hashlib.sha256(raw).hexdigest()
+        values[name] = raw.decode() if name == 'build.log' else json.loads(raw)
+    attempt, outcome = values['attempt.json'], values['outcome.json']
+    ingress = outcome.get('default_interface_rx_bytes')
+    if (attempt.get('previous_attempt') or attempt.get('status') != 'attempt_consumed_no_automatic_retry'
+            or not re.fullmatch(r'[0-9a-f]{64}', attempt.get('lock_sha256', ''))
+            or outcome.get('status') != 'stopped' or type(outcome.get('exit_code')) is not int
+            or outcome['exit_code'] != 125 or outcome.get('reason') != 'build_nonzero'
+            or type(outcome.get('proxy_payload_bytes')) is not int or outcome['proxy_payload_bytes'] != 0
+            or type(outcome.get('proxy_connections')) is not int or outcome['proxy_connections'] != 0
+            or outcome.get('proxy_failure') is not None
+            or outcome.get('proxy_download_bytes', 0) != 0 or outcome.get('proxy_upload_bytes', 0) != 0
+            or outcome.get('proxy_hosts', {}) or outcome.get('proxy_denied', 0) != 0
+            or type(ingress) is not int or not 0 <= ingress < RX_LIMIT
+            or values['build.log'].strip().splitlines() != [
+                'Error: unknown flag: --cpus', "See 'podman build --help'"]
+            or values['transfer-reservation.json'].get('non_model_reserved_bytes') != TRANSFER_RESERVATION
+            or type(values['baseline.json'].get('rx_bytes')) is not int):
+        raise ValueError('previous attempt is not the approved zero-network CLI-flag failure')
+    return {'path': str(path), 'lock_sha256': attempt['lock_sha256'], 'receipt_sha256': hashes,
+            'carried_ingress_bytes': ingress,
+            'reservation': 'reuse existing25.1GB non-model reservation; do not add or refund'}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--run-directory', type=Path, required=True)
     parser.add_argument('--source-directory', type=Path, required=True)
     parser.add_argument('--lock', type=Path, required=True)
     parser.add_argument('--lock-sha256', required=True, help='SHA-256 of the exact reviewed lock bytes')
+    parser.add_argument('--previous-attempt', type=Path,
+                        help='manual reviewed compatibility retry of exact zero-proxy unknown--cpus/125 only')
     args = parser.parse_args()
     if os.geteuid() != 0:
         raise ValueError('GPU-host rootful executor required')
@@ -471,9 +520,15 @@ def main():
         raise ValueError('reviewed lock SHA-256 mismatch')
     lock = json.loads(raw)
     validate_lock(lock)
+    prior = previous_attempt(args.previous_attempt) if args.previous_attempt else None
     # Exclusive durable one-shot marker exists before any Podman/network action.
     write_json(run / 'attempt.json', {'started_at': time.time(), 'lock_sha256': args.lock_sha256,
+                                     'previous_attempt': prior,
                                      'status': 'attempt_consumed_no_automatic_retry'})
+    if prior:
+        write_json(Path(prior['path']) / 'compatibility-retry-claim.json',
+                   {'next_run_directory': str(run), 'new_lock_sha256': args.lock_sha256,
+                    'carried_ingress_bytes': prior['carried_ingress_bytes'], 'claimed_at': time.time()})
     process, proxy, outcome = None, None, {'status': 'stopped', 'reason': 'preflight_or_monitor_failed'}
     def interrupted(signum, frame):
         raise InterruptedError('owned_build_interrupted')
@@ -483,6 +538,8 @@ def main():
         write_json(run / 'transfer-reservation.json', {'non_model_reserved_bytes': TRANSFER_RESERVATION,
                    'default_interface_rx_ceiling_bytes': RX_LIMIT, 'overall_ceiling_bytes': 60_000_000_000,
                    'connect_proxy_payload_ceiling_bytes': PROXY_PAYLOAD_LIMIT,
+                   'previous_attempt': prior,
+                   'reservation_action': 'reuse_existing_not_additional' if prior else 'reserve_once',
                    'remaining_model_transfer_ceiling_bytes': 60_000_000_000 - TRANSFER_RESERVATION,
                    'accounting': 'reservation must seed shared staging transferred_bytes; never refund on failure'})
         hashes = copy_context(args.source_directory, run / 'context')
@@ -498,6 +555,7 @@ def main():
             raise ValueError('image store must use approved root filesystem')
         devices = default_interfaces()
         baseline = sample(devices)
+        baseline['previous_attempt_ingress_bytes'] = prior['carried_ingress_bytes'] if prior else 0
         if baseline['root_free_bytes'] < ROOT_STOP or baseline['mem_available_bytes'] < MEM_FLOOR:
             raise ValueError('insufficient prebuild host headroom')
         write_json(run / 'baseline.json', baseline)
@@ -525,7 +583,7 @@ def main():
                 if time.monotonic() >= next_progress:
                     print(json.dumps({'phase': 'image_build', 'status': 'running',
                                       'elapsed_seconds': time.monotonic() - started,
-                                      'default_interface_rx_bytes': sampled['rx_bytes'] - baseline['rx_bytes'],
+                                      'default_interface_rx_bytes': limits.ingress(sampled),
                                       'image_store_growth_bytes': sampled['store_bytes'] - baseline['store_bytes']}), flush=True)
                     next_progress = time.monotonic() + 30
                 if reason:
@@ -538,7 +596,8 @@ def main():
             code = process.wait(timeout=10)
             proxy.close()
             outcome = {'status': 'stopped', 'reason': reason or 'build_nonzero', 'exit_code': code,
-                       'default_interface_rx_bytes': sampled['rx_bytes'] - baseline['rx_bytes'],
+                       'default_interface_rx_bytes': limits.ingress(sampled),
+                       'current_attempt_default_interface_rx_bytes': sampled['rx_bytes'] - baseline['rx_bytes'],
                        'image_store_growth_bytes': sampled['store_bytes'] - baseline['store_bytes'],
                        'root_allocated_growth_bytes': baseline['root_free_bytes'] - sampled['root_free_bytes'],
                        **proxy.stats(),
@@ -566,6 +625,7 @@ def main():
         if process is not None and process.poll() is None:
             stop_owned_group(process)
         outcome['finished_at'] = time.time()
+        outcome['previous_attempt'] = prior
         write_json(run / 'outcome.json', outcome)
     print(json.dumps(outcome, sort_keys=True))
     return 0 if outcome['status'] == 'built_local_only' else 1

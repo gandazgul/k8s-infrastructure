@@ -61,7 +61,7 @@ must accompany the decision report.
 
 ## 1. Preflight and local-only build (after build approval)
 
-Reverify branch/source/root revision, the five-object production inventory,
+Reverify branch/source/root revision, the current reviewed production inventory (initially5;7 after separate YouTube adoptionae3124f),
 Ready/pressure/workload baseline, NVMe backing filesystem, available RAM/root
 space, no resource-name collision and no GPU/build owner. Record sanitized
 evidence. Do not create resources over an existing experiment's resources.
