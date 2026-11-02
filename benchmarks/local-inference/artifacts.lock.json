@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "experiment": "local-inference-benchmark",
+  "approval": {
+    "discord_message_id": "1566606024822096095",
+    "date": "2026-11-01T19:13:02-05:00",
+    "scope": "isolated benchmark only; no production GitOps root/OpenClaw/ingress changes"
+  },
+  "source": {
+    "repo": "https://github.com/ggml-org/llama.cpp.git",
+    "commit": "785322d17f2d51e5185cf996a1f4e46d87640841"
+  },
+  "build": {
+    "platform": "linux/amd64",
+    "ubuntu_snapshot": "20261101T000000Z",
+    "build_packages": [
+      "build-essential=12.10ubuntu1",
+      "cmake=3.28.3-1build7",
+      "git=1:2.43.0-1ubuntu7.4",
+      "ca-certificates=20260816ubuntu0.24.04.1",
+      "libc6=2.39-0ubuntu8.9",
+      "libgcc-s1=14.2.0-4ubuntu2~24.04.1",
+      "libgomp1=14.2.0-4ubuntu2~24.04.1",
+      "libstdc++6=14.2.0-4ubuntu2~24.04.1"
+    ],
+    "runtime_packages": [
+      "ca-certificates=20260816ubuntu0.24.04.1",
+      "libc6=2.39-0ubuntu8.9",
+      "libgcc-s1=14.2.0-4ubuntu2~24.04.1",
+      "libgomp1=14.2.0-4ubuntu2~24.04.1",
+      "libstdc++6=14.2.0-4ubuntu2~24.04.1",
+      "python3=3.12.3-0ubuntu2.1"
+    ],
+    "package_source_receipts": {
+      "build-essential": {
+        "name": "build-essential",
+        "version": "12.10ubuntu1",
+        "pocket": "noble",
+        "filename": "pool/main/b/build-essential/build-essential_12.10ubuntu1_amd64.deb",
+        "sha256": "9b2159b95a4c01937309783c7c8a6ec8dfbcb7ffd604951c9713ac52ee9c7268"
+      },
+      "ca-certificates": {
+        "name": "ca-certificates",
+        "version": "20260816ubuntu0.24.04.1",
+        "pocket": "noble-updates",
+        "filename": "pool/main/c/ca-certificates/ca-certificates_20260816ubuntu0.24.04.1_all.deb",
+        "sha256": "8a0a754aaafed72cc8efb8c1731808133284a84fbfc76a4fcc73fce9e01b4187"
+      },
+      "cmake": {
+        "name": "cmake",
+        "version": "3.28.3-1build7",
+        "pocket": "noble",
+        "filename": "pool/main/c/cmake/cmake_3.28.3-1build7_amd64.deb",
+        "sha256": "4b0a7f8c0daf27b26b46997d994ae5d1ee7a3d11dfcda9f7627bb1462c162295"
+      },
+      "git": {
+        "name": "git",
+        "version": "1:2.43.0-1ubuntu7.4",
+        "pocket": "noble-updates",
+        "filename": "pool/main/g/git/git_2.43.0-1ubuntu7.4_amd64.deb",
+        "sha256": "c79b7948ef9860c97ec74293a90178676e63368a0711c95c28a55af4edf1adab"
+      },
+      "libc6": {
+        "name": "libc6",
+        "version": "2.39-0ubuntu8.9",
+        "pocket": "noble-updates",
+        "filename": "pool/main/g/glibc/libc6_2.39-0ubuntu8.9_amd64.deb",
+        "sha256": "ff5557d99b51f761c4b7c92368b9cc45565eda17df9bf9eb4b134d09825008be"
+      },
+      "libgcc-s1": {
+        "name": "libgcc-s1",
+        "version": "14.2.0-4ubuntu2~24.04.1",
+        "pocket": "noble-updates",
+        "filename": "pool/main/g/gcc-14/libgcc-s1_14.2.0-4ubuntu2~24.04.1_amd64.deb",
+        "sha256": "aa7fadbe33b78bcf99885318040601c550c208929565b179891d9a3cc2aa68cd"
+      },
+      "libgomp1": {
+        "name": "libgomp1",
+        "version": "14.2.0-4ubuntu2~24.04.1",
+        "pocket": "noble-updates",
+        "filename": "pool/main/g/gcc-14/libgomp1_14.2.0-4ubuntu2~24.04.1_amd64.deb",
+        "sha256": "e8a95ec58125b4933597f30ff56c2ae10edf90f287262e366d4b6edea3019144"
+      },
+      "libstdc++6": {
+        "name": "libstdc++6",
+        "version": "14.2.0-4ubuntu2~24.04.1",
+        "pocket": "noble-updates",
+        "filename": "pool/main/g/gcc-14/libstdc++6_14.2.0-4ubuntu2~24.04.1_amd64.deb",
+        "sha256": "a51f8de7829211db961a31f02158058ad1a95f92ac6d0a5dff6350e2821c54c0"
+      },
+      "python3": {
+        "name": "python3",
+        "version": "3.12.3-0ubuntu2.1",
+        "pocket": "noble-updates",
+        "filename": "pool/main/p/python3-defaults/python3_3.12.3-0ubuntu2.1_amd64.deb",
+        "sha256": "e691b9cc40841c41bbdc50bd794c876cb1b1801306ea27b06e9a1458180df1e9"
+      }
+    },
+    "builder_image": "nvidia/cuda@sha256:4b9ed5fa8361736996499f64ecebf25d4ec37ff56e4d11323ccde10aa36e0c43",
+    "runtime_image": "nvidia/cuda@sha256:828c4d878adcaa4265d80c95d8ec877149b49bb2419a4cf3bb6aa889bbb7ca2e",
+    "cuda_architectures": [
+      "75"
+    ],
+    "max_cpus": 4,
+    "max_memory_bytes": 12884901888,
+    "final_image_digest": null,
+    "final_image_id": null
+  },
+  "models": [
+    {
+      "id": "qwen36-27b-weights",
+      "repo": "ggml-org/Qwen3.6-27B-GGUF",
+      "revision": "1132d03976d88e30a09ab0ddbf1531d5e1b46e7c",
+      "path": "Qwen3.6-27B-Q4_K_M.gguf",
+      "local_name": "Qwen3.6-27B-Q4_K_M.gguf",
+      "bytes": 19095766304,
+      "sha256": "65b753ea835627f7b511143c6ceb976525c7f21f5df8c664bc0a9c23d1c49921"
+    },
+    {
+      "id": "qwen36-27b-projector",
+      "repo": "ggml-org/Qwen3.6-27B-GGUF",
+      "revision": "1132d03976d88e30a09ab0ddbf1531d5e1b46e7c",
+      "path": "mmproj-Qwen3.6-27B-BF16.gguf",
+      "local_name": "mmproj-Qwen3.6-27B-BF16.gguf",
+      "bytes": 931145984,
+      "sha256": "65582658c19c23ce991818985ecddf3a403fd31c9307b229c9ea0da4cb78d260"
+    },
+    {
+      "id": "qwen35-9b-weights",
+      "repo": "unsloth/Qwen3.5-9B-GGUF",
+      "revision": "3885219b6810b007914f3a7950a8d1b469d598a5",
+      "path": "Qwen3.5-9B-Q8_0.gguf",
+      "local_name": "Qwen3.5-9B-Q8_0.gguf",
+      "bytes": 9527502048,
+      "sha256": "809626574d0cb43d4becfa56169980da2bb448f2299270f7be443cb89d0a6ae4"
+    },
+    {
+      "id": "qwen35-9b-projector",
+      "repo": "unsloth/Qwen3.5-9B-GGUF",
+      "revision": "3885219b6810b007914f3a7950a8d1b469d598a5",
+      "path": "mmproj-F16.gguf",
+      "local_name": "mmproj-F16.gguf",
+      "bytes": 918166080,
+      "sha256": "f70dc3509053962b0d0d3ee8a7eacebf5d60aa560cad78254ae8698516ae029f"
+    }
+  ],
+  "profiles": [
+    {
+      "id": "qwen36-27b",
+      "weights": "Qwen3.6-27B-Q4_K_M.gguf",
+      "projector": "mmproj-Qwen3.6-27B-BF16.gguf"
+    },
+    {
+      "id": "qwen35-9b",
+      "weights": "Qwen3.5-9B-Q8_0.gguf",
+      "projector": "mmproj-F16.gguf"
+    }
+  ],
+  "budgets": {
+    "max_new_transfer_bytes": 60000000000,
+    "max_gpu_wall_seconds": 21600,
+    "max_model_staging_bytes": 64424509440,
+    "max_image_build_growth_bytes": 21474836480,
+    "max_reports_bytes": 2147483648,
+    "min_root_free_bytes": 80530636800,
+    "min_host_mem_available_bytes": 25769803776,
+    "low_mem_duration_seconds": 30,
+    "max_gpu_temp_c": 85,
+    "high_temp_duration_seconds": 30
+  },
+  "benchmark": {
+    "contexts": [
+      4096,
+      8192,
+      16384
+    ],
+    "kv_cache": "f16",
+    "parallel": 1,
+    "routine_max_output_tokens": 512,
+    "max_output_tokens": 2048,
+    "request_deadline_seconds": 120,
+    "cold_load_deadline_seconds": 180,
+    "queue_wait_seconds": 30,
+    "fixture_repeats": 3,
+    "latency_trials": 50,
+    "cold_load_trials": 5,
+    "multi_turn_conversations": 3,
+    "multi_turn_length": 10,
+    "soak_requests": 100
+  },
+  "paths": {
+    "host_root": "/var/lib/local-inference-benchmark",
+    "models": "/var/lib/local-inference-benchmark/models",
+    "results": "/var/lib/local-inference-benchmark/results",
+    "build": "/var/lib/local-inference-benchmark/build"
+  },
+  "isolation": {
+    "namespace": "local-inference-benchmark",
+    "production_root_inclusion": false,
+    "nodeport_ingress": false,
+    "credentials": "fresh benchmark-api Secret, not stored in Git",
+    "fixtures": "synthetic only",
+    "model_api": "authenticated ClusterIP with optional loopback forwarding"
+  }
+}

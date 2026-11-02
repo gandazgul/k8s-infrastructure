@@ -1,0 +1,109 @@
+# Use the three-file allowlisted build context documented in the benchmark README,
+# never the generic publishing/multiarch helper. No host CUDA/compiler install.
+FROM --platform=linux/amd64 nvidia/cuda:12.8.1-devel-ubuntu24.04@sha256:4b9ed5fa8361736996499f64ecebf25d4ec37ff56e4d11323ccde10aa36e0c43 AS builder
+
+ARG UBUNTU_SNAPSHOT
+ARG BUILD_PACKAGES
+ARG LLAMA_COMMIT=785322d17f2d51e5185cf996a1f4e46d87640841
+
+# Mandatory signed snapshot + versioned direct roots; immutable base and
+# snapshot fix resolver inputs. Save the complete resulting dpkg closure.
+RUN set -eu; \
+    test "${LLAMA_COMMIT}" = 785322d17f2d51e5185cf996a1f4e46d87640841; \
+    test -n "${UBUNTU_SNAPSHOT}"; test -n "${BUILD_PACKAGES}"; \
+    case "${UBUNTU_SNAPSHOT}" in *[!0-9TZ]*) exit 1;; esac; \
+    for package in ${BUILD_PACKAGES}; do case "${package}" in *=?*) ;; *) exit 1;; esac; done; \
+    rm -f /etc/apt/sources.list /etc/apt/sources.list.d/*; \
+    printf 'Types: deb\nURIs: https://snapshot.ubuntu.com/ubuntu/%s/\nSuites: noble noble-updates noble-security\nComponents: main universe restricted multiverse\nSigned-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg\nCheck-Valid-Until: no\n' "${UBUNTU_SNAPSHOT}" > /etc/apt/sources.list.d/ubuntu.sources; \
+    apt-get update; \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ${BUILD_PACKAGES}; \
+    mkdir -p /opt/local-inference/receipts; \
+    dpkg-query -W -f='${Package}\t${Version}\n' > /opt/local-inference/receipts/builder-dpkg.tsv; \
+    rm -rf /var/lib/apt/lists/*
+
+RUN set -eu; \
+    git init /src/llama.cpp; \
+    git -C /src/llama.cpp remote add origin https://github.com/ggml-org/llama.cpp.git; \
+    git -C /src/llama.cpp fetch --depth=1 origin "${LLAMA_COMMIT}"; \
+    git -C /src/llama.cpp checkout --detach FETCH_HEAD; \
+    test "$(git -C /src/llama.cpp rev-parse HEAD)" = "${LLAMA_COMMIT}"; \
+    test ! -s /src/llama.cpp/.gitmodules; \
+    git -C /src/llama.cpp archive --format=tar HEAD | sha256sum > /opt/local-inference/receipts/source-tree-sha256.txt; \
+    printf '%s\n' "${LLAMA_COMMIT}" > /opt/local-inference/receipts/llama-commit.txt
+
+COPY containers/local-inference/cuda-sm75-check.cu /src/cuda-sm75-check.cu
+RUN set -eu; \
+    cmake -S /src/llama.cpp -B /src/llama.cpp/build \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_CUDA_ARCHITECTURES=75 \
+      -DGGML_CUDA=ON \
+      -DGGML_NATIVE=OFF \
+      -DBUILD_SHARED_LIBS=ON \
+      -DLLAMA_BUILD_TESTS=OFF \
+      -DLLAMA_BUILD_EXAMPLES=OFF \
+      -DLLAMA_BUILD_TOOLS=ON \
+      -DLLAMA_BUILD_SERVER=ON \
+      -DLLAMA_BUILD_APP=OFF \
+      -DLLAMA_BUILD_UI=OFF \
+      -DLLAMA_USE_PREBUILT_UI=OFF \
+      -DLLAMA_CONNECT=OFF \
+      -DLLAMA_OPENSSL=OFF \
+      -DLLAMA_BUILD_BORINGSSL=OFF \
+      -DLLAMA_BUILD_LIBRESSL=OFF \
+      -DFETCHCONTENT_FULLY_DISCONNECTED=ON; \
+    cmake --build /src/llama.cpp/build --target llama-server --parallel 4; \
+    mkdir -p /opt/local-inference/bin /opt/local-inference/lib /opt/local-inference/licenses; \
+    cp /src/llama.cpp/build/bin/llama-server /opt/local-inference/bin/; \
+    cp -a /src/llama.cpp/build/bin/*.so* /opt/local-inference/lib/; \
+    cd /src/llama.cpp; \
+    find . -type f \( -iname 'LICENSE*' -o -iname 'COPYING*' -o -iname 'NOTICE*' \) \
+      ! -path './.git/*' ! -path './build/*' \
+      -exec cp --parents '{}' /opt/local-inference/licenses/ \;; \
+    cp /src/llama.cpp/build/CMakeCache.txt /opt/local-inference/receipts/; \
+    nvcc -O2 --std=c++17 -gencode arch=compute_75,code=sm_75 \
+      /src/cuda-sm75-check.cu -o /opt/local-inference/bin/cuda-sm75-check; \
+    cuobjdump --list-elf /opt/local-inference/bin/cuda-sm75-check > /opt/local-inference/receipts/cuda-gate-elf.txt; \
+    cuobjdump --list-elf /opt/local-inference/lib/libggml-cuda.so > /opt/local-inference/receipts/ggml-cuda-elf.txt; \
+    grep -q 'sm_75' /opt/local-inference/receipts/cuda-gate-elf.txt; \
+    grep -q 'sm_75' /opt/local-inference/receipts/ggml-cuda-elf.txt
+
+FROM --platform=linux/amd64 nvidia/cuda:12.8.1-runtime-ubuntu24.04@sha256:828c4d878adcaa4265d80c95d8ec877149b49bb2419a4cf3bb6aa889bbb7ca2e AS runtime
+
+ARG UBUNTU_SNAPSHOT
+ARG RUNTIME_PACKAGES
+RUN set -eu; \
+    test -n "${UBUNTU_SNAPSHOT}"; test -n "${RUNTIME_PACKAGES}"; \
+    case "${UBUNTU_SNAPSHOT}" in *[!0-9TZ]*) exit 1;; esac; \
+    for package in ${RUNTIME_PACKAGES}; do case "${package}" in *=?*) ;; *) exit 1;; esac; done; \
+    rm -f /etc/apt/sources.list /etc/apt/sources.list.d/*; \
+    printf 'Types: deb\nURIs: https://snapshot.ubuntu.com/ubuntu/%s/\nSuites: noble noble-updates noble-security\nComponents: main universe restricted multiverse\nSigned-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg\nCheck-Valid-Until: no\n' "${UBUNTU_SNAPSHOT}" > /etc/apt/sources.list.d/ubuntu.sources; \
+    apt-get update; \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ${RUNTIME_PACKAGES}; \
+    mkdir -p /opt/local-inference/receipts; \
+    dpkg-query -W -f='${Package}\t${Version}\n' > /opt/local-inference/receipts/runtime-dpkg.tsv; \
+    rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /opt/local-inference/ /opt/local-inference/
+COPY --chmod=0644 containers/local-inference/benchmark_proxy.py /opt/local-inference/bin/benchmark_proxy.py
+ENV LD_LIBRARY_PATH=/opt/local-inference/lib:/usr/local/cuda/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64
+ENV HOME=/tmp XDG_CACHE_HOME=/tmp/cache CUDA_CACHE_DISABLE=1
+
+# libcuda.so.1 is injected by native CDI at GPU pod creation. Every other
+# dependency must resolve now, including dlopened GGML backends. Never copy
+# random host libraries or silently tolerate an additional missing library.
+RUN set -eu; \
+    for package in libc6 libgcc-s1 libstdc++6 libgomp1; do \
+      builder_version="$(awk -F '\t' -v name="${package}" '$1 == name {print $2}' /opt/local-inference/receipts/builder-dpkg.tsv)"; \
+      runtime_version="$(dpkg-query -W -f='${Version}' "${package}")"; \
+      test -n "${builder_version}"; test "${builder_version}" = "${runtime_version}"; \
+    done; \
+    for binary in /opt/local-inference/bin/llama-server /opt/local-inference/bin/cuda-sm75-check /opt/local-inference/lib/*.so; do \
+      ldd "${binary}" > /tmp/ldd-result; \
+      if grep 'not found' /tmp/ldd-result | grep -v '^[[:space:]]*libcuda.so.1 => not found$'; then exit 1; fi; \
+    done; \
+    rm /tmp/ldd-result
+
+USER 10001:10001
+WORKDIR /tmp
+EXPOSE 8080
+ENTRYPOINT ["/usr/bin/python3", "/opt/local-inference/bin/benchmark_proxy.py"]
