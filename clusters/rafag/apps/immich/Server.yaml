@@ -1,0 +1,127 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: immich
+  name: immich
+  namespace: default
+spec:
+  $patch: replace
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: server
+      app.kubernetes.io/name: immich
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: server
+        app.kubernetes.io/name: immich
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - env:
+        - name: DB_DATABASE_NAME
+          value: immich
+        - name: DB_HOSTNAME
+          value: immich-postgres-rw.default.svc.cluster.local
+        - name: DB_PORT
+          value: '5432'
+        - name: DB_VECTOR_EXTENSION
+          value: vectorchord
+        - name: REDIS_HOSTNAME
+          value: immich-valkey.default.svc.cluster.local
+        - name: REDIS_PORT
+          value: '6379'
+        - name: REDIS_DBINDEX
+          value: '0'
+        - name: IMMICH_MEDIA_LOCATION
+          value: /data
+        - name: IMMICH_PORT
+          value: '2283'
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: immich-postgres-app
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: immich-postgres-app
+        - name: IMMICH_TELEMETRY_EXCLUDE
+          value: all
+        - name: IMMICH_LOG_LEVEL
+          value: debug
+        image: ghcr.io/immich-app/immich-server:v3.3.3@sha256:8c94984724f79503eb431dfd34ea58b57111c186df8030a66f39ffacf51d7c81
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 6
+          httpGet:
+            path: /api/server/ping
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 2
+        name: container
+        ports:
+        - containerPort: 2283
+          name: http
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /api/server/ping
+            port: http
+          periodSeconds: 5
+          timeoutSeconds: 2
+        resources:
+          limits:
+            cpu: '4'
+            memory: 4Gi
+          requests:
+            cpu: 500m
+            memory: 512Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            add:
+            - DAC_READ_SEARCH
+            drop:
+            - ALL
+          runAsGroup: 0
+          runAsUser: 0
+        startupProbe:
+          failureThreshold: 60
+          httpGet:
+            path: /api/server/ping
+            port: http
+          periodSeconds: 5
+          timeoutSeconds: 2
+        volumeMounts:
+        - mountPath: /data
+          name: main-volume
+          subPath: ${IMMICH_LIBRARY_PATH}
+        - mountPath: /external/photos
+          name: main-volume
+          readOnly: true
+          subPath: ${PHOTOS_PATH}
+      enableServiceLinks: false
+      nodeSelector:
+        kubernetes.io/hostname: k8s-control-plane
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+      - name: yasr-volume
+        persistentVolumeClaim:
+          claimName: yasr-volume
+      - name: backup-volume
+        persistentVolumeClaim:
+          claimName: backup-volume
+      - name: main-volume
+        persistentVolumeClaim:
+          claimName: main-volume

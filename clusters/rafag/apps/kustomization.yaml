@@ -21,6 +21,7 @@ resources:
 - ../../../apps/Prowlarr.yaml
 - ../../../apps/Sharry.yaml
 - ../../../apps/Paperless.yaml
+- ../../../apps/Immich.yaml
 - home-assistant/Ingress.yaml
 - sftpgo/SFTPGo.yaml
 patches:
@@ -1120,3 +1121,74 @@ patches:
           # Keep first-install account claiming private until the owner has completed it.
           main:
             enabled: false
+- target:
+    group: kustomize.toolkit.fluxcd.io
+    version: v1
+    kind: Kustomization
+    name: immich
+    namespace: default
+  patch: |
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: immich
+      namespace: default
+    spec:
+      suspend: true
+      path: ./clusters/rafag/apps/immich/
+      postBuild:
+        substitute:
+          IMMICH_LIBRARY_PATH: rafag/immich-library
+          PHOTOS_PATH: rafag/photos
+      healthChecks:
+      - apiVersion: apps/v1
+        kind: Deployment
+        name: immich
+        namespace: default
+      - apiVersion: apps/v1
+        kind: Deployment
+        name: immich-machine-learning
+        namespace: default
+      - apiVersion: apps/v1
+        kind: Deployment
+        name: immich-valkey
+        namespace: default
+- target:
+    group: postgresql.cnpg.io
+    version: v1
+    kind: Cluster
+    name: immich-postgres
+    namespace: default
+  patch: |
+    - op: replace
+      path: /spec
+      value:
+        instances: 1
+        imageName: ghcr.io/tensorchord/cloudnative-vectorchord:16.9-0.4.3@sha256:bf0c731659d3eb1d7df97cb9ee85672627cb574c1679175013a06ac1062ecbe0
+        postgresql:
+          shared_preload_libraries:
+          - vchord.so
+        storage:
+          size: 8Gi
+          storageClass: ''
+          pvcTemplate:
+            volumeName: immich-postgres-pgdata
+        enableSuperuserAccess: false
+        bootstrap:
+          initdb:
+            database: immich
+            owner: immich
+            secret:
+              name: immich-postgres-app
+            postInitApplicationSQL:
+            - CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
+            - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE;
+        postgresUID: 26
+        postgresGID: 26
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: '2'
+            memory: 2Gi

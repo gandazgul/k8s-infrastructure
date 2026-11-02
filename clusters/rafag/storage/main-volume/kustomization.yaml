@@ -5,6 +5,7 @@ resources:
 - ../../../../infrastructure/storage/hdd-class/
 - Storage.yaml
 - PaperlessStorage.yaml
+- ImmichStorage.yaml
 patches:
 - target:
     kind: PersistentVolume

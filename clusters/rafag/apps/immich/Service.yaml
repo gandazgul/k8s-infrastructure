@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: immich
+  name: immich
+  namespace: default
+spec:
+  $patch: replace
+  ports:
+  - name: http
+    port: 2283
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: immich
+  type: ClusterIP

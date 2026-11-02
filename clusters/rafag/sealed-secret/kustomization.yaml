@@ -6,3 +6,4 @@ resources:
 - Reconciliation.yaml
 - ../apps/secrets/
 - PaperlessDatabase.yaml
+- ImmichDatabase.yaml
