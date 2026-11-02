@@ -1,0 +1,171 @@
+---
+apiVersion: v1
+data:
+  guard.sh: "#!/bin/bash\nset -eux\n# This script runs only in the Pod network namespace, never in hostNetwork.\n# The positive control must succeed before a failed connection proves a block.\nnc -w 2 10.101.63.36 8191 </dev/null >/dev/null\nfor tool in iptables ip6tables; do\n    \"${tool}\" -w 5 -P OUTPUT DROP\n    \"${tool}\" -w 5 -P INPUT DROP\n    \"${tool}\" -w 5 -P FORWARD DROP\n    \"${tool}\" -w 5 -F\n    \"${tool}\" -w 5 -A OUTPUT -o lo -j ACCEPT\n    \"${tool}\" -w 5 -A OUTPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT\n    \"${tool}\" -w 5 -A INPUT -i lo -j ACCEPT\n    \"${tool}\" -w 5 -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT\ndone\n# Approved owner-access exception: actual Traefik Pod only, native HTTP port only.\n# OUTPUT still rejects all NEW connections; replies use conntrack above.\niptables -w 5 -A INPUT -s 10.244.0.4/32 -p tcp --dport 9000 -m conntrack --ctstate NEW -j ACCEPT\nnc -l -p 18765 -e /bin/cat &\nlistener=$!\ntrap 'kill \"${listener}\" 2>/dev/null || true' EXIT\nsleep 1\nreply=$(printf 'private-loopback\\n' | nc -w 2 127.0.0.1 18765)\ntest \"${reply}\" = private-loopback\nif nc -w 2 10.101.63.36 8191 </dev/null >/dev/null 2>&1; then\n    echo 'FAIL: new external connection permitted' >&2\n    exit 1\nfi\n# Require a DROP policy and actual packet hits, not merely a failed probe.\niptables -w 5 -L OUTPUT -n -v | grep -E 'policy DROP [1-9][0-9]* packets'\nip6tables -w 5 -S OUTPUT | grep -Fx -- '-P OUTPUT DROP'\necho 'PASS: loopback allowed; controlled new external TCP blocked; IPv4/IPv6 default DROP'\n"
+  start.sh: '#!/bin/bash
+
+    set -e
+
+    cd /app/data
+
+    test -s mealie.db
+
+    test -s .secret
+
+    test -s .session_secret
+
+    printf ''%s\n'' ''83aaf967bd2d6598f65f67b1bf09d38f295c40a10c2ee49ad6e818cee17d4ad5  mealie.db'' | sha256sum -c -
+
+    # Native ASGI server only: do not run Mealie''s init_db or scheduler lifespan.
+
+    # Saved schema is already the pinned 3.29.0 head 1e69ea7cd45e.
+
+    exec /opt/mealie/bin/uvicorn mealie.app:app --host 0.0.0.0 --port 9000 --workers 1 --lifespan off --no-proxy-headers
+
+    '
+kind: ConfigMap
+metadata:
+  name: mealie-private-guard
+  namespace: default
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mealie-private
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: mealie-private
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        recovery.dumbhome.uk/public-owner-access: '2026-10-30T03:06:57.485Z'
+      labels:
+        app: mealie-private
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - command:
+        - /bin/bash
+        - /guard/start.sh
+        envFrom:
+        - secretRef:
+            name: mealie-recovery-env
+        image: ghcr.io/mealie-recipes/mealie@sha256:243e33ea66e71b2094cb1f9c9167af24452405a33fc899a1dc7359dc210506f8
+        imagePullPolicy: IfNotPresent
+        name: mealie
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - curl --max-time 3 -fsS http://127.0.0.1:9000/api/app/about >/dev/null
+          failureThreshold: 3
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 4
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsGroup: 1000
+          runAsUser: 1000
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /guard
+          name: guard
+          readOnly: true
+        - mountPath: /app/data
+          name: working
+      dnsPolicy: ClusterFirst
+      initContainers:
+      - command:
+        - /bin/sh
+        - /guard/guard.sh
+        image: ghcr.io/flannel-io/flannel@sha256:9aeaf1689ad3554e686d5f4062f33a2ba173398fd8f6d0346bd1dc1a27fb1437
+        imagePullPolicy: IfNotPresent
+        name: network-guard
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            add:
+            - NET_ADMIN
+            drop:
+            - ALL
+          runAsUser: 0
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /guard
+          name: guard
+          readOnly: true
+      nodeSelector:
+        kubernetes.io/hostname: k8s-control-plane
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: mealie-private-guard
+        name: guard
+      - hostPath:
+          path: /media/yasr/recovery/mealie-20261030/working/mealie
+          type: Directory
+        name: working
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mealie
+  namespace: default
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 9000
+  selector:
+    app: mealie-private
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+  name: mealie
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: recipes.dumbhome.uk
+    http:
+      paths:
+      - backend:
+          service:
+            name: mealie
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - recipes.dumbhome.uk
+    secretName: internal-ingress-cert

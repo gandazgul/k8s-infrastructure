@@ -12,3 +12,8 @@ resources:
 - Sharry.yaml
 - Wallabag.yaml
 - WyomingOpenAI.yaml
+- Mealie.yaml
+- N8N.yaml
+- SFTPGoHeldNative.yaml
+- SFTPGoStorage.yaml
+- RetainedVolumes.yaml

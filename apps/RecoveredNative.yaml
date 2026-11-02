@@ -11,6 +11,7 @@ spec:
     namespace: kube-system
   - name: yasr-volume
     namespace: kube-system
+  - name: recovered-app-secrets
   interval: 10m0s
   retryInterval: 1m0s
   timeout: 3m0s
@@ -66,4 +67,24 @@ spec:
   - apiVersion: apps/v1
     kind: Deployment
     name: wyoming-openai
+    namespace: default
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: mealie-private
+    namespace: default
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: n8n-private
+    namespace: default
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: sftpgo
+    namespace: default
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: sftpgo-working
+    namespace: default
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: plex-legacy-movies
     namespace: default

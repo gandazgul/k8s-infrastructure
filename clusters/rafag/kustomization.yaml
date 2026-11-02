@@ -12,3 +12,4 @@ resources:
 - ../../apps/HomeAssistantEditor.yaml
 - ../../apps/RecoveredNative.yaml
 - ../../apps/RecoveredAppSecrets.yaml
+- ../../apps/RecoveredHelm.yaml
