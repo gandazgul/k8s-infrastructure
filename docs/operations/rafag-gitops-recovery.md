@@ -69,6 +69,27 @@ owner to adopt it. The encrypted template retains the same annotations/labels to
 avoid controller fights. No raw credential values belong in this repository.
 Verify decryptability before activation and exact credential hashes afterwards.
 
+## HA and editor ownership
+
+`home-assistant-native` adopts the current Deployment, public Service/Ingress and
+held HelmRelease. Keep the full existing Pod template, digest, Recreate strategy,
+USB mapping and saved-state guard; adoption must not restart HA. The held release
+remains suspended and prune-protected even though its inert old chart values
+remain for history. Never unsuspend it to deploy the native editor.
+
+`home-assistant-editor` depends on native HA adoption. Its separate pinned
+code-server container mounts only `configs/hass` from the existing YASR claim,
+runs as UID/GID1000 without chown/fsGroup, has no API token and uses the existing
+reflected `ADMIN_PASSWORD` key through secretKeyRef. No password value belongs in
+Git or logs. Config/auth checks must pass before publishing its TLS-only route.
+Readiness `/healthz` is process health only; require login, IDE/WebSocket and a
+disposable-file round-trip before claiming editor recovery. HA runtime/data
+identity must stay unchanged.
+
+CEL health checks use field selectors such as `has(status.conditions)`.
+`has(status)` is not a valid root presence macro in this controller and is
+rejected before apply; schema/server dry-run does not compile those expressions.
+
 ## Explicit holds and non-goals
 
 - No backup-volume PV/PVC or backup jobs until the actual backup disk is mounted
