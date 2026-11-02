@@ -1,4 +1,5 @@
 import { isIP } from 'node:net';
+import { realpathSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 const REQUEST_TIMEOUT_MS = 5000;
@@ -184,6 +185,7 @@ export async function main({ env = process.env, fetchImpl = globalThis.fetch, lo
     }
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+// ConfigMap mounts expose the entry point through symlinks; ESM resolves its real path.
+if (process.argv[1] && import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href) {
     process.exitCode = await main();
 }

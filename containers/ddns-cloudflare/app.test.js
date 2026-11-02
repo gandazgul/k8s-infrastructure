@@ -2,6 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { discoverIpv4, main, readConfig, updateDns } from './app.js';
 
 const env = {
@@ -218,4 +221,32 @@ test('CLI main gate exits nonzero on missing env before any network access', () 
     assert.equal(result.status, 1);
     assert.equal(result.stdout, '');
     assert.equal(result.stderr, 'DDNS: Invalid CLUSTER_NAME.\n');
+});
+
+test('ConfigMap-like symlink entry point runs main while module imports stay inert', () => {
+    const mount = mkdtempSync(join(tmpdir(), 'ddns-configmap-'));
+
+    try {
+        const dataDirectory = '..2026_11_02';
+        mkdirSync(join(mount, dataDirectory));
+        writeFileSync(join(mount, dataDirectory, 'app.mjs'), readFileSync(new URL('./app.js', import.meta.url)));
+        symlinkSync(dataDirectory, join(mount, '..data'));
+        symlinkSync('..data/app.mjs', join(mount, 'app.mjs'));
+        const result = spawnSync(process.execPath, [join(mount, 'app.mjs')], {
+            env: {}, encoding: 'utf8', timeout: 2000,
+        });
+        assert.equal(result.status, 1);
+        assert.equal(result.stdout, '');
+        assert.equal(result.stderr, 'DDNS: Invalid CLUSTER_NAME.\n');
+        const imported = spawnSync(process.execPath, ['--input-type=module', '-e',
+            'await import(process.env.TEST_IMPORT_PATH);'], {
+            env: { TEST_IMPORT_PATH: join(mount, 'app.mjs') }, encoding: 'utf8', timeout: 2000,
+        });
+        assert.equal(imported.status, 0);
+        assert.equal(imported.stdout, '');
+        assert.equal(imported.stderr, '');
+    }
+    finally {
+        rmSync(mount, { recursive: true, force: true });
+    }
 });
