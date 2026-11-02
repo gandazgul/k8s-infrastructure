@@ -1,8 +1,285 @@
-additionalVolumeMounts:
-- name: usb-zbt2
-  mountPath: /dev/ttyACM0
-additionalVolumes:
-- name: usb-zbt2
-  hostPath:
-    path: /dev/serial/by-id/usb-Nabu_Casa_ZBT-2_DCB4D90C146C-if00
-    type: CharDevice
+addons:
+  codeserver:
+    enabled: true
+    image:
+      repository: ghcr.io/coder/code-server
+      tag: 4.144.0@sha256:b9e8056bb74bd0c4f90284c7559eddeccd38400cfedc28e64c9d3ca50fef1f83
+      pullPolicy: IfNotPresent
+    pullPolicy: IfNotPresent
+    workingDir: /config
+    env:
+      HOME: /home/coder
+    args:
+    - --config
+    - /dev/null
+    - --bind-addr
+    - 0.0.0.0:8080
+    - --auth
+    - password
+    - --disable-telemetry
+    - --disable-update-check
+    - --user-data-dir
+    - /config/.vscode
+    - --extensions-dir
+    - /config/.vscode/extensions
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+        - ALL
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      seccompProfile:
+        type: RuntimeDefault
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: '2'
+        memory: 1Gi
+    volumeMounts:
+    - name: config
+      mountPath: /config
+      subPath: configs/hass
+    - name: editor-tmp
+      mountPath: /tmp
+    - name: editor-home
+      mountPath: /home/coder
+    service:
+      enabled: true
+      ports:
+        codeserver:
+          port: 8080
+    ingress:
+      enabled: false
+controller:
+  strategy: Recreate
+  type: deployment
+dnsPolicy: ClusterFirst
+env:
+  TZ: America/New_York
+hostNetwork: false
+image:
+  pullPolicy: IfNotPresent
+  repository: ghcr.io/home-assistant/home-assistant
+  tag: 2026.10.2@sha256:d30d46d24d55c43f1122ab04fdf04d2d31144815b983b07feb075f3a18814239
+ingress:
+  main:
+    enabled: true
+    nameOverride: public
+    ingressClassName: nginx
+    hosts:
+    - host: hass.dumbhome.uk
+      paths:
+      - path: /
+        pathType: Prefix
+    tls:
+    - hosts:
+      - hass.dumbhome.uk
+      secretName: internal-ingress-cert
+initContainers:
+  saved-state-guard:
+    command:
+    - python3
+    - -c
+    - 'import json, os, pathlib, sys
+
+      p = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else ''/config'')
+
+      assert p.is_dir() and not p.is_symlink(), ''configuration directory missing''
+
+      assert (p / ''configuration.yaml'').is_file(), ''saved configuration missing''
+
+      assert (p / ''.HA_VERSION'').read_text().strip() == ''2026.10.2'', ''saved version
+      mismatch''
+
+      assert (p / ''home-assistant_v2.db'').stat().st_size > 1000000, ''saved recorder
+      missing''
+
+      a = json.loads((p / ''.storage/auth'').read_text())[''data'']
+
+      assert len(a[''users'']) >= 8 and len(a[''credentials'']) >= 5, ''saved authentication
+      missing''
+
+      b = json.loads((p / ''.storage/onboarding'').read_text())[''data'']
+
+      assert set([''user'', ''core_config'', ''analytics'', ''integration'']) <= set(b[''done'']),
+      ''onboarding incomplete''
+
+      e = json.loads((p / ''.storage/core.config_entries'').read_text())[''data''][''entries'']
+
+      assert len(e) >= 104 and any(x[''domain''] == ''zha'' for x in e), ''saved integrations
+      missing''
+
+      d = pathlib.Path(''/yasr-device/b52443c5-0f4b-43a3-a689-b444ea6c3683'')
+
+      assert d.is_symlink(), ''YASR UUID missing''
+
+      name = pathlib.Path(os.readlink(d)).name
+
+      major, minor = map(int, pathlib.Path(''/sys/class/block'', name, ''dev'').read_text().split('':''))
+
+      assert p.stat().st_dev == os.makedev(major, minor), ''wrong configuration filesystem''
+
+      assert pathlib.Path(''/dev/ttyACM0'').is_char_device(), ''saved USB device missing''
+
+      print(''Saved configuration, authentication, onboarding, integrations, UUID
+      and USB verified'')
+
+      '
+    image: ghcr.io/home-assistant/home-assistant:2026.10.2@sha256:d30d46d24d55c43f1122ab04fdf04d2d31144815b983b07feb075f3a18814239
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    volumeMounts:
+    - mountPath: /config
+      name: config
+      readOnly: true
+      subPath: configs/hass
+    - mountPath: /yasr-device
+      name: yasr-device
+      readOnly: true
+    - mountPath: /dev/ttyACM0
+      name: usb
+      readOnly: true
+  editor-saved-config-guard:
+    name: saved-config-guard
+    image: ghcr.io/home-assistant/home-assistant:2026.10.2@sha256:d30d46d24d55c43f1122ab04fdf04d2d31144815b983b07feb075f3a18814239
+    command:
+    - python3
+    - -c
+    - 'import os, pathlib
+
+      p = pathlib.Path(''/config'')
+
+      assert p.is_dir() and not p.is_symlink(), ''saved config missing''
+
+      assert (p / ''configuration.yaml'').is_file(), ''saved YAML missing''
+
+      assert p.stat().st_gid == os.getgid() and p.stat().st_mode & 0o020, ''saved
+      config lacks editor group write permission''
+
+      assert len(os.environ[''PASSWORD'']) >= 12, ''admin credential is missing or
+      too short''
+
+      d = pathlib.Path(''/yasr-device/b52443c5-0f4b-43a3-a689-b444ea6c3683'')
+
+      assert d.is_symlink(), ''YASR UUID missing''
+
+      name = pathlib.Path(os.readlink(d)).name
+
+      major, minor = map(int, pathlib.Path(''/sys/class/block'', name, ''dev'').read_text().split('':''))
+
+      assert p.stat().st_dev == os.makedev(major, minor), ''wrong configuration filesystem''
+
+      print(''Saved configuration filesystem and editor prerequisites verified'')
+
+      '
+    env:
+    - name: PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: secrets
+          key: ADMIN_PASSWORD
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+        - ALL
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      seccompProfile:
+        type: RuntimeDefault
+    volumeMounts:
+    - name: config
+      mountPath: /config
+      subPath: configs/hass
+      readOnly: true
+    - name: yasr-device
+      mountPath: /yasr-device
+      readOnly: true
+metrics:
+  enabled: false
+persistence:
+  config:
+    enabled: true
+    existingClaim: yasr-volume
+    subPath: configs/hass
+  usb:
+    enabled: true
+    hostPath: /dev/serial/by-id/usb-Nabu_Casa_ZBT-2_DCB4D90C146C-if00
+    hostPathType: CharDevice
+    mountPath: /dev/ttyACM0
+    type: hostPath
+  yasr-device:
+    enabled: true
+    hostPath: /dev/disk/by-uuid
+    hostPathType: Directory
+    mountPath: '-'
+    type: hostPath
+  editor-tmp:
+    enabled: true
+    type: emptyDir
+    mountPath: '-'
+    sizeLimit: 128Mi
+  editor-home:
+    enabled: true
+    type: emptyDir
+    mountPath: '-'
+    sizeLimit: 128Mi
+probes:
+  liveness:
+    custom: true
+    enabled: true
+    spec:
+      failureThreshold: 6
+      httpGet:
+        path: /
+        port: 8123
+      periodSeconds: 10
+      timeoutSeconds: 5
+  readiness:
+    custom: true
+    enabled: true
+    spec:
+      failureThreshold: 6
+      httpGet:
+        path: /
+        port: 8123
+      periodSeconds: 10
+      timeoutSeconds: 5
+  startup:
+    custom: true
+    enabled: true
+    spec:
+      failureThreshold: 60
+      httpGet:
+        path: /
+        port: 8123
+      periodSeconds: 10
+      timeoutSeconds: 5
+resources:
+  limits:
+    memory: 4Gi
+  requests:
+    cpu: 200m
+    memory: 1Gi
+securityContext:
+  privileged: true
+service:
+  main:
+    enabled: true
+    nameOverride: public
+    ports:
+      http:
+        port: 8123
+        targetPort: 8123
+podAnnotations:
+  kubectl.kubernetes.io/restartedAt: '2026-10-29T15:25:43-04:00'

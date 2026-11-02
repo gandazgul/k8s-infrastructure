@@ -18,7 +18,8 @@ spec:
     spec:
       containers:
         - name: wyoming-openai
-          image: ghcr.io/roryeckel/wyoming_openai:latest
+          image: ghcr.io/roryeckel/wyoming_openai@sha256:2468fbe5ea50c00bff2d021d8c3e42c8f62bb43765a6f21e10d3c217fefc89aa
+          imagePullPolicy: IfNotPresent
           env:
             - name: WYOMING_URI
               value: "tcp://0.0.0.0:10300"

@@ -1,40 +1,2606 @@
----
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./secrets/
-  - ../../../apps/ActualBudget.yaml
-  - ../../../apps/Bitwarden.yaml
-  - ../../../apps/Forecastle.yaml
-  - ../../../apps/HomeAssistant.yaml
-  - ../../../apps/TeslaPublicKey.yaml
-  - ../../../apps/MosquitoMQTTBroker.yaml
-  - ../../../apps/Paperless.yaml
-  - ../../../apps/Photoprism.yaml
-  - ../../../apps/ImmichRafag.yaml
-  - ../../../apps/Resilio.yaml
-  - ../../../apps/SFTPGo.yaml
-  - ../../../apps/Sharry.yaml
-  #  - ../../../apps/ZWaveJS.yaml
-  - ../../../apps/Mealie.yaml
-  - ../../../apps/Transmission.yaml
-  - ../../../apps/Lidarr.yaml
-  - ../../../apps/Overseerr.yaml
-  - ../../../apps/Prowlarr.yaml
-  - ../../../apps/Radarr.yaml
-  - ../../../apps/Sonarr.yaml
-  - ../../../apps/Tdarr.yaml
-  - ../../../apps/Plex.yaml
-  # - ../../../apps/Ollama.yaml
-  # - ../../../apps/OpenWebUI.yaml
-  # - ../../../apps/Zigbee2mqtt.yaml
-  - ../../../apps/N8N.yaml
-  - ../../../apps/AudioBookShelf.yaml
-  - ../../../apps/Flaresolverr.yaml
-  - ../../../apps/Qdrant.yaml
-  - ../../../apps/SearXNG.yaml
-  - ../../../apps/Wallabag.yaml
-  - ../../../apps/FreshRSS.yaml
-  - ../../../apps/KokoroTTS.yaml
-  - ../../../apps/WyomingOpenAI.yaml
-  - ../../../apps/YouTubeOperationalAPI.yaml
+- ../../../apps/TeslaPublicKey.yaml
+- ../../../apps/FreshRSS.yaml
+- ../../../apps/Lidarr.yaml
+- ../../../apps/Qdrant.yaml
+- ../../../apps/SearXNG.yaml
+- ../../../apps/Wallabag.yaml
+- ../../../apps/Mealie.yaml
+- ../../../apps/N8N.yaml
+- ../../../apps/Bitwarden.yaml
+- ../../../apps/Forecastle.yaml
+- ../../../apps/MosquitoMQTTBroker.yaml
+- ../../../apps/Plex.yaml
+- ../../../apps/SFTPGo.yaml
+- ../../../apps/HomeAssistant.yaml
+- ../../../apps/KokoroTTS.yaml
+- ../../../apps/WyomingOpenAI.yaml
+- RuntimeOverrides.yaml
+- ../../../apps/Flaresolverr.yaml
+- ../../../apps/Prowlarr.yaml
+- ../../../apps/Sharry.yaml
+patches:
+- patch: |
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: tesla-public-key
+      namespace: default
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+    spec:
+      dependsOn:
+      - name: kube-system
+        namespace: kube-system
+      - name: main-volume
+        namespace: kube-system
+      - name: yasr-volume
+        namespace: kube-system
+      - name: sealed-secret
+        namespace: kube-system
+      prune: false
+      deletionPolicy: Orphan
+      force: false
+      healthChecks:
+      - apiVersion: apps/v1
+        kind: Deployment
+        name: tesla-public-key
+        namespace: default
+      patches:
+      - patch: |
+          - op: remove
+            path: /metadata/labels
+          - op: add
+            path: /immutable
+            value: true
+        target:
+          group: ''
+          version: v1
+          kind: ConfigMap
+          name: tesla-public-key
+          namespace: default
+      - patch: |
+          - op: add
+            path: /spec/template/metadata/annotations
+            value:
+              checksum/public-key: 788dc4adc61bf43151ee66ef799b63e70fb668cbfcd17e7848d6f9167c73a05e
+          - op: replace
+            path: /spec/template/spec/containers/0/image
+            value: docker.io/library/nginx@sha256:35cd77497979abe70dc8d26f5ae60811eea233a2eb5dc03c2ee30972caeb303e
+          - op: add
+            path: /spec/template/spec/nodeSelector
+            value:
+              kubernetes.io/arch: amd64
+        target:
+          group: apps
+          version: v1
+          kind: Deployment
+          name: tesla-public-key
+          namespace: default
+      - patch: |
+          - op: replace
+            path: /spec/rules/0/host
+            value: tesla.dumbhome.uk
+          - op: replace
+            path: /spec/rules/0/http/paths/0/pathType
+            value: Exact
+          - op: replace
+            path: /spec/tls/0/hosts/0
+            value: tesla.dumbhome.uk
+        target:
+          group: networking.k8s.io
+          version: v1
+          kind: Ingress
+          name: tesla-public-key
+          namespace: default
+      - target:
+          group: apps
+          version: v1
+          kind: Deployment
+        patch: |
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: not-used
+            annotations:
+              kustomize.toolkit.fluxcd.io/substitute: disabled
+      - target:
+          group: ''
+          version: v1
+          kind: ConfigMap
+        patch: |
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: not-used
+            annotations:
+              kustomize.toolkit.fluxcd.io/substitute: disabled
+  target:
+    group: kustomize.toolkit.fluxcd.io
+    version: v1
+    kind: Kustomization
+    name: tesla-public-key
+    namespace: default
+- patch: |
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: freshrss
+      namespace: default
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+    spec:
+      dependsOn:
+      - name: kube-system
+        namespace: kube-system
+      - name: main-volume
+        namespace: kube-system
+      - name: yasr-volume
+        namespace: kube-system
+      - name: sealed-secret
+        namespace: kube-system
+      prune: false
+      deletionPolicy: Orphan
+      force: false
+      healthChecks:
+      - apiVersion: apps/v1
+        kind: Deployment
+        name: freshrss-private
+        namespace: default
+      patches:
+      - patch: |
+          - op: remove
+            path: /metadata/labels
+          - op: replace
+            path: /spec/ports/0/targetPort
+            value: 8080
+          - op: remove
+            path: /spec/selector/app.kubernetes.io~1name
+          - op: add
+            path: /spec/selector/app
+            value: freshrss-private
+        target:
+          group: ''
+          version: v1
+          kind: Service
+          name: freshrss
+          namespace: default
+      - patch: |
+          - op: remove
+            path: /metadata/labels
+          - op: replace
+            path: /metadata/name
+            value: freshrss-private
+          - op: replace
+            path: /spec/revisionHistoryLimit
+            value: 10
+          - op: remove
+            path: /spec/selector/matchLabels/app.kubernetes.io~1name
+          - op: add
+            path: /spec/selector/matchLabels/app
+            value: freshrss-private
+          - op: remove
+            path: /spec/template/metadata/labels/app.kubernetes.io~1name
+          - op: add
+            path: /spec/template/metadata/labels/app
+            value: freshrss-private
+          - op: add
+            path: /spec/template/metadata/annotations
+            value:
+              recovery.dumbhome.uk/public-owner-access: '2026-10-30T03:06:57.485Z'
+          - op: remove
+            path: /spec/template/spec/containers/0/env
+          - op: replace
+            path: /spec/template/spec/containers/0/image
+            value: docker.io/freshrss/freshrss@sha256:a003730e81c89abf86c3ca9c8b263c818804734b574469d59586234364f425b0
+          - op: replace
+            path: /spec/template/spec/containers/0/imagePullPolicy
+            value: IfNotPresent
+          - op: remove
+            path: /spec/template/spec/containers/0/livenessProbe
+          - op: replace
+            path: /spec/template/spec/containers/0/name
+            value: freshrss
+          - op: remove
+            path: /spec/template/spec/containers/0/ports
+          - op: remove
+            path: /spec/template/spec/containers/0/resources/limits
+          - op: remove
+            path: /spec/template/spec/containers/0/resources/requests
+          - op: replace
+            path: /spec/template/spec/containers/0/volumeMounts
+            value:
+            - mountPath: /guard
+              name: guard
+              readOnly: true
+            - mountPath: /var/www/FreshRSS/data
+              name: working
+              subPath: data
+            - mountPath: /var/www/FreshRSS/extensions
+              name: working
+              readOnly: true
+              subPath: extensions
+          - op: add
+            path: /spec/template/spec/containers/0/command
+            value:
+            - /bin/bash
+            - /guard/start.sh
+          - op: add
+            path: /spec/template/spec/containers/0/readinessProbe
+            value:
+              exec:
+                command:
+                - php
+                - -r
+                - exit(@file_get_contents("http://127.0.0.1:8080/i/?c=auth&a=login")===false?1:0);
+              periodSeconds: 5
+              timeoutSeconds: 4
+          - op: add
+            path: /spec/template/spec/containers/0/securityContext
+            value:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+              runAsGroup: 33
+              runAsUser: 33
+          - op: replace
+            path: /spec/template/spec/initContainers/0/command
+            value:
+            - /bin/sh
+            - /guard/guard.sh
+          - op: remove
+            path: /spec/template/spec/initContainers/0/env
+          - op: replace
+            path: /spec/template/spec/initContainers/0/image
+            value: ghcr.io/flannel-io/flannel@sha256:9aeaf1689ad3554e686d5f4062f33a2ba173398fd8f6d0346bd1dc1a27fb1437
+          - op: replace
+            path: /spec/template/spec/initContainers/0/name
+            value: network-guard
+          - op: replace
+            path: /spec/template/spec/initContainers/0/volumeMounts/0/mountPath
+            value: /guard
+          - op: replace
+            path: /spec/template/spec/initContainers/0/volumeMounts/0/name
+            value: guard
+          - op: remove
+            path: /spec/template/spec/initContainers/0/volumeMounts/0/subPath
+          - op: add
+            path: /spec/template/spec/initContainers/0/volumeMounts/0/readOnly
+            value: true
+          - op: add
+            path: /spec/template/spec/initContainers/0/resources
+            value: {}
+          - op: add
+            path: /spec/template/spec/initContainers/0/securityContext
+            value:
+              allowPrivilegeEscalation: false
+              capabilities:
+                add:
+                - NET_ADMIN
+                drop:
+                - ALL
+              runAsUser: 0
+          - op: replace
+            path: /spec/template/spec/volumes
+            value:
+            - configMap:
+                name: freshrss-private-guard
+              name: guard
+            - hostPath:
+                path: /media/yasr/recovery/freshrss-20261030/working/freshrss
+                type: Directory
+              name: working
+          - op: add
+            path: /spec/template/spec/automountServiceAccountToken
+            value: false
+          - op: add
+            path: /spec/template/spec/nodeSelector
+            value:
+              kubernetes.io/hostname: k8s-control-plane
+          - op: add
+            path: /spec/strategy
+            value:
+              type: Recreate
+        target:
+          group: apps
+          version: v1
+          kind: Deployment
+          name: freshrss
+          namespace: default
+      - patch: |
+          - op: remove
+            path: /metadata/annotations/forecastle.stakater.com~1appName
+          - op: remove
+            path: /metadata/annotations/forecastle.stakater.com~1expose
+          - op: remove
+            path: /metadata/annotations/forecastle.stakater.com~1group
+          - op: remove
+            path: /metadata/annotations/forecastle.stakater.com~1icon
+          - op: add
+            path: /metadata/annotations/nginx.ingress.kubernetes.io~1ssl-redirect
+            value: 'true'
+          - op: remove
+            path: /metadata/labels
+          - op: replace
+            path: /spec/rules/0/host
+            value: rss.dumbhome.uk
+          - op: remove
+            path: /spec/rules/0/http/paths/0/backend/service/port/name
+          - op: add
+            path: /spec/rules/0/http/paths/0/backend/service/port/number
+            value: 80
+          - op: replace
+            path: /spec/rules/0/http/paths/0/pathType
+            value: Prefix
+          - op: replace
+            path: /spec/tls/0/hosts/0
+            value: rss.dumbhome.uk
+        target:
+          group: networking.k8s.io
+          version: v1
+          kind: Ingress
+          name: freshrss
+          namespace: default
+      - target:
+          group: apps
+          version: v1
+          kind: Deployment
+        patch: |
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: not-used
+            annotations:
+              kustomize.toolkit.fluxcd.io/substitute: disabled
+      - target:
+          group: ''
+          version: v1
+          kind: ConfigMap
+        patch: |
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: not-used
+            annotations:
+              kustomize.toolkit.fluxcd.io/substitute: disabled
+  target:
+    group: kustomize.toolkit.fluxcd.io
+    version: v1
+    kind: Kustomization
+    name: freshrss
+    namespace: default
+- patch: |
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: lidarr
+      namespace: default
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+    spec:
+      dependsOn:
+      - name: kube-system
+        namespace: kube-system
+      - name: main-volume
+        namespace: kube-system
+      - name: yasr-volume
+        namespace: kube-system
+      - name: sealed-secret
+        namespace: kube-system
+      prune: false
+      deletionPolicy: Orphan
+      force: false
+      healthChecks:
+      - apiVersion: apps/v1
+        kind: Deployment
+        name: lidarr-public
+        namespace: default
+      patches:
+      - patch: |
+          - op: remove
+            path: /metadata/labels
+          - op: replace
+            path: /metadata/name
+            value: lidarr-public
+          - op: replace
+            path: /spec/ports/0/targetPort
+            value: 8686
+          - op: remove
+            path: /spec/selector/app.kubernetes.io~1name
+          - op: add
+            path: /spec/selector/app
+            value: lidarr-public
+        target:
+          group: ''
+          version: v1
+          kind: Service
+          name: lidarr
+          namespace: default
+      - patch: |
+          - op: remove
+            path: /metadata/labels
+          - op: replace
+            path: /metadata/name
+            value: lidarr-public
+          - op: replace
+            path: /spec/revisionHistoryLimit
+            value: 10
+          - op: remove
+            path: /spec/selector/matchLabels/app.kubernetes.io~1name
+          - op: add
+            path: /spec/selector/matchLabels/app
+            value: lidarr-public
+          - op: remove
+            path: /spec/template/metadata/labels/app.kubernetes.io~1name
+          - op: add
+            path: /spec/template/metadata/labels/app
+            value: lidarr-public
+          - op: replace
+            path: /spec/template/spec/containers/0/env
+            value:
+            - name: HOME
+              value: /config
+          - op: replace
+            path: /spec/template/spec/containers/0/image
+            value: docker.io/linuxserver/lidarr@sha256:135634128ba917a6bd093e8ea3bca9aeaba88ca36e8245bba8dd98b373618c6b
+          - op: replace
+            path: /spec/template/spec/containers/0/imagePullPolicy
+            value: IfNotPresent
+          - op: remove
+            path: /spec/template/spec/containers/0/livenessProbe
+          - op: replace
+            path: /spec/template/spec/containers/0/name
+            value: lidarr
+          - op: remove
+            path: /spec/template/spec/containers/0/ports
+          - op: remove
+            path: /spec/template/spec/containers/0/resources/limits
+          - op: remove
+            path: /spec/template/spec/containers/0/resources/requests
+          - op: replace
+            path: /spec/template/spec/containers/0/volumeMounts
+            value:
+            - mountPath: /guard
+              name: guard
+              readOnly: true
+            - mountPath: /config
+              name: working
+            - mountPath: /media
+              name: music
+              readOnly: true
+            - mountPath: /data
+              name: downloads
+              readOnly: true
+          - op: add
+            path: /spec/template/spec/containers/0/command
+            value:
+            - /bin/bash
+            - /guard/start.sh
+          - op: add
+            path: /spec/template/spec/containers/0/readinessProbe
+            value:
+              exec:
+                command:
+                - /bin/sh
+                - -c
+                - curl --max-time 3 -fsS http://127.0.0.1:8686/ping >/dev/null
+              periodSeconds: 5
+              timeoutSeconds: 4
+          - op: add
+            path: /spec/template/spec/containers/0/securityContext
+            value:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+              runAsGroup: 1000
+              runAsUser: 1000
+          - op: replace
+            path: /spec/template/spec/volumes
+            value:
+            - configMap:
+                name: lidarr-public-guard-cb6565246g
+              name: guard
+            - hostPath:
+                path: /media/yasr/recovery/arr-next-20261030/working/lidarr
+                type: Directory
+              name: working
+            - hostPath:
+                path: /media/main/public/Music
+                type: Directory
+              name: music
+            - hostPath:
+                path: /media/yasr/configs/transmission
+                type: Directory
+              name: downloads
+          - op: add
+            path: /spec/template/spec/automountServiceAccountToken
+            value: false
+          - op: add
+            path: /spec/template/spec/initContainers
+            value:
+            - command:
+              - /bin/sh
+              - /guard/guard.sh
+              image: ghcr.io/flannel-io/flannel@sha256:9aeaf1689ad3554e686d5f4062f33a2ba173398fd8f6d0346bd1dc1a27fb1437
+              imagePullPolicy: IfNotPresent
+              name: network-guard
+              resources: {}
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  add:
+                  - NET_ADMIN
+                  drop:
+                  - ALL
+                runAsUser: 0
+              volumeMounts:
+              - mountPath: /guard
+                name: guard
+                readOnly: true
+          - op: add
+            path: /spec/template/spec/nodeSelector
+            value:
+              kubernetes.io/hostname: k8s-control-plane
+          - op: add
+            path: /spec/strategy
+            value:
+              type: Recreate
+        target:
+          group: apps
+          version: v1
+          kind: Deployment
+          name: lidarr
+          namespace: default
+      - patch: |
+          - op: remove
+            path: /metadata/annotations
+          - op: remove
+            path: /metadata/labels
+          - op: replace
+            path: /metadata/name
+            value: lidarr-public
+          - op: replace
+            path: /spec/rules/0/host
+            value: music.dumbhome.uk
+          - op: replace
+            path: /spec/rules/0/http/paths/0/backend/service/name
+            value: lidarr-public
+          - op: remove
+            path: /spec/rules/0/http/paths/0/backend/service/port/name
+          - op: add
+            path: /spec/rules/0/http/paths/0/backend/service/port/number
+            value: 8686
+          - op: replace
+            path: /spec/rules/0/http/paths/0/pathType
+            value: Prefix
+          - op: replace
+            path: /spec/tls/0/hosts/0
+            value: music.dumbhome.uk
+        target:
+          group: networking.k8s.io
+          version: v1
+          kind: Ingress
+          name: lidarr
+          namespace: default
+      - target:
+          group: apps
+          version: v1
+          kind: Deployment
+        patch: |
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: not-used
+            annotations:
+              kustomize.toolkit.fluxcd.io/substitute: disabled
+      - target:
+          group: ''
+          version: v1
+          kind: ConfigMap
+        patch: |
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: not-used
+            annotations:
+              kustomize.toolkit.fluxcd.io/substitute: disabled
+  target:
+    group: kustomize.toolkit.fluxcd.io
+    version: v1
+    kind: Kustomization
+    name: lidarr
+    namespace: default
+- patch: |
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: qdrant
+      namespace: default
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+    spec:
+      dependsOn:
+      - name: kube-system
+        namespace: kube-system
+      - name: main-volume
+        namespace: kube-system
+      - name: yasr-volume
+        namespace: kube-system
+      - name: sealed-secret
+        namespace: kube-system
+      prune: false
+      deletionPolicy: Orphan
+      force: false
+      healthChecks:
+      - apiVersion: apps/v1
+        kind: Deployment
+        name: qdrant
+        namespace: default
+      patches:
+      - patch: |
+          apiVersion: v1
+          kind: Service
+          metadata:
+            labels:
+              app.kubernetes.io/name: qdrant
+            name: qdrant-nodeport
+            namespace: default
+          $patch: delete
+        target:
+          group: ''
+          version: v1
+          kind: Service
+          name: qdrant-nodeport
+          namespace: default
+      - patch: |
+          - op: replace
+            path: /spec/template/spec/containers/0/image
+            value: ghcr.io/qdrant/qdrant/qdrant@sha256:975b390833f6c0b2fc032bb962254c1733a88b7fd0e879b4642cd11c84f7c6d7
+          - op: replace
+            path: /spec/template/spec/containers/0/volumeMounts
+            value:
+            - mountPath: /qdrant/storage
+              name: yasr-volume
+              subPath: configs/qdrant
+            - mountPath: /yasr-device
+              name: yasr-device
+              readOnly: true
+            - mountPath: /guard
+              name: guard
+              readOnly: true
+          - op: add
+            path: /spec/template/spec/containers/0/command
+            value:
+            - /bin/bash
+            - -ec
+            - /bin/bash /guard/guard.sh; cd /qdrant; exec ./entrypoint.sh
+          - op: add
+            path: /spec/template/spec/containers/0/envFrom
+            value:
+            - secretRef:
+                name: secrets
+          - op: add
+            path: /spec/template/spec/containers/0/securityContext
+            value:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+              runAsGroup: 0
+              runAsUser: 0
+          - op: replace
+            path: /spec/template/spec/volumes/0/name
+            value: yasr-device
+          - op: remove
+            path: /spec/template/spec/volumes/0/persistentVolumeClaim
+          - op: add
+            path: /spec/template/spec/volumes/0/hostPath
+            value:
+              path: /dev/disk/by-uuid
+              type: Directory
+          - op: replace
+            path: /spec/template/spec/volumes/1/name
+            value: guard
+          - op: remove
+            path: /spec/template/spec/volumes/1/persistentVolumeClaim
+          - op: add
+            path: /spec/template/spec/volumes/1/configMap
+            value:
+              defaultMode: 365
+              name: qdrant-fresh-bootstrap-guard-md269h67k5
+          - op: replace
+            path: /spec/template/spec/volumes/2/name
+            value: yasr-volume
+          - op: replace
+            path: /spec/template/spec/volumes/2/persistentVolumeClaim/claimName
+            value: yasr-volume
+          - op: add
+            path: /spec/template/spec/nodeSelector
+            value:
+              kubernetes.io/arch: amd64
+              kubernetes.io/hostname: k8s-control-plane
+          - op: add
+            path: /spec/strategy
+            value:
+              type: Recreate
+        target:
+          group: apps
+          version: v1
+          kind: Deployment
+          name: qdrant
+          namespace: default
+      - patch: |
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            annotations:
+              forecastle.stakater.com/appName: Qdrant
+              forecastle.stakater.com/expose: 'true'
+              forecastle.stakater.com/group: AI
+              forecastle.stakater.com/icon: https://qdrant.tech/images/logo.svg
+            labels:
+              app.kubernetes.io/name: qdrant
+            name: qdrant
+            namespace: default
+          $patch: delete
+        target:
+          group: networking.k8s.io
+          version: v1
+          kind: Ingress
+          name: qdrant
+          namespace: default
+      - target:
+          group: apps
+          version: v1
+          kind: Deployment
+        patch: |
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: not-used
+            annotations:
+              kustomize.toolkit.fluxcd.io/substitute: disabled
+      - target:
+          group: ''
+          version: v1
+          kind: ConfigMap
+        patch: |
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: not-used
+            annotations:
+              kustomize.toolkit.fluxcd.io/substitute: disabled
+  target:
+    group: kustomize.toolkit.fluxcd.io
+    version: v1
+    kind: Kustomization
+    name: qdrant
+    namespace: default
+- patch: |
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: searxng
+      namespace: default
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+    spec:
+      dependsOn:
+      - name: kube-system
+        namespace: kube-system
+      - name: main-volume
+        namespace: kube-system
+      - name: yasr-volume
+        namespace: kube-system
+      - name: sealed-secret
+        namespace: kube-system
+      prune: false
+      deletionPolicy: Orphan
+      force: false
+      healthChecks:
+      - apiVersion: apps/v1
+        kind: Deployment
+        name: searxng
+        namespace: default
+      patches:
+      - patch: |
+          - op: replace
+            path: /spec/template/spec/containers/0/env
+            value:
+            - name: GRANIAN_HOST
+              value: '::'
+            - name: PYTHONDONTWRITEBYTECODE
+              value: '1'
+            - name: SEARXNG_BASE_URL
+              value: https://search.dumbhome.uk/
+            - name: SEARXNG_PORT
+              value: '8080'
+          - op: replace
+            path: /spec/template/spec/containers/0/image
+            value: searxng/searxng@sha256:aa7270053bc3bf92155e2af83e2b0a7c3833c209cdeb8d396861a00c55ee7110
+          - op: replace
+            path: /spec/template/spec/containers/0/imagePullPolicy
+            value: IfNotPresent
+          - op: remove
+            path: /spec/template/spec/containers/0/livenessProbe/httpGet
+          - op: replace
+            path: /spec/template/spec/containers/0/livenessProbe/initialDelaySeconds
+            value: 10
+          - op: add
+            path: /spec/template/spec/containers/0/livenessProbe/exec
+            value:
+              command:
+              - /usr/local/searxng/.venv/bin/python
+              - -c
+              - import urllib.request; assert urllib.request.urlopen("http://127.0.0.1:8080/healthz", timeout=5).status
+                == 200
+          - op: add
+            path: /spec/template/spec/containers/0/livenessProbe/periodSeconds
+            value: 30
+          - op: replace
+            path: /spec/template/spec/containers/0/resources/limits/cpu
+            value: '1'
+          - op: replace
+            path: /spec/template/spec/containers/0/volumeMounts
+            value:
+            - mountPath: /etc/searxng
+              name: yasr-volume
+              readOnly: true
+              subPath: recovery/searxng-20261028/working
+            - mountPath: /var/cache/searxng
+              name: cache
+              subPath: recovery/searxng-20261028/cache
+            - mountPath: /tmp
+              name: tmp
+          - op: add
+            path: /spec/template/spec/containers/0/command
+            value:
+            - /usr/local/searxng/.venv/bin/granian
+            - searx.webapp:app
+          - op: add
+            path: /spec/template/spec/containers/0/readinessProbe
+            value:
+              exec:
+                command:
+                - /usr/local/searxng/.venv/bin/python
+                - -c
+                - import urllib.request; assert urllib.request.urlopen("http://127.0.0.1:8080/healthz", timeout=5).status
+                  == 200
+              initialDelaySeconds: 10
+              periodSeconds: 30
+              timeoutSeconds: 10
+          - op: add
+            path: /spec/template/spec/containers/0/securityContext
+            value:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+              readOnlyRootFilesystem: true
+              runAsUser: 0
+          - op: replace
+            path: /spec/template/spec/volumes
+            value:
+            - hostPath:
+                path: /dev/disk/by-uuid
+                type: Directory
+              name: yasr-device
+            - configMap:
+                defaultMode: 365
+                name: searxng-recovery-guard-7mhg7cb8kk
+              name: guard
+            - name: cache
+              persistentVolumeClaim:
+                claimName: yasr-volume
+            - emptyDir: {}
+              name: tmp
+            - name: yasr-volume
+              persistentVolumeClaim:
+                claimName: yasr-volume
+          - op: add
+            path: /spec/template/spec/initContainers
+            value:
+            - command:
+              - /bin/sh
+              - /guard/guard.sh
+              image: searxng/searxng@sha256:aa7270053bc3bf92155e2af83e2b0a7c3833c209cdeb8d396861a00c55ee7110
+              imagePullPolicy: IfNotPresent
+              name: verify-saved-config
+              resources: {}
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                  - ALL
+                readOnlyRootFilesystem: true
+                runAsUser: 0
+              volumeMounts:
+              - mountPath: /etc/searxng
+                name: yasr-volume
+                readOnly: true
+                subPath: recovery/searxng-20261028/working
+              - mountPath: /yasr-device
+                name: yasr-device
+                readOnly: true
+              - mountPath: /guard
+                name: guard
+                readOnly: true
+          - op: add
+            path: /spec/strategy
+            value:
+              type: Recreate
+        target:
+          group: apps
+          version: v1
+          kind: Deployment
+          name: searxng
+          namespace: default
+      - patch: |
+          - op: replace
+            path: /spec/rules/0/host
+            value: search.dumbhome.uk
+          - op: replace
+            path: /spec/tls/0/hosts/0
+            value: search.dumbhome.uk
+        target:
+          group: networking.k8s.io
+          version: v1
+          kind: Ingress
+          name: searxng
+          namespace: default
+      - target:
+          group: apps
+          version: v1
+          kind: Deployment
+        patch: |
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: not-used
+            annotations:
+              kustomize.toolkit.fluxcd.io/substitute: disabled
+      - target:
+          group: ''
+          version: v1
+          kind: ConfigMap
+        patch: |
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: not-used
+            annotations:
+              kustomize.toolkit.fluxcd.io/substitute: disabled
+  target:
+    group: kustomize.toolkit.fluxcd.io
+    version: v1
+    kind: Kustomization
+    name: searxng
+    namespace: default
+- patch: |
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: wallabag
+      namespace: default
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+    spec:
+      dependsOn:
+      - name: kube-system
+        namespace: kube-system
+      - name: main-volume
+        namespace: kube-system
+      - name: yasr-volume
+        namespace: kube-system
+      - name: sealed-secret
+        namespace: kube-system
+      prune: false
+      deletionPolicy: Orphan
+      force: false
+      healthChecks:
+      - apiVersion: apps/v1
+        kind: Deployment
+        name: wallabag-private
+        namespace: default
+      patches:
+      - patch: |
+          - op: remove
+            path: /metadata/labels
+          - op: replace
+            path: /spec/ports/0/targetPort
+            value: 80
+          - op: remove
+            path: /spec/selector/app.kubernetes.io~1name
+          - op: add
+            path: /spec/selector/app
+            value: wallabag-private
+        target:
+          group: ''
+          version: v1
+          kind: Service
+          name: wallabag
+          namespace: default
+      - patch: |
+          - op: remove
+            path: /metadata/labels
+          - op: replace
+            path: /metadata/name
+            value: wallabag-private
+          - op: replace
+            path: /spec/revisionHistoryLimit
+            value: 10
+          - op: remove
+            path: /spec/selector/matchLabels/app.kubernetes.io~1name
+          - op: add
+            path: /spec/selector/matchLabels/app
+            value: wallabag-private
+          - op: remove
+            path: /spec/template/metadata/labels/app.kubernetes.io~1name
+          - op: add
+            path: /spec/template/metadata/labels/app
+            value: wallabag-private
+          - op: add
+            path: /spec/template/metadata/annotations
+            value:
+              recovery.dumbhome.uk/public-owner-access: '2026-10-30T03:06:57.485Z'
+          - op: replace
+            path: /spec/template/spec/containers/0/env/3/value
+            value: https://wallabag.dumbhome.uk
+          - op: replace
+            path: /spec/template/spec/containers/0/image
+            value: docker.io/wallabag/wallabag@sha256:82ade66b403d67c05732f9f08003034509f6499e9f487b858c0b77524b28545d
+          - op: replace
+            path: /spec/template/spec/containers/0/imagePullPolicy
+            value: IfNotPresent
+          - op: remove
+            path: /spec/template/spec/containers/0/livenessProbe
+          - op: replace
+            path: /spec/template/spec/containers/0/name
+            value: wallabag
+          - op: remove
+            path: /spec/template/spec/containers/0/ports
+          - op: remove
+            path: /spec/template/spec/containers/0/resources/limits
+          - op: remove
+            path: /spec/template/spec/containers/0/resources/requests
+          - op: replace
+            path: /spec/template/spec/containers/0/volumeMounts
+            value:
+            - mountPath: /guard
+              name: guard
+              readOnly: true
+            - mountPath: /var/www/wallabag/data
+              name: working
+              subPath: recovery/wallabag-20261030/working/wallabag/data
+            - mountPath: /var/www/wallabag/web/assets/images
+              name: working
+              subPath: recovery/wallabag-20261030/working/wallabag/images
+          - op: add
+            path: /spec/template/spec/containers/0/command
+            value:
+            - /bin/sh
+            - /guard/start.sh
+          - op: add
+            path: /spec/template/spec/containers/0/readinessProbe
+            value:
+              exec:
+                command:
+                - php
+                - -r
+                - exit(@file_get_contents("http://127.0.0.1/login")===false?1:0);
+              periodSeconds: 5
+              timeoutSeconds: 4
+          - op: add
+            path: /spec/template/spec/containers/0/securityContext
+            value:
+              allowPrivilegeEscalation: false
+              capabilities:
+                add:
+                - SETUID
+                - SETGID
+                - CHOWN
+                - DAC_OVERRIDE
+                - NET_BIND_SERVICE
+                drop:
+                - ALL
+              runAsUser: 0
+          - op: replace
+            path: /spec/template/spec/volumes
+            value:
+            - configMap:
+                name: wallabag-private-guard
+              name: guard
+            - name: working
+              persistentVolumeClaim:
+                claimName: yasr-volume
+          - op: add
+            path: /spec/template/spec/automountServiceAccountToken
+            value: false
+          - op: add
+            path: /spec/template/spec/initContainers
+            value:
+            - command:
+              - /bin/sh
+              - /guard/guard.sh
+              image: ghcr.io/flannel-io/flannel@sha256:9aeaf1689ad3554e686d5f4062f33a2ba173398fd8f6d0346bd1dc1a27fb1437
+              imagePullPolicy: IfNotPresent
+              name: network-guard
+              resources: {}
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  add:
+                  - NET_ADMIN
+                  drop:
+                  - ALL
+                runAsUser: 0
+              volumeMounts:
+              - mountPath: /guard
+                name: guard
+                readOnly: true
+          - op: add
+            path: /spec/template/spec/nodeSelector
+            value:
+              kubernetes.io/hostname: k8s-control-plane
+          - op: add
+            path: /spec/strategy
+            value:
+              type: Recreate
+        target:
+          group: apps
+          version: v1
+          kind: Deployment
+          name: wallabag
+          namespace: default
+      - patch: |
+          - op: remove
+            path: /metadata/annotations/forecastle.stakater.com~1appName
+          - op: remove
+            path: /metadata/annotations/forecastle.stakater.com~1expose
+          - op: remove
+            path: /metadata/annotations/forecastle.stakater.com~1group
+          - op: remove
+            path: /metadata/annotations/forecastle.stakater.com~1icon
+          - op: add
+            path: /metadata/annotations/nginx.ingress.kubernetes.io~1ssl-redirect
+            value: 'true'
+          - op: remove
+            path: /metadata/labels
+          - op: replace
+            path: /spec/rules/0/host
+            value: wallabag.dumbhome.uk
+          - op: remove
+            path: /spec/rules/0/http/paths/0/backend/service/port/name
+          - op: add
+            path: /spec/rules/0/http/paths/0/backend/service/port/number
+            value: 80
+          - op: replace
+            path: /spec/rules/0/http/paths/0/pathType
+            value: Prefix
+          - op: replace
+            path: /spec/tls/0/hosts/0
+            value: wallabag.dumbhome.uk
+        target:
+          group: networking.k8s.io
+          version: v1
+          kind: Ingress
+          name: wallabag
+          namespace: default
+      - target:
+          group: apps
+          version: v1
+          kind: Deployment
+        patch: |
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: not-used
+            annotations:
+              kustomize.toolkit.fluxcd.io/substitute: disabled
+      - target:
+          group: ''
+          version: v1
+          kind: ConfigMap
+        patch: |
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: not-used
+            annotations:
+              kustomize.toolkit.fluxcd.io/substitute: disabled
+  target:
+    group: kustomize.toolkit.fluxcd.io
+    version: v1
+    kind: Kustomization
+    name: wallabag
+    namespace: default
+- patch: |
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: mealie
+      namespace: default
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+    spec:
+      dependsOn:
+      - name: kube-system
+        namespace: kube-system
+      - name: main-volume
+        namespace: kube-system
+      - name: yasr-volume
+        namespace: kube-system
+      - name: sealed-secret
+        namespace: kube-system
+      prune: false
+      deletionPolicy: Orphan
+      force: false
+      healthChecks:
+      - apiVersion: apps/v1
+        kind: Deployment
+        name: mealie-private
+        namespace: default
+      patches:
+      - patch: |
+          - op: remove
+            path: /metadata/labels
+          - op: replace
+            path: /spec/ports/0/port
+            value: 80
+          - op: replace
+            path: /spec/ports/0/targetPort
+            value: 9000
+          - op: remove
+            path: /spec/selector/app.kubernetes.io~1name
+          - op: add
+            path: /spec/selector/app
+            value: mealie-private
+        target:
+          group: ''
+          version: v1
+          kind: Service
+          name: mealie
+          namespace: default
+      - patch: |
+          - op: remove
+            path: /metadata/labels
+          - op: replace
+            path: /metadata/name
+            value: mealie-private
+          - op: replace
+            path: /spec/revisionHistoryLimit
+            value: 10
+          - op: remove
+            path: /spec/selector/matchLabels/app.kubernetes.io~1name
+          - op: add
+            path: /spec/selector/matchLabels/app
+            value: mealie-private
+          - op: remove
+            path: /spec/template/metadata/labels/app.kubernetes.io~1name
+          - op: add
+            path: /spec/template/metadata/labels/app
+            value: mealie-private
+          - op: add
+            path: /spec/template/metadata/annotations
+            value:
+              recovery.dumbhome.uk/public-owner-access: '2026-10-30T03:06:57.485Z'
+          - op: remove
+            path: /spec/template/spec/containers/0/env
+          - op: replace
+            path: /spec/template/spec/containers/0/image
+            value: ghcr.io/mealie-recipes/mealie@sha256:243e33ea66e71b2094cb1f9c9167af24452405a33fc899a1dc7359dc210506f8
+          - op: replace
+            path: /spec/template/spec/containers/0/imagePullPolicy
+            value: IfNotPresent
+          - op: remove
+            path: /spec/template/spec/containers/0/livenessProbe
+          - op: replace
+            path: /spec/template/spec/containers/0/name
+            value: mealie
+          - op: remove
+            path: /spec/template/spec/containers/0/ports
+          - op: remove
+            path: /spec/template/spec/containers/0/resources/limits
+          - op: remove
+            path: /spec/template/spec/containers/0/resources/requests
+          - op: replace
+            path: /spec/template/spec/containers/0/volumeMounts/0/mountPath
+            value: /guard
+          - op: replace
+            path: /spec/template/spec/containers/0/volumeMounts/0/name
+            value: guard
+          - op: replace
+            path: /spec/template/spec/containers/0/volumeMounts/1/name
+            value: working
+          - op: remove
+            path: /spec/template/spec/containers/0/volumeMounts/1/subPath
+          - op: add
+            path: /spec/template/spec/containers/0/command
+            value:
+            - /bin/bash
+            - /guard/start.sh
+          - op: add
+            path: /spec/template/spec/containers/0/envFrom
+            value:
+            - secretRef:
+                name: mealie-recovery-env
+          - op: add
+            path: /spec/template/spec/containers/0/readinessProbe
+            value:
+              exec:
+                command:
+                - /bin/sh
+                - -c
+                - curl --max-time 3 -fsS http://127.0.0.1:9000/api/app/about >/dev/null
+              periodSeconds: 5
+              timeoutSeconds: 4
+          - op: add
+            path: /spec/template/spec/containers/0/securityContext
+            value:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+              runAsGroup: 1000
+              runAsUser: 1000
+          - op: replace
+            path: /spec/template/spec/volumes
+            value:
+            - configMap:
+                name: mealie-private-guard
+              name: guard
+            - hostPath:
+                path: /media/yasr/recovery/mealie-20261030/working/mealie
+                type: Directory
+              name: working
+          - op: add
+            path: /spec/template/spec/automountServiceAccountToken
+            value: false
+          - op: add
+            path: /spec/template/spec/initContainers
+            value:
+            - command:
+              - /bin/sh
+              - /guard/guard.sh
+              image: ghcr.io/flannel-io/flannel@sha256:9aeaf1689ad3554e686d5f4062f33a2ba173398fd8f6d0346bd1dc1a27fb1437
+              imagePullPolicy: IfNotPresent
+              name: network-guard
+              resources: {}
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  add:
+                  - NET_ADMIN
+                  drop:
+                  - ALL
+                runAsUser: 0
+              volumeMounts:
+              - mountPath: /guard
+                name: guard
+                readOnly: true
+          - op: add
+            path: /spec/template/spec/nodeSelector
+            value:
+              kubernetes.io/hostname: k8s-control-plane
+          - op: add
+            path: /spec/strategy
+            value:
+              type: Recreate
+        target:
+          group: apps
+          version: v1
+          kind: Deployment
+          name: mealie
+          namespace: default
+      - patch: |
+          - op: remove
+            path: /metadata/annotations/forecastle.stakater.com~1appName
+          - op: remove
+            path: /metadata/annotations/forecastle.stakater.com~1expose
+          - op: remove
+            path: /metadata/annotations/forecastle.stakater.com~1group
+          - op: remove
+            path: /metadata/annotations/forecastle.stakater.com~1icon
+          - op: add
+            path: /metadata/annotations/nginx.ingress.kubernetes.io~1ssl-redirect
+            value: 'true'
+          - op: remove
+            path: /metadata/labels
+          - op: replace
+            path: /spec/rules/0/host
+            value: recipes.dumbhome.uk
+          - op: remove
+            path: /spec/rules/0/http/paths/0/backend/service/port/name
+          - op: add
+            path: /spec/rules/0/http/paths/0/backend/service/port/number
+            value: 80
+          - op: replace
+            path: /spec/rules/0/http/paths/0/pathType
+            value: Prefix
+          - op: replace
+            path: /spec/tls/0/hosts/0
+            value: recipes.dumbhome.uk
+        target:
+          group: networking.k8s.io
+          version: v1
+          kind: Ingress
+          name: mealie
+          namespace: default
+      - target:
+          group: apps
+          version: v1
+          kind: Deployment
+        patch: |
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: not-used
+            annotations:
+              kustomize.toolkit.fluxcd.io/substitute: disabled
+      - target:
+          group: ''
+          version: v1
+          kind: ConfigMap
+        patch: |
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: not-used
+            annotations:
+              kustomize.toolkit.fluxcd.io/substitute: disabled
+  target:
+    group: kustomize.toolkit.fluxcd.io
+    version: v1
+    kind: Kustomization
+    name: mealie
+    namespace: default
+- patch: |
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: n8n
+      namespace: default
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+    spec:
+      dependsOn:
+      - name: kube-system
+        namespace: kube-system
+      - name: main-volume
+        namespace: kube-system
+      - name: yasr-volume
+        namespace: kube-system
+      - name: sealed-secret
+        namespace: kube-system
+      prune: false
+      deletionPolicy: Orphan
+      force: false
+      healthChecks:
+      - apiVersion: apps/v1
+        kind: Deployment
+        name: n8n-private
+        namespace: default
+      patches:
+      - patch: |
+          - op: remove
+            path: /metadata/labels
+          - op: replace
+            path: /metadata/name
+            value: n8n-read-only
+          - op: replace
+            path: /spec/ports/0/targetPort
+            value: 5678
+          - op: remove
+            path: /spec/selector/app.kubernetes.io~1name
+          - op: add
+            path: /spec/selector/app
+            value: n8n-private
+        target:
+          group: ''
+          version: v1
+          kind: Service
+          name: n8n
+          namespace: default
+      - patch: |
+          - op: remove
+            path: /metadata/labels
+          - op: replace
+            path: /metadata/name
+            value: n8n-private
+          - op: replace
+            path: /spec/revisionHistoryLimit
+            value: 10
+          - op: remove
+            path: /spec/selector/matchLabels/app.kubernetes.io~1name
+          - op: add
+            path: /spec/selector/matchLabels/app
+            value: n8n-private
+          - op: remove
+            path: /spec/template/metadata/labels/app.kubernetes.io~1name
+          - op: add
+            path: /spec/template/metadata/labels/app
+            value: n8n-private
+          - op: add
+            path: /spec/template/metadata/annotations
+            value:
+              kubectl.kubernetes.io/restartedAt: '2026-10-30T19:56:45-04:00'
+          - op: replace
+            path: /spec/template/spec/containers/0/env
+            value:
+            - name: N8N_DIAGNOSTICS_ENABLED
+              value: 'false'
+            - name: N8N_VERSION_NOTIFICATIONS_ENABLED
+              value: 'false'
+            - name: N8N_TEMPLATES_ENABLED
+              value: 'false'
+            - name: N8N_PERSONALIZATION_ENABLED
+              value: 'false'
+            - name: N8N_RUNNERS_MODE
+              value: internal
+            - name: N8N_RUNNERS_BROKER_LISTEN_ADDRESS
+              value: 127.0.0.1
+            - name: N8N_HOST
+              value: n8n.dumbhome.uk
+            - name: N8N_PROTOCOL
+              value: http
+            - name: N8N_EDITOR_BASE_URL
+              value: https://n8n.dumbhome.uk/
+            - name: N8N_PROXY_HOPS
+              value: '1'
+            - name: N8N_PORT
+              value: '5678'
+            - name: WEBHOOK_URL
+              value: https://n8n.dumbhome.uk/
+            - name: GENERIC_TIMEZONE
+              value: America/New_York
+            - name: N8N_ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: encryption-key
+                  name: n8n-private-existing-key
+            - name: EXECUTIONS_DATA_PRUNE
+              value: 'false'
+          - op: replace
+            path: /spec/template/spec/containers/0/image
+            value: docker.io/n8nio/n8n@sha256:b4a4adb0f35d8f86eede56ebd7ae36892e25758ffc0276df14f2c69c111aac48
+          - op: replace
+            path: /spec/template/spec/containers/0/imagePullPolicy
+            value: IfNotPresent
+          - op: remove
+            path: /spec/template/spec/containers/0/livenessProbe
+          - op: replace
+            path: /spec/template/spec/containers/0/name
+            value: n8n
+          - op: remove
+            path: /spec/template/spec/containers/0/ports
+          - op: replace
+            path: /spec/template/spec/containers/0/readinessProbe/httpGet/path
+            value: /healthz/readiness
+          - op: replace
+            path: /spec/template/spec/containers/0/readinessProbe/httpGet/port
+            value: 5678
+          - op: remove
+            path: /spec/template/spec/containers/0/readinessProbe/httpGet/scheme
+          - op: remove
+            path: /spec/template/spec/containers/0/readinessProbe/initialDelaySeconds
+          - op: replace
+            path: /spec/template/spec/containers/0/readinessProbe/periodSeconds
+            value: 5
+          - op: replace
+            path: /spec/template/spec/containers/0/readinessProbe/timeoutSeconds
+            value: 3
+          - op: replace
+            path: /spec/template/spec/containers/0/resources/limits/cpu
+            value: '2'
+          - op: replace
+            path: /spec/template/spec/containers/0/volumeMounts
+            value:
+            - mountPath: /home/node/.n8n
+              name: working
+              subPath: recovery/n8n-editor-20261030-native/state
+            - mountPath: /guard
+              name: guard
+              readOnly: true
+            - mountPath: /host-uuid
+              name: host-uuid
+              readOnly: true
+            - mountPath: /host-mountinfo
+              name: host-mountinfo
+              readOnly: true
+          - op: add
+            path: /spec/template/spec/containers/0/command
+            value:
+            - node
+            - /guard/start.cjs
+          - op: add
+            path: /spec/template/spec/containers/0/securityContext
+            value:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+              runAsGroup: 1000
+              runAsUser: 1000
+          - op: replace
+            path: /spec/template/spec/volumes
+            value:
+            - name: working
+              persistentVolumeClaim:
+                claimName: yasr-volume
+            - configMap:
+                name: n8n-private-guard
+              name: guard
+            - hostPath:
+                path: /dev/disk/by-uuid
+                type: Directory
+              name: host-uuid
+            - hostPath:
+                path: /proc/1/mountinfo
+                type: File
+              name: host-mountinfo
+          - op: add
+            path: /spec/template/spec/automountServiceAccountToken
+            value: false
+          - op: add
+            path: /spec/template/spec/initContainers
+            value:
+            - command:
+              - /bin/sh
+              - /guard/network-guard.sh
+              image: ghcr.io/flannel-io/flannel@sha256:9aeaf1689ad3554e686d5f4062f33a2ba173398fd8f6d0346bd1dc1a27fb1437
+              imagePullPolicy: IfNotPresent
+              name: network-guard
+              resources: {}
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  add:
+                  - NET_ADMIN
+                  drop:
+                  - ALL
+                runAsUser: 0
+              volumeMounts:
+              - mountPath: /guard
+                name: guard
+                readOnly: true
+          - op: add
+            path: /spec/template/spec/nodeSelector
+            value:
+              kubernetes.io/hostname: k8s-control-plane
+          - op: add
+            path: /spec/strategy
+            value:
+              type: Recreate
+        target:
+          group: apps
+          version: v1
+          kind: Deployment
+          name: n8n
+          namespace: default
+      - patch: |
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            annotations:
+              forecastle.stakater.com/appName: n8n
+              forecastle.stakater.com/expose: 'true'
+              forecastle.stakater.com/group: Automation
+              forecastle.stakater.com/icon: https://n8n.io/favicon.ico
+            labels:
+              app.kubernetes.io/name: n8n
+            name: n8n
+            namespace: default
+          $patch: delete
+        target:
+          group: networking.k8s.io
+          version: v1
+          kind: Ingress
+          name: n8n
+          namespace: default
+      - target:
+          group: apps
+          version: v1
+          kind: Deployment
+        patch: |
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: not-used
+            annotations:
+              kustomize.toolkit.fluxcd.io/substitute: disabled
+      - target:
+          group: ''
+          version: v1
+          kind: ConfigMap
+        patch: |
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: not-used
+            annotations:
+              kustomize.toolkit.fluxcd.io/substitute: disabled
+  target:
+    group: kustomize.toolkit.fluxcd.io
+    version: v1
+    kind: Kustomization
+    name: n8n
+    namespace: default
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: bitwarden
+  patch: |
+    - op: replace
+      path: /spec
+      value:
+        chart:
+          spec:
+            chart: vaultwarden
+            interval: 5m
+            sourceRef:
+              kind: HelmRepository
+              name: k8s-at-home
+              namespace: kube-system
+            version: 5.3.2
+        interval: 5m
+        postRenderers:
+        - kustomize:
+            images:
+            - digest: sha256:094b5689ed81549bd293418395c7cf495ae9d960fc2d4928cef2083ef913d912
+              name: vaultwarden/server
+        suspend: false
+        valuesFrom:
+        - kind: Secret
+          name: bitwarden-gitops-values
+          valuesKey: values.yaml
+          optional: false
+    - op: add
+      path: /metadata/annotations
+      value:
+        kustomize.toolkit.fluxcd.io/prune: disabled
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: forecastle
+  patch: |
+    - op: replace
+      path: /spec
+      value:
+        chart:
+          spec:
+            chart: forecastle
+            sourceRef:
+              kind: HelmRepository
+              name: stakater-charts
+              namespace: kube-system
+            version: 2.1.1
+        interval: 5m
+        postRenderers:
+        - kustomize:
+            images:
+            - digest: sha256:382cd9572352be83c28d44443daa6ba461fc4bdf6d8ce387ff0e5e2903c37bc6
+              name: stakater/forecastle
+            patches:
+            - patch: |
+                - op: replace
+                  path: /rules
+                  value:
+                  - apiGroups:
+                    - ''
+                    resources:
+                    - namespaces
+                    verbs:
+                    - get
+                    - list
+                  - apiGroups:
+                    - networking.k8s.io
+                    resources:
+                    - ingresses
+                    verbs:
+                    - get
+                    - list
+              target:
+                kind: ClusterRole
+                name: forecastle-cluster-ingress-role
+        valuesFrom:
+        - kind: Secret
+          name: forecastle-gitops-values
+          valuesKey: values.yaml
+          optional: false
+    - op: add
+      path: /metadata/annotations
+      value:
+        kustomize.toolkit.fluxcd.io/prune: disabled
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: mosquitto
+  patch: |
+    - op: replace
+      path: /spec
+      value:
+        chart:
+          spec:
+            chart: mosquitto
+            sourceRef:
+              kind: HelmRepository
+              name: k8s-at-home
+              namespace: kube-system
+            version: 4.3.2
+        interval: 1h0m0s
+        postRenderers:
+        - kustomize:
+            patches:
+            - patch: |
+                - op: replace
+                  path: /data/mosquitto.conf
+                  value: 'listener 1883 127.0.0.1
+
+                    allow_anonymous true
+
+                    include_dir /mosquitto/configinc
+
+                    '
+              target:
+                kind: ConfigMap
+                name: mosquitto-config
+        suspend: false
+        valuesFrom:
+        - kind: Secret
+          name: mosquitto-gitops-values
+          valuesKey: values.yaml
+          optional: false
+    - op: add
+      path: /metadata/annotations
+      value:
+        kustomize.toolkit.fluxcd.io/prune: disabled
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: plex
+  patch: |
+    - op: replace
+      path: /spec
+      value:
+        chart:
+          spec:
+            chart: plex
+            interval: 5m
+            sourceRef:
+              kind: HelmRepository
+              name: k8s-at-home
+              namespace: kube-system
+            version: 6.2.1
+        interval: 5m
+        postRenderers:
+        - kustomize:
+            images:
+            - digest: sha256:6d778d41daae68f89115aa87a44ae14a96b23e71a2093da173b5a9aac4091336
+              name: plexinc/pms-docker
+            patches:
+            - patch: |-
+                - op: add
+                  path: /spec/externalTrafficPolicy
+                  value: Local
+              target:
+                kind: Service
+                name: plex
+        suspend: false
+        valuesFrom:
+        - kind: Secret
+          name: plex-values
+          optional: false
+        - kind: Secret
+          name: plex-gitops-values
+          valuesKey: values.yaml
+          optional: false
+    - op: add
+      path: /metadata/annotations
+      value:
+        kustomize.toolkit.fluxcd.io/prune: disabled
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: sftpgo
+  patch: |
+    - op: replace
+      path: /spec
+      value:
+        chart:
+          spec:
+            chart: sftpgo
+            interval: 5m
+            sourceRef:
+              kind: HelmRepository
+              name: staged-sftpgo-skm
+              namespace: kube-system
+            version: 0.12.0
+        interval: 5m
+        postRenderers:
+        - kustomize:
+            images:
+            - digest: sha256:3016b086b12e541bfcce037f79ab4f303901e1dc653c381b217f83fea3f80603
+              name: ghcr.io/drakkan/sftpgo
+            patches:
+            - patch: |
+                apiVersion: apps/v1
+                kind: Deployment
+                metadata:
+                  name: sftpgo
+                spec:
+                  strategy:
+                    rollingUpdate: null
+                    type: Recreate
+                  template:
+                    spec:
+                      containers:
+                      - args: []
+                        command:
+                        - /bin/bash
+                        - -ec
+                        - /bin/bash /guard/guard.sh; exec /usr/local/bin/sftpgo serve --config-dir
+                          /etc/sftpgo
+                        name: sftpgo
+              target:
+                kind: Deployment
+                name: sftpgo
+        suspend: true
+        valuesFrom:
+        - kind: Secret
+          name: sftpgo-gitops-values
+          valuesKey: values.yaml
+          optional: false
+    - op: add
+      path: /metadata/annotations
+      value:
+        kustomize.toolkit.fluxcd.io/prune: disabled
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: home-assistant
+  patch: |
+    - op: remove
+      path: /spec/values
+    - op: add
+      path: /spec/valuesFrom
+      value:
+      - kind: Secret
+        name: home-assistant-values
+        valuesKey: values.yaml
+        optional: false
+    - op: add
+      path: /spec/suspend
+      value: false
+    - op: add
+      path: /spec/upgrade
+      value:
+        disableTakeOwnership: false
+    - op: add
+      path: /spec/postRenderers
+      value:
+      - kustomize:
+          patches:
+          - target:
+              kind: Deployment
+              name: home-assistant
+            patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: home-assistant
+              spec:
+                template:
+                  spec:
+                    containers:
+                    - name: codeserver
+                      command:
+                      - /usr/bin/dumb-init
+                      - --
+                      - /usr/bin/code-server
+                      env:
+                      - name: PASSWORD
+                        valueFrom:
+                          secretKeyRef:
+                            name: secrets
+                            key: ADMIN_PASSWORD
+                      startupProbe:
+                        httpGet:
+                          path: /healthz
+                          port: codeserver
+                        failureThreshold: 60
+                        periodSeconds: 5
+                      readinessProbe:
+                        httpGet:
+                          path: /healthz
+                          port: codeserver
+                      livenessProbe:
+                        httpGet:
+                          path: /healthz
+                          port: codeserver
+                        initialDelaySeconds: 30
+          - target:
+              kind: Service
+              name: home-assistant-codeserver
+            patch: |
+              - op: replace
+                path: /metadata/name
+                value: home-assistant-editor
+    - op: add
+      path: /metadata/annotations
+      value:
+        kustomize.toolkit.fluxcd.io/prune: disabled
+- target:
+    group: networking.k8s.io
+    version: v1
+    kind: Ingress
+    name: sftpgo-webdav
+  patch: |
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: sftpgo-webdav
+      namespace: default
+    $patch: delete
+- target:
+    group: networking.k8s.io
+    version: v1
+    kind: Ingress
+    name: sftpgo-sftp
+  patch: |
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: sftpgo-sftp
+      namespace: default
+    $patch: delete
+- target:
+    group: source.toolkit.fluxcd.io
+    version: v1
+    kind: HelmRepository
+    name: stakater-charts
+  patch: |
+    apiVersion: source.toolkit.fluxcd.io/v1
+    kind: HelmRepository
+    metadata:
+      name: stakater-charts
+      namespace: kube-system
+    $patch: delete
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: flaresolverr
+    namespace: default
+  patch: |
+    - op: replace
+      path: /spec/values
+      value:
+        extraEnv:
+        - name: PUID
+          value: '1000'
+        - name: PGID
+          value: '1000'
+        - name: TZ
+          value: America/New_York
+        service:
+          port: 8191
+        ingress:
+          enabled: false
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 250m
+            memory: 256Mi
+        image:
+          registry: ghcr.io
+          repository: flaresolverr/flaresolverr
+          sha: 4ad0ed7de64622f9823594bf7bc237149158fca881f875aafbdd8456f6467134
+        serviceAccount:
+          create: false
+          automount: false
+        podSecurityContext: null
+        nodeSelector:
+          kubernetes.io/arch: amd64
+    - op: add
+      path: /spec/install
+      value:
+        disableTakeOwnership: false
+    - op: add
+      path: /spec/upgrade
+      value:
+        disableTakeOwnership: false
+    - op: add
+      path: /spec/postRenderers
+      value:
+      - kustomize:
+          patches:
+          - target:
+              kind: Service
+              name: flaresolverr
+            patch: |
+              - op: remove
+                path: /spec/selector/app.kubernetes.io~1instance
+              - op: replace
+                path: /spec/ipFamilyPolicy
+                value: SingleStack
+          - target:
+              kind: Deployment
+              name: flaresolverr
+            patch: |
+              - op: remove
+                path: /spec/selector/matchLabels/app.kubernetes.io~1instance
+              - op: remove
+                path: /spec/template/metadata/labels/helm.sh~1chart
+              - op: remove
+                path: /spec/template/metadata/labels/app.kubernetes.io~1instance
+              - op: remove
+                path: /spec/template/metadata/labels/app.kubernetes.io~1version
+              - op: remove
+                path: /spec/template/metadata/labels/app.kubernetes.io~1part-of
+              - op: remove
+                path: /spec/template/metadata/labels/app.kubernetes.io~1managed-by
+              - op: remove
+                path: /spec/template/spec/serviceAccountName
+              - op: replace
+                path: /spec/template/spec/securityContext
+                value: {}
+              - op: replace
+                path: /spec/template/spec/containers/0/image
+                value: ghcr.io/flaresolverr/flaresolverr@sha256:4ad0ed7de64622f9823594bf7bc237149158fca881f875aafbdd8456f6467134
+              - op: add
+                path: /spec/template/spec/containers/0/livenessProbe/timeoutSeconds
+                value: 10
+              - op: add
+                path: /spec/template/spec/containers/0/readinessProbe/timeoutSeconds
+                value: 10
+              - op: add
+                path: /spec/template/spec/containers/0/startupProbe
+                value:
+                  failureThreshold: 36
+                  httpGet:
+                    path: /health
+                    port: http
+                  periodSeconds: 5
+                  timeoutSeconds: 10
+              - op: add
+                path: /spec/template/spec/automountServiceAccountToken
+                value: false
+              - op: add
+                path: /spec/revisionHistoryLimit
+                value: 2
+- target:
+    group: source.toolkit.fluxcd.io
+    kind: OCIRepository
+    name: flaresolverr
+    namespace: kube-system
+  patch: |
+    - op: replace
+      path: /spec/ref
+      value:
+        tag: 2.0.1
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: prowlarr
+    namespace: default
+  patch: |
+    - op: replace
+      path: /spec/values
+      value:
+        image:
+          repository: docker.io/linuxserver/prowlarr
+          tag: recovered
+        env:
+        - name: HOME
+          value: /config
+        persistence:
+          config:
+            enabled: false
+          guard:
+            enabled: true
+            type: custom
+            volumeSpec:
+              configMap:
+                defaultMode: 420
+                name: prowlarr-public-guard-c25k4c25mc
+            mountPath: /guard
+            readOnly: true
+          working:
+            enabled: true
+            type: custom
+            volumeSpec:
+              hostPath:
+                path: /media/yasr/recovery/arr-next-20261030/working/prowlarr
+                type: Directory
+            mountPath: /config
+        ingress:
+          main:
+            enabled: true
+            hosts:
+            - host: seedbox.dumbhome.uk
+              paths:
+              - path: /
+                pathType: Prefix
+            tls:
+            - hosts:
+              - seedbox.dumbhome.uk
+              secretName: internal-ingress-cert
+        fullnameOverride: prowlarr-public
+        controller:
+          strategy: Recreate
+          revisionHistoryLimit: 10
+        command:
+        - /bin/bash
+        - /guard/start.sh
+        args: []
+        automountServiceAccountToken: false
+        nodeSelector:
+          kubernetes.io/hostname: k8s-control-plane
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsGroup: 1000
+          runAsUser: 1000
+        initContainers:
+          network-guard:
+            command:
+            - /bin/sh
+            - /guard/guard.sh
+            image: ghcr.io/flannel-io/flannel@sha256:9aeaf1689ad3554e686d5f4062f33a2ba173398fd8f6d0346bd1dc1a27fb1437
+            imagePullPolicy: IfNotPresent
+            name: network-guard
+            resources: {}
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                add:
+                - NET_ADMIN
+                drop:
+                - ALL
+              runAsUser: 0
+            volumeMounts:
+            - mountPath: /guard
+              name: guard
+              readOnly: true
+        probes:
+          liveness:
+            enabled: false
+          startup:
+            enabled: false
+          readiness:
+            enabled: true
+            custom: true
+            spec:
+              exec:
+                command:
+                - /bin/sh
+                - -c
+                - curl --max-time 3 -fsS http://127.0.0.1:9696/ping >/dev/null
+              failureThreshold: 3
+              periodSeconds: 5
+              successThreshold: 1
+              timeoutSeconds: 4
+    - op: add
+      path: /spec/install
+      value:
+        disableTakeOwnership: false
+    - op: add
+      path: /spec/upgrade
+      value:
+        disableTakeOwnership: false
+    - op: add
+      path: /spec/postRenderers
+      value:
+      - kustomize:
+          patches:
+          - target:
+              kind: Service
+              name: prowlarr-public
+            patch: |
+              - op: replace
+                path: /spec/ports/0/targetPort
+                value: 9696
+              - op: remove
+                path: /spec/selector/app.kubernetes.io~1name
+              - op: remove
+                path: /spec/selector/app.kubernetes.io~1instance
+              - op: add
+                path: /spec/selector/app
+                value: prowlarr-public
+          - target:
+              kind: Deployment
+              name: prowlarr-public
+            patch: |
+              - op: remove
+                path: /spec/selector/matchLabels/app.kubernetes.io~1name
+              - op: remove
+                path: /spec/selector/matchLabels/app.kubernetes.io~1instance
+              - op: add
+                path: /spec/selector/matchLabels/app
+                value: prowlarr-public
+              - op: remove
+                path: /spec/template/metadata/labels/app.kubernetes.io~1name
+              - op: remove
+                path: /spec/template/metadata/labels/app.kubernetes.io~1instance
+              - op: add
+                path: /spec/template/metadata/labels/app
+                value: prowlarr-public
+              - op: remove
+                path: /spec/template/spec/serviceAccountName
+              - op: remove
+                path: /spec/template/spec/enableServiceLinks
+              - op: replace
+                path: /spec/template/spec/containers/0/name
+                value: prowlarr
+              - op: replace
+                path: /spec/template/spec/containers/0/image
+                value: docker.io/linuxserver/prowlarr@sha256:9dab9a743cd558fa33d17db65d77c9fda40582b26c88e347b1c43808c6615e97
+              - op: remove
+                path: /spec/template/spec/containers/0/ports
+              - op: remove
+                path: /spec/template/spec/containers/0/readinessProbe/failureThreshold
+              - op: remove
+                path: /spec/template/spec/containers/0/readinessProbe/initialDelaySeconds
+              - op: remove
+                path: /spec/template/spec/containers/0/readinessProbe/successThreshold
+              - op: add
+                path: /spec/template/spec/containers/0/resources
+                value: {}
+          - target:
+              kind: Ingress
+              name: prowlarr-public
+            patch: |
+              - op: add
+                path: /spec/ingressClassName
+                value: nginx
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: sharry
+    namespace: default
+  patch: |
+    - op: replace
+      path: /spec/values
+      value:
+        env: []
+        config: '{}'
+        persistence:
+          config:
+            enabled: false
+          guard:
+            enabled: true
+            type: custom
+            volumeSpec:
+              configMap:
+                defaultMode: 420
+                name: sharry-private-guard
+            mountPath: /guard
+            readOnly: true
+          working:
+            enabled: true
+            type: custom
+            volumeSpec:
+              persistentVolumeClaim:
+                claimName: yasr-volume
+            mountPath: /config
+            readOnly: true
+            subPath: recovery/sharry-20261030/working
+        ingress:
+          main:
+            enabled: false
+        fullnameOverride: sharry-private
+        image:
+          repository: docker.io/eikek0/sharry
+          tag: recovered
+        controller:
+          strategy: Recreate
+          revisionHistoryLimit: 10
+        command:
+        - /opt/sharry-restserver-1.8.0/bin/sharry-restserver
+        - /guard/sharry.conf
+        args: []
+        automountServiceAccountToken: false
+        nodeSelector:
+          kubernetes.io/hostname: k8s-control-plane
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        initContainers:
+          network-guard:
+            command:
+            - /bin/sh
+            - /guard/guard.sh
+            image: ghcr.io/flannel-io/flannel@sha256:9aeaf1689ad3554e686d5f4062f33a2ba173398fd8f6d0346bd1dc1a27fb1437
+            imagePullPolicy: IfNotPresent
+            name: network-guard
+            resources: {}
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                add:
+                - NET_ADMIN
+                drop:
+                - ALL
+              runAsUser: 0
+            volumeMounts:
+            - mountPath: /guard
+              name: guard
+              readOnly: true
+        probes:
+          liveness:
+            enabled: false
+          startup:
+            enabled: false
+          readiness:
+            enabled: true
+            custom: true
+            spec:
+              exec:
+                command:
+                - sh
+                - -c
+                - wget -q -O /dev/null http://127.0.0.1:9090/app
+              failureThreshold: 3
+              periodSeconds: 5
+              successThreshold: 1
+              timeoutSeconds: 3
+        service:
+          main:
+            enabled: false
+    - op: add
+      path: /spec/install
+      value:
+        disableTakeOwnership: false
+    - op: add
+      path: /spec/upgrade
+      value:
+        disableTakeOwnership: false
+    - op: add
+      path: /spec/postRenderers
+      value:
+      - kustomize:
+          patches:
+          - target:
+              kind: ConfigMap
+              name: sharry-private-config
+            patch: |
+              apiVersion: v1
+              kind: ConfigMap
+              metadata:
+                name: sharry-private-config
+              $patch: delete
+          - target:
+              kind: Deployment
+              name: sharry-private
+            patch: |
+              - op: remove
+                path: /spec/selector/matchLabels/app.kubernetes.io~1name
+              - op: remove
+                path: /spec/selector/matchLabels/app.kubernetes.io~1instance
+              - op: add
+                path: /spec/selector/matchLabels/app
+                value: sharry-private
+              - op: remove
+                path: /spec/template/metadata/labels/app.kubernetes.io~1name
+              - op: remove
+                path: /spec/template/metadata/labels/app.kubernetes.io~1instance
+              - op: add
+                path: /spec/template/metadata/labels/app
+                value: sharry-private
+              - op: remove
+                path: /spec/template/spec/serviceAccountName
+              - op: remove
+                path: /spec/template/spec/enableServiceLinks
+              - op: replace
+                path: /spec/template/spec/containers/0/name
+                value: sharry
+              - op: replace
+                path: /spec/template/spec/containers/0/image
+                value: docker.io/eikek0/sharry@sha256:661ff3ef42cd4aec07bf0c57e00dc9503f807a833c72efb3b5bbff185c4ae7ef
+              - op: remove
+                path: /spec/template/spec/containers/0/ports
+              - op: replace
+                path: /spec/template/spec/containers/0/volumeMounts
+                value:
+                - mountPath: /config
+                  name: working
+                  readOnly: true
+                  subPath: recovery/sharry-20261030/working
+                - mountPath: /guard
+                  name: guard
+                  readOnly: true
+              - op: remove
+                path: /spec/template/spec/containers/0/readinessProbe/failureThreshold
+              - op: remove
+                path: /spec/template/spec/containers/0/readinessProbe/initialDelaySeconds
+              - op: remove
+                path: /spec/template/spec/containers/0/readinessProbe/successThreshold
+              - op: add
+                path: /spec/template/spec/containers/0/resources
+                value: {}
+              - op: replace
+                path: /spec/template/spec/volumes
+                value:
+                - configMap:
+                    defaultMode: 420
+                    name: sharry-private-guard
+                  name: guard
+                - name: working
+                  persistentVolumeClaim:
+                    claimName: yasr-volume
+              - op: add
+                path: /spec/template/spec/automountServiceAccountToken
+                value: false
+    - op: remove
+      path: /spec/valuesFrom
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: home-assistant
+  patch: |
+    apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    metadata:
+      name: home-assistant
+      namespace: default
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: prowlarr
+  patch: |
+    apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    metadata:
+      name: prowlarr
+      namespace: default
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: sharry
+  patch: |
+    apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    metadata:
+      name: sharry
+      namespace: default
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: flaresolverr
+  patch: |
+    apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    metadata:
+      name: flaresolverr
+      namespace: default
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled

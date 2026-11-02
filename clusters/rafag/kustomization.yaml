@@ -1,15 +1,9 @@
+# Reuse the existing app definitions with Rafag-specific overrides.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-# Deliberately exclude the legacy apps/, sealed-secret/ and BackupCronJobsExtra.yaml:
-# their legacy declarations do not yet describe the recovered live workloads.
-# Do not expand this list without reviewing ownership, data and rollout impact.
 resources:
 - ClusterKustomization.yaml
 - NvidiaDevicePlugin.yaml
 - ../../apps/YouTubeOperationalAPI.yaml
 - ../../infrastructure/kube-system/CloudflareDDNS.yaml
-- ../../apps/HomeAssistantNative.yaml
-- ../../apps/HomeAssistantEditor.yaml
-- ../../apps/RecoveredNative.yaml
-- ../../apps/RecoveredAppSecrets.yaml
-- ../../apps/RecoveredHelm.yaml
+- ./apps/

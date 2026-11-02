@@ -45,3 +45,56 @@ spec:
   storageClassName: hdd
   volumeMode: Filesystem
   volumeName: yasr-volume
+
+---
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  finalizers:
+  - kubernetes.io/pv-protection
+  name: sftpgo-working
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: sftpgo-working
+    namespace: default
+  local:
+    path: /media/yasr
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - k8s-control-plane
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    pv.kubernetes.io/bind-completed: 'yes'
+    kustomize.toolkit.fluxcd.io/prune: disabled
+  finalizers:
+  - kubernetes.io/pvc-protection
+  name: sftpgo-working
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: ''
+  volumeMode: Filesystem
+  volumeName: sftpgo-working
