@@ -4,7 +4,6 @@ kind: Kustomization
 # their legacy declarations do not yet describe the recovered live workloads.
 # Do not expand this list without reviewing ownership, data and rollout impact.
 resources:
-- GitRepository.yaml
 - ClusterKustomization.yaml
 - NvidiaDevicePlugin.yaml
 - ../../apps/YouTubeOperationalAPI.yaml
