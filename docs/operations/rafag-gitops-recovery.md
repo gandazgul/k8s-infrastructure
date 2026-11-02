@@ -103,6 +103,24 @@ rejected before apply; schema/server dry-run does not compile those expressions.
   repair batches, not a reason to include the old whole apps tree.
 - No main merge or automatic PR creation; owner review/integration is separate.
 
+## Integration status and recovery holds
+
+The watched feature branch is the live source. These changes are **not merged
+into main** automatically. The unchanged generic installer still selects main
+until the existing branch-selection workflow is used. Repository-owner review
+and integration are required before treating the default fresh-install path as
+containing these changes. Other clusters need their own reviewed infrastructure
+overlays before shared dispatcher changes are integrated; never reuse rafag
+identities or re-enable the old whole infrastructure tree by accident.
+
+All current running default-namespace Deployments now have a reviewed native or
+Helm owner. This does not imply all recovery is complete: the two recovery CNPG
+Cluster CRs, their generated PVCs, standalone Immich/Paperless Pods and the
+Sonarr/Transmission long-lived Job retain explicit data-recovery review holds.
+The failed Paperless web Pod remains failed. Historical absent apps, monitoring,
+backup hardware and intermittent router DNS are separate gaps, not silently
+re-enabled by this adoption. Preserve private key/data restore prerequisites.
+
 ## Rebuild prerequisites and rollback
 
 Preserve/restore the existing Sealed Secrets **private key** through the private
