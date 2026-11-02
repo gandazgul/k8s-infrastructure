@@ -1,0 +1,47 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: yasr-volume
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 4Ti
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: yasr-volume
+    namespace: default
+  local:
+    path: /media/yasr
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - k8s-control-plane
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: hdd
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: yasr-volume
+  namespace: default
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 4Ti
+  storageClassName: hdd
+  volumeMode: Filesystem
+  volumeName: yasr-volume

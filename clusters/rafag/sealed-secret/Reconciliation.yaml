@@ -1,0 +1,25 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: sealed-secret
+  namespace: kube-system
+spec:
+  interval: 10m0s
+  path: ./clusters/rafag/sealed-secret/
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  prune: false
+  deletionPolicy: Orphan
+  force: false
+  healthCheckExprs:
+  - apiVersion: bitnami.com/v1alpha1
+    kind: SealedSecret
+    failed: "has(status) && has(status.conditions) && status.conditions.exists(c, c.type == 'Synced' && c.status == 'False')"
+    current: "has(status) && has(status.observedGeneration) && status.observedGeneration == metadata.generation && has(status.conditions) && status.conditions.exists(c, c.type == 'Synced' && c.status == 'True')"
+  healthChecks:
+  - apiVersion: bitnami.com/v1alpha1
+    kind: SealedSecret
+    name: secrets
+    namespace: kube-system

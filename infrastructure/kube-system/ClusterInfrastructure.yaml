@@ -1,0 +1,52 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-infrastructure
+  namespace: kube-system
+spec:
+  interval: 10m0s
+  retryInterval: 1m0s
+  timeout: 5m0s
+  path: ./clusters/${CLUSTER_NAME}/infrastructure/
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  prune: false
+  deletionPolicy: Orphan
+  force: false
+  # No dependency on kube-system: that parent waits for this child.
+  healthCheckExprs:
+  - apiVersion: bitnami.com/v1alpha1
+    kind: SealedSecret
+    failed: "has(status) && has(status.conditions) && status.conditions.exists(c, c.type == 'Synced' && c.status == 'False')"
+    current: "has(status) && has(status.observedGeneration) && status.observedGeneration == metadata.generation && has(status.conditions) && status.conditions.exists(c, c.type == 'Synced' && c.status == 'True')"
+  healthChecks:
+  - apiVersion: bitnami.com/v1alpha1
+    kind: SealedSecret
+    name: cloudflare-api-token-secret
+    namespace: kube-system
+  - apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    name: sealed-secrets-controller
+    namespace: kube-system
+  - apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    name: cert-manager
+    namespace: kube-system
+  - apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    name: cnpg
+    namespace: kube-system
+  - apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    name: reflector
+    namespace: kube-system
+  - apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    name: traefik
+    namespace: kube-system
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: traefik-default-backend
+    namespace: kube-system

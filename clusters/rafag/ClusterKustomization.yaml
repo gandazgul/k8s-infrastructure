@@ -9,10 +9,10 @@ spec:
   - name: sealed-secret
   - name: kube-system
   - name: main-volume
-  - name: backup-volume
   - name: yasr-volume
-  # Adopt the control/GPU baseline plus the reviewed native YouTube API objects.
-  # Legacy app/storage/infra trees remain excluded.
+  # Backup storage is physically absent. Backup workloads stay held separately;
+  # their missing disk must not block unrelated applications.
+  # Adopt only explicitly reviewed resources, never the full legacy app tree.
   interval: 10m0s
   retryInterval: 1m0s
   timeout: 2m0s
