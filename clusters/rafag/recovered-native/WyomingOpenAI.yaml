@@ -1,0 +1,86 @@
+# TTS_OPENAI_KEY is a verified nonempty known placeholder for local TTS, not an authentication secret.
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: wyoming-openai
+  name: wyoming-openai
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: wyoming-openai
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: wyoming-openai
+    spec:
+      containers:
+      - env:
+        - name: WYOMING_URI
+          value: tcp://0.0.0.0:10300
+        - name: WYOMING_LOG_LEVEL
+          value: INFO
+        - name: WYOMING_LANGUAGES
+          value: en
+        - name: TTS_OPENAI_URL
+          value: http://kokoro-tts:8880/v1
+        - name: TTS_OPENAI_KEY
+          value: not-needed
+        - name: TTS_MODELS
+          value: kokoro
+        - name: TTS_BACKEND
+          value: OPENAI
+        - name: TTS_VOICES
+          value: am_adam af_alloy af_aoede af_bella af_heart af_jadzia af_jessica af_kore af_nicole af_nova af_river af_sarah af_sky am_echo am_eric am_fenrir am_liam am_michael am_onyx am_puck am_santa bf_alice bf_emma bf_lily bm_daniel bm_fable bm_george bm_lewis ef_dora em_alex em_santa ff_siwis hf_alpha hf_beta hm_omega hm_psi if_sara im_nicola jf_alpha jf_gongitsune jf_nezumi jf_tebukuro jm_kumo pf_dora pm_alex pm_santa zf_xiaobei zf_xiaoni zf_xiaoxiao zf_xiaoyi zm_yunjian zm_yunxi zm_yunxia zm_yunyang
+        - name: TTS_SPEED
+          value: '1.0'
+        image: ghcr.io/roryeckel/wyoming_openai@sha256:2468fbe5ea50c00bff2d021d8c3e42c8f62bb43765a6f21e10d3c217fefc89aa
+        imagePullPolicy: IfNotPresent
+        name: wyoming-openai
+        ports:
+        - containerPort: 10300
+          protocol: TCP
+        resources:
+          limits:
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: wyoming-openai
+  name: wyoming-openai
+  namespace: default
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - port: 10300
+    protocol: TCP
+    targetPort: 10300
+  selector:
+    app: wyoming-openai
+  sessionAffinity: None
+  type: ClusterIP

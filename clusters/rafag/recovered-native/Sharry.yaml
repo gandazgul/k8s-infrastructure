@@ -1,0 +1,100 @@
+---
+apiVersion: v1
+data:
+  guard.sh: "#!/bin/bash\nset -eux\n# This script runs only in the Pod network namespace, never in hostNetwork.\n# The positive control must succeed before a failed connection proves a block.\nnc -w 2 10.101.63.36 8191 </dev/null >/dev/null\nfor tool in iptables ip6tables; do\n    \"${tool}\" -w 5 -P OUTPUT DROP\n    \"${tool}\" -w 5 -P INPUT DROP\n    \"${tool}\" -w 5 -P FORWARD DROP\n    \"${tool}\" -w 5 -F\n    \"${tool}\" -w 5 -A OUTPUT -o lo -j ACCEPT\n    \"${tool}\" -w 5 -A OUTPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT\n    \"${tool}\" -w 5 -A INPUT -i lo -j ACCEPT\n    \"${tool}\" -w 5 -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT\ndone\nnc -l -p 18765 -e /bin/cat &\nlistener=$!\ntrap 'kill \"${listener}\" 2>/dev/null || true' EXIT\nsleep 1\nreply=$(printf 'private-loopback\\n' | nc -w 2 127.0.0.1 18765)\ntest \"${reply}\" = private-loopback\nif nc -w 2 10.101.63.36 8191 </dev/null >/dev/null 2>&1; then\n    echo 'FAIL: new external connection permitted' >&2\n    exit 1\nfi\n# Require a DROP policy and actual packet hits, not merely a failed probe.\niptables -w 5 -L OUTPUT -n -v | grep -E 'policy DROP [1-9][0-9]* packets'\nip6tables -w 5 -S OUTPUT | grep -Fx -- '-P OUTPUT DROP'\necho 'PASS: loopback allowed; controlled new external TCP blocked; IPv4/IPv6 default DROP'\n"
+  sharry.conf: "include \"/opt/sharry-restserver-1.8.0/conf/sharry.conf\"\nsharry.restserver {\n  base-url = \"https://share.dumbhome.uk\"\n  bind.address = \"127.0.0.1\"\n  bind.port = 9090\n  backend {\n    signup.mode = \"closed\"\n    auth.fixed.enabled = false\n    auth.internal.enabled = true\n    jdbc {\n      url = \"jdbc:h2:/config/sharry.db;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;IFEXISTS=TRUE;ACCESS_MODE_DATA=r\"\n      user = \"sa\"\n      password = \"\"\n    }\n    cleanup.enabled = false\n    mail.enabled = false\n  }\n}\n"
+kind: ConfigMap
+metadata:
+  name: sharry-private-guard
+  namespace: default
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sharry-private
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: sharry-private
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: sharry-private
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - command:
+        - /opt/sharry-restserver-1.8.0/bin/sharry-restserver
+        - /guard/sharry.conf
+        image: docker.io/eikek0/sharry@sha256:661ff3ef42cd4aec07bf0c57e00dc9503f807a833c72efb3b5bbff185c4ae7ef
+        imagePullPolicy: IfNotPresent
+        name: sharry
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - wget -q -O /dev/null http://127.0.0.1:9090/app
+          failureThreshold: 3
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 3
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /config
+          name: working
+          readOnly: true
+          subPath: recovery/sharry-20261030/working
+        - mountPath: /guard
+          name: guard
+          readOnly: true
+      dnsPolicy: ClusterFirst
+      initContainers:
+      - command:
+        - /bin/sh
+        - /guard/guard.sh
+        image: ghcr.io/flannel-io/flannel@sha256:9aeaf1689ad3554e686d5f4062f33a2ba173398fd8f6d0346bd1dc1a27fb1437
+        imagePullPolicy: IfNotPresent
+        name: network-guard
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            add:
+            - NET_ADMIN
+            drop:
+            - ALL
+          runAsUser: 0
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /guard
+          name: guard
+          readOnly: true
+      nodeSelector:
+        kubernetes.io/hostname: k8s-control-plane
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: sharry-private-guard
+        name: guard
+      - name: working
+        persistentVolumeClaim:
+          claimName: yasr-volume

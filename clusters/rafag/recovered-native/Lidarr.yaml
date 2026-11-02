@@ -1,0 +1,179 @@
+---
+apiVersion: v1
+data:
+  guard.sh: "#!/bin/bash\nset -eux\n# This script runs only in the Pod network namespace, never in hostNetwork.\n# The positive control must succeed before a failed connection proves a block.\nnc -w 2 10.101.63.36 8191 </dev/null >/dev/null\nfor tool in iptables ip6tables; do\n    \"${tool}\" -w 5 -P OUTPUT DROP\n    \"${tool}\" -w 5 -P INPUT DROP\n    \"${tool}\" -w 5 -P FORWARD DROP\n    \"${tool}\" -w 5 -F\n    \"${tool}\" -w 5 -A OUTPUT -o lo -j ACCEPT\n    \"${tool}\" -w 5 -A OUTPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT\n    \"${tool}\" -w 5 -A INPUT -i lo -j ACCEPT\n    \"${tool}\" -w 5 -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT\ndone\niptables -w 5 -A INPUT -s 10.244.0.4/32 -p tcp --dport 8686 -m conntrack --ctstate NEW -j ACCEPT\nnc -l -p 18765 -e /bin/cat &\nlistener=$!\ntrap 'kill \"${listener}\" 2>/dev/null || true' EXIT\nsleep 1\nreply=$(printf 'private-loopback\\n' | nc -w 2 127.0.0.1 18765)\ntest \"${reply}\" = private-loopback\nif nc -w 2 10.101.63.36 8191 </dev/null >/dev/null 2>&1; then\n    echo 'FAIL: new external connection permitted' >&2\n    exit 1\nfi\n# Require a DROP policy and actual packet hits, not merely a failed probe.\niptables -w 5 -L OUTPUT -n -v | grep -E 'policy DROP [1-9][0-9]* packets'\nip6tables -w 5 -S OUTPUT | grep -Fx -- '-P OUTPUT DROP'\necho 'PASS: loopback allowed; controlled new external TCP blocked; IPv4/IPv6 default DROP'\n"
+  start.sh: '#!/bin/bash
+
+    set -eu
+
+    test -s /config/lidarr.db
+
+    test -s /config/RECOVERY-SAFETY-VERIFIED
+
+    test -s /config/PUBLIC-SAFETY-VERIFIED
+
+    (cd /config && sha256sum -c PUBLIC-CONFIG.sha256 >/dev/null)
+
+    grep -q ''<AuthenticationMethod>Forms</AuthenticationMethod>'' /config/config.xml
+
+    test -x /app/lidarr/bin/Lidarr
+
+    exec /app/lidarr/bin/Lidarr -nobrowser -data=/config
+
+    '
+kind: ConfigMap
+metadata:
+  name: lidarr-public-guard-cb6565246g
+  namespace: default
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lidarr-public
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: lidarr-public
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: lidarr-public
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - command:
+        - /bin/bash
+        - /guard/start.sh
+        env:
+        - name: HOME
+          value: /config
+        image: docker.io/linuxserver/lidarr@sha256:135634128ba917a6bd093e8ea3bca9aeaba88ca36e8245bba8dd98b373618c6b
+        imagePullPolicy: IfNotPresent
+        name: lidarr
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - curl --max-time 3 -fsS http://127.0.0.1:8686/ping >/dev/null
+          failureThreshold: 3
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 4
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsGroup: 1000
+          runAsUser: 1000
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /guard
+          name: guard
+          readOnly: true
+        - mountPath: /config
+          name: working
+        - mountPath: /media
+          name: music
+          readOnly: true
+        - mountPath: /data
+          name: downloads
+          readOnly: true
+      dnsPolicy: ClusterFirst
+      initContainers:
+      - command:
+        - /bin/sh
+        - /guard/guard.sh
+        image: ghcr.io/flannel-io/flannel@sha256:9aeaf1689ad3554e686d5f4062f33a2ba173398fd8f6d0346bd1dc1a27fb1437
+        imagePullPolicy: IfNotPresent
+        name: network-guard
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            add:
+            - NET_ADMIN
+            drop:
+            - ALL
+          runAsUser: 0
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /guard
+          name: guard
+          readOnly: true
+      nodeSelector:
+        kubernetes.io/hostname: k8s-control-plane
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: lidarr-public-guard-cb6565246g
+        name: guard
+      - hostPath:
+          path: /media/yasr/recovery/arr-next-20261030/working/lidarr
+          type: Directory
+        name: working
+      - hostPath:
+          path: /media/main/public/Music
+          type: Directory
+        name: music
+      - hostPath:
+          path: /media/yasr/configs/transmission
+          type: Directory
+        name: downloads
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lidarr-public
+  namespace: default
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http
+    port: 8686
+    protocol: TCP
+    targetPort: 8686
+  selector:
+    app: lidarr-public
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lidarr-public
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: music.dumbhome.uk
+    http:
+      paths:
+      - backend:
+          service:
+            name: lidarr-public
+            port:
+              number: 8686
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - music.dumbhome.uk
+    secretName: internal-ingress-cert

@@ -10,3 +10,4 @@ resources:
 - ../../infrastructure/kube-system/CloudflareDDNS.yaml
 - ../../apps/HomeAssistantNative.yaml
 - ../../apps/HomeAssistantEditor.yaml
+- ../../apps/RecoveredNative.yaml
