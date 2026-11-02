@@ -8,11 +8,11 @@ spec:
   - web
   routes:
   - kind: Rule
-    match: Host(`n8n.dumbhome.uk`)
+    match: Host(`n8n.${CLUSTER_DOMAIN_NAME}`)
     middlewares:
     - name: n8n-https
     services:
-    - name: n8n-read-only
+    - name: n8n
       nativeLB: false
       port: 5678
 ---
@@ -36,9 +36,9 @@ spec:
   - websecure
   routes:
   - kind: Rule
-    match: Host(`n8n.dumbhome.uk`)
+    match: Host(`n8n.${CLUSTER_DOMAIN_NAME}`)
     services:
-    - name: n8n-read-only
+    - name: n8n
       nativeLB: false
       port: 5678
   tls:

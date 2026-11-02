@@ -194,26 +194,7 @@ patches:
     metadata:
       name: n8n
       namespace: default
-      annotations:
-        kustomize.toolkit.fluxcd.io/substitute: disabled
     spec:
-      dependsOn:
-      - name: kube-system
-        namespace: kube-system
-      - name: main-volume
-        namespace: kube-system
-      - name: yasr-volume
-        namespace: kube-system
-      - name: sealed-secret
-        namespace: kube-system
-      prune: false
-      deletionPolicy: Orphan
-      force: false
-      healthChecks:
-      - apiVersion: apps/v1
-        kind: Deployment
-        name: n8n-private
-        namespace: default
       path: ./clusters/rafag/apps/n8n/
   target:
     group: kustomize.toolkit.fluxcd.io
