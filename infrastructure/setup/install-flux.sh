@@ -18,8 +18,12 @@ pause
 
 # Update secrets file
 secretFile="$REPO_ROOT/clusters/$CLUSTER_NAME/secrets.env"
-sed -i '' "s/\(CONTROL_PLANE_IP=*\).*/\1$CONTROL_PLANE_IP/" "$secretFile" || exit 1
-sed -i '' "s/\(CONTROL_PLANE_NAME=*\).*/\1$CONTROL_PLANE_NAME/" "$secretFile" || exit 1
+sedInPlace=(-i)
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  sedInPlace=(-i '')
+fi
+sed "${sedInPlace[@]}" "s/\(CONTROL_PLANE_IP=*\).*/\1$CONTROL_PLANE_IP/" "$secretFile" || exit 1
+sed "${sedInPlace[@]}" "s/\(CONTROL_PLANE_NAME=*\).*/\1$CONTROL_PLANE_NAME/" "$secretFile" || exit 1
 
 message "Installing Flux v2"
 

@@ -10,15 +10,16 @@ if ! dnf list installed cri-o > /dev/null 2>&1; then
   sudo bash -c 'cat <<EOF | tee /etc/yum.repos.d/cri-o.repo
 [cri-o]
 name=CRI-O
-baseurl=https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.34/rpm/
+baseurl=https://download.opensuse.org/repositories/isv:/cri-o:/stable:/v1.36/rpm/
 enabled=1
 gpgcheck=1
-gpgkey=https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.34/rpm/repodata/repomd.xml.key
+gpgkey=https://download.opensuse.org/repositories/isv:/cri-o:/stable:/v1.36/rpm/repodata/repomd.xml.key
 EOF'
 
   printf "\nInstalling cri-o dependencies\n"
   sudo dnf install -y \
-      conntrack \
+      conntrack-tools \
+      iproute-tc \
       container-selinux \
       ebtables \
       ethtool \
@@ -46,10 +47,10 @@ if [[ ! -f /etc/yum.repos.d/kubernetes.repo ]]; then
     sudo bash -c 'cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
-baseurl=https://pkgs.k8s.io/core:/stable:/v1.34/rpm/
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.36/rpm/
 enabled=1
 gpgcheck=1
-gpgkey=https://pkgs.k8s.io/core:/stable:/v1.34/rpm/repodata/repomd.xml.key
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.36/rpm/repodata/repomd.xml.key
 exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
 EOF'
 
@@ -57,9 +58,6 @@ EOF'
     # cockpit-pcp enables the metric graphs in cockpit
     sudo dnf -y install cockpit-pcp || exit 1
 
-    # enable cni plugins
-    sudo mkdir -p /opt/cni/
-    sudo ln -s /usr/libexec/cni/ /opt/cni/bin
 fi;
 
 printf "\nEnabling cockpit ==========================================================================================\n"
