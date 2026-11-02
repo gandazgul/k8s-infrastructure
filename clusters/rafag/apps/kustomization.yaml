@@ -1079,6 +1079,10 @@ patches:
       name: paperless-db
       namespace: default
     spec:
+      bootstrap:
+        initdb:
+          secret:
+            name: paperless-db-app
       imageName: ghcr.io/cloudnative-pg/postgresql:17.0@sha256:458db597a860eca45bebd91ec9c990a6eee3e63ced730635f4429bfc0ece2302
       storage:
         storageClass: ""
@@ -1097,7 +1101,7 @@ patches:
       name: paperless
       namespace: default
     spec:
-      # Hold native startup until copied-data canary, database import and private runtime are reviewed.
+      # Hold until clean original paths, retained DB credentials and native canary are verified.
       suspend: true
       values:
         image:

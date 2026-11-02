@@ -5,3 +5,4 @@ resources:
 - MealieSMTP.yaml
 - Reconciliation.yaml
 - ../apps/secrets/
+- PaperlessDatabase.yaml
