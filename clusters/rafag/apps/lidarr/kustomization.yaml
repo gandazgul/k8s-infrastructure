@@ -1,5 +1,264 @@
-# Apply cluster patches after the shared app overlay transformers.
+# Existing shared app flow with Rafag-specific patches and startup safeguards.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - ../../../../apps/generic/overlays/lidarr
+configMapGenerator:
+- name: lidarr-public-guard-cb6565246g
+  namespace: default
+  literals:
+  - |
+    guard.sh=#!/bin/bash
+    set -eux
+    # This script runs only in the Pod network namespace, never in hostNetwork.
+    # The positive control must succeed before a failed connection proves a block.
+    nc -w 2 10.101.63.36 8191 </dev/null >/dev/null
+    for tool in iptables ip6tables; do
+        "${tool}" -w 5 -P OUTPUT DROP
+        "${tool}" -w 5 -P INPUT DROP
+        "${tool}" -w 5 -P FORWARD DROP
+        "${tool}" -w 5 -F
+        "${tool}" -w 5 -A OUTPUT -o lo -j ACCEPT
+        "${tool}" -w 5 -A OUTPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+        "${tool}" -w 5 -A INPUT -i lo -j ACCEPT
+        "${tool}" -w 5 -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+    done
+    iptables -w 5 -A INPUT -s 10.244.0.4/32 -p tcp --dport 8686 -m conntrack --ctstate NEW -j ACCEPT
+    nc -l -p 18765 -e /bin/cat &
+    listener=$!
+    trap 'kill "${listener}" 2>/dev/null || true' EXIT
+    sleep 1
+    reply=$(printf 'private-loopback\n' | nc -w 2 127.0.0.1 18765)
+    test "${reply}" = private-loopback
+    if nc -w 2 10.101.63.36 8191 </dev/null >/dev/null 2>&1; then
+        echo 'FAIL: new external connection permitted' >&2
+        exit 1
+    fi
+    # Require a DROP policy and actual packet hits, not merely a failed probe.
+    iptables -w 5 -L OUTPUT -n -v | grep -E 'policy DROP [1-9][0-9]* packets'
+    ip6tables -w 5 -S OUTPUT | grep -Fx -- '-P OUTPUT DROP'
+    echo 'PASS: loopback allowed; controlled new external TCP blocked; IPv4/IPv6 default DROP'
+  - |
+    start.sh=#!/bin/bash
+    set -eu
+    test -s /config/lidarr.db
+    test -s /config/RECOVERY-SAFETY-VERIFIED
+    test -s /config/PUBLIC-SAFETY-VERIFIED
+    (cd /config && sha256sum -c PUBLIC-CONFIG.sha256 >/dev/null)
+    grep -q '<AuthenticationMethod>Forms</AuthenticationMethod>' /config/config.xml
+    test -x /app/lidarr/bin/Lidarr
+    exec /app/lidarr/bin/Lidarr -nobrowser -data=/config
+  options:
+    disableNameSuffixHash: true
+    annotations:
+      kustomize.toolkit.fluxcd.io/substitute: disabled
+patches:
+- patch: |
+    - op: remove
+      path: /metadata/labels
+    - op: replace
+      path: /metadata/name
+      value: lidarr-public
+    - op: replace
+      path: /spec/ports/0/targetPort
+      value: 8686
+    - op: remove
+      path: /spec/selector/app.kubernetes.io~1name
+    - op: add
+      path: /spec/selector/app
+      value: lidarr-public
+  target:
+    group: ''
+    version: v1
+    kind: Service
+    name: lidarr
+    namespace: default
+- patch: |
+    - op: remove
+      path: /metadata/labels
+    - op: replace
+      path: /metadata/name
+      value: lidarr-public
+    - op: replace
+      path: /spec/revisionHistoryLimit
+      value: 10
+    - op: remove
+      path: /spec/selector/matchLabels/app.kubernetes.io~1name
+    - op: add
+      path: /spec/selector/matchLabels/app
+      value: lidarr-public
+    - op: remove
+      path: /spec/template/metadata/labels/app.kubernetes.io~1name
+    - op: add
+      path: /spec/template/metadata/labels/app
+      value: lidarr-public
+    - op: replace
+      path: /spec/template/spec/containers/0/env
+      value:
+      - name: HOME
+        value: /config
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: docker.io/linuxserver/lidarr@sha256:135634128ba917a6bd093e8ea3bca9aeaba88ca36e8245bba8dd98b373618c6b
+    - op: replace
+      path: /spec/template/spec/containers/0/imagePullPolicy
+      value: IfNotPresent
+    - op: remove
+      path: /spec/template/spec/containers/0/livenessProbe
+    - op: replace
+      path: /spec/template/spec/containers/0/name
+      value: lidarr
+    - op: remove
+      path: /spec/template/spec/containers/0/ports
+    - op: remove
+      path: /spec/template/spec/containers/0/resources/limits
+    - op: remove
+      path: /spec/template/spec/containers/0/resources/requests
+    - op: replace
+      path: /spec/template/spec/containers/0/volumeMounts
+      value:
+      - mountPath: /guard
+        name: guard
+        readOnly: true
+      - mountPath: /config
+        name: working
+      - mountPath: /media
+        name: music
+        readOnly: true
+      - mountPath: /data
+        name: downloads
+        readOnly: true
+    - op: add
+      path: /spec/template/spec/containers/0/command
+      value:
+      - /bin/bash
+      - /guard/start.sh
+    - op: add
+      path: /spec/template/spec/containers/0/readinessProbe
+      value:
+        exec:
+          command:
+          - /bin/sh
+          - -c
+          - curl --max-time 3 -fsS http://127.0.0.1:8686/ping >/dev/null
+        periodSeconds: 5
+        timeoutSeconds: 4
+    - op: add
+      path: /spec/template/spec/containers/0/securityContext
+      value:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        runAsGroup: 1000
+        runAsUser: 1000
+    - op: replace
+      path: /spec/template/spec/volumes
+      value:
+      - configMap:
+          name: lidarr-public-guard-cb6565246g
+        name: guard
+      - hostPath:
+          path: /media/yasr/recovery/arr-next-20261030/working/lidarr
+          type: Directory
+        name: working
+      - hostPath:
+          path: /media/main/public/Music
+          type: Directory
+        name: music
+      - hostPath:
+          path: /media/yasr/configs/transmission
+          type: Directory
+        name: downloads
+    - op: add
+      path: /spec/template/spec/automountServiceAccountToken
+      value: false
+    - op: add
+      path: /spec/template/spec/initContainers
+      value:
+      - command:
+        - /bin/sh
+        - /guard/guard.sh
+        image: ghcr.io/flannel-io/flannel@sha256:9aeaf1689ad3554e686d5f4062f33a2ba173398fd8f6d0346bd1dc1a27fb1437
+        imagePullPolicy: IfNotPresent
+        name: network-guard
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            add:
+            - NET_ADMIN
+            drop:
+            - ALL
+          runAsUser: 0
+        volumeMounts:
+        - mountPath: /guard
+          name: guard
+          readOnly: true
+    - op: add
+      path: /spec/template/spec/nodeSelector
+      value:
+        kubernetes.io/hostname: k8s-control-plane
+    - op: add
+      path: /spec/strategy
+      value:
+        type: Recreate
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: lidarr
+    namespace: default
+- patch: |
+    - op: remove
+      path: /metadata/annotations
+    - op: remove
+      path: /metadata/labels
+    - op: replace
+      path: /metadata/name
+      value: lidarr-public
+    - op: replace
+      path: /spec/rules/0/host
+      value: music.dumbhome.uk
+    - op: replace
+      path: /spec/rules/0/http/paths/0/backend/service/name
+      value: lidarr-public
+    - op: remove
+      path: /spec/rules/0/http/paths/0/backend/service/port/name
+    - op: add
+      path: /spec/rules/0/http/paths/0/backend/service/port/number
+      value: 8686
+    - op: replace
+      path: /spec/rules/0/http/paths/0/pathType
+      value: Prefix
+    - op: replace
+      path: /spec/tls/0/hosts/0
+      value: music.dumbhome.uk
+  target:
+    group: networking.k8s.io
+    version: v1
+    kind: Ingress
+    name: lidarr
+    namespace: default
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+  patch: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: not-used
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+- target:
+    group: ''
+    version: v1
+    kind: ConfigMap
+  patch: |
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: not-used
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled

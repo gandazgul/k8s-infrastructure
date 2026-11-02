@@ -1,0 +1,45 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: n8n-http
+  namespace: default
+spec:
+  entryPoints:
+  - web
+  routes:
+  - kind: Rule
+    match: Host(`n8n.dumbhome.uk`)
+    middlewares:
+    - name: n8n-https
+    services:
+    - name: n8n-read-only
+      nativeLB: false
+      port: 5678
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: n8n-https
+  namespace: default
+spec:
+  redirectScheme:
+    permanent: true
+    scheme: https
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: n8n-read-only
+  namespace: default
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`n8n.dumbhome.uk`)
+    services:
+    - name: n8n-read-only
+      nativeLB: false
+      port: 5678
+  tls:
+    secretName: internal-ingress-cert

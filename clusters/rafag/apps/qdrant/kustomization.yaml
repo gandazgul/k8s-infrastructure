@@ -1,5 +1,167 @@
-# Apply cluster patches after the shared app overlay transformers.
+# Existing shared app flow with Rafag-specific patches and startup safeguards.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - ../../../../apps/generic/overlays/qdrant
+configMapGenerator:
+- name: qdrant-fresh-bootstrap-guard-md269h67k5
+  namespace: default
+  literals:
+  - |
+    guard.sh=#!/bin/bash
+    set -eu
+    # Read-only startup checks. The deployment task must create the protected baseline.
+    state=${1:-/qdrant/storage}
+    device=${2:-/yasr-device/b52443c5-0f4b-43a3-a689-b444ea6c3683}
+    [ -d "${state}" ] && [ ! -L "${state}" ]
+    [ -L "${device}" ]
+    disk=$(readlink "${device}")
+    name=${disk##*/}
+    major_minor=$(cat /sys/class/block/"${name}"/dev)
+    major=${major_minor%:*}; minor=${major_minor#*:}
+    [ "$(stat -c %d "${state}")" = "$((major*256+minor))" ]
+    marker=${state}/.owner-approved-empty-baseline
+    [ -f "${marker}" ] && [ ! -L "${marker}" ]
+    [ "$(cat "${marker}")" = 'qdrant-only|2026-10-28T22:33:19.209Z|b52443c5-0f4b-43a3-a689-b444ea6c3683|configs/qdrant|historical-vectors-not-restored' ]
+    [ -w "${state}" ]
+    # Missing collections is allowed ONLY with the exact owner baseline above.
+    # No mkdir, chown, relabel, database write or marker creation is done here.
+  options:
+    disableNameSuffixHash: true
+    annotations:
+      kustomize.toolkit.fluxcd.io/substitute: disabled
+patches:
+- patch: |
+    apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app.kubernetes.io/name: qdrant
+      name: qdrant-nodeport
+      namespace: default
+    $patch: delete
+  target:
+    group: ''
+    version: v1
+    kind: Service
+    name: qdrant-nodeport
+    namespace: default
+- patch: |
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: ghcr.io/qdrant/qdrant/qdrant@sha256:975b390833f6c0b2fc032bb962254c1733a88b7fd0e879b4642cd11c84f7c6d7
+    - op: replace
+      path: /spec/template/spec/containers/0/volumeMounts
+      value:
+      - mountPath: /qdrant/storage
+        name: yasr-volume
+        subPath: configs/qdrant
+      - mountPath: /yasr-device
+        name: yasr-device
+        readOnly: true
+      - mountPath: /guard
+        name: guard
+        readOnly: true
+    - op: add
+      path: /spec/template/spec/containers/0/command
+      value:
+      - /bin/bash
+      - -ec
+      - /bin/bash /guard/guard.sh; cd /qdrant; exec ./entrypoint.sh
+    - op: add
+      path: /spec/template/spec/containers/0/envFrom
+      value:
+      - secretRef:
+          name: secrets
+    - op: add
+      path: /spec/template/spec/containers/0/securityContext
+      value:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        runAsGroup: 0
+        runAsUser: 0
+    - op: replace
+      path: /spec/template/spec/volumes/0/name
+      value: yasr-device
+    - op: remove
+      path: /spec/template/spec/volumes/0/persistentVolumeClaim
+    - op: add
+      path: /spec/template/spec/volumes/0/hostPath
+      value:
+        path: /dev/disk/by-uuid
+        type: Directory
+    - op: replace
+      path: /spec/template/spec/volumes/1/name
+      value: guard
+    - op: remove
+      path: /spec/template/spec/volumes/1/persistentVolumeClaim
+    - op: add
+      path: /spec/template/spec/volumes/1/configMap
+      value:
+        defaultMode: 365
+        name: qdrant-fresh-bootstrap-guard-md269h67k5
+    - op: replace
+      path: /spec/template/spec/volumes/2/name
+      value: yasr-volume
+    - op: replace
+      path: /spec/template/spec/volumes/2/persistentVolumeClaim/claimName
+      value: yasr-volume
+    - op: add
+      path: /spec/template/spec/nodeSelector
+      value:
+        kubernetes.io/arch: amd64
+        kubernetes.io/hostname: k8s-control-plane
+    - op: add
+      path: /spec/strategy
+      value:
+        type: Recreate
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: qdrant
+    namespace: default
+- patch: |
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      annotations:
+        forecastle.stakater.com/appName: Qdrant
+        forecastle.stakater.com/expose: 'true'
+        forecastle.stakater.com/group: AI
+        forecastle.stakater.com/icon: https://qdrant.tech/images/logo.svg
+      labels:
+        app.kubernetes.io/name: qdrant
+      name: qdrant
+      namespace: default
+    $patch: delete
+  target:
+    group: networking.k8s.io
+    version: v1
+    kind: Ingress
+    name: qdrant
+    namespace: default
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+  patch: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: not-used
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+- target:
+    group: ''
+    version: v1
+    kind: ConfigMap
+  patch: |
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: not-used
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled

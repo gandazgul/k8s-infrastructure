@@ -1,5 +1,283 @@
-# Apply cluster patches after the shared app overlay transformers.
+# Existing shared app flow with Rafag-specific patches and startup safeguards.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - ../../../../apps/generic/overlays/wallabag
+configMapGenerator:
+- name: wallabag-private-guard
+  namespace: default
+  literals:
+  - |
+    check.php=<?php
+    // Refuse a missing or empty database before PDO can create one.
+    $path = '/var/www/wallabag/data/db/wallabag.sqlite';
+    if (!is_file($path) || filesize($path) === 0) { exit(1); }
+    $db = new PDO('sqlite:' . $path);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    if ($db->query('PRAGMA integrity_check')->fetchColumn() !== 'ok') { exit(1); }
+    foreach (['wallabag_user'=>1, 'wallabag_entry'=>7, 'wallabag_tag'=>3, 'wallabag_config'=>1, 'migration_versions'=>46] as $table=>$count) {
+        if ((int)$db->query('SELECT COUNT(*) FROM ' . $table)->fetchColumn() !== $count) { exit(1); }
+    }
+    // All tables, including article content, verifiers, tokens and settings.
+    foreach ($db->query('SELECT name FROM sqlite_master WHERE type="table" ORDER BY name')->fetchAll(PDO::FETCH_COLUMN) as $table) {
+        $rows = $db->query('SELECT * FROM "' . $table . '" ORDER BY rowid')->fetchAll(PDO::FETCH_ASSOC);
+        echo $table, ' ', count($rows), ' ', hash('sha256', serialize($rows)), "\n";
+    }
+  - |
+    guard.sh=#!/bin/bash
+    set -eux
+    # This script runs only in the Pod network namespace, never in hostNetwork.
+    # The positive control must succeed before a failed connection proves a block.
+    nc -w 2 10.101.63.36 8191 </dev/null >/dev/null
+    for tool in iptables ip6tables; do
+        "${tool}" -w 5 -P OUTPUT DROP
+        "${tool}" -w 5 -P INPUT DROP
+        "${tool}" -w 5 -P FORWARD DROP
+        "${tool}" -w 5 -F
+        "${tool}" -w 5 -A OUTPUT -o lo -j ACCEPT
+        "${tool}" -w 5 -A OUTPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+        "${tool}" -w 5 -A INPUT -i lo -j ACCEPT
+        "${tool}" -w 5 -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+    done
+    # Approved owner-access exception: actual Traefik Pod only, native HTTP port only.
+    # OUTPUT still rejects all NEW connections; replies use conntrack above.
+    iptables -w 5 -A INPUT -s 10.244.0.4/32 -p tcp --dport 80 -m conntrack --ctstate NEW -j ACCEPT
+    nc -l -p 18765 -e /bin/cat &
+    listener=$!
+    trap 'kill "${listener}" 2>/dev/null || true' EXIT
+    sleep 1
+    reply=$(printf 'private-loopback\n' | nc -w 2 127.0.0.1 18765)
+    test "${reply}" = private-loopback
+    if nc -w 2 10.101.63.36 8191 </dev/null >/dev/null 2>&1; then
+        echo 'FAIL: new external connection permitted' >&2
+        exit 1
+    fi
+    # Require a DROP policy and actual packet hits, not merely a failed probe.
+    iptables -w 5 -L OUTPUT -n -v | grep -E 'policy DROP [1-9][0-9]* packets'
+    ip6tables -w 5 -S OUTPUT | grep -Fx -- '-P OUTPUT DROP'
+    echo 'PASS: loopback allowed; controlled new external TCP blocked; IPv4/IPv6 default DROP'
+  - |
+    start.sh=#!/bin/sh
+    set -e
+    cd /var/www/wallabag
+    test -s data/site-credentials-secret-key.txt
+    php /guard/check.php
+    # Native template rendering only. Never run install, migrations, composer or workers.
+    envsubst < /etc/wallabag/parameters.template.yml > app/config/parameters.yml
+    envsubst < /etc/wallabag/php-wallabag.template.ini > /etc/php81/conf.d/50_wallabag.ini
+    sed -i 's/listen \[::\]:80 ipv6only=off;/listen 0.0.0.0:80;/' /etc/nginx/nginx.conf
+    grep -F 'listen 0.0.0.0:80;' /etc/nginx/nginx.conf
+    # These are the two native web services, with no queue consumer or scheduler.
+    test "$(ls /etc/s6 | sort | tr '\n' ' ')" = 'nginx php-fpm '
+    rm -rf var/cache
+    exec s6-svscan /etc/s6/
+  options:
+    disableNameSuffixHash: true
+    annotations:
+      kustomize.toolkit.fluxcd.io/substitute: disabled
+patches:
+- patch: |
+    - op: remove
+      path: /metadata/labels
+    - op: replace
+      path: /spec/ports/0/targetPort
+      value: 80
+    - op: remove
+      path: /spec/selector/app.kubernetes.io~1name
+    - op: add
+      path: /spec/selector/app
+      value: wallabag-private
+  target:
+    group: ''
+    version: v1
+    kind: Service
+    name: wallabag
+    namespace: default
+- patch: |
+    - op: remove
+      path: /metadata/labels
+    - op: replace
+      path: /metadata/name
+      value: wallabag-private
+    - op: replace
+      path: /spec/revisionHistoryLimit
+      value: 10
+    - op: remove
+      path: /spec/selector/matchLabels/app.kubernetes.io~1name
+    - op: add
+      path: /spec/selector/matchLabels/app
+      value: wallabag-private
+    - op: remove
+      path: /spec/template/metadata/labels/app.kubernetes.io~1name
+    - op: add
+      path: /spec/template/metadata/labels/app
+      value: wallabag-private
+    - op: add
+      path: /spec/template/metadata/annotations
+      value:
+        recovery.dumbhome.uk/public-owner-access: '2026-10-30T03:06:57.485Z'
+    - op: replace
+      path: /spec/template/spec/containers/0/env/3/value
+      value: https://wallabag.dumbhome.uk
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: docker.io/wallabag/wallabag@sha256:82ade66b403d67c05732f9f08003034509f6499e9f487b858c0b77524b28545d
+    - op: replace
+      path: /spec/template/spec/containers/0/imagePullPolicy
+      value: IfNotPresent
+    - op: remove
+      path: /spec/template/spec/containers/0/livenessProbe
+    - op: replace
+      path: /spec/template/spec/containers/0/name
+      value: wallabag
+    - op: remove
+      path: /spec/template/spec/containers/0/ports
+    - op: remove
+      path: /spec/template/spec/containers/0/resources/limits
+    - op: remove
+      path: /spec/template/spec/containers/0/resources/requests
+    - op: replace
+      path: /spec/template/spec/containers/0/volumeMounts
+      value:
+      - mountPath: /guard
+        name: guard
+        readOnly: true
+      - mountPath: /var/www/wallabag/data
+        name: working
+        subPath: recovery/wallabag-20261030/working/wallabag/data
+      - mountPath: /var/www/wallabag/web/assets/images
+        name: working
+        subPath: recovery/wallabag-20261030/working/wallabag/images
+    - op: add
+      path: /spec/template/spec/containers/0/command
+      value:
+      - /bin/sh
+      - /guard/start.sh
+    - op: add
+      path: /spec/template/spec/containers/0/readinessProbe
+      value:
+        exec:
+          command:
+          - php
+          - -r
+          - exit(@file_get_contents("http://127.0.0.1/login")===false?1:0);
+        periodSeconds: 5
+        timeoutSeconds: 4
+    - op: add
+      path: /spec/template/spec/containers/0/securityContext
+      value:
+        allowPrivilegeEscalation: false
+        capabilities:
+          add:
+          - SETUID
+          - SETGID
+          - CHOWN
+          - DAC_OVERRIDE
+          - NET_BIND_SERVICE
+          drop:
+          - ALL
+        runAsUser: 0
+    - op: replace
+      path: /spec/template/spec/volumes
+      value:
+      - configMap:
+          name: wallabag-private-guard
+        name: guard
+      - name: working
+        persistentVolumeClaim:
+          claimName: yasr-volume
+    - op: add
+      path: /spec/template/spec/automountServiceAccountToken
+      value: false
+    - op: add
+      path: /spec/template/spec/initContainers
+      value:
+      - command:
+        - /bin/sh
+        - /guard/guard.sh
+        image: ghcr.io/flannel-io/flannel@sha256:9aeaf1689ad3554e686d5f4062f33a2ba173398fd8f6d0346bd1dc1a27fb1437
+        imagePullPolicy: IfNotPresent
+        name: network-guard
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            add:
+            - NET_ADMIN
+            drop:
+            - ALL
+          runAsUser: 0
+        volumeMounts:
+        - mountPath: /guard
+          name: guard
+          readOnly: true
+    - op: add
+      path: /spec/template/spec/nodeSelector
+      value:
+        kubernetes.io/hostname: k8s-control-plane
+    - op: add
+      path: /spec/strategy
+      value:
+        type: Recreate
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: wallabag
+    namespace: default
+- patch: |
+    - op: remove
+      path: /metadata/annotations/forecastle.stakater.com~1appName
+    - op: remove
+      path: /metadata/annotations/forecastle.stakater.com~1expose
+    - op: remove
+      path: /metadata/annotations/forecastle.stakater.com~1group
+    - op: remove
+      path: /metadata/annotations/forecastle.stakater.com~1icon
+    - op: add
+      path: /metadata/annotations/nginx.ingress.kubernetes.io~1ssl-redirect
+      value: 'true'
+    - op: remove
+      path: /metadata/labels
+    - op: replace
+      path: /spec/rules/0/host
+      value: wallabag.dumbhome.uk
+    - op: remove
+      path: /spec/rules/0/http/paths/0/backend/service/port/name
+    - op: add
+      path: /spec/rules/0/http/paths/0/backend/service/port/number
+      value: 80
+    - op: replace
+      path: /spec/rules/0/http/paths/0/pathType
+      value: Prefix
+    - op: replace
+      path: /spec/tls/0/hosts/0
+      value: wallabag.dumbhome.uk
+  target:
+    group: networking.k8s.io
+    version: v1
+    kind: Ingress
+    name: wallabag
+    namespace: default
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+  patch: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: not-used
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+- target:
+    group: ''
+    version: v1
+    kind: ConfigMap
+  patch: |
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: not-used
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled

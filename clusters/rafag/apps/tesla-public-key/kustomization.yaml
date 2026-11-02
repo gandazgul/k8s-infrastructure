@@ -1,5 +1,74 @@
-# Apply cluster patches after the shared app overlay transformers.
+# Existing shared app flow with Rafag-specific patches and startup safeguards.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - ../../../../apps/generic/overlays/tesla-public-key
+patches:
+- patch: |
+    - op: remove
+      path: /metadata/labels
+    - op: add
+      path: /immutable
+      value: true
+  target:
+    group: ''
+    version: v1
+    kind: ConfigMap
+    name: tesla-public-key
+    namespace: default
+- patch: |
+    - op: add
+      path: /spec/template/metadata/annotations
+      value:
+        checksum/public-key: 788dc4adc61bf43151ee66ef799b63e70fb668cbfcd17e7848d6f9167c73a05e
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: docker.io/library/nginx@sha256:35cd77497979abe70dc8d26f5ae60811eea233a2eb5dc03c2ee30972caeb303e
+    - op: add
+      path: /spec/template/spec/nodeSelector
+      value:
+        kubernetes.io/arch: amd64
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: tesla-public-key
+    namespace: default
+- patch: |
+    - op: replace
+      path: /spec/rules/0/host
+      value: tesla.dumbhome.uk
+    - op: replace
+      path: /spec/rules/0/http/paths/0/pathType
+      value: Exact
+    - op: replace
+      path: /spec/tls/0/hosts/0
+      value: tesla.dumbhome.uk
+  target:
+    group: networking.k8s.io
+    version: v1
+    kind: Ingress
+    name: tesla-public-key
+    namespace: default
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+  patch: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: not-used
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+- target:
+    group: ''
+    version: v1
+    kind: ConfigMap
+  patch: |
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: not-used
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
