@@ -20,6 +20,7 @@ resources:
 - ../../../apps/Flaresolverr.yaml
 - ../../../apps/Prowlarr.yaml
 - ../../../apps/Sharry.yaml
+- ../../../apps/Paperless.yaml
 - home-assistant/Ingress.yaml
 - sftpgo/SFTPGo.yaml
 patches:
@@ -1065,3 +1066,53 @@ patches:
       namespace: default
       annotations:
         kustomize.toolkit.fluxcd.io/substitute: disabled
+- target:
+    group: postgresql.cnpg.io
+    version: v1
+    kind: Cluster
+    name: paperless-db
+    namespace: default
+  patch: |
+    apiVersion: postgresql.cnpg.io/v1
+    kind: Cluster
+    metadata:
+      name: paperless-db
+      namespace: default
+    spec:
+      imageName: ghcr.io/cloudnative-pg/postgresql:17.0@sha256:458db597a860eca45bebd91ec9c990a6eee3e63ced730635f4429bfc0ece2302
+      storage:
+        storageClass: ""
+        pvcTemplate:
+          volumeName: paperless-db-pgdata
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: paperless
+    namespace: default
+  patch: |
+    apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    metadata:
+      name: paperless
+      namespace: default
+    spec:
+      # Hold native startup until copied-data canary, database import and private runtime are reviewed.
+      suspend: true
+      values:
+        image:
+          pullPolicy: IfNotPresent
+          tag: 2.20.15@sha256:835974fc3368fc6714aa38542db7a1f0f542d03244e39b981e519aefc100f355
+        redis:
+          image:
+            tag: 6.2@sha256:ce852c585d8bb7921a559f6ebed083367ee4bc0271629a39fe890b6ce6ace64d
+          master:
+            persistence:
+              storageClass: "-"
+              selector:
+                matchLabels:
+                  storage-id: paperless-redis
+        ingress:
+          # Keep first-install account claiming private until the owner has completed it.
+          main:
+            enabled: false

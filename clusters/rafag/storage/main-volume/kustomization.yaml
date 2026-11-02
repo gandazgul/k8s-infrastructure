@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
 - ../../../../infrastructure/storage/hdd-class/
 - Storage.yaml
+- PaperlessStorage.yaml
 patches:
 - target:
     kind: PersistentVolume
