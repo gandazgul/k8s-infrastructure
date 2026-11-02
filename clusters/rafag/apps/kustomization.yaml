@@ -1101,8 +1101,8 @@ patches:
       name: paperless
       namespace: default
     spec:
-      # Hold until clean original paths, retained DB credentials and native canary are verified.
-      suspend: true
+      # Clean original paths, retained DB credentials and native canary are verified.
+      suspend: false
       values:
         image:
           pullPolicy: IfNotPresent
