@@ -1,5 +1,22 @@
----
+# Adopt through shared storage templates; retain supplemental bindings until app handoffs.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+- ../../../../infrastructure/storage/hdd-class/
 - Storage.yaml
+patches:
+- target:
+    kind: PersistentVolume
+    name: \$\{VOLUME_NAME\}
+  patch: "- op: replace\n  path: /spec/nodeAffinity\n  value:\n    required:\n   \
+    \   nodeSelectorTerms:\n      - matchExpressions:\n        - key: kubernetes.io/hostname\n\
+    \          operator: In\n          values:\n          - k8s-control-plane\n- op:\
+    \ add\n  path: /spec/claimRef\n  value:\n    apiVersion: v1\n    kind: PersistentVolumeClaim\n\
+    \    name: main-volume\n    namespace: default\n- op: add\n  path: /metadata/annotations\n\
+    \  value:\n    kustomize.toolkit.fluxcd.io/prune: disabled\n"
+- target:
+    kind: PersistentVolumeClaim
+    name: \$\{VOLUME_NAME\}
+  patch: "- op: remove\n  path: /spec/selector\n- op: add\n  path: /spec/volumeName\n\
+    \  value: main-volume\n- op: add\n  path: /metadata/annotations\n  value:\n  \
+    \  kustomize.toolkit.fluxcd.io/prune: disabled\n"
