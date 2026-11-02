@@ -1,4 +1,60 @@
 ---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  chart:
+    spec:
+      chart: traefik
+      sourceRef:
+        kind: HelmRepository
+        name: traefik
+        namespace: kube-system
+      version: 42.1.3
+  interval: 1h
+  suspend: false
+  values:
+    ingressClass:
+      enabled: true
+      isDefaultClass: false
+      name: nginx
+    providers:
+      kubernetesIngress:
+        enabled: false
+      kubernetesIngressNGINX:
+        allowCrossNamespaceResources: false
+        allowSnippetAnnotations: false
+        clientBodyBufferSize: 33554432
+        controllerClass: traefik.io/ingress-controller
+        customHTTPErrors:
+        - '404'
+        - '401'
+        - '403'
+        - '500'
+        - '503'
+        defaultBackendService: kube-system/traefik-default-backend
+        enabled: true
+        ingressClass: nginx
+        ingressClassByName: false
+        proxyBodySize: 1073741824
+        proxyBuffering: false
+        proxyReadTimeout: 600
+        proxyRequestBuffering: true
+        proxySendTimeout: 600
+        watchIngressWithoutClass: false
+    service:
+      spec:
+        externalIPs:
+        - 10.1.1.2
+        externalTrafficPolicy: Local
+        type: NodePort
+    tlsStore:
+      default:
+        defaultCertificate:
+          secretName: internal-ingress-cert
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:

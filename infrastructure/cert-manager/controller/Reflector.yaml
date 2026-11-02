@@ -5,7 +5,7 @@ metadata:
   name: emberstack
   namespace: kube-system
 spec:
-  interval: 1h0m0s
+  interval: 1h
   url: https://emberstack.github.io/helm-charts
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
@@ -14,13 +14,36 @@ metadata:
   name: reflector
   namespace: kube-system
 spec:
-  interval: 5m
   chart:
     spec:
       chart: reflector
-      version: 7.1.288
       sourceRef:
         kind: HelmRepository
         name: emberstack
         namespace: kube-system
-      interval: 1h
+      version: 10.0.69
+  interval: 1h
+  postRenderers:
+  - kustomize:
+      patches:
+      - patch: |-
+          - op: replace
+            path: /rules/0/verbs
+            value: [get, list, watch, create, update, patch, delete]
+        target:
+          kind: ClusterRole
+          name: reflector
+  suspend: false
+  values:
+    image:
+      tag: 10.0.69@sha256:b689b19ed36a5843648ad07446fc3468bd1f33327ef57eb3883519eadca4a58d
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000
+      seccompProfile:
+        type: RuntimeDefault

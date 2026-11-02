@@ -32,3 +32,7 @@ spec:
       kind: Kustomization
       name: cert-manager-certificates
       namespace: kube-system
+    - apiVersion: kustomize.toolkit.fluxcd.io/v1
+      kind: Kustomization
+      name: cert-manager
+      namespace: kube-system

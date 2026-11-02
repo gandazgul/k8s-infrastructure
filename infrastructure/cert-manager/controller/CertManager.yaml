@@ -5,8 +5,9 @@ metadata:
   name: jetstack
   namespace: kube-system
 spec:
-  interval: 1h0m0s
-  url: https://charts.jetstack.io
+  interval: 1h
+  type: oci
+  url: oci://quay.io/jetstack/charts
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -14,19 +15,30 @@ metadata:
   name: cert-manager
   namespace: kube-system
 spec:
-  interval: 5m
   chart:
     spec:
       chart: cert-manager
-      version: 1.17.1
       sourceRef:
         kind: HelmRepository
         name: jetstack
         namespace: kube-system
-      interval: 1h
+      version: v1.21.3
+  interval: 1h
+  suspend: false
   values:
-    installCRDs: true
-    extraArgs:
-      - --max-concurrent-challenges=2
-      - --dns01-recursive-nameservers-only
-      - --dns01-recursive-nameservers=1.1.1.1:53,8.8.8.8:53
+    acmesolver:
+      image:
+        digest: sha256:c8c1225bb2fe8ab37a330b77f0d8c2ee6a41210fcb54fc07ca606ab9a022b8b7
+    cainjector:
+      image:
+        digest: sha256:083d0e906f8eb44e255fe4ff817ae54e49f9ed82e22f1011bb4e9e4f4b8a641f
+    crds:
+      enabled: true
+    image:
+      digest: sha256:9f4f96a33c7774cef24466fcd85031997531a03a8d117f151126baa8d1290dcc
+    startupapicheck:
+      image:
+        digest: sha256:1c519d4afca1413d1e4ccd78bdc756184418ab55a34569a3b3de39d32f9974e1
+    webhook:
+      image:
+        digest: sha256:055ac8e9de6a0ba6763794838fe38944acc650f68ebe1b01dd8be079e580f458
