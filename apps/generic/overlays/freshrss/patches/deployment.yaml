@@ -3,8 +3,11 @@ kind: Deployment
 metadata:
   name: freshrss
 spec:
+  strategy:
+    type: Recreate
   template:
     spec:
+      automountServiceAccountToken: false
       initContainers:
         - name: install-cntools-extensions
           image: alpine/git:latest
@@ -40,8 +43,8 @@ spec:
               subPath: configs/freshrss/extensions/
       containers:
         - name: container
-          image: freshrss/freshrss:latest
-          imagePullPolicy: Always
+          image: freshrss/freshrss:1.30.4
+          imagePullPolicy: IfNotPresent
           env:
             - name: TZ
               value: "${CLUSTER_TIME_ZONE}"
@@ -61,6 +64,13 @@ spec:
               port: http
             initialDelaySeconds: 30
             timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /i/?c=auth&a=login
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 4
           resources:
             requests:
               cpu: 100m

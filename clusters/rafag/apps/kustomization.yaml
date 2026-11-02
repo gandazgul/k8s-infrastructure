@@ -65,39 +65,6 @@ patches:
     apiVersion: kustomize.toolkit.fluxcd.io/v1
     kind: Kustomization
     metadata:
-      name: freshrss
-      namespace: default
-      annotations:
-        kustomize.toolkit.fluxcd.io/substitute: disabled
-    spec:
-      dependsOn:
-      - name: kube-system
-        namespace: kube-system
-      - name: main-volume
-        namespace: kube-system
-      - name: yasr-volume
-        namespace: kube-system
-      - name: sealed-secret
-        namespace: kube-system
-      prune: false
-      deletionPolicy: Orphan
-      force: false
-      healthChecks:
-      - apiVersion: apps/v1
-        kind: Deployment
-        name: freshrss-private
-        namespace: default
-      path: ./clusters/rafag/apps/freshrss/
-  target:
-    group: kustomize.toolkit.fluxcd.io
-    version: v1
-    kind: Kustomization
-    name: freshrss
-    namespace: default
-- patch: |
-    apiVersion: kustomize.toolkit.fluxcd.io/v1
-    kind: Kustomization
-    metadata:
       name: lidarr
       namespace: default
       annotations:
