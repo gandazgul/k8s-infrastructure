@@ -16,8 +16,8 @@ spec:
   healthCheckExprs:
   - apiVersion: bitnami.com/v1alpha1
     kind: SealedSecret
-    failed: "has(status) && has(status.conditions) && status.conditions.exists(c, c.type == 'Synced' && c.status == 'False')"
-    current: "has(status) && has(status.observedGeneration) && status.observedGeneration == metadata.generation && has(status.conditions) && status.conditions.exists(c, c.type == 'Synced' && c.status == 'True')"
+    failed: "has(status.conditions) && status.conditions.exists(c, c.type == 'Synced' && c.status == 'False')"
+    current: "has(status.observedGeneration) && status.observedGeneration == metadata.generation && has(status.conditions) && status.conditions.exists(c, c.type == 'Synced' && c.status == 'True')"
   healthChecks:
   - apiVersion: bitnami.com/v1alpha1
     kind: SealedSecret
