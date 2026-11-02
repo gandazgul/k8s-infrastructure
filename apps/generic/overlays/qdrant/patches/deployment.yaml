@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: qdrant
 spec:
+  strategy:
+    type: Recreate
   template:
     spec:
       containers:
@@ -11,7 +13,7 @@ spec:
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: yasr-volume
-              mountPath: /qdrant/config/storage
+              mountPath: /qdrant/storage
               subPath: configs/qdrant/
           livenessProbe:
             httpGet:

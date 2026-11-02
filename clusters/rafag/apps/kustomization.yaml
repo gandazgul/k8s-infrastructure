@@ -133,26 +133,7 @@ patches:
     metadata:
       name: qdrant
       namespace: default
-      annotations:
-        kustomize.toolkit.fluxcd.io/substitute: disabled
     spec:
-      dependsOn:
-      - name: kube-system
-        namespace: kube-system
-      - name: main-volume
-        namespace: kube-system
-      - name: yasr-volume
-        namespace: kube-system
-      - name: sealed-secret
-        namespace: kube-system
-      prune: false
-      deletionPolicy: Orphan
-      force: false
-      healthChecks:
-      - apiVersion: apps/v1
-        kind: Deployment
-        name: qdrant
-        namespace: default
       path: ./clusters/rafag/apps/qdrant/
   target:
     group: kustomize.toolkit.fluxcd.io
