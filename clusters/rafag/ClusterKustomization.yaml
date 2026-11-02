@@ -5,6 +5,12 @@ metadata:
   name: rafag
   namespace: kube-system
 spec:
+  dependsOn:
+  - name: sealed-secret
+  - name: kube-system
+  - name: main-volume
+  - name: backup-volume
+  - name: yasr-volume
   # Adopt the control/GPU baseline plus the reviewed native YouTube API objects.
   # Legacy app/storage/infra trees remain excluded.
   interval: 10m0s
