@@ -40,7 +40,7 @@ patches:
       namespace: default
     spec:
       path: ./clusters/rafag/apps/audiobookshelf/
-      suspend: true
+      suspend: false
       postBuild:
         substitute:
           AUDIOBOOKSHELF_MOUNT_PATH: /data/books-podcast-media
