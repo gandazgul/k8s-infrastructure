@@ -24,7 +24,26 @@ resources:
 - ../../../apps/Immich.yaml
 - home-assistant/Ingress.yaml
 - sftpgo/SFTPGo.yaml
+- ../../../apps/AudioBookShelf.yaml
 patches:
+- target:
+    group: kustomize.toolkit.fluxcd.io
+    version: v1
+    kind: Kustomization
+    name: audiobookshelf
+    namespace: default
+  patch: |
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: audiobookshelf
+      namespace: default
+    spec:
+      path: ./clusters/rafag/apps/audiobookshelf/
+      suspend: true
+      postBuild:
+        substitute:
+          AUDIOBOOKSHELF_MOUNT_PATH: /data/books-podcast-media
 - target:
     group: kustomize.toolkit.fluxcd.io
     version: v1
