@@ -48,4 +48,4 @@ spec:
       type: deployment
       strategy: Recreate
       replicas: 1
-  suspend: true
+  suspend: false
