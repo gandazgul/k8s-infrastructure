@@ -58,10 +58,10 @@ addons:
 controller:
   strategy: Recreate
   type: deployment
-dnsPolicy: ClusterFirst
+dnsPolicy: ClusterFirstWithHostNet
 env:
   TZ: America/New_York
-hostNetwork: false
+hostNetwork: true
 image:
   pullPolicy: IfNotPresent
   repository: ghcr.io/home-assistant/home-assistant
