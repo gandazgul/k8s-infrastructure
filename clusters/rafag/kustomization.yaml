@@ -1,4 +1,3 @@
-# Reuse the existing app definitions with Rafag-specific overrides.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
@@ -7,3 +6,4 @@ resources:
 - ../../apps/YouTubeOperationalAPI.yaml
 - ../../infrastructure/kube-system/CloudflareDDNS.yaml
 - ./apps/
+- ./monitoring/MonitoringRoots.yaml

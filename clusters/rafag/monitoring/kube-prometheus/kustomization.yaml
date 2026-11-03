@@ -1,0 +1,36 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../../../infrastructure/monitoring/kube-prometheus/
+images:
+- name: ghcr.io/jimmidyson/configmap-reload
+  newTag: v0.15.0
+  digest: sha256:f23e297aff60046ab53d327d7705ec92228bf9e61f0f720d6038c651f664066c
+- name: quay.io/brancz/kube-rbac-proxy
+  newTag: v0.19.0
+  digest: sha256:395b832209300ef4be1ccf5d80d1ac6ab011175b835a3e63e21b399329e93240
+- name: quay.io/prometheus-operator/prometheus-config-reloader
+  newTag: v0.81.0
+  digest: sha256:6bfe763f260e3dda51615147b1fb9e2cac3ca2c53ad9825c7b5a11935b328a8a
+- name: quay.io/prometheus-operator/prometheus-operator
+  newTag: v0.81.0
+  digest: sha256:8f0a94d31545583b86118c1b1ff04dd315fc2e91f0d125b2ebb8fd0df62edad9
+- name: quay.io/prometheus/blackbox-exporter
+  newTag: v0.26.0
+  digest: sha256:c78a587054acf7ac35514a4a3ea577686e52630288f28f005b1ea754857b6151
+- name: quay.io/prometheus/node-exporter
+  newTag: v1.9.1
+  digest: sha256:863b62ff9f392b6f472e22b4b670ad1cabb66b3042502ebd4b2cd192733e1bce
+- name: registry.k8s.io/kube-state-metrics/kube-state-metrics
+  newTag: v2.15.0
+  digest: sha256:d9760cb88c96b59bfab6a3586064b204b5234b6ad07bec2667ca37f797a519ff
+- name: registry.k8s.io/prometheus-adapter/prometheus-adapter
+  newTag: v0.12.0
+  digest: sha256:1ba33d7a5b4cdfb960c8824d612a459ff5ef62a15330224d422d36755bc11a11
+patches:
+- target:
+    kind: Deployment
+    name: prometheus-operator
+    namespace: monitoring
+  patch: "- op: replace\n  path: /spec/template/spec/containers/0/args/1\n  value:\
+    \ --prometheus-config-reloader=quay.io/prometheus-operator/prometheus-config-reloader:v0.81.0@sha256:6bfe763f260e3dda51615147b1fb9e2cac3ca2c53ad9825c7b5a11935b328a8a\n"

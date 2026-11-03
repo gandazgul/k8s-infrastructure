@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- grafana-config.yaml
+- grafana-deployment.yaml
+- grafana-ingress.yml
+- grafana-service.yaml
+- grafana-serviceAccount.yaml
+- grafana-serviceMonitor.yaml
