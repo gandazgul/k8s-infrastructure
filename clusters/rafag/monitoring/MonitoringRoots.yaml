@@ -14,7 +14,7 @@ metadata:
 spec:
   interval: 10m0s
   path: ./clusters/rafag/monitoring/storage/
-  suspend: true
+  suspend: false
   sourceRef:
     kind: GitRepository
     name: k8s-infrastructure
@@ -41,7 +41,7 @@ spec:
     kind: GitRepository
     name: k8s-infrastructure
     namespace: kube-system
-  suspend: true
+  suspend: false
 ---
 kind: Kustomization
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -62,7 +62,7 @@ spec:
     substituteFrom:
     - kind: Secret
       name: secrets
-  suspend: true
+  suspend: false
 ---
 kind: Kustomization
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -83,7 +83,7 @@ spec:
     substituteFrom:
     - kind: Secret
       name: secrets
-  suspend: true
+  suspend: false
 ---
 kind: Kustomization
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -104,7 +104,7 @@ spec:
     substituteFrom:
     - kind: Secret
       name: secrets
-  suspend: true
+  suspend: false
 ---
 kind: Kustomization
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -121,4 +121,4 @@ spec:
     kind: GitRepository
     name: k8s-infrastructure
     namespace: kube-system
-  suspend: true
+  suspend: false
