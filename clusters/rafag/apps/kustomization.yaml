@@ -25,6 +25,7 @@ resources:
 - home-assistant/Ingress.yaml
 - sftpgo/SFTPGo.yaml
 - ../../../apps/AudioBookShelf.yaml
+- overseerr/Overseerr.yaml
 patches:
 - target:
     group: kustomize.toolkit.fluxcd.io
