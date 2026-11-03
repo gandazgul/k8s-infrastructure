@@ -6,6 +6,7 @@ resources:
 - EncryptedCredentials.yaml
 - CredentialAdoption.yaml
 - AppChartSources.yaml
+- ../../../infrastructure/kube-system/repos/HelmSagikazarmark.yaml
 - ../../../infrastructure/kube-system/BackupCronJobs.yaml
 - ../BackupCronJobsExtra.yaml
 patches:

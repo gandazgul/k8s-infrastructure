@@ -13,7 +13,7 @@ resources:
 - ../../../apps/Forecastle.yaml
 - ../../../apps/MosquitoMQTTBroker.yaml
 - ../../../apps/Plex.yaml
-- ../../../apps/SFTPGo.yaml
+- sftpgo/HelmRelease.yaml
 - ../../../apps/HomeAssistant.yaml
 - ../../../apps/KokoroTTS.yaml
 - ../../../apps/WyomingOpenAI.yaml
@@ -292,63 +292,6 @@ patches:
     group: helm.toolkit.fluxcd.io
     version: v2
     kind: HelmRelease
-    name: sftpgo
-  patch: |
-    - op: replace
-      path: /spec
-      value:
-        chart:
-          spec:
-            chart: sftpgo
-            interval: 5m
-            sourceRef:
-              kind: HelmRepository
-              name: staged-sftpgo-skm
-              namespace: kube-system
-            version: 0.12.0
-        interval: 5m
-        postRenderers:
-        - kustomize:
-            images:
-            - digest: sha256:3016b086b12e541bfcce037f79ab4f303901e1dc653c381b217f83fea3f80603
-              name: ghcr.io/drakkan/sftpgo
-            patches:
-            - patch: |
-                apiVersion: apps/v1
-                kind: Deployment
-                metadata:
-                  name: sftpgo
-                spec:
-                  strategy:
-                    rollingUpdate: null
-                    type: Recreate
-                  template:
-                    spec:
-                      containers:
-                      - args: []
-                        command:
-                        - /bin/bash
-                        - -ec
-                        - /bin/bash /guard/guard.sh; exec /usr/local/bin/sftpgo serve --config-dir
-                          /etc/sftpgo
-                        name: sftpgo
-              target:
-                kind: Deployment
-                name: sftpgo
-        suspend: true
-        valuesFrom:
-        - kind: Secret
-          name: sftpgo-gitops-values
-          valuesKey: values.yaml
-          optional: false
-    - op: add
-      path: /metadata/annotations
-      value:
-        kustomize.toolkit.fluxcd.io/prune: disabled
-- target:
-    group: helm.toolkit.fluxcd.io
-    version: v2
-    kind: HelmRelease
     name: home-assistant
   patch: |
     - op: remove
@@ -421,30 +364,6 @@ patches:
       path: /metadata/annotations
       value:
         kustomize.toolkit.fluxcd.io/prune: disabled
-- target:
-    group: networking.k8s.io
-    version: v1
-    kind: Ingress
-    name: sftpgo-webdav
-  patch: |
-    apiVersion: networking.k8s.io/v1
-    kind: Ingress
-    metadata:
-      name: sftpgo-webdav
-      namespace: default
-    $patch: delete
-- target:
-    group: networking.k8s.io
-    version: v1
-    kind: Ingress
-    name: sftpgo-sftp
-  patch: |
-    apiVersion: networking.k8s.io/v1
-    kind: Ingress
-    metadata:
-      name: sftpgo-sftp
-      namespace: default
-    $patch: delete
 - target:
     group: source.toolkit.fluxcd.io
     version: v1
