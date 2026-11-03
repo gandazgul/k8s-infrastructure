@@ -12,16 +12,16 @@ patches:
     kind: Deployment
     name: immich
   patch: "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: immich\n  namespace:\
-    \ default\nspec:\n  replicas: 0\n"
+    \ default\nspec:\n  replicas: 1\n"
 - target:
     kind: Deployment
     name: immich-valkey
   patch: "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: immich-valkey\n\
-    \  namespace: default\nspec:\n  replicas: 0\n"
+    \  namespace: default\nspec:\n  replicas: 1\n"
 - target:
     kind: Deployment
     name: immich-machine-learning
   patch: "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: immich-machine-learning\n\
-    \  namespace: default\nspec:\n  replicas: 0\n"
+    \  namespace: default\nspec:\n  replicas: 1\n"
 - patch: "apiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: immich\n\
     \  namespace: default\n$patch: delete\n"

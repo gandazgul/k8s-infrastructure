@@ -1134,7 +1134,7 @@ patches:
       name: immich
       namespace: default
     spec:
-      suspend: true
+      suspend: false
       path: ./clusters/rafag/apps/immich/
       postBuild:
         substitute:
