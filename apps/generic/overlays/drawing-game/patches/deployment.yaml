@@ -18,7 +18,7 @@ spec:
       containers:
         - name: container
           # yamllint disable-line rule:line-length
-          image: harbor.dumbhome.uk/library/drawing-game:20261103-pwa-icons@sha256:b0cb229f5de2df3d7e1d248ad5deea1d45e2ade0a1d6ed1ad6800c2849f43369
+          image: harbor.dumbhome.uk/library/drawing-game:20261104-install-screenshots@sha256:5f0f7b4e60a43d8e7ac4bf7b52d31f6805dc6247b853be4510f732629791fd70
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
