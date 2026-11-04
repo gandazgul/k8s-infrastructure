@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: container
-          image: harbor.dumbhome.uk/library/berenstain-bears:e4fc215@sha256:bd11db8ba0dbce054e13882c51cab99b4b0152a78e15ba65d4d236ab72b5fe4b
+          image: harbor.dumbhome.uk/library/berenstain-bears:20261103-pwa-icons@sha256:6d623d3ec3b26798ec1072f068347135f95dcb734161b14896b29bb2e4cfe639
           imagePullPolicy: IfNotPresent
           env:
             - name: TZ
