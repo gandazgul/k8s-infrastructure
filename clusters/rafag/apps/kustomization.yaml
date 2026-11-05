@@ -1,6 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+- RestoredResilio.yaml
 - RestoredMedia.yaml
 - ../../../apps/TeslaPublicKey.yaml
 - ../../../apps/FreshRSS.yaml
@@ -500,224 +501,158 @@ patches:
     namespace: default
   patch: |
     - op: replace
-      path: /spec/values
+      path: /spec
       value:
-        image:
-          repository: docker.io/linuxserver/prowlarr
-          tag: recovered
-        env:
-        - name: HOME
-          value: /config
-        persistence:
-          config:
-            enabled: false
-          guard:
-            enabled: true
-            type: custom
-            volumeSpec:
-              configMap:
-                defaultMode: 420
-                name: prowlarr-public-guard-c25k4c25mc
-            mountPath: /guard
-            readOnly: true
-          working:
-            enabled: true
-            type: custom
-            volumeSpec:
-              hostPath:
-                path: /media/yasr/recovery/arr-next-20261030/working/prowlarr
-                type: Directory
-            mountPath: /config
-        ingress:
-          main:
-            enabled: true
-            hosts:
-            - host: seedbox.dumbhome.uk
-              paths:
-              - path: /
-                pathType: Prefix
-            tls:
-            - hosts:
-              - seedbox.dumbhome.uk
-              secretName: internal-ingress-cert
-        fullnameOverride: prowlarr-public
-        controller:
-          strategy: Recreate
-          revisionHistoryLimit: 10
-        command:
-        - /bin/bash
-        - /guard/start.sh
-        args: []
-        automountServiceAccountToken: false
-        nodeSelector:
-          kubernetes.io/hostname: k8s-control-plane
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          runAsGroup: 1000
-          runAsUser: 1000
-        initContainers:
-          network-guard:
-            command:
-            - /bin/sh
-            - /guard/guard.sh
-            image: ghcr.io/flannel-io/flannel@sha256:9aeaf1689ad3554e686d5f4062f33a2ba173398fd8f6d0346bd1dc1a27fb1437
-            imagePullPolicy: IfNotPresent
-            name: network-guard
-            resources: {}
-            securityContext:
-              allowPrivilegeEscalation: false
-              capabilities:
-                add:
-                - NET_ADMIN
-                drop:
-                - ALL
-              runAsUser: 0
-            volumeMounts:
-            - mountPath: /guard
-              name: guard
+        chart:
+          spec:
+            chart: prowlarr
+            interval: 5m
+            sourceRef:
+              kind: HelmRepository
+              name: k8s-at-home
+              namespace: kube-system
+            version: 4.2.0
+        install:
+          disableTakeOwnership: false
+        interval: 5m
+        postRenderers:
+        - kustomize:
+            patches:
+            - patch: "- op: replace\n  path: /spec/ports/0/targetPort\n  value: 9696\n\
+                - op: remove\n  path: /spec/selector/app.kubernetes.io~1name\n- op: remove\n\
+                \  path: /spec/selector/app.kubernetes.io~1instance\n- op: add\n  path:\
+                \ /spec/selector/app\n  value: prowlarr-public\n"
+              target:
+                kind: Service
+                name: prowlarr-public
+            - patch: "- op: remove\n  path: /spec/selector/matchLabels/app.kubernetes.io~1name\n\
+                - op: remove\n  path: /spec/selector/matchLabels/app.kubernetes.io~1instance\n\
+                - op: add\n  path: /spec/selector/matchLabels/app\n  value: prowlarr-public\n\
+                - op: remove\n  path: /spec/template/metadata/labels/app.kubernetes.io~1name\n\
+                - op: remove\n  path: /spec/template/metadata/labels/app.kubernetes.io~1instance\n\
+                - op: add\n  path: /spec/template/metadata/labels/app\n  value: prowlarr-public\n\
+                - op: remove\n  path: /spec/template/spec/serviceAccountName\n- op: remove\n\
+                \  path: /spec/template/spec/enableServiceLinks\n- op: replace\n  path:\
+                \ /spec/template/spec/containers/0/name\n  value: prowlarr\n- op: replace\n\
+                \  path: /spec/template/spec/containers/0/image\n  value: docker.io/linuxserver/prowlarr@sha256:9dab9a743cd558fa33d17db65d77c9fda40582b26c88e347b1c43808c6615e97\n\
+                - op: remove\n  path: /spec/template/spec/containers/0/ports\n- op: remove\n\
+                \  path: /spec/template/spec/containers/0/readinessProbe/failureThreshold\n\
+                - op: remove\n  path: /spec/template/spec/containers/0/readinessProbe/initialDelaySeconds\n\
+                - op: remove\n  path: /spec/template/spec/containers/0/readinessProbe/successThreshold\n\
+                - op: add\n  path: /spec/template/spec/containers/0/resources\n  value:\
+                \ {}\n- op: add\n  path: /spec/replicas\n  value: 1\n"
+              target:
+                kind: Deployment
+                name: prowlarr-public
+            - patch: "- op: add\n  path: /spec/ingressClassName\n  value: nginx"
+              target:
+                kind: Ingress
+                name: prowlarr-public
+        suspend: false
+        upgrade:
+          disableTakeOwnership: false
+        values:
+          args: []
+          automountServiceAccountToken: false
+          command:
+          - /bin/bash
+          - /guard/start.sh
+          configmap:
+            guard:
+              annotations:
+                kustomize.toolkit.fluxcd.io/substitute: disabled
+              data:
+                start.sh: '#!/bin/bash
+
+                  set -eu
+
+                  test -s /config/prowlarr.db
+
+                  test -s /config/RECOVERY-SAFETY-VERIFIED
+
+                  test -s /config/PUBLIC-SAFETY-VERIFIED
+
+                  (cd /config && sha256sum -c PUBLIC-CONFIG.sha256 >/dev/null)
+
+                  grep -q ''<AuthenticationMethod>Forms</AuthenticationMethod>'' /config/config.xml
+
+                  test -x /app/prowlarr/bin/Prowlarr
+
+                  exec /app/prowlarr/bin/Prowlarr -nobrowser -data=/config
+
+                  '
+              enabled: true
+              nameOverride: guard-restored-v1
+          controller:
+            revisionHistoryLimit: 10
+            strategy: Recreate
+          env:
+          - name: HOME
+            value: /config
+          - name: PUID
+            value: '1000'
+          - name: PGID
+            value: '1000'
+          - name: TZ
+            value: America/New_York
+          fullnameOverride: prowlarr-public
+          image:
+            repository: docker.io/linuxserver/prowlarr
+            tag: recovered
+          ingress:
+            main:
+              enabled: true
+              hosts:
+              - host: seedbox.dumbhome.uk
+                paths:
+                - path: /
+                  pathType: Prefix
+              tls:
+              - hosts:
+                - seedbox.dumbhome.uk
+                secretName: internal-ingress-cert
+          nodeSelector:
+            kubernetes.io/hostname: k8s-control-plane
+          persistence:
+            config:
+              enabled: true
+              existingClaim: yasr-volume
+              subPath: configs/prowlarr
+              type: pvc
+            guard:
+              enabled: true
+              mountPath: /guard
               readOnly: true
-        probes:
-          liveness:
-            enabled: false
-          startup:
-            enabled: false
-          readiness:
-            enabled: true
-            custom: true
-            spec:
-              exec:
-                command:
-                - /bin/sh
-                - -c
-                - curl --max-time 3 -fsS http://127.0.0.1:9696/ping >/dev/null
-              failureThreshold: 3
-              periodSeconds: 5
-              successThreshold: 1
-              timeoutSeconds: 4
-        configmap:
-          guard:
-            enabled: true
-            nameOverride: guard-c25k4c25mc
-            annotations:
-              kustomize.toolkit.fluxcd.io/substitute: disabled
-            data:
-              guard.sh: |
-                #!/bin/bash
-                set -eux
-                # This script runs only in the Pod network namespace, never in hostNetwork.
-                # The positive control must succeed before a failed connection proves a block.
-                nc -w 2 10.101.63.36 8191 </dev/null >/dev/null
-                for tool in iptables ip6tables; do
-                    "${tool}" -w 5 -P OUTPUT DROP
-                    "${tool}" -w 5 -P INPUT DROP
-                    "${tool}" -w 5 -P FORWARD DROP
-                    "${tool}" -w 5 -F
-                    "${tool}" -w 5 -A OUTPUT -o lo -j ACCEPT
-                    "${tool}" -w 5 -A OUTPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-                    "${tool}" -w 5 -A INPUT -i lo -j ACCEPT
-                    "${tool}" -w 5 -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-                done
-                iptables -w 5 -A INPUT -s 10.244.0.4/32 -p tcp --dport 9696 -m conntrack --ctstate NEW -j ACCEPT
-                nc -l -p 18765 -e /bin/cat &
-                listener=$!
-                trap 'kill "${listener}" 2>/dev/null || true' EXIT
-                sleep 1
-                reply=$(printf 'private-loopback\n' | nc -w 2 127.0.0.1 18765)
-                test "${reply}" = private-loopback
-                if nc -w 2 10.101.63.36 8191 </dev/null >/dev/null 2>&1; then
-                    echo 'FAIL: new external connection permitted' >&2
-                    exit 1
-                fi
-                # Require a DROP policy and actual packet hits, not merely a failed probe.
-                iptables -w 5 -L OUTPUT -n -v | grep -E 'policy DROP [1-9][0-9]* packets'
-                ip6tables -w 5 -S OUTPUT | grep -Fx -- '-P OUTPUT DROP'
-                echo 'PASS: loopback allowed; controlled new external TCP blocked; IPv4/IPv6 default DROP'
-              start.sh: |
-                #!/bin/bash
-                set -eu
-                test -s /config/prowlarr.db
-                test -s /config/RECOVERY-SAFETY-VERIFIED
-                test -s /config/PUBLIC-SAFETY-VERIFIED
-                (cd /config && sha256sum -c PUBLIC-CONFIG.sha256 >/dev/null)
-                grep -q '<AuthenticationMethod>Forms</AuthenticationMethod>' /config/config.xml
-                test -x /app/prowlarr/bin/Prowlarr
-                exec /app/prowlarr/bin/Prowlarr -nobrowser -data=/config
-    - op: add
-      path: /spec/install
-      value:
-        disableTakeOwnership: false
-    - op: add
-      path: /spec/upgrade
-      value:
-        disableTakeOwnership: false
-    - op: add
-      path: /spec/postRenderers
-      value:
-      - kustomize:
-          patches:
-          - target:
-              kind: Service
-              name: prowlarr-public
-            patch: |
-              - op: replace
-                path: /spec/ports/0/targetPort
-                value: 9696
-              - op: remove
-                path: /spec/selector/app.kubernetes.io~1name
-              - op: remove
-                path: /spec/selector/app.kubernetes.io~1instance
-              - op: add
-                path: /spec/selector/app
-                value: prowlarr-public
-          - target:
-              kind: Deployment
-              name: prowlarr-public
-            patch: |
-              - op: remove
-                path: /spec/selector/matchLabels/app.kubernetes.io~1name
-              - op: remove
-                path: /spec/selector/matchLabels/app.kubernetes.io~1instance
-              - op: add
-                path: /spec/selector/matchLabels/app
-                value: prowlarr-public
-              - op: remove
-                path: /spec/template/metadata/labels/app.kubernetes.io~1name
-              - op: remove
-                path: /spec/template/metadata/labels/app.kubernetes.io~1instance
-              - op: add
-                path: /spec/template/metadata/labels/app
-                value: prowlarr-public
-              - op: remove
-                path: /spec/template/spec/serviceAccountName
-              - op: remove
-                path: /spec/template/spec/enableServiceLinks
-              - op: replace
-                path: /spec/template/spec/containers/0/name
-                value: prowlarr
-              - op: replace
-                path: /spec/template/spec/containers/0/image
-                value: docker.io/linuxserver/prowlarr@sha256:9dab9a743cd558fa33d17db65d77c9fda40582b26c88e347b1c43808c6615e97
-              - op: remove
-                path: /spec/template/spec/containers/0/ports
-              - op: remove
-                path: /spec/template/spec/containers/0/readinessProbe/failureThreshold
-              - op: remove
-                path: /spec/template/spec/containers/0/readinessProbe/initialDelaySeconds
-              - op: remove
-                path: /spec/template/spec/containers/0/readinessProbe/successThreshold
-              - op: add
-                path: /spec/template/spec/containers/0/resources
-                value: {}
-          - target:
-              kind: Ingress
-              name: prowlarr-public
-            patch: |
-              - op: add
-                path: /spec/ingressClassName
-                value: nginx
+              type: custom
+              volumeSpec:
+                configMap:
+                  defaultMode: 420
+                  name: prowlarr-public-guard-restored-v1
+          probes:
+            liveness:
+              enabled: false
+            readiness:
+              custom: true
+              enabled: true
+              spec:
+                exec:
+                  command:
+                  - /bin/sh
+                  - -c
+                  - curl --max-time 3 -fsS http://127.0.0.1:9696/ping >/dev/null
+                failureThreshold: 3
+                periodSeconds: 5
+                successThreshold: 1
+                timeoutSeconds: 4
+            startup:
+              enabled: false
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            runAsGroup: 1000
+            runAsUser: 1000
 - target:
     group: helm.toolkit.fluxcd.io
     version: v2
