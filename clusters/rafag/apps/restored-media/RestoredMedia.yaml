@@ -433,3 +433,18 @@ spec:
   - hosts:
     - mousehole.dumbhome.uk
     secretName: internal-ingress-cert
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarr
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: sonarr-transmission-private
+  ports:
+  - name: http
+    port: 8989
+    targetPort: 8989
+    protocol: TCP
