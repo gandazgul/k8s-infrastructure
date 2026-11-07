@@ -13,7 +13,7 @@ resources:
   - ../../../apps/Forecastle.yaml
   - ../../../apps/HomeAssistant.yaml
   - ../../../apps/Paperless.yaml
-  # - ../../../apps/Resilio.yaml
+   - ../../../apps/Resilio.yaml
   # - ../../../apps/SFTPGo.yaml
   - ../../../apps/ZWaveJS.yaml
   - ../../../apps/Mealie.yaml
@@ -28,14 +28,11 @@ resources:
   # - ../../../apps/TubeSync.yaml
   - ../../../apps/Tdarr.yaml
   - ../../../apps/Plex.yaml
-  # - ../../../apps/K7.yaml
   - ../../../apps/RDiffWeb.yaml
   # - ../../../apps/Qdrant.yaml
   - ../../../apps/Immich.yaml
-  # - ../../../apps/OpenWebUI.yaml
-  - ../../../apps/Goaly.yaml
-  # - ../../../apps/Gotify.yaml
-  - ../../../apps/Tow.yaml
+    - ../../../apps/Goaly.yaml
+    - ../../../apps/Tow.yaml
   - ../../../apps/Overture.yaml
   - ../../../apps/BerenstainBears.yaml
   - ../../../apps/DrawingGame.yaml
