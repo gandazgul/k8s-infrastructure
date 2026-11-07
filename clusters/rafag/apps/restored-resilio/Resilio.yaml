@@ -1,0 +1,145 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: resilio-resilio-sync
+  labels:
+    helm.sh/chart: resilio-sync-5.0.1
+    app.kubernetes.io/name: resilio-sync
+    app.kubernetes.io/instance: resilio
+    app.kubernetes.io/version: 2.7.2
+  annotations: null
+  namespace: default
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8888
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app.kubernetes.io/name: resilio-sync
+    app.kubernetes.io/instance: resilio
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resilio-resilio-sync
+  labels:
+    helm.sh/chart: resilio-sync-5.0.1
+    app.kubernetes.io/name: resilio-sync
+    app.kubernetes.io/instance: resilio
+    app.kubernetes.io/version: 2.7.2
+  namespace: default
+  annotations:
+    recovery.rafag/data-authority: CURRENT /media/yasr/configs/resilio; no restore/canary
+      promotion
+spec:
+  revisionHistoryLimit: 3
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: resilio-sync
+      app.kubernetes.io/instance: resilio
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: resilio-sync
+        app.kubernetes.io/instance: resilio
+    spec:
+      serviceAccountName: default
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: false
+      containers:
+      - name: resilio-resilio-sync
+        image: ghcr.io/linuxserver/resilio-sync:version-2.7.2.1375@sha256:0f91995938cfc1c5e6b3cb1c7b333772094d2ba29bb8daea9fe149d5201190c8
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: PGID
+          value: '1000'
+        - name: PUID
+          value: '1000'
+        - name: TZ
+          value: America/New_York
+        - name: UMASK
+          value: ''
+        ports:
+        - name: http
+          containerPort: 8888
+          protocol: TCP
+        volumeMounts:
+        - name: config
+          mountPath: /config
+          subPath: configs/resilio
+        - name: sync
+          mountPath: /sync
+          subPath: rafag
+        livenessProbe:
+          tcpSocket:
+            port: 8888
+          initialDelaySeconds: 0
+          failureThreshold: 3
+          timeoutSeconds: 1
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 8888
+          initialDelaySeconds: 0
+          failureThreshold: 3
+          timeoutSeconds: 1
+          periodSeconds: 10
+        startupProbe:
+          tcpSocket:
+            port: 8888
+          initialDelaySeconds: 0
+          failureThreshold: 30
+          timeoutSeconds: 1
+          periodSeconds: 5
+        resources:
+          limits:
+            memory: 12Gi
+          requests:
+            cpu: 250m
+            memory: 2Gi
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: yasr-volume
+      - name: sync
+        persistentVolumeClaim:
+          claimName: main-volume
+      automountServiceAccountToken: false
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: resilio-resilio-sync
+  labels:
+    helm.sh/chart: resilio-sync-5.0.1
+    app.kubernetes.io/name: resilio-sync
+    app.kubernetes.io/instance: resilio
+    app.kubernetes.io/version: 2.7.2
+  annotations:
+    forecastle.stakater.com/appName: Resilio
+    forecastle.stakater.com/expose: 'true'
+    forecastle.stakater.com/group: File Sharing
+    forecastle.stakater.com/icon: https://www.resilio.com/images/sync-logo-horizontal-digital-full-color.svg
+    kubernetes.io/ingress.class: nginx
+  namespace: default
+spec:
+  tls:
+  - hosts:
+    - resilio.dumbhome.uk
+    secretName: internal-ingress-cert
+  rules:
+  - host: resilio.dumbhome.uk
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: resilio-resilio-sync
+            port:
+              number: 8888

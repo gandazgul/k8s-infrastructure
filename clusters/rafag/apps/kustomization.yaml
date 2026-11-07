@@ -1,40 +1,1070 @@
----
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./secrets/
-  - ../../../apps/ActualBudget.yaml
-  - ../../../apps/Bitwarden.yaml
-  - ../../../apps/Forecastle.yaml
-  - ../../../apps/HomeAssistant.yaml
-  - ../../../apps/TeslaPublicKey.yaml
-  - ../../../apps/MosquitoMQTTBroker.yaml
-  - ../../../apps/Paperless.yaml
-  - ../../../apps/Photoprism.yaml
-  - ../../../apps/ImmichRafag.yaml
-  - ../../../apps/Resilio.yaml
-  - ../../../apps/SFTPGo.yaml
-  - ../../../apps/Sharry.yaml
-  #  - ../../../apps/ZWaveJS.yaml
-  - ../../../apps/Mealie.yaml
-  - ../../../apps/Transmission.yaml
-  - ../../../apps/Lidarr.yaml
-  - ../../../apps/Overseerr.yaml
-  - ../../../apps/Prowlarr.yaml
-  - ../../../apps/Radarr.yaml
-  - ../../../apps/Sonarr.yaml
-  - ../../../apps/Tdarr.yaml
-  - ../../../apps/Plex.yaml
-  # - ../../../apps/Ollama.yaml
-  # - ../../../apps/OpenWebUI.yaml
-  # - ../../../apps/Zigbee2mqtt.yaml
-  - ../../../apps/N8N.yaml
-  - ../../../apps/AudioBookShelf.yaml
-  - ../../../apps/Flaresolverr.yaml
-  - ../../../apps/Qdrant.yaml
-  - ../../../apps/SearXNG.yaml
-  - ../../../apps/Wallabag.yaml
-  - ../../../apps/FreshRSS.yaml
-  - ../../../apps/KokoroTTS.yaml
-  - ../../../apps/WyomingOpenAI.yaml
-  - ../../../apps/YouTubeOperationalAPI.yaml
+- prowlarr/ServiceAlias.yaml
+- RestoredResilio.yaml
+- RestoredMedia.yaml
+- ../../../apps/TeslaPublicKey.yaml
+- ../../../apps/FreshRSS.yaml
+- ../../../apps/Lidarr.yaml
+- ../../../apps/Qdrant.yaml
+- ../../../apps/SearXNG.yaml
+- ../../../apps/Wallabag.yaml
+- ../../../apps/Mealie.yaml
+- ../../../apps/N8N.yaml
+- ../../../apps/Bitwarden.yaml
+- ../../../apps/Forecastle.yaml
+- ../../../apps/MosquitoMQTTBroker.yaml
+- ../../../apps/Plex.yaml
+- sftpgo/HelmRelease.yaml
+- ../../../apps/HomeAssistant.yaml
+- ../../../apps/KokoroTTS.yaml
+- ../../../apps/WyomingOpenAI.yaml
+- ../../../apps/Flaresolverr.yaml
+- ../../../apps/Prowlarr.yaml
+- ../../../apps/Sharry.yaml
+- ../../../apps/Paperless.yaml
+- ../../../apps/Immich.yaml
+- home-assistant/Ingress.yaml
+- sftpgo/SFTPGo.yaml
+- ../../../apps/AudioBookShelf.yaml
+- overseerr/Overseerr.yaml
+patches:
+- target:
+    group: kustomize.toolkit.fluxcd.io
+    version: v1
+    kind: Kustomization
+    name: audiobookshelf
+    namespace: default
+  patch: |
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: audiobookshelf
+      namespace: default
+    spec:
+      path: ./clusters/rafag/apps/audiobookshelf/
+      suspend: false
+      postBuild:
+        substitute:
+          AUDIOBOOKSHELF_MOUNT_PATH: /data/books-podcast-media
+- target:
+    group: kustomize.toolkit.fluxcd.io
+    version: v1
+    kind: Kustomization
+    name: mealie
+    namespace: default
+  patch: |
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: mealie
+      namespace: default
+    spec:
+      patches:
+      - target:
+          group: apps
+          version: v1
+          kind: Deployment
+          name: mealie
+          namespace: default
+        patch: |
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: mealie
+            namespace: default
+          spec:
+            template:
+              spec:
+                containers:
+                - name: container
+                  env:
+                  - name: SMTP_PASSWORD
+                    value: null
+                    valueFrom:
+                      secretKeyRef:
+                        name: mealie-smtp
+                        key: SMTP_PASSWORD
+- patch: |
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: qdrant
+      namespace: default
+    spec:
+      path: ./clusters/rafag/apps/qdrant/
+  target:
+    group: kustomize.toolkit.fluxcd.io
+    version: v1
+    kind: Kustomization
+    name: qdrant
+    namespace: default
+- patch: |
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: n8n
+      namespace: default
+    spec:
+      path: ./clusters/rafag/apps/n8n/
+  target:
+    group: kustomize.toolkit.fluxcd.io
+    version: v1
+    kind: Kustomization
+    name: n8n
+    namespace: default
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: bitwarden
+  patch: |
+    - op: replace
+      path: /spec
+      value:
+        chart:
+          spec:
+            chart: vaultwarden
+            interval: 5m
+            sourceRef:
+              kind: HelmRepository
+              name: k8s-at-home
+              namespace: kube-system
+            version: 5.3.2
+        interval: 5m
+        postRenderers:
+        - kustomize:
+            images:
+            - digest: sha256:094b5689ed81549bd293418395c7cf495ae9d960fc2d4928cef2083ef913d912
+              name: vaultwarden/server
+        suspend: false
+        valuesFrom:
+        - kind: Secret
+          name: bitwarden-gitops-values
+          valuesKey: values.yaml
+          optional: false
+    - op: add
+      path: /metadata/annotations
+      value:
+        kustomize.toolkit.fluxcd.io/prune: disabled
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: forecastle
+  patch: |
+    - op: replace
+      path: /spec
+      value:
+        chart:
+          spec:
+            chart: forecastle
+            sourceRef:
+              kind: HelmRepository
+              name: stakater-charts
+              namespace: kube-system
+            version: 2.1.1
+        interval: 5m
+        postRenderers:
+        - kustomize:
+            images:
+            - digest: sha256:382cd9572352be83c28d44443daa6ba461fc4bdf6d8ce387ff0e5e2903c37bc6
+              name: stakater/forecastle
+            patches:
+            - patch: |
+                - op: replace
+                  path: /rules
+                  value:
+                  - apiGroups:
+                    - ''
+                    resources:
+                    - namespaces
+                    verbs:
+                    - get
+                    - list
+                  - apiGroups:
+                    - networking.k8s.io
+                    resources:
+                    - ingresses
+                    verbs:
+                    - get
+                    - list
+              target:
+                kind: ClusterRole
+                name: forecastle-cluster-ingress-role
+        valuesFrom:
+        - kind: Secret
+          name: forecastle-gitops-values
+          valuesKey: values.yaml
+          optional: false
+    - op: add
+      path: /metadata/annotations
+      value:
+        kustomize.toolkit.fluxcd.io/prune: disabled
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: mosquitto
+  patch: |
+    - op: replace
+      path: /spec
+      value:
+        chart:
+          spec:
+            chart: mosquitto
+            sourceRef:
+              kind: HelmRepository
+              name: k8s-at-home
+              namespace: kube-system
+            version: 4.3.2
+        interval: 1h0m0s
+        postRenderers:
+        - kustomize:
+            patches:
+            - patch: |
+                - op: replace
+                  path: /data/mosquitto.conf
+                  value: 'listener 1883 127.0.0.1
+
+                    allow_anonymous true
+
+                    include_dir /mosquitto/configinc
+
+                    '
+              target:
+                kind: ConfigMap
+                name: mosquitto-config
+        suspend: false
+        valuesFrom:
+        - kind: Secret
+          name: mosquitto-gitops-values
+          valuesKey: values.yaml
+          optional: false
+    - op: add
+      path: /metadata/annotations
+      value:
+        kustomize.toolkit.fluxcd.io/prune: disabled
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: plex
+  patch: |
+    - op: replace
+      path: /spec
+      value:
+        chart:
+          spec:
+            chart: plex
+            interval: 5m
+            sourceRef:
+              kind: HelmRepository
+              name: k8s-at-home
+              namespace: kube-system
+            version: 6.2.1
+        interval: 5m
+        postRenderers:
+        - kustomize:
+            images:
+            - digest: sha256:6d778d41daae68f89115aa87a44ae14a96b23e71a2093da173b5a9aac4091336
+              name: plexinc/pms-docker
+            patches:
+            - patch: |-
+                - op: add
+                  path: /spec/externalTrafficPolicy
+                  value: Local
+              target:
+                kind: Service
+                name: plex
+        suspend: false
+        valuesFrom:
+        - kind: Secret
+          name: plex-values
+          optional: false
+        - kind: Secret
+          name: plex-gitops-values
+          valuesKey: values.yaml
+          optional: false
+    - op: add
+      path: /metadata/annotations
+      value:
+        kustomize.toolkit.fluxcd.io/prune: disabled
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: home-assistant
+  patch: |
+    - op: remove
+      path: /spec/values
+    - op: add
+      path: /spec/valuesFrom
+      value:
+      - kind: Secret
+        name: home-assistant-values
+        valuesKey: values.yaml
+        optional: false
+    - op: add
+      path: /spec/suspend
+      value: false
+    - op: add
+      path: /spec/upgrade
+      value:
+        disableTakeOwnership: false
+    - op: add
+      path: /spec/postRenderers
+      value:
+      - kustomize:
+          patches:
+          - target:
+              kind: Deployment
+              name: home-assistant
+            patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: home-assistant
+              spec:
+                template:
+                  spec:
+                    containers:
+                    - name: codeserver
+                      command:
+                      - /usr/bin/dumb-init
+                      - --
+                      - /usr/bin/code-server
+                      env:
+                      - name: PASSWORD
+                        valueFrom:
+                          secretKeyRef:
+                            name: secrets
+                            key: ADMIN_PASSWORD
+                      startupProbe:
+                        httpGet:
+                          path: /healthz
+                          port: codeserver
+                        failureThreshold: 60
+                        periodSeconds: 5
+                      readinessProbe:
+                        httpGet:
+                          path: /healthz
+                          port: codeserver
+                      livenessProbe:
+                        httpGet:
+                          path: /healthz
+                          port: codeserver
+                        initialDelaySeconds: 30
+          - target:
+              kind: Service
+              name: home-assistant-codeserver
+            patch: |
+              - op: replace
+                path: /metadata/name
+                value: home-assistant-editor
+    - op: add
+      path: /metadata/annotations
+      value:
+        kustomize.toolkit.fluxcd.io/prune: disabled
+- target:
+    group: source.toolkit.fluxcd.io
+    version: v1
+    kind: HelmRepository
+    name: stakater-charts
+  patch: |
+    apiVersion: source.toolkit.fluxcd.io/v1
+    kind: HelmRepository
+    metadata:
+      name: stakater-charts
+      namespace: kube-system
+    $patch: delete
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: flaresolverr
+    namespace: default
+  patch: |
+    - op: replace
+      path: /spec/values
+      value:
+        extraEnv:
+        - name: PUID
+          value: '1000'
+        - name: PGID
+          value: '1000'
+        - name: TZ
+          value: America/New_York
+        service:
+          port: 8191
+        ingress:
+          enabled: false
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 250m
+            memory: 256Mi
+        image:
+          registry: ghcr.io
+          repository: flaresolverr/flaresolverr
+          sha: 4ad0ed7de64622f9823594bf7bc237149158fca881f875aafbdd8456f6467134
+        serviceAccount:
+          create: false
+          automount: false
+        podSecurityContext: null
+        nodeSelector:
+          kubernetes.io/arch: amd64
+    - op: add
+      path: /spec/install
+      value:
+        disableTakeOwnership: false
+    - op: add
+      path: /spec/upgrade
+      value:
+        disableTakeOwnership: false
+    - op: add
+      path: /spec/postRenderers
+      value:
+      - kustomize:
+          patches:
+          - target:
+              kind: Service
+              name: flaresolverr
+            patch: |
+              - op: remove
+                path: /spec/selector/app.kubernetes.io~1instance
+              - op: replace
+                path: /spec/ipFamilyPolicy
+                value: SingleStack
+          - target:
+              kind: Deployment
+              name: flaresolverr
+            patch: |
+              - op: remove
+                path: /spec/selector/matchLabels/app.kubernetes.io~1instance
+              - op: remove
+                path: /spec/template/metadata/labels/helm.sh~1chart
+              - op: remove
+                path: /spec/template/metadata/labels/app.kubernetes.io~1instance
+              - op: remove
+                path: /spec/template/metadata/labels/app.kubernetes.io~1version
+              - op: remove
+                path: /spec/template/metadata/labels/app.kubernetes.io~1part-of
+              - op: remove
+                path: /spec/template/metadata/labels/app.kubernetes.io~1managed-by
+              - op: remove
+                path: /spec/template/spec/serviceAccountName
+              - op: replace
+                path: /spec/template/spec/securityContext
+                value: {}
+              - op: replace
+                path: /spec/template/spec/containers/0/image
+                value: ghcr.io/flaresolverr/flaresolverr@sha256:4ad0ed7de64622f9823594bf7bc237149158fca881f875aafbdd8456f6467134
+              - op: add
+                path: /spec/template/spec/containers/0/livenessProbe/timeoutSeconds
+                value: 10
+              - op: add
+                path: /spec/template/spec/containers/0/readinessProbe/timeoutSeconds
+                value: 10
+              - op: add
+                path: /spec/template/spec/containers/0/startupProbe
+                value:
+                  failureThreshold: 36
+                  httpGet:
+                    path: /health
+                    port: http
+                  periodSeconds: 5
+                  timeoutSeconds: 10
+              - op: add
+                path: /spec/template/spec/automountServiceAccountToken
+                value: false
+              - op: add
+                path: /spec/revisionHistoryLimit
+                value: 2
+- target:
+    group: source.toolkit.fluxcd.io
+    kind: OCIRepository
+    name: flaresolverr
+    namespace: kube-system
+  patch: |
+    - op: replace
+      path: /spec/ref
+      value:
+        tag: 2.0.1
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: prowlarr
+    namespace: default
+  patch: |
+    - op: replace
+      path: /spec
+      value:
+        chart:
+          spec:
+            chart: prowlarr
+            interval: 5m
+            sourceRef:
+              kind: HelmRepository
+              name: k8s-at-home
+              namespace: kube-system
+            version: 4.2.0
+        install:
+          disableTakeOwnership: false
+        interval: 5m
+        postRenderers:
+        - kustomize:
+            patches:
+            - patch: "- op: replace\n  path: /spec/ports/0/targetPort\n  value: 9696\n\
+                - op: remove\n  path: /spec/selector/app.kubernetes.io~1name\n- op: remove\n\
+                \  path: /spec/selector/app.kubernetes.io~1instance\n- op: add\n  path:\
+                \ /spec/selector/app\n  value: prowlarr-public\n"
+              target:
+                kind: Service
+                name: prowlarr-public
+            - patch: "- op: remove\n  path: /spec/selector/matchLabels/app.kubernetes.io~1name\n\
+                - op: remove\n  path: /spec/selector/matchLabels/app.kubernetes.io~1instance\n\
+                - op: add\n  path: /spec/selector/matchLabels/app\n  value: prowlarr-public\n\
+                - op: remove\n  path: /spec/template/metadata/labels/app.kubernetes.io~1name\n\
+                - op: remove\n  path: /spec/template/metadata/labels/app.kubernetes.io~1instance\n\
+                - op: add\n  path: /spec/template/metadata/labels/app\n  value: prowlarr-public\n\
+                - op: remove\n  path: /spec/template/spec/serviceAccountName\n- op: remove\n\
+                \  path: /spec/template/spec/enableServiceLinks\n- op: replace\n  path:\
+                \ /spec/template/spec/containers/0/name\n  value: prowlarr\n- op: replace\n\
+                \  path: /spec/template/spec/containers/0/image\n  value: docker.io/linuxserver/prowlarr@sha256:9dab9a743cd558fa33d17db65d77c9fda40582b26c88e347b1c43808c6615e97\n\
+                - op: remove\n  path: /spec/template/spec/containers/0/ports\n- op: remove\n\
+                \  path: /spec/template/spec/containers/0/readinessProbe/failureThreshold\n\
+                - op: remove\n  path: /spec/template/spec/containers/0/readinessProbe/initialDelaySeconds\n\
+                - op: remove\n  path: /spec/template/spec/containers/0/readinessProbe/successThreshold\n\
+                - op: add\n  path: /spec/template/spec/containers/0/resources\n  value:\
+                \ {}\n- op: add\n  path: /spec/replicas\n  value: 1\n"
+              target:
+                kind: Deployment
+                name: prowlarr-public
+            - patch: "- op: add\n  path: /spec/ingressClassName\n  value: nginx"
+              target:
+                kind: Ingress
+                name: prowlarr-public
+        suspend: false
+        upgrade:
+          disableTakeOwnership: false
+        values:
+          args: []
+          automountServiceAccountToken: false
+          command:
+          - /bin/bash
+          - /guard/start.sh
+          configmap:
+            guard:
+              annotations:
+                kustomize.toolkit.fluxcd.io/substitute: disabled
+              data:
+                start.sh: '#!/bin/bash
+
+                  set -eu
+
+                  test -s /config/prowlarr.db
+
+                  test -s /config/RECOVERY-SAFETY-VERIFIED
+
+                  test -s /config/PUBLIC-SAFETY-VERIFIED
+
+                  (cd /config && sha256sum -c PUBLIC-CONFIG.sha256 >/dev/null)
+
+                  grep -q ''<AuthenticationMethod>Forms</AuthenticationMethod>'' /config/config.xml
+
+                  test -x /app/prowlarr/bin/Prowlarr
+
+                  exec /app/prowlarr/bin/Prowlarr -nobrowser -data=/config
+
+                  '
+              enabled: true
+              nameOverride: guard-restored-v1
+          controller:
+            revisionHistoryLimit: 10
+            strategy: Recreate
+          env:
+          - name: HOME
+            value: /config
+          - name: PUID
+            value: '1000'
+          - name: PGID
+            value: '1000'
+          - name: TZ
+            value: America/New_York
+          fullnameOverride: prowlarr-public
+          image:
+            repository: docker.io/linuxserver/prowlarr
+            tag: recovered
+          ingress:
+            main:
+              enabled: true
+              hosts:
+              - host: seedbox.dumbhome.uk
+                paths:
+                - path: /
+                  pathType: Prefix
+              tls:
+              - hosts:
+                - seedbox.dumbhome.uk
+                secretName: internal-ingress-cert
+          nodeSelector:
+            kubernetes.io/hostname: k8s-control-plane
+          persistence:
+            config:
+              enabled: true
+              existingClaim: yasr-volume
+              subPath: configs/prowlarr
+              type: pvc
+            guard:
+              enabled: true
+              mountPath: /guard
+              readOnly: true
+              type: custom
+              volumeSpec:
+                configMap:
+                  defaultMode: 420
+                  name: prowlarr-public-guard-restored-v1
+          probes:
+            liveness:
+              enabled: false
+            readiness:
+              custom: true
+              enabled: true
+              spec:
+                exec:
+                  command:
+                  - /bin/sh
+                  - -c
+                  - curl --max-time 3 -fsS http://127.0.0.1:9696/ping >/dev/null
+                failureThreshold: 3
+                periodSeconds: 5
+                successThreshold: 1
+                timeoutSeconds: 4
+            startup:
+              enabled: false
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            runAsGroup: 1000
+            runAsUser: 1000
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: sharry
+    namespace: default
+  patch: |
+    - op: replace
+      path: /spec/values
+      value:
+        env: []
+        config: '{}'
+        persistence:
+          config:
+            enabled: false
+          guard:
+            enabled: true
+            type: custom
+            volumeSpec:
+              configMap:
+                defaultMode: 420
+                name: sharry-private-guard
+            mountPath: /guard
+            readOnly: true
+          working:
+            enabled: true
+            type: custom
+            volumeSpec:
+              persistentVolumeClaim:
+                claimName: yasr-volume
+            mountPath: /config
+            readOnly: true
+            subPath: recovery/sharry-20261030/working
+        ingress:
+          main:
+            enabled: false
+        fullnameOverride: sharry-private
+        image:
+          repository: docker.io/eikek0/sharry
+          tag: recovered
+        controller:
+          strategy: Recreate
+          revisionHistoryLimit: 10
+        command:
+        - /opt/sharry-restserver-1.8.0/bin/sharry-restserver
+        - /guard/sharry.conf
+        args: []
+        automountServiceAccountToken: false
+        nodeSelector:
+          kubernetes.io/hostname: k8s-control-plane
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        initContainers:
+          network-guard:
+            command:
+            - /bin/sh
+            - /guard/guard.sh
+            image: ghcr.io/flannel-io/flannel@sha256:9aeaf1689ad3554e686d5f4062f33a2ba173398fd8f6d0346bd1dc1a27fb1437
+            imagePullPolicy: IfNotPresent
+            name: network-guard
+            resources: {}
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                add:
+                - NET_ADMIN
+                drop:
+                - ALL
+              runAsUser: 0
+            volumeMounts:
+            - mountPath: /guard
+              name: guard
+              readOnly: true
+        probes:
+          liveness:
+            enabled: false
+          startup:
+            enabled: false
+          readiness:
+            enabled: true
+            custom: true
+            spec:
+              exec:
+                command:
+                - sh
+                - -c
+                - wget -q -O /dev/null http://127.0.0.1:9090/app
+              failureThreshold: 3
+              periodSeconds: 5
+              successThreshold: 1
+              timeoutSeconds: 3
+        service:
+          main:
+            enabled: false
+    - op: add
+      path: /spec/install
+      value:
+        disableTakeOwnership: false
+    - op: add
+      path: /spec/upgrade
+      value:
+        disableTakeOwnership: false
+    - op: add
+      path: /spec/postRenderers
+      value:
+      - kustomize:
+          patches:
+          - target:
+              kind: ConfigMap
+              name: sharry-private-config
+            patch: |
+              - op: replace
+                path: /metadata/name
+                value: sharry-private-guard
+              - op: replace
+                path: /data
+                value:
+                  guard.sh: |
+                    #!/bin/bash
+                    set -eux
+                    # This script runs only in the Pod network namespace, never in hostNetwork.
+                    # The positive control must succeed before a failed connection proves a block.
+                    nc -w 2 10.101.63.36 8191 </dev/null >/dev/null
+                    for tool in iptables ip6tables; do
+                        "${tool}" -w 5 -P OUTPUT DROP
+                        "${tool}" -w 5 -P INPUT DROP
+                        "${tool}" -w 5 -P FORWARD DROP
+                        "${tool}" -w 5 -F
+                        "${tool}" -w 5 -A OUTPUT -o lo -j ACCEPT
+                        "${tool}" -w 5 -A OUTPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+                        "${tool}" -w 5 -A INPUT -i lo -j ACCEPT
+                        "${tool}" -w 5 -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+                    done
+                    nc -l -p 18765 -e /bin/cat &
+                    listener=$!
+                    trap 'kill "${listener}" 2>/dev/null || true' EXIT
+                    sleep 1
+                    reply=$(printf 'private-loopback\n' | nc -w 2 127.0.0.1 18765)
+                    test "${reply}" = private-loopback
+                    if nc -w 2 10.101.63.36 8191 </dev/null >/dev/null 2>&1; then
+                        echo 'FAIL: new external connection permitted' >&2
+                        exit 1
+                    fi
+                    # Require a DROP policy and actual packet hits, not merely a failed probe.
+                    iptables -w 5 -L OUTPUT -n -v | grep -E 'policy DROP [1-9][0-9]* packets'
+                    ip6tables -w 5 -S OUTPUT | grep -Fx -- '-P OUTPUT DROP'
+                    echo 'PASS: loopback allowed; controlled new external TCP blocked; IPv4/IPv6 default DROP'
+                  sharry.conf: |
+                    include "/opt/sharry-restserver-1.8.0/conf/sharry.conf"
+                    sharry.restserver {
+                      base-url = "https://share.dumbhome.uk"
+                      bind.address = "127.0.0.1"
+                      bind.port = 9090
+                      backend {
+                        signup.mode = "closed"
+                        auth.fixed.enabled = false
+                        auth.internal.enabled = true
+                        jdbc {
+                          url = "jdbc:h2:/config/sharry.db;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;IFEXISTS=TRUE;ACCESS_MODE_DATA=r"
+                          user = "sa"
+                          password = ""
+                        }
+                        cleanup.enabled = false
+                        mail.enabled = false
+                      }
+                    }
+              - op: add
+                path: /metadata/annotations
+                value:
+                  kustomize.toolkit.fluxcd.io/substitute: disabled
+          - target:
+              kind: Deployment
+              name: sharry-private
+            patch: |
+              - op: remove
+                path: /spec/selector/matchLabels/app.kubernetes.io~1name
+              - op: remove
+                path: /spec/selector/matchLabels/app.kubernetes.io~1instance
+              - op: add
+                path: /spec/selector/matchLabels/app
+                value: sharry-private
+              - op: remove
+                path: /spec/template/metadata/labels/app.kubernetes.io~1name
+              - op: remove
+                path: /spec/template/metadata/labels/app.kubernetes.io~1instance
+              - op: add
+                path: /spec/template/metadata/labels/app
+                value: sharry-private
+              - op: remove
+                path: /spec/template/spec/serviceAccountName
+              - op: remove
+                path: /spec/template/spec/enableServiceLinks
+              - op: replace
+                path: /spec/template/spec/containers/0/name
+                value: sharry
+              - op: replace
+                path: /spec/template/spec/containers/0/image
+                value: docker.io/eikek0/sharry@sha256:661ff3ef42cd4aec07bf0c57e00dc9503f807a833c72efb3b5bbff185c4ae7ef
+              - op: remove
+                path: /spec/template/spec/containers/0/ports
+              - op: replace
+                path: /spec/template/spec/containers/0/volumeMounts
+                value:
+                - mountPath: /config
+                  name: working
+                  readOnly: true
+                  subPath: recovery/sharry-20261030/working
+                - mountPath: /guard
+                  name: guard
+                  readOnly: true
+              - op: remove
+                path: /spec/template/spec/containers/0/readinessProbe/failureThreshold
+              - op: remove
+                path: /spec/template/spec/containers/0/readinessProbe/initialDelaySeconds
+              - op: remove
+                path: /spec/template/spec/containers/0/readinessProbe/successThreshold
+              - op: add
+                path: /spec/template/spec/containers/0/resources
+                value: {}
+              - op: replace
+                path: /spec/template/spec/volumes
+                value:
+                - configMap:
+                    defaultMode: 420
+                    name: sharry-private-guard
+                  name: guard
+                - name: working
+                  persistentVolumeClaim:
+                    claimName: yasr-volume
+              - op: add
+                path: /spec/template/spec/automountServiceAccountToken
+                value: false
+    - op: remove
+      path: /spec/valuesFrom
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: home-assistant
+  patch: |
+    apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    metadata:
+      name: home-assistant
+      namespace: default
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: prowlarr
+  patch: |
+    apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    metadata:
+      name: prowlarr
+      namespace: default
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: sharry
+  patch: |
+    apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    metadata:
+      name: sharry
+      namespace: default
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: flaresolverr
+  patch: |
+    apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    metadata:
+      name: flaresolverr
+      namespace: default
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+- target:
+    group: postgresql.cnpg.io
+    version: v1
+    kind: Cluster
+    name: paperless-db
+    namespace: default
+  patch: |
+    apiVersion: postgresql.cnpg.io/v1
+    kind: Cluster
+    metadata:
+      name: paperless-db
+      namespace: default
+    spec:
+      bootstrap:
+        initdb:
+          secret:
+            name: paperless-db-app
+      imageName: ghcr.io/cloudnative-pg/postgresql:17.0@sha256:458db597a860eca45bebd91ec9c990a6eee3e63ced730635f4429bfc0ece2302
+      storage:
+        storageClass: ""
+        pvcTemplate:
+          volumeName: paperless-db-pgdata
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: paperless
+    namespace: default
+  patch: |
+    apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    metadata:
+      name: paperless
+      namespace: default
+    spec:
+      # Clean original paths, retained DB credentials and native canary are verified.
+      suspend: false
+      values:
+        image:
+          pullPolicy: IfNotPresent
+          tag: 2.20.15@sha256:835974fc3368fc6714aa38542db7a1f0f542d03244e39b981e519aefc100f355
+        redis:
+          image:
+            tag: 6.2@sha256:ce852c585d8bb7921a559f6ebed083367ee4bc0271629a39fe890b6ce6ace64d
+          master:
+            persistence:
+              storageClass: "-"
+              selector:
+                matchLabels:
+                  storage-id: paperless-redis
+        ingress:
+          # Keep first-install account claiming private until the owner has completed it.
+          main:
+            enabled: false
+- target:
+    group: kustomize.toolkit.fluxcd.io
+    version: v1
+    kind: Kustomization
+    name: immich
+    namespace: default
+  patch: |
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: immich
+      namespace: default
+    spec:
+      suspend: false
+      path: ./clusters/rafag/apps/immich/
+      postBuild:
+        substitute:
+          IMMICH_LIBRARY_PATH: rafag/immich-library
+          PHOTOS_PATH: rafag/photos
+      healthChecks:
+      - apiVersion: apps/v1
+        kind: Deployment
+        name: immich
+        namespace: default
+      - apiVersion: apps/v1
+        kind: Deployment
+        name: immich-machine-learning
+        namespace: default
+      - apiVersion: apps/v1
+        kind: Deployment
+        name: immich-valkey
+        namespace: default
+- target:
+    group: postgresql.cnpg.io
+    version: v1
+    kind: Cluster
+    name: immich-postgres
+    namespace: default
+  patch: |
+    - op: replace
+      path: /spec
+      value:
+        instances: 1
+        imageName: ghcr.io/tensorchord/cloudnative-vectorchord:16.9-0.4.3@sha256:bf0c731659d3eb1d7df97cb9ee85672627cb574c1679175013a06ac1062ecbe0
+        postgresql:
+          shared_preload_libraries:
+          - vchord.so
+        storage:
+          size: 8Gi
+          storageClass: ''
+          pvcTemplate:
+            volumeName: immich-postgres-pgdata
+        enableSuperuserAccess: false
+        bootstrap:
+          initdb:
+            database: immich
+            owner: immich
+            secret:
+              name: immich-postgres-app
+            postInitApplicationSQL:
+            - CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
+            - CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE;
+        postgresUID: 26
+        postgresGID: 26
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: '2'
+            memory: 2Gi

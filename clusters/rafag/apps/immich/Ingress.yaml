@@ -1,0 +1,46 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: immich
+  namespace: default
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`immich.${CLUSTER_DOMAIN_NAME}`)
+    services:
+    - name: immich
+      nativeLB: false
+      port: 2283
+  tls:
+    secretName: internal-ingress-cert
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: immich-http
+  namespace: default
+spec:
+  entryPoints:
+  - web
+  routes:
+  - kind: Rule
+    match: Host(`immich.${CLUSTER_DOMAIN_NAME}`)
+    middlewares:
+    - name: immich-https
+    services:
+    - name: immich
+      nativeLB: false
+      port: 2283
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: immich-https
+  namespace: default
+spec:
+  redirectScheme:
+    permanent: true
+    scheme: https

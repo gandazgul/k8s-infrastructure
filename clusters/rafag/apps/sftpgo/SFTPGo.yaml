@@ -1,0 +1,61 @@
+# Retained original host routes; native resources are owned by the SFTPGo HelmRelease.
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: sftpgo-owner-http-held
+  namespace: default
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`sftpgo.dumbhome.uk`)
+    services:
+    - name: sftpgo
+      port: http
+  tls:
+    secretName: internal-ingress-cert
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: sftpgo-owner-http-redirect
+  namespace: default
+spec:
+  entryPoints:
+  - web
+  routes:
+  - kind: Rule
+    match: Host(`sftpgo.dumbhome.uk`) || Host(`webdav.dumbhome.uk`)
+    middlewares:
+    - name: sftpgo-https
+    services:
+    - name: sftpgo
+      port: http
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: sftpgo-https
+  namespace: default
+spec:
+  redirectScheme:
+    permanent: true
+    scheme: https
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: sftpgo-webdav
+  namespace: default
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - kind: Rule
+    match: Host(`webdav.dumbhome.uk`)
+    services:
+    - name: sftpgo
+      port: webdav
+  tls:
+    secretName: internal-ingress-cert

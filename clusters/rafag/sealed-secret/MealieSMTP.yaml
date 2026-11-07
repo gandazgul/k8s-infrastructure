@@ -1,0 +1,14 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: mealie-smtp
+  namespace: default
+spec:
+  encryptedData:
+    SMTP_PASSWORD: AgCO+agtT3IxIeT36ooh458CWsNVOCBpvHyVylFqT0p5qWoJ7pTY/oy94Q/fzKDAGuXctQv63U6VbaQ0qMQC7RNFdhWuVBGwN1YywctCHKaAszum8LUFa6gmCAarfQdnLf7MpAw/XbKK3RTkW+V+q84QlDVb84BiKyuiXaP9Xb89Rf0OlwOGADWghZBYmNMp2n2k86Y3rQeefXxUYVP8u0pumcnpr5gtqhwD9s9DsbDKMt/F6+qtcv7eMvyGA6OTBcOPyUqLwFH+dIgbP1j0U4J/EHLDmvC2gh3esGFdliMZ525OIkyw4FhuKk80yt3Yz27LL2jZeZvhviV0krb0VkmmDbWvix0VM7CdJ71BixVJUZC6VOHXNNO8lsPqWPh5CqhPkm1/dTWw2lDthg1besKRn7KIYIdDlu4276iKhuCiEo8QfbFMVr4knnBBvlp9mmZxInRxi4dAUMJI+sK0fcMHSAUrhhPgVyFZ12KqmWm3RHjU8JWDZkririKkFZDIs9ZAxiqjFEW/8C61UHBUXcVBxhvfzUwtOUygVakrNtUYcrBPrmXmCH2kpC7s3H4HdV35GT7Sl/4Q4LSlY9NLWw/ZywjjJC7ydmn1uTRefQCgvaHo9dZov8ZKVxU3punobzVn1jTRVwbvYkdIEYF2t505+6JGL5FZU7mQY367uPRTHR4fs7oxRPFhROEW3IRPuM3r1hNi5Kd4sSAgycDWn0zmeL2d
+  template:
+    metadata:
+      name: mealie-smtp
+      namespace: default
+    type: Opaque

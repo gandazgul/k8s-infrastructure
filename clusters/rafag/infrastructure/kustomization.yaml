@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- CertificatesRoot.yaml
+- StorageRoots.yaml
+- EncryptedCredentials.yaml
+- CredentialAdoption.yaml
+- AppChartSources.yaml
+- ../../../infrastructure/kube-system/repos/HelmSagikazarmark.yaml
+- ../../../infrastructure/kube-system/BackupCronJobs.yaml
+- ../BackupCronJobsExtra.yaml
+patches:
+- target:
+    group: kustomize.toolkit.fluxcd.io
+    version: v1
+    kind: Kustomization
+    name: (incremental-backups|clean-incremental-backups|yasr-backup|angela-backup|miki-backup)
+  patch: "# HDD disconnected: do not create backup or cleanup CronJobs yet.\n- op:\
+    \ add\n  path: /spec/suspend\n  value: true\n"

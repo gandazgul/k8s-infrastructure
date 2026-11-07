@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 if [[ $EUID = 0 ]]; then
    printf "Don't run this script as root"
    exit 1
@@ -10,15 +12,16 @@ if ! dnf list installed cri-o > /dev/null 2>&1; then
   sudo bash -c 'cat <<EOF | tee /etc/yum.repos.d/cri-o.repo
 [cri-o]
 name=CRI-O
-baseurl=https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.34/rpm/
+baseurl=https://download.opensuse.org/repositories/isv:/cri-o:/stable:/v1.36/rpm/
 enabled=1
 gpgcheck=1
-gpgkey=https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.34/rpm/repodata/repomd.xml.key
+gpgkey=https://download.opensuse.org/repositories/isv:/cri-o:/stable:/v1.36/rpm/repodata/repomd.xml.key
 EOF'
 
   printf "\nInstalling cri-o dependencies\n"
   sudo dnf install -y \
-      conntrack \
+      conntrack-tools \
+      iproute-tc \
       container-selinux \
       ebtables \
       ethtool \
@@ -26,7 +29,7 @@ EOF'
       socat
 
   printf "\nInstalling cri-o\n"
-  sudo dnf install -y --repo cri-o cri-o
+  sudo dnf install -y --repo cri-o cri-o-1.36.7-150500.1.1
 
   printf "\nEnable cri-o ==========================================================================================\n"
   sudo systemctl daemon-reload || exit 1
@@ -46,20 +49,17 @@ if [[ ! -f /etc/yum.repos.d/kubernetes.repo ]]; then
     sudo bash -c 'cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
-baseurl=https://pkgs.k8s.io/core:/stable:/v1.34/rpm/
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.36/rpm/
 enabled=1
 gpgcheck=1
-gpgkey=https://pkgs.k8s.io/core:/stable:/v1.34/rpm/repodata/repomd.xml.key
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.36/rpm/repodata/repomd.xml.key
 exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
 EOF'
 
-    sudo dnf -y install --enablerepo=kubernetes kubelet kubectl kubeadm --disableexcludes=kubernetes || exit 1
+    sudo dnf -y install --enablerepo=kubernetes kubelet-1.36.5-150500.1.1 kubectl-1.36.5-150500.1.1 kubeadm-1.36.5-150500.1.1 cri-tools-1.36.0-150500.1.1 kubernetes-cni-1.9.1-150500.1.1 --disableexcludes=kubernetes || exit 1
     # cockpit-pcp enables the metric graphs in cockpit
     sudo dnf -y install cockpit-pcp || exit 1
 
-    # enable cni plugins
-    sudo mkdir -p /opt/cni/
-    sudo ln -s /usr/libexec/cni/ /opt/cni/bin
 fi;
 
 printf "\nEnabling cockpit ==========================================================================================\n"
@@ -70,15 +70,6 @@ if dnf list installed zram-generator-defaults > /dev/null 2>&1; then
   sudo dnf -y remove zram-generator-defaults
   sudo swapoff /dev/zram0 || exit 1
 fi
-
-if systemctl is-active --quiet firewalld >/dev/null 2>&1; then
-    printf "\nDisabling the firewall ================================================================================\n"
-    sudo systemctl stop firewalld
-    sudo systemctl disable firewalld
-    # fedora 29 complained that uninstalling firewalld would uninstall kernel-core
-    # sudo dnf -y remove firewalld
-    # Masking prevents the service from ever being started
-    sudo systemctl mask firewalld.service
 
     # needed for cri-o
     sudo modprobe overlay
@@ -103,4 +94,3 @@ EOF
 
 # make the above settings take effect now
 sudo sysctl --system
-fi;

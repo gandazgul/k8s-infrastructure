@@ -1,0 +1,20 @@
+# Keep the existing private ClusterIP-only access while using the shared app.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../../../apps/generic/overlays/qdrant
+patches:
+- patch: |
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: qdrant-nodeport
+      namespace: default
+    $patch: delete
+- patch: |
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: qdrant
+      namespace: default
+    $patch: delete

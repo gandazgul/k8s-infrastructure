@@ -3,11 +3,13 @@ kind: Deployment
 metadata:
   name: lidarr
 spec:
+  strategy:
+    type: Recreate
   template:
     spec:
       containers:
         - name: container
-          image: docker.io/linuxserver/lidarr:latest
+          image: docker.io/linuxserver/lidarr:3.1.0.4875-ls45
           imagePullPolicy: Always
           volumeMounts:
             - name: yasr-volume

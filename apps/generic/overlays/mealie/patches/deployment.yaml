@@ -3,16 +3,19 @@ kind: Deployment
 metadata:
   name: mealie
 spec:
+  strategy:
+    type: Recreate
   template:
     spec:
+      automountServiceAccountToken: false
       volumes:
         - name: tz-config
           hostPath:
             path: /etc/localtime
       containers:
         - name: container
-          image: ghcr.io/mealie-recipes/mealie:latest
-          imagePullPolicy: Always
+          image: ghcr.io/mealie-recipes/mealie:v3.29.0
+          imagePullPolicy: IfNotPresent
           env:
             - name: PUID
               value: "1000"
@@ -36,6 +39,12 @@ spec:
               value: ${EMAIL}
             - name: SMTP_PASSWORD
               value: ${SMTP_PASSWORD}
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
           livenessProbe:
             httpGet:
               scheme: HTTP

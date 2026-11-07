@@ -1,0 +1,124 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    pod-security.kubernetes.io/warn: privileged
+    pod-security.kubernetes.io/warn-version: latest
+  name: monitoring
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: yasr-volume-monitoring
+  namespace: kube-system
+spec:
+  interval: 10m0s
+  path: ./clusters/rafag/monitoring/storage/
+  suspend: false
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  prune: false
+  deletionPolicy: Orphan
+  force: false
+  healthChecks:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: yasr-volume-monitoring
+    namespace: monitoring
+---
+kind: Kustomization
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+metadata:
+  name: kube-prometheus-crds
+  namespace: monitoring
+spec:
+  interval: 1h
+  path: ./clusters/rafag/monitoring/setup/
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  suspend: false
+---
+kind: Kustomization
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  interval: 1h
+  path: ./clusters/rafag/monitoring/grafana/
+  prune: true
+  dependsOn:
+  - name: kube-prometheus-crds
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  postBuild:
+    substituteFrom:
+    - kind: Secret
+      name: secrets
+  suspend: false
+---
+kind: Kustomization
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  interval: 1h
+  path: ./clusters/rafag/monitoring/prometheus/
+  prune: true
+  dependsOn:
+  - name: kube-prometheus-crds
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  postBuild:
+    substituteFrom:
+    - kind: Secret
+      name: secrets
+  suspend: false
+---
+kind: Kustomization
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+metadata:
+  name: alertmanager
+  namespace: monitoring
+spec:
+  interval: 1h
+  path: ./clusters/rafag/monitoring/alertmanager/
+  prune: true
+  dependsOn:
+  - name: kube-prometheus-crds
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  postBuild:
+    substituteFrom:
+    - kind: Secret
+      name: secrets
+  suspend: false
+---
+kind: Kustomization
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+metadata:
+  name: kube-prometheus
+  namespace: monitoring
+spec:
+  interval: 1h
+  path: ./clusters/rafag/monitoring/kube-prometheus/
+  prune: true
+  dependsOn:
+  - name: kube-prometheus-crds
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  suspend: false

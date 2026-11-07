@@ -1,0 +1,89 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: main-volume
+  namespace: kube-system
+spec:
+  interval: 10m0s
+  path: ./clusters/rafag/storage/main-volume/
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  prune: false
+  deletionPolicy: Orphan
+  force: false
+  healthChecks:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: main-volume
+    namespace: default
+  postBuild:
+    substitute:
+      VOLUME_NAME: main-volume
+      VOLUME_CAPACITY: 4Ti
+      VOLUME_STORAGE_CLASS: hdd
+      VOLUME_PATH: /media/main
+      NAMESPACE: default
+      VOLUME_MODE: Filesystem
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: yasr-volume
+  namespace: kube-system
+spec:
+  interval: 10m0s
+  path: ./clusters/rafag/storage/yasr-volume/
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  prune: false
+  deletionPolicy: Orphan
+  force: false
+  healthChecks:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: yasr-volume
+    namespace: default
+  postBuild:
+    substitute:
+      VOLUME_NAME: yasr-volume
+      VOLUME_CAPACITY: 4Ti
+      VOLUME_STORAGE_CLASS: hdd
+      VOLUME_PATH: /media/yasr
+      NAMESPACE: default
+      VOLUME_MODE: Filesystem
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: backup-volume
+  namespace: kube-system
+spec:
+  interval: 10m0s
+  path: ./infrastructure/storage/hdd/
+  sourceRef:
+    kind: GitRepository
+    name: k8s-infrastructure
+    namespace: kube-system
+  dependsOn:
+  - name: main-volume
+  prune: false
+  deletionPolicy: Orphan
+  force: false
+  healthChecks:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: backup-volume
+    namespace: default
+  postBuild:
+    substitute:
+      VOLUME_NAME: backup-volume
+      VOLUME_CAPACITY: 4Ti
+      VOLUME_STORAGE_CLASS: hdd
+      VOLUME_PATH: /media/backup
+      NAMESPACE: default
+      VOLUME_MODE: Filesystem

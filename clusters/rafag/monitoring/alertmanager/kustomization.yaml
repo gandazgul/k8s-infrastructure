@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../../../infrastructure/monitoring/alertmanager/
+images:
+- name: quay.io/prometheus/alertmanager
+  newTag: v0.28.1
+  digest: sha256:220da6995a919b9ee6e0d3da7ca5f09802f3088007af56be22160314d2485b54
+patches:
+- target:
+    kind: Alertmanager
+    name: main
+    namespace: monitoring
+  patch: "- op: replace\n  path: /spec/image\n  value: quay.io/prometheus/alertmanager:v0.28.1@sha256:220da6995a919b9ee6e0d3da7ca5f09802f3088007af56be22160314d2485b54\n"

@@ -18,8 +18,8 @@ pause
 
 # Update secrets file
 secretFile="$REPO_ROOT/clusters/$CLUSTER_NAME/secrets.env"
-sed -i '' "s/\(CONTROL_PLANE_IP=*\).*/\1$CONTROL_PLANE_IP/" "$secretFile" || exit 1
-sed -i '' "s/\(CONTROL_PLANE_NAME=*\).*/\1$CONTROL_PLANE_NAME/" "$secretFile" || exit 1
+sed -i "s/\(CONTROL_PLANE_IP=*\).*/\1$CONTROL_PLANE_IP/" "$secretFile" || exit 1
+sed -i "s/\(CONTROL_PLANE_NAME=*\).*/\1$CONTROL_PLANE_NAME/" "$secretFile" || exit 1
 
 message "Installing Flux v2"
 
@@ -28,7 +28,7 @@ if ! flux check --pre; then
   exit 1
 fi
 
-if ! flux install --components-extra=image-reflector-controller,image-automation-controller; then
+if ! flux install --version=v2.10.0 --components-extra=image-reflector-controller,image-automation-controller; then
   echo -e "Flux did not install correctly, aborting!"
   exit 1
 fi

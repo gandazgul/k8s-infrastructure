@@ -1,0 +1,106 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: plex-legacy-movies
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 18Ti
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: plex-legacy-movies
+    namespace: default
+  local:
+    path: /mnt/old-main/public/films
+  mountOptions:
+  - ro
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - k8s-control-plane
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: recovery-immich-pgdata-gqae085q
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 8Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: recovery-immich-1
+    namespace: default
+  local:
+    path: /media/yasr/recovery/database-recovery-gqae085q/imports/immich
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - k8s-control-plane
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: recovery-paperless-pgdata-gqae085q
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 8Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: recovery-paperless-1
+    namespace: default
+  local:
+    path: /media/yasr/recovery/database-recovery-gqae085q/imports/paperless
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - k8s-control-plane
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: plex-legacy-movies
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 18Ti
+  storageClassName: ''
+  volumeMode: Filesystem
+  volumeName: plex-legacy-movies

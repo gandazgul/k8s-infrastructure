@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../../../infrastructure/monitoring/prometheus/
+images:
+- name: quay.io/prometheus/prometheus
+  newTag: v3.2.1
+  digest: sha256:5d34817348f69ddb956be509cafa4d4c2b5ecbbb5b786dd99d5a62e686b2ece4
+patches:
+- target:
+    kind: Prometheus
+    name: k8s
+    namespace: monitoring
+  patch: "- op: replace\n  path: /spec/image\n  value: quay.io/prometheus/prometheus:v3.2.1@sha256:5d34817348f69ddb956be509cafa4d4c2b5ecbbb5b786dd99d5a62e686b2ece4\n"

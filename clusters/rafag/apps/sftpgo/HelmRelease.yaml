@@ -1,0 +1,189 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: sftpgo
+  namespace: default
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+spec:
+  suspend: false
+  interval: 5m
+  chart:
+    spec:
+      chart: sftpgo
+      version: 0.12.0
+      sourceRef:
+        kind: HelmRepository
+        name: skm
+        namespace: kube-system
+      interval: 5m
+  values:
+    image:
+      repository: ghcr.io/drakkan/sftpgo
+      tag: v2.2.2@sha256:3016b086b12e541bfcce037f79ab4f303901e1dc653c381b217f83fea3f80603
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    env:
+      TZ: America/New_York
+      SFTPGO_SFTPD__HOST_KEYS: /hostkeys/ssh_host_ed25519_key
+    sftpd:
+      enabled: true
+    ftpd:
+      enabled: false
+    httpd:
+      enabled: true
+    webdavd:
+      enabled: true
+    config:
+      data_provider:
+        driver: sqlite
+        name: /config/db.sqlite
+        prefer_database_credentials: true
+      ftpd:
+        bindings:
+        - port: 0
+      sftpd:
+        bindings:
+        - port: 0
+    volumes:
+    - name: main-volume
+      persistentVolumeClaim:
+        claimName: main-volume
+    - name: yasr-volume
+      persistentVolumeClaim:
+        claimName: yasr-volume
+    volumeMounts:
+    - name: main-volume
+      mountPath: /data
+    - name: yasr-volume
+      subPath: configs/sftpgo
+      mountPath: /config
+    - name: yasr-volume
+      mountPath: /yasr
+    - name: yasr-volume
+      subPath: configs/sftpgo-hostkeys
+      mountPath: /hostkeys
+      readOnly: true
+    - name: main-volume
+      subPath: public
+      mountPath: /media/main/public
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    podSecurityContext: {}
+    hostNetwork: false
+    ui:
+      ingress:
+        enabled: false
+    api:
+      ingress:
+        enabled: false
+    service:
+      type: ClusterIP
+    services:
+      lan-sftp:
+        type: NodePort
+        externalTrafficPolicy: Local
+        ports:
+          sftp:
+            port: 2022
+            nodePort: 30222
+  postRenderers:
+  - kustomize:
+      patches:
+      - target:
+          kind: Deployment
+          name: sftpgo
+        patch: |
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: sftpgo
+          spec:
+            strategy:
+              type: Recreate
+              rollingUpdate: null
+            template:
+              spec:
+                automountServiceAccountToken: false
+                initContainers:
+                - name: lan-sftp-boundary
+                  image: ghcr.io/flannel-io/flannel@sha256:9aeaf1689ad3554e686d5f4062f33a2ba173398fd8f6d0346bd1dc1a27fb1437
+                  imagePullPolicy: IfNotPresent
+                  command:
+                  - /bin/sh
+                  - -ec
+                  - |
+                    iptables -w 5 -A INPUT ! -i lo -p tcp --dport 2022 ! -s 10.1.1.0/24 -j DROP
+                    ip6tables -w 5 -A INPUT ! -i lo -p tcp --dport 2022 -j DROP
+                  securityContext:
+                    runAsUser: 0
+                    allowPrivilegeEscalation: false
+                    capabilities:
+                      drop:
+                      - ALL
+                      add:
+                      - NET_ADMIN
+                containers:
+                - name: sftpgo
+                  env:
+                  - name: SFTPGO_TELEMETRY__BIND_ADDRESS
+                    value: 127.0.0.1
+                  readinessProbe:
+                    httpGet: null
+                    exec:
+                      command:
+                      - /bin/bash
+                      - -ec
+                      - exec 3<>/dev/tcp/127.0.0.1/10000; printf "GET /healthz HTTP/1.0\r\n\r\n" >&3; read -r line
+                        <&3; [[ "$line" == *" 200 "* ]]
+                    initialDelaySeconds: 5
+                    periodSeconds: 10
+                    timeoutSeconds: 1
+                  livenessProbe:
+                    httpGet: null
+                    exec:
+                      command:
+                      - /bin/bash
+                      - -ec
+                      - exec 3<>/dev/tcp/127.0.0.1/10000; printf "GET /healthz HTTP/1.0\r\n\r\n" >&3; read -r line
+                        <&3; [[ "$line" == *" 200 "* ]]
+                    initialDelaySeconds: 5
+                    periodSeconds: 10
+                    timeoutSeconds: 1
+      - target:
+          kind: Service
+          name: sftpgo
+        patch: |
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: sftpgo
+          spec:
+            ports:
+            - name: sftp
+              port: 22
+              protocol: TCP
+              $patch: delete
+      - target:
+          kind: Service
+          name: sftpgo-lan-sftp
+        patch: |
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: sftpgo-lan-sftp
+          spec:
+            ports:
+            - name: sftp
+              port: 2022
+              protocol: TCP
+              appProtocol: null
+  install:
+    disableTakeOwnership: false
+  upgrade:
+    disableTakeOwnership: false

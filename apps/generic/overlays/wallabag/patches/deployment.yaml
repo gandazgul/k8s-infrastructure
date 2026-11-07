@@ -3,12 +3,15 @@ kind: Deployment
 metadata:
   name: wallabag
 spec:
+  strategy:
+    type: Recreate
   template:
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: container
-          image: wallabag/wallabag:latest
-          imagePullPolicy: Always
+          image: wallabag/wallabag:2.6.14
+          imagePullPolicy: IfNotPresent
           env:
             - name: SYMFONY__ENV__DATABASE_DRIVER
               value: "pdo_sqlite"
@@ -29,6 +32,14 @@ spec:
             - name: yasr-volume
               mountPath: /var/www/wallabag/web/assets/images
               subPath: configs/wallabag/images/
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /login
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
           livenessProbe:
             httpGet:
               scheme: HTTP

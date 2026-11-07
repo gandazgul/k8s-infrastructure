@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../../../apps/generic/overlays/audiobookshelf
+images:
+- name: ghcr.io/advplyr/audiobookshelf
+  digest: sha256:e388e90e381ae3fa8660346612b2955f2c555ede81c9c286e2218bdf966b4de8
+patches:
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: audiobookshelf
+  patch: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: audiobookshelf
+    spec:
+      strategy:
+        type: Recreate
+      template:
+        spec:
+          containers:
+          - name: container
+            imagePullPolicy: IfNotPresent

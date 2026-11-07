@@ -8,7 +8,12 @@ spec:
     - name: sealed-secret
   interval: 10m0s
   path: ./infrastructure/kube-system/
-  prune: true
+  # Only the explicit dispatcher allowlist is reconciled; never scan legacy files.
+  prune: false
+  deletionPolicy: Orphan
+  force: false
+  retryInterval: 1m0s
+  timeout: 5m0s
   sourceRef:
     kind: GitRepository
     name: k8s-infrastructure
@@ -17,4 +22,17 @@ spec:
     substituteFrom:
       - kind: Secret
         name: secrets
-        optional: true
+        optional: false
+  healthChecks:
+    - apiVersion: kustomize.toolkit.fluxcd.io/v1
+      kind: Kustomization
+      name: cluster-infrastructure
+      namespace: kube-system
+    - apiVersion: kustomize.toolkit.fluxcd.io/v1
+      kind: Kustomization
+      name: cert-manager-certificates
+      namespace: kube-system
+    - apiVersion: kustomize.toolkit.fluxcd.io/v1
+      kind: Kustomization
+      name: cert-manager
+      namespace: kube-system

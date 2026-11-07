@@ -1,0 +1,64 @@
+# Dedicated empty destinations only; existing historical Paperless trees remain untouched.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: paperless-db-pgdata
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  volumeMode: Filesystem
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: paperless-db-1
+    namespace: default
+  hostPath:
+    path: /media/yasr/configs/paperless-db
+    type: Directory
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - k8s-control-plane
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: paperless-redis-data
+  labels:
+    storage-id: paperless-redis
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+spec:
+  capacity:
+    storage: 8Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  volumeMode: Filesystem
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: redis-data-paperless-redis-master-0
+    namespace: default
+  hostPath:
+    path: /media/yasr/configs/paperless-redis
+    type: Directory
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - k8s-control-plane

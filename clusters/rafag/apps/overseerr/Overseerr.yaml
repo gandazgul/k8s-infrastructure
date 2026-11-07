@@ -1,0 +1,51 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: overseerr
+  namespace: default
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: overseerr
+      version: 5.4.2
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home
+        namespace: kube-system
+      interval: 5m
+  values:
+    image:
+      tag: 1.35.0@sha256:4d026271272ee9241a863f4fef08e866fd81dd3e021f21a8a1570f6c3e4d0290
+      pullPolicy: IfNotPresent
+    env:
+      TZ: ${CLUSTER_TIME_ZONE}
+    persistence:
+      config:
+        enabled: true
+        type: pvc
+        existingClaim: yasr-volume
+        subPath: configs/overseerr
+    ingress:
+      main:
+        enabled: true
+        hosts:
+        - host: media.${CLUSTER_DOMAIN_NAME}
+          paths:
+          - path: /
+        tls:
+        - hosts:
+          - media.${CLUSTER_DOMAIN_NAME}
+          secretName: internal-ingress-cert
+        annotations:
+          kubernetes.io/ingress.class: nginx
+          forecastle.stakater.com/appName: Overseerr
+          forecastle.stakater.com/group: Media
+          forecastle.stakater.com/expose: 'true'
+          forecastle.stakater.com/icon: https://media.${CLUSTER_DOMAIN_NAME}/apple-touch-icon.png
+        ingressClassName: nginx
+    controller:
+      type: deployment
+      strategy: Recreate
+      replicas: 1
+  suspend: false

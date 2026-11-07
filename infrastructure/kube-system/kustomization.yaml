@@ -1,0 +1,12 @@
+# Explicit shared infrastructure selection; backup/storage/monitoring selections remain held in their existing reviewed roots.
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../setup/KubeSystem.yaml
+- ClusterInfrastructure.yaml
+- SealedSecretsController.yaml
+- PostgresOperator.yaml
+- repos/HelmTraefik.yaml
+- Traefik.yaml
+- CertManagerKustomization.yaml

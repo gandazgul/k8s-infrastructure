@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../../../infrastructure/monitoring/grafana/
+patches:
+- target:
+    kind: Deployment
+    name: grafana
+    namespace: monitoring
+  patch: "- op: add\n  path: /spec/template/spec/securityContext/fsGroupChangePolicy\n\
+    \  value: OnRootMismatch\n"
+- target:
+    kind: Ingress
+    name: grafana-ingress
+    namespace: monitoring
+  patch: "- op: replace\n  path: /spec/tls/0/secretName\n  value: internal-ingress-cert\n"
+images:
+- name: docker.io/grafana/grafana
+  newTag: 11.6.0
+  digest: sha256:b739cda4b61ba3b90707578b643a22cd851fecf4498e6c6ec2d8f9d622a5d0b2

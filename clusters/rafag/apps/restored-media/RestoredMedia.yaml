@@ -1,0 +1,450 @@
+apiVersion: v1
+data:
+  port-forwarding.sh: "#!/bin/bash\nset -euo pipefail\n# Same existing helper, mounted\
+    \ into its existing immutable image. Never log auth/session/body.\nfail() { echo\
+    \ 'PIA port-forward: failed' >&2; exit 1; }\n: \"${TRANSMISSIONS_USER:?existing\
+    \ RPC username required}\"\n: \"${TRANSMISSIONS_PASS:?existing RPC password required}\"\
+    \nport_file=${FORWARDED_PORT_FILE:-/data/forwarded_port}\nurl=${TRANSMISSION_RPC_URL:-http://127.0.0.1:9091/transmission/rpc}\n\
+    [[ ${url} =~ ^http://127\\.0\\.0\\.1:[0-9]+/transmission/rpc$ ]] || fail\nport=$(cat\
+    \ \"${port_file}\")\n[[ ${port} =~ ^[0-9]{1,5}$ ]] || fail\nport=$((10#${port}))\n\
+    ((port > 0 && port <= 65535)) || fail\n# curl config avoids exposing credentials\
+    \ in process arguments; reject config injection.\n[[ ${TRANSMISSIONS_USER}${TRANSMISSIONS_PASS}\
+    \ != *$'\\n'* && ${TRANSMISSIONS_USER}${TRANSMISSIONS_PASS} != *$'\\r'* ]] ||\
+    \ fail\numask 077\nscratch=$(mktemp -d)\ntrap 'rm -rf \"${scratch}\"' EXIT\ncredentials=${TRANSMISSIONS_USER}:${TRANSMISSIONS_PASS}\n\
+    credentials=${credentials//\\\\/\\\\\\\\}\ncredentials=${credentials//\\\"/\\\\\
+    \\\"}\nprintf 'user = \"%s\"\\n' \"${credentials}\" > \"${scratch}/auth\"\nprintf\
+    \ '{\"method\":\"session-set\",\"arguments\":{\"peer-port\":%s}}' \"${port}\"\
+    \ > \"${scratch}/request\"\nrequest() {\n  curl --silent --show-error --connect-timeout\
+    \ 3 --max-time 10 \\\n    --config \"${scratch}/auth\" --dump-header \"${scratch}/headers\"\
+    \ \\\n    --output \"${scratch}/body\" --write-out '%{http_code}' \\\n    --header\
+    \ 'Content-Type: application/json' \"$@\" \\\n    --data-binary \"@${scratch}/request\"\
+    \ \"${url}\"\n}\ncode=$(request) || fail\nif [[ ${code} == 409 ]]; then\n  session=$(tr\
+    \ -d '\\r' < \"${scratch}/headers\" | sed -n 's/^[Xx]-[Tt]ransmission-[Ss]ession-[Ii]d:[[:space:]]*\\\
+    ([^[:space:]]*\\).*/\\1/p')\n  [[ ${session} =~ ^[A-Za-z0-9]+$ ]] || fail\n  code=$(request\
+    \ --header \"X-Transmission-Session-Id: ${session}\") || fail\nfi\n[[ ${code}\
+    \ == 200 ]] || fail\n# session-set has no user-controlled response fields; require\
+    \ its native result, not HTTP alone.\ngrep -Eq '\"result\"[[:space:]]*:[[:space:]]*\"\
+    success\"' \"${scratch}/body\" || fail\necho 'PIA port-forward: applied'\n"
+kind: ConfigMap
+metadata:
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+  labels:
+    app.kubernetes.io/name: transmission
+  name: restored-media-port-forward-source
+  namespace: default
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sonarr-transmission-private
+  name: sonarr-transmission-private
+  namespace: default
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: sonarr-transmission-private
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: sonarr-transmission-private
+    spec:
+      containers:
+      - name: sonarr
+        image: docker.io/linuxserver/sonarr@sha256:6b4a380a52859aca238e754fb4b8d363809feb8f815707dbc891cb3a0b892f4a
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: PUID
+          value: '1000'
+        - name: PGID
+          value: '1000'
+        - name: TZ
+          value: America/New_York
+        ports:
+        - containerPort: 8989
+          name: sonarr-http
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /config
+          name: yasr-volume
+          subPath: configs/sonarr/
+        - mountPath: /data
+          name: yasr-volume
+          subPath: configs/transmission/
+        - mountPath: /tv
+          name: main-volume
+          subPath: public/shows/
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            memory: 2Gi
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 8989
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+      - env:
+        - name: PUID
+          value: '1000'
+        - name: PGID
+          value: '1000'
+        - name: UMASK
+          value: '002'
+        - name: USER
+          value: transmission
+        - name: PASS
+          valueFrom:
+            secretKeyRef:
+              key: ADMIN_PASSWORD
+              name: transmission-existing-admin
+        - name: HOST_WHITELIST
+          value: transmission.dumbhome.uk
+        - name: TZ
+          value: America/New_York
+        image: docker.io/linuxserver/transmission:4.0.6@sha256:452310cb020c036d293e879698097acb6cc653db2676610bf8e3b58a3f4d2af5
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 45
+          periodSeconds: 60
+          tcpSocket:
+            port: 9091
+          timeoutSeconds: 5
+        name: transmission
+        ports:
+        - containerPort: 9091
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 9091
+          timeoutSeconds: 30
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 2000Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /data
+          name: yasr-volume
+          subPath: configs/transmission/
+        - mountPath: /config
+          name: yasr-volume
+          subPath: configs/transmission/
+      - env:
+        - name: TRANSMISSIONS_USER
+          value: transmission
+        - name: TRANSMISSIONS_PASS
+          valueFrom:
+            secretKeyRef:
+              key: ADMIN_PASSWORD
+              name: transmission-existing-admin
+        image: docker.io/gandazgul/transmission-pia-port-forward:v27cad21@sha256:475255eb4ad91a905b95ccaaff8050282b0ad2e1b8224b5a3b9cc08dc98cc5e8
+        imagePullPolicy: IfNotPresent
+        name: transmission-pia-port-forward
+        resources:
+          limits:
+            cpu: 50m
+            memory: 50Mi
+          requests:
+            cpu: 50m
+            memory: 50Mi
+        volumeMounts:
+        - mountPath: /data
+          name: yasr-volume
+          subPath: configs/openvpn/
+        - mountPath: /usr/bin/port-forwarding.sh
+          name: transmission-port-forward-source
+          readOnly: true
+          subPath: port-forwarding.sh
+      - env:
+        - name: TZ
+          value: America/New_York
+        - name: MOUSEHOLE_INSECURE_ALLOW_NO_AUTH
+          value: 'true'
+        - name: MOUSEHOLE_ALLOWED_HOSTS
+          value: localhost,127.0.0.1,mousehole.dumbhome.uk
+        - name: MOUSEHOLE_ALLOWED_ORIGINS
+          value: http://localhost:5010,http://127.0.0.1:5010,https://mousehole.dumbhome.uk
+        image: docker.io/tmmrtn/mousehole@sha256:2fc02b12362581e60bfd6adba788bda9eda93f8f31ed089581eeabcee4518b0d
+        imagePullPolicy: Always
+        name: mousehole
+        ports:
+        - containerPort: 5010
+          name: mousehole
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi
+        volumeMounts:
+        - mountPath: /srv/mousehole
+          name: yasr-volume
+          subPath: configs/openvpn/
+      dnsConfig: {}
+      dnsPolicy: ClusterFirst
+      volumes:
+      - hostPath:
+          path: /dev/net/tun
+          type: CharDevice
+        name: dev-tun
+      - configMap:
+          defaultMode: 365
+          name: restored-media-port-forward-source
+        name: transmission-port-forward-source
+      - name: yasr-volume
+        persistentVolumeClaim:
+          claimName: yasr-volume
+      - name: main-volume
+        persistentVolumeClaim:
+          claimName: main-volume
+      automountServiceAccountToken: false
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      initContainers:
+      - env:
+        - name: VPN_SERVICE_PROVIDER
+          value: private internet access
+        - name: SERVER_REGIONS
+          value: CA Montreal
+        - name: OPENVPN_USER
+          valueFrom:
+            secretKeyRef:
+              key: VPN_USER
+              name: secrets
+        - name: OPENVPN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: VPN_PASSWORD
+              name: secrets
+        - name: TZ
+          value: America/New_York
+        - name: VPN_PORT_FORWARDING
+          value: 'on'
+        - name: HTTPPROXY
+          value: 'off'
+        - name: SHADOWSOCKS
+          value: 'off'
+        - name: DOT
+          value: 'off'
+        - name: FIREWALL_ENABLED_DISABLING_IT_SHOOTS_YOU_IN_YOUR_FOOT
+          value: 'on'
+        - name: OPENVPN_IPV6
+          value: 'off'
+        - name: FIREWALL_INPUT_PORTS
+          value: 8989,9091,5010
+        image: docker.io/qmcgaw/gluetun:v3.40.0@sha256:2b42bfa046757145a5155acece417b65b4443c8033fb88661a8e9dcf7fda5a00
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          exec:
+            command:
+            - /gluetun-entrypoint
+            - healthcheck
+          failureThreshold: 3
+          initialDelaySeconds: 45
+          periodSeconds: 60
+          timeoutSeconds: 5
+        name: vpn
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+          privileged: true
+        volumeMounts:
+        - mountPath: /vpn
+          name: yasr-volume
+          subPath: configs/openvpn/
+        - mountPath: /dev/net/tun
+          name: dev-tun
+        - mountPath: /tmp/gluetun/
+          name: yasr-volume
+          subPath: configs/openvpn/
+        restartPolicy: Always
+        startupProbe:
+          exec:
+            command:
+            - /gluetun-entrypoint
+            - healthcheck
+          failureThreshold: 60
+          periodSeconds: 5
+          timeoutSeconds: 5
+      enableServiceLinks: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarr-public
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: sonarr-transmission-private
+  ports:
+  - name: sonarr-http
+    port: 8989
+    targetPort: sonarr-http
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transmission-public
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: sonarr-transmission-private
+  ports:
+  - name: http
+    port: 9091
+    targetPort: http
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mousehole
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: sonarr-transmission-private
+  ports:
+  - name: mousehole
+    port: 5010
+    targetPort: mousehole
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transmission
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: sonarr-transmission-private
+  ports:
+  - name: http
+    port: 9091
+    targetPort: http
+    protocol: TCP
+  - name: mousehole
+    port: 5010
+    targetPort: mousehole
+    protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sonarr-public
+  namespace: default
+  annotations:
+    forecastle.stakater.com/expose: 'true'
+    forecastle.stakater.com/group: Media
+    forecastle.stakater.com/appName: TV
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: tv.dumbhome.uk
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sonarr-public
+            port:
+              number: 8989
+  tls:
+  - hosts:
+    - tv.dumbhome.uk
+    secretName: internal-ingress-cert
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: transmission-public
+  namespace: default
+  annotations:
+    forecastle.stakater.com/expose: 'true'
+    forecastle.stakater.com/group: Media
+    forecastle.stakater.com/appName: Transmission
+    nginx.ingress.kubernetes.io/app-root: /transmission/web/
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: transmission.dumbhome.uk
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: transmission-public
+            port:
+              number: 9091
+  tls:
+  - hosts:
+    - transmission.dumbhome.uk
+    secretName: internal-ingress-cert
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mousehole
+  namespace: default
+  annotations:
+    forecastle.stakater.com/expose: 'true'
+    forecastle.stakater.com/group: Media
+    forecastle.stakater.com/appName: Mousehole
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: mousehole.dumbhome.uk
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: mousehole
+            port:
+              number: 5010
+  tls:
+  - hosts:
+    - mousehole.dumbhome.uk
+    secretName: internal-ingress-cert
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarr
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: sonarr-transmission-private
+  ports:
+  - name: http
+    port: 8989
+    targetPort: 8989
+    protocol: TCP

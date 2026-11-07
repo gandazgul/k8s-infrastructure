@@ -12,29 +12,85 @@ spec:
   - name: backup-volume
   - name: yasr-volume
   interval: 10m0s
+  retryInterval: 1m0s
+  timeout: 2m0s
   path: ./clusters/rafag/
-  prune: true
+  prune: false
+  deletionPolicy: Orphan
+  force: false
   sourceRef:
     kind: GitRepository
     name: k8s-infrastructure
     namespace: kube-system
   postBuild:
-    # constants can be specified like this:
     substitute:
       PHOTOS_PATH: rafag/photos
-      PHOTOS_UID: "1000"
-      PHOTOS_GID: "1000"
-      BITWARDEN_SUBDOMAIN: "p"
-      HASS_SUBDOMAIN: "hass"
-      AUDIOBOOKSHELF_SUBDOMAIN: "listen"
-      AUDIOBOOKSHELF_BOOKS_PATH: "public/books-podcast-media"
-      AUDIOBOOKSHELF_MOUNT_PATH: "/data/books-podcast-media"
-      CLUSTER_NAME: "rafag"
+      PHOTOS_UID: '1000'
+      PHOTOS_GID: '1000'
+      BITWARDEN_SUBDOMAIN: p
+      HASS_SUBDOMAIN: hass
+      AUDIOBOOKSHELF_SUBDOMAIN: listen
+      AUDIOBOOKSHELF_BOOKS_PATH: public/books-podcast-media
+      AUDIOBOOKSHELF_MOUNT_PATH: /data/books-podcast-media
+      CLUSTER_NAME: rafag
     substituteFrom:
-    # substitutions can also come from a config map or secret
-    #    - kind: ConfigMap
-    #      name: cluster-vars
     - kind: Secret
       name: secrets
-
-  # use ${var:=default} or ${var} in the files to place variables
+  healthChecks:
+  - apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    name: nvidia-device-plugin
+    namespace: kube-system
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: youtube-operational-api
+    namespace: default
+  - apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    name: home-assistant
+    namespace: default
+  - apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    name: flaresolverr
+    namespace: default
+  - apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    name: prowlarr
+    namespace: default
+  - apiVersion: helm.toolkit.fluxcd.io/v2
+    kind: HelmRelease
+    name: sharry
+    namespace: default
+  - apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    name: freshrss
+    namespace: default
+  - apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    name: lidarr
+    namespace: default
+  - apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    name: mealie
+    namespace: default
+  - apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    name: n8n
+    namespace: default
+  - apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    name: qdrant
+    namespace: default
+  - apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    name: searxng
+    namespace: default
+  - apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    name: tesla-public-key
+    namespace: default
+  - apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    name: wallabag
+    namespace: default
+  suspend: false
