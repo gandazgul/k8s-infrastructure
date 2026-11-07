@@ -13,8 +13,7 @@ spec:
   - name: yasr-volume
   interval: 10m0s
   path: ./clusters/rafag/
-  # TEMPORARY: first reconcile of the draft branch runs without pruning; flip back to true after the prune list is reviewed.
-  prune: false
+  prune: true
   sourceRef:
     kind: GitRepository
     name: k8s-infrastructure
