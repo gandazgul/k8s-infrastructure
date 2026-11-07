@@ -31,6 +31,8 @@ spec:
       AUDIOBOOKSHELF_BOOKS_PATH: "public/books-podcast-media"
       AUDIOBOOKSHELF_MOUNT_PATH: "/data/books-podcast-media"
       CLUSTER_NAME: "rafag"
+      # Live Plex already runs with an empty dynamic-DNS name; keep that (strict substitution needs the key defined).
+      DYN_DNS_NAME: ""
     substituteFrom:
     # substitutions can also come from a config map or secret
     #    - kind: ConfigMap
