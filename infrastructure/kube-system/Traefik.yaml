@@ -1,0 +1,151 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  chart:
+    spec:
+      chart: traefik
+      sourceRef:
+        kind: HelmRepository
+        name: traefik
+        namespace: kube-system
+      version: 42.1.3
+  interval: 1h
+  suspend: false
+  values:
+    ingressClass:
+      enabled: true
+      isDefaultClass: false
+      name: nginx
+    providers:
+      kubernetesIngress:
+        enabled: false
+      kubernetesIngressNGINX:
+        allowCrossNamespaceResources: false
+        allowSnippetAnnotations: false
+        clientBodyBufferSize: 33554432
+        controllerClass: traefik.io/ingress-controller
+        customHTTPErrors:
+        - '404'
+        - '401'
+        - '403'
+        - '500'
+        - '503'
+        defaultBackendService: kube-system/traefik-default-backend
+        enabled: true
+        ingressClass: nginx
+        ingressClassByName: false
+        proxyBodySize: 1073741824
+        proxyBuffering: false
+        proxyReadTimeout: 600
+        proxyRequestBuffering: true
+        proxySendTimeout: 600
+        watchIngressWithoutClass: false
+    service:
+      spec:
+        externalIPs:
+        - ${CONTROL_PLANE_IP}
+        externalTrafficPolicy: Local
+        type: NodePort
+    tlsStore:
+      default:
+        defaultCertificate:
+          secretName: internal-ingress-cert
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traefik-default-backend
+  namespace: kube-system
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: traefik-default-backend
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: traefik-default-backend
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - image: docker.io/billimek/custom-error-pages@sha256:96e6ba8bffcce419ea665ba60ff84e03c5ea5879617bb25298a17cfaff9b6495
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: error-pages
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 6
+          httpGet:
+            path: /healthz
+            port: http
+            scheme: HTTP
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources:
+          limits:
+            memory: 350Mi
+          requests:
+            cpu: 25m
+            memory: 250Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 65534
+          runAsNonRoot: true
+          runAsUser: 65534
+          seccompProfile:
+            type: RuntimeDefault
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-default-backend
+  namespace: kube-system
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: traefik-default-backend
+  sessionAffinity: None
+  type: ClusterIP
