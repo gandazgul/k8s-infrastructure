@@ -1,6 +1,14 @@
 # K8s Infrastructure Config
 
-This is a collection of scripts to deploy kubernetes v1.34.x on Fedora. Tested on Fedora 39.
+This is a collection of scripts to deploy Kubernetes on Fedora 44.
+
+Bootstrap version sources:
+
+- `KUBERNETES_MINOR` in [install-k8s/configNode.sh](install-k8s/configNode.sh) selects the Kubernetes and CRI-O repositories; package patch versions are not pinned.
+- [install-k8s/2-configK8SControlPlane.sh](install-k8s/2-configK8SControlPlane.sh) uses the installed kubeadm version for both image pulls and cluster initialization.
+- The Flux controller version is pinned only in [infrastructure/setup/install-flux.sh](infrastructure/setup/install-flux.sh). Flannel uses its latest release manifest.
+
+The homelab bootstrap stops, disables, and masks active firewalld, preserving its existing policy rather than configuring host-firewall rules. Kernel modules and forwarding settings are applied regardless of firewalld state. This setup relies on the homelab's router/Cloudflare boundary and permits NodePorts 1025–32767.
 
 It's also a collection of [flux v2](https://toolkit.fluxcd.io/) objects to deploy all the supported applications.
 

@@ -38,3 +38,4 @@ resources:
   - ../../../apps/KokoroTTS.yaml
   - ../../../apps/WyomingOpenAI.yaml
   - ../../../apps/YouTubeOperationalAPI.yaml
+  - ../NvidiaDevicePlugin.yaml

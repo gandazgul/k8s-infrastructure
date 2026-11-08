@@ -1,24 +1,30 @@
 #!/bin/bash
 
+set -e
+
+# Keep Kubernetes and CRI-O on the same minor; repositories select the patch versions.
+KUBERNETES_MINOR=v1.36
+
 if [[ $EUID = 0 ]]; then
    printf "Don't run this script as root"
    exit 1
 fi
 
 printf "\nInstalling cri-o from its repo ==================================================================\n"
-if ! dnf list installed cri-o > /dev/null 2>&1; then
-  sudo bash -c 'cat <<EOF | tee /etc/yum.repos.d/cri-o.repo
+if ! rpm -q cri-o > /dev/null 2>&1; then
+  cat <<EOF | sudo tee /etc/yum.repos.d/cri-o.repo > /dev/null
 [cri-o]
 name=CRI-O
-baseurl=https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.34/rpm/
+baseurl=https://download.opensuse.org/repositories/isv:/cri-o:/stable:/${KUBERNETES_MINOR}/rpm/
 enabled=1
 gpgcheck=1
-gpgkey=https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.34/rpm/repodata/repomd.xml.key
-EOF'
+gpgkey=https://download.opensuse.org/repositories/isv:/cri-o:/stable:/${KUBERNETES_MINOR}/rpm/repodata/repomd.xml.key
+EOF
 
   printf "\nInstalling cri-o dependencies\n"
   sudo dnf install -y \
-      conntrack \
+      conntrack-tools \
+      iproute-tc \
       container-selinux \
       ebtables \
       ethtool \
@@ -26,7 +32,7 @@ EOF'
       socat
 
   printf "\nInstalling cri-o\n"
-  sudo dnf install -y --repo cri-o cri-o
+  sudo dnf install -y --from-repo=cri-o cri-o
 
   printf "\nEnable cri-o ==========================================================================================\n"
   sudo systemctl daemon-reload || exit 1
@@ -41,61 +47,59 @@ EOF'
 fi;
 
 printf "\nInstalling Kubernetes packages from repo ==================================================================\n"
-if [[ ! -f /etc/yum.repos.d/kubernetes.repo ]]; then
+if ! rpm -q kubelet kubectl kubeadm cri-tools kubernetes-cni > /dev/null 2>&1; then
     printf "\nInstall kubelet, kubeadm and kubectl"
-    sudo bash -c 'cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+    if [[ ! -f /etc/yum.repos.d/kubernetes.repo ]]; then
+      cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo > /dev/null
 [kubernetes]
 name=Kubernetes
-baseurl=https://pkgs.k8s.io/core:/stable:/v1.34/rpm/
+baseurl=https://pkgs.k8s.io/core:/stable:/${KUBERNETES_MINOR}/rpm/
 enabled=1
 gpgcheck=1
-gpgkey=https://pkgs.k8s.io/core:/stable:/v1.34/rpm/repodata/repomd.xml.key
+gpgkey=https://pkgs.k8s.io/core:/stable:/${KUBERNETES_MINOR}/rpm/repodata/repomd.xml.key
 exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
-EOF'
+EOF
+    fi
 
-    sudo dnf -y install --enablerepo=kubernetes kubelet kubectl kubeadm --disableexcludes=kubernetes || exit 1
+    sudo dnf -y install --from-repo=kubernetes kubelet kubectl kubeadm cri-tools kubernetes-cni --setopt=disable_excludes=kubernetes || exit 1
     # cockpit-pcp enables the metric graphs in cockpit
     sudo dnf -y install cockpit-pcp || exit 1
-
-    # enable cni plugins
-    sudo mkdir -p /opt/cni/
-    sudo ln -s /usr/libexec/cni/ /opt/cni/bin
 fi;
 
 printf "\nEnabling cockpit ==========================================================================================\n"
 sudo systemctl enable --now cockpit.socket || exit 1
 
-if dnf list installed zram-generator-defaults > /dev/null 2>&1; then
+if rpm -q zram-generator-defaults > /dev/null 2>&1; then
   printf "\nDisabling swap ==========================================================================================\n"
   sudo dnf -y remove zram-generator-defaults
   sudo swapoff /dev/zram0 || exit 1
 fi
 
+# Preserve the homelab bootstrap's existing host-firewall policy.
 if systemctl is-active --quiet firewalld >/dev/null 2>&1; then
     printf "\nDisabling the firewall ================================================================================\n"
     sudo systemctl stop firewalld
     sudo systemctl disable firewalld
-    # fedora 29 complained that uninstalling firewalld would uninstall kernel-core
-    # sudo dnf -y remove firewalld
-    # Masking prevents the service from ever being started
     sudo systemctl mask firewalld.service
+fi
 
-    # needed for cri-o
-    sudo modprobe overlay
-    # enable iptables in the kernel
-    sudo modprobe br_netfilter
-    cat <<EOF | sudo tee /etc/modules-load.d/crio.conf
+# Apply networking prerequisites even when firewalld is already inactive.
+# needed for cri-o
+sudo modprobe overlay
+# enable iptables in the kernel
+sudo modprobe br_netfilter
+cat <<EOF | sudo tee /etc/modules-load.d/crio.conf
 overlay
 br_netfilter
 EOF
 
-    # Enable ipv4 forwarding
-    echo 1 | sudo tee --append /proc/sys/net/ipv4/ip_forward
-    # This ensures all network traffic goes through iptables
-    echo 1 | sudo tee --append /proc/sys/net/bridge/bridge-nf-call-iptables
+# Enable ipv4 forwarding
+echo 1 | sudo tee --append /proc/sys/net/ipv4/ip_forward
+# This ensures all network traffic goes through iptables
+echo 1 | sudo tee --append /proc/sys/net/bridge/bridge-nf-call-iptables
 
-    # same as above?
-    cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
+# same as above?
+cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
 net.bridge.bridge-nf-call-iptables  = 1
 net.ipv4.ip_forward                 = 1
 net.bridge.bridge-nf-call-ip6tables = 1
@@ -103,4 +107,3 @@ EOF
 
 # make the above settings take effect now
 sudo sysctl --system
-fi;
