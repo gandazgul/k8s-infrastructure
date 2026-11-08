@@ -117,5 +117,14 @@ patches:
     namespace: default
   patch: |
     - op: replace
-      path: /spec/values/volumes/0/persistentVolumeClaim/claimName
-      value: vault-volume
+      path: /spec/values/volumes
+      value:
+      - name: yasr-volume
+        persistentVolumeClaim:
+          claimName: yasr-volume
+    - op: replace
+      path: /spec/values/volumeMounts
+      value:
+      - name: yasr-volume
+        subPath: configs/sftpgo
+        mountPath: /config
