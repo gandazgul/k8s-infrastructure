@@ -2,7 +2,7 @@ persistence:
   data:
     enabled: true
     type: pvc
-    existingClaim: main-volume
+    existingClaim: vault-volume
     subPath:
     - path: public
       mountPath: /data
@@ -11,7 +11,7 @@ persistence:
   films:
     enabled: true
     type: pvc
-    existingClaim: old-main-volume
+    existingClaim: main-volume
     subPath:
     - path: public/films
       mountPath: /data/films

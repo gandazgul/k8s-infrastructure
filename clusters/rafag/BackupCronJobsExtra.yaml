@@ -5,7 +5,7 @@
 # /media/backup/rafag). These extra jobs cover data that lives outside that
 # pair and should only exist on the rafag cluster:
 #   - /media/yasr        -> /media/backup/yasr    (separate disk, yasr-volume PVC)
-#   - /media/main/angela -> /media/backup/angela  (under main-volume)
+#   - /media/main/angela -> /media/backup/angela  (under vault-volume)
 # NOTE: retention/pruning (rdiff-backup "remove increments") is intentionally
 # not wired here yet; increments will grow until that is added. There is ample
 # free space (~2.3 TB) for the initial ~343 GB plus a month of increments.
@@ -83,7 +83,7 @@ spec:
   prune: true
   targetNamespace: default
   dependsOn:
-    - name: main-volume
+    - name: vault-volume
     - name: backup-volume
   postBuild:
     substitute:
@@ -96,9 +96,9 @@ spec:
         - op: add
           path: /spec/jobTemplate/spec/template/spec/volumes/-
           value:
-            name: main-volume
+            name: vault-volume
             persistentVolumeClaim:
-              claimName: main-volume
+              claimName: vault-volume
         - op: add
           path: /spec/jobTemplate/spec/template/spec/volumes/-
           value:
@@ -111,7 +111,7 @@ spec:
         - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
           value:
-            name: main-volume
+            name: vault-volume
             mountPath: /media/main
         - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
@@ -142,7 +142,7 @@ spec:
   prune: true
   targetNamespace: default
   dependsOn:
-    - name: main-volume
+    - name: vault-volume
     - name: backup-volume
   postBuild:
     substitute:
@@ -155,9 +155,9 @@ spec:
         - op: add
           path: /spec/jobTemplate/spec/template/spec/volumes/-
           value:
-            name: main-volume
+            name: vault-volume
             persistentVolumeClaim:
-              claimName: main-volume
+              claimName: vault-volume
         - op: add
           path: /spec/jobTemplate/spec/template/spec/volumes/-
           value:
@@ -170,7 +170,7 @@ spec:
         - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-
           value:
-            name: main-volume
+            name: vault-volume
             mountPath: /media/main
         - op: add
           path: /spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-

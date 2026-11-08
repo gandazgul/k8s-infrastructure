@@ -67,7 +67,7 @@ spec:
         enabled: true
       persistence:
         library:
-          existingClaim: main-volume
+          existingClaim: vault-volume
     valkey:
       enabled: true
       controllers:
@@ -119,7 +119,7 @@ spec:
       persistence:
         data:
           type: persistentVolumeClaim
-          existingClaim: main-volume
+          existingClaim: vault-volume
           globalMounts:
             - path: /data
               subPath: rafag/immich-library
