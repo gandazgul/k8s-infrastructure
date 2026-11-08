@@ -23,6 +23,9 @@ spec:
     providers:
       kubernetesIngress:
         enabled: false
+      # Serve existing nginx-class Ingress resources and supported nginx annotations.
+      # Compatibility reference: https://github.com/traefik/traefik/blob/v3.7.16/docs/content/reference/routing-configuration/kubernetes/ingress-nginx.md
+      # Not a full nginx replacement: satisfy:any (e.g. Flower Shop) is unsupported.
       kubernetesIngressNGINX:
         allowCrossNamespaceResources: false
         allowSnippetAnnotations: false
