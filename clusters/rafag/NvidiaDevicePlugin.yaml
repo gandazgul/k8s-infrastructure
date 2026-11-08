@@ -1,4 +1,5 @@
 ---
+# Flux auto-discovers this file from the rafag root; do not also include it from apps.
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
