@@ -6,6 +6,6 @@ persistence:
     subPath: configs/resilio
   sync:
     enabled: true
-    existingClaim: vault-volume
+    existingClaim: main-volume
     mountPath: /sync
     subPath: rafag

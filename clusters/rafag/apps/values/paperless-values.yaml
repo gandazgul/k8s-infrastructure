@@ -1,6 +1,6 @@
 persistence:
   main:
     enabled: true
-    existingClaim: vault-volume
+    existingClaim: main-volume
     mountPath: /usr/src/paperless/consume
     subPath: "rafag/PaperlessConsumer"

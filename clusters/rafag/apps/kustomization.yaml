@@ -39,29 +39,29 @@ resources:
   - ../../../apps/WyomingOpenAI.yaml
   - ../../../apps/YouTubeOperationalAPI.yaml
 patches:
-# Vault: all data lives on vault-volume; main-volume (old disk) only holds films.
-# Apps whose shared definitions hardcode main-volume are pointed at vault-volume here.
+# Tdarr's shared overlay mounts main-volume at /media (subPath public). On rafag main-volume is the
+# new disk, whose public/ has no films, so Tdarr reads the old disk (films-volume) instead.
 - target:
     kind: Kustomization
-    name: audiobookshelf
+    name: tdarr
     namespace: default
   patch: |
     apiVersion: kustomize.toolkit.fluxcd.io/v1
     kind: Kustomization
     metadata:
-      name: audiobookshelf
+      name: tdarr
       namespace: default
     spec:
       patches:
       - target:
           kind: Deployment
-          name: audiobookshelf
+          name: tdarr
           namespace: default
         patch: |
           apiVersion: apps/v1
           kind: Deployment
           metadata:
-            name: audiobookshelf
+            name: tdarr
             namespace: default
           spec:
             template:
@@ -69,53 +69,4 @@ patches:
                 volumes:
                 - name: main-volume
                   persistentVolumeClaim:
-                    claimName: vault-volume
-- target:
-    kind: Kustomization
-    name: lidarr
-    namespace: default
-  patch: |
-    apiVersion: kustomize.toolkit.fluxcd.io/v1
-    kind: Kustomization
-    metadata:
-      name: lidarr
-      namespace: default
-    spec:
-      patches:
-      - target:
-          kind: Deployment
-          name: lidarr
-          namespace: default
-        patch: |
-          apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            name: lidarr
-            namespace: default
-          spec:
-            template:
-              spec:
-                volumes:
-                - name: main-volume
-                  persistentVolumeClaim:
-                    claimName: vault-volume
-- target:
-    group: helm.toolkit.fluxcd.io
-    version: v2
-    kind: HelmRelease
-    name: photoprism
-    namespace: default
-  patch: |
-    - op: replace
-      path: /spec/values/persistence/originals/existingClaim
-      value: vault-volume
-- target:
-    group: helm.toolkit.fluxcd.io
-    version: v2
-    kind: HelmRelease
-    name: sftpgo
-    namespace: default
-  patch: |
-    - op: replace
-      path: /spec/values/volumes/0/persistentVolumeClaim/claimName
-      value: vault-volume
+                    claimName: films-volume

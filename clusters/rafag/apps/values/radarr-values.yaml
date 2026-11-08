@@ -2,5 +2,5 @@ persistence:
   movies:
     enabled: true
     type: pvc
-    existingClaim: main-volume
+    existingClaim: films-volume
     subPath: public/films

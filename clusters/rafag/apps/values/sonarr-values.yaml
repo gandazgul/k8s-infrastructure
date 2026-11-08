@@ -2,5 +2,5 @@ persistence:
   tv:
     enabled: true
     type: pvc
-    existingClaim: vault-volume
+    existingClaim: main-volume
     subPath: public/shows

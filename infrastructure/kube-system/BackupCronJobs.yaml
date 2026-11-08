@@ -29,7 +29,7 @@ spec:
           value:
             name: main-volume
             persistentVolumeClaim:
-              claimName: ${BACKUP_SOURCE_VOLUME:=main-volume}
+              claimName: main-volume
         - op: add
           path: /spec/jobTemplate/spec/template/spec/volumes/-
           value:
