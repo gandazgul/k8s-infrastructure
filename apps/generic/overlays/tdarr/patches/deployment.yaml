@@ -11,11 +11,6 @@ spec:
             path: /etc/localtime
         - name: transcode-cache
           emptyDir: {}
-        # Media library claim. Clusters that keep media on a different claim than main-volume
-        # set TDARR_MEDIA_CLAIM in their cluster Kustomization substitutions.
-        - name: media-volume
-          persistentVolumeClaim:
-            claimName: ${TDARR_MEDIA_CLAIM:=main-volume}
       containers:
         # Tdarr Server (replaces generic 'container')
         - name: container
@@ -59,7 +54,7 @@ spec:
               name: yasr-volume
               subPath: configs/tdarr
             - mountPath: /media
-              name: media-volume
+              name: main-volume
               subPath: public
             - mountPath: /shared
               name: transcode-cache
@@ -102,7 +97,7 @@ spec:
               name: yasr-volume
               subPath: configs/tdarr
             - mountPath: /media
-              name: media-volume
+              name: main-volume
               subPath: public
             - mountPath: /shared
               name: transcode-cache
