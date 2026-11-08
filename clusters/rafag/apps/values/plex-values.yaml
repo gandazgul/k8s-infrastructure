@@ -11,7 +11,7 @@ persistence:
   films:
     enabled: true
     type: pvc
-    existingClaim: films-volume
+    existingClaim: franken-vault-volume
     subPath:
     - path: public/films
       mountPath: /data/films
