@@ -6,9 +6,3 @@ additionalVolumes:
   hostPath:
     path: /dev/serial/by-id/usb-Nabu_Casa_ZBT-2_DCB4D90C146C-if00
     type: CharDevice
-addons:
-  codeserver:
-    ingress:
-      annotations:
-        # Use the reachable Service IP instead of the firewalled hostNetwork endpoint.
-        nginx.ingress.kubernetes.io/service-upstream: "true"
