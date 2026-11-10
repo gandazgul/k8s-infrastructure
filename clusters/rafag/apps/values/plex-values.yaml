@@ -8,3 +8,11 @@ persistence:
       mountPath: /data
     - path: rafag/photos/kalidroid/Camera
       mountPath: /pictures
+  films:
+    enabled: true
+    type: pvc
+    existingClaim: franken-vault-volume
+    subPath:
+    - path: public/films
+      mountPath: /data/films
+      readOnly: true

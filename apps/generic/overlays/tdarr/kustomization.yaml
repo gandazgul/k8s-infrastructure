@@ -53,3 +53,15 @@ patches:
       version: v1
       kind: Ingress
       name: tdarr
+  # Media library claim. Volumes are [tz-config, transcode-cache, yasr-volume, backup-volume, main-volume],
+  # so index 4 is main-volume. Clusters that keep media on a different claim set TDARR_MEDIA_CLAIM in
+  # their cluster secret; the default renders the same main-volume claim as before.
+  - patch: |-
+      - op: replace
+        path: /spec/template/spec/volumes/4/persistentVolumeClaim/claimName
+        value: ${TDARR_MEDIA_CLAIM:=main-volume}
+    target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: tdarr

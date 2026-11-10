@@ -79,6 +79,8 @@ spec:
           enabled: true
           annotations:
             kubernetes.io/ingress.class: "nginx"
+            # Route through the Service IP rather than a potentially firewalled hostNetwork endpoint.
+            nginx.ingress.kubernetes.io/service-upstream: "true"
             forecastle.stakater.com/expose: "true"
             forecastle.stakater.com/icon: "https://raw.githubusercontent.com/coder/code-server/main/src/browser/media/pwa-icon-512.png"
             forecastle.stakater.com/appName: "Config Editor"
