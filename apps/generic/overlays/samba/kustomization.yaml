@@ -1,0 +1,31 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: default
+resources:
+- ../../base/
+
+labels:
+- pairs:
+    app.kubernetes.io/name: samba
+  includeSelectors: true
+
+patches:
+- path: patches/deployment.yaml
+  target:
+    kind: Deployment
+    name: deployment
+  options:
+    allowNameChange: true
+- path: patches/service.yaml
+  target:
+    kind: Service
+    name: service
+  options:
+    allowNameChange: true
+- patch: |-
+    $patch: delete
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: ingress

@@ -15,6 +15,7 @@ resources:
   - ../../../apps/Paperless.yaml
    - ../../../apps/Resilio.yaml
   # - ../../../apps/SFTPGo.yaml
+  - ../../../apps/Samba.yaml
   - ../../../apps/ZWaveJS.yaml
   - ../../../apps/Mealie.yaml
   - ../../../apps/BookOrbit.yaml

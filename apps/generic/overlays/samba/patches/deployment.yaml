@@ -1,0 +1,82 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: samba
+spec:
+  strategy:
+    type: Recreate
+  template:
+    spec:
+      automountServiceAccountToken: false
+      volumes:
+      - name: backup-volume
+        $patch: delete
+      containers:
+      - name: container
+        image: ghcr.io/servercontainers/samba:smbd-only-latest@sha256:31b90ea7fe3258d30fccd971c85743b92694605f4b43dc8a4df23a202fced06a
+        command: ["/bin/sh", "-ec"]
+        args:
+        - |
+          mkdir -p /var/lib/samba/private /etc/avahi/services
+          chmod 755 /var/lib/samba
+          chmod 700 /var/lib/samba/private
+          ACCOUNT_gandazgul=$(grep '^gandazgul:' /config/smbpasswd)
+          export ACCOUNT_gandazgul
+          exec /container/scripts/entrypoint.sh runsvdir -P /container/config/runit
+        env:
+        - name: UID_gandazgul
+          value: "1000"
+        - name: TZ
+          value: "${CLUSTER_TIME_ZONE}"
+        - name: FAIL_FAST
+          value: "1"
+        - name: AVAHI_DISABLE
+          value: "1"
+        - name: WSDD2_DISABLE
+          value: "1"
+        - name: NETBIOS_DISABLE
+          value: "1"
+        - name: SAMBA_CONF_MAP_TO_GUEST
+          value: Never
+        - name: SAMBA_GLOBAL_STANZA
+          value: "server min protocol = SMB2; smb ports = 445; netbios name = media"
+        - name: SAMBA_VOLUME_CONFIG_media
+          value: "[media]; path = /shares/media; valid users = gandazgul; guest ok = no; read only = yes; browseable = yes"
+        volumeMounts:
+        - name: yasr-volume
+          mountPath: /config
+          subPath: configs/samba
+          readOnly: true
+        - name: yasr-volume
+          mountPath: /var/lib/samba
+          subPath: configs/samba/state
+        - name: main-volume
+          mountPath: /shares/media
+          subPath: public
+          readOnly: true
+        ports:
+        - name: smb
+          containerPort: 445
+        livenessProbe:
+          $patch: replace
+          tcpSocket:
+            port: smb
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          tcpSocket:
+            port: smb
+          timeoutSeconds: 5
+        startupProbe:
+          tcpSocket:
+            port: smb
+          periodSeconds: 5
+          failureThreshold: 30
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: "2"
+            memory: 512Mi

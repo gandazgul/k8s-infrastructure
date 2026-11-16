@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: samba
+spec:
+  externalIPs:
+  - "${CONTROL_PLANE_IP}"
+  ports:
+  - name: smb
+    port: 445
+    targetPort: smb
+    protocol: TCP
