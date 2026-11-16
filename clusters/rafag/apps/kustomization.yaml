@@ -38,3 +38,21 @@ resources:
   - ../../../apps/KokoroTTS.yaml
   - ../../../apps/WyomingOpenAI.yaml
   - ../../../apps/YouTubeOperationalAPI.yaml
+patches:
+  - target:
+      kind: HelmRelease
+      name: plex
+    patch: |-
+      apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      metadata:
+        name: plex
+        namespace: default
+      spec:
+        values:
+          persistence:
+            films:
+              subPath:
+                - path: public/films
+                  mountPath: /data/films
+                  readOnly: false
