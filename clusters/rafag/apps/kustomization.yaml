@@ -56,3 +56,18 @@ patches:
                 - path: public/films
                   mountPath: /data/films
                   readOnly: false
+  - target:
+      kind: HelmRelease
+      name: resilio
+    patch: |-
+      apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      metadata:
+        name: resilio
+        namespace: default
+      spec:
+        values:
+          ingress:
+            main:
+              annotations:
+                nginx.ingress.kubernetes.io/custom-http-errors: "403,404,500,503"
