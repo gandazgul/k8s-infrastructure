@@ -43,6 +43,8 @@ spec:
           value: "server min protocol = SMB2; smb ports = 445; netbios name = media"
         - name: SAMBA_VOLUME_CONFIG_media
           value: "[media]; path = /shares/media; valid users = gandazgul; guest ok = no; read only = yes; browseable = yes"
+        - name: SAMBA_VOLUME_CONFIG_pictures
+          value: "[pictures]; path = /shares/pictures; valid users = gandazgul; guest ok = no; read only = yes; browseable = yes"
         volumeMounts:
         - name: yasr-volume
           mountPath: /config
@@ -54,6 +56,10 @@ spec:
         - name: main-volume
           mountPath: /shares/media
           subPath: public
+          readOnly: true
+        - name: main-volume
+          mountPath: /shares/pictures
+          subPath: gandazgul/Pictures
           readOnly: true
         ports:
         - name: smb

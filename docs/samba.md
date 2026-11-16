@@ -14,8 +14,10 @@ smb://10.1.1.2/media
 Use the `gandazgul` account and its existing Samba password. The Samba password
 can differ from the SSH password. Save the password in Keychain if required.
 
-The share exposes `/media/main/public` from `main-volume`. Both the Samba share
-and the container's media mount are read-only. Guest access is disabled.
+The `media` share exposes `/media/main/public` from `main-volume`. The
+`pictures` share exposes `/media/main/gandazgul/Pictures` at
+`smb://10.1.1.2/pictures`. Both shares and their container mounts are read-only.
+Guest access is disabled.
 Only TCP port 445 is exposed, through a Service on `${CONTROL_PLANE_IP}`.
 There is no HTTP ingress or network discovery service. Keep port 445 on the
 trusted LAN; do not forward it from the internet.

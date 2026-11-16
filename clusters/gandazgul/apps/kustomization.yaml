@@ -28,7 +28,8 @@ resources:
   - ../../../apps/Sonarr.yaml
   # - ../../../apps/TubeSync.yaml
   - ../../../apps/Tdarr.yaml
-  - ../../../apps/Plex.yaml
+  # Plex runs on the Mac; retain the source data on yasr-volume for rollback.
+  # - ../../../apps/Plex.yaml
   - ../../../apps/RDiffWeb.yaml
   # - ../../../apps/Qdrant.yaml
   - ../../../apps/Immich.yaml
