@@ -41,7 +41,7 @@ the deployment. Do not commit password hashes to Git.
 
 ## Plex migration
 
-The share is available for the Plex move. A persistent Mac mount, local Plex
-installation, and transfer of the existing Plex data are separate operations.
-Keep the Plex database and transcode files on the Mac's local disk. Disable
-Plex's automatic trash emptying before changing library paths.
+See [Plex on the Mac](plex-migration.md) for the storage layout and rollback
+steps. Keep the Plex database and transcode files on the Mac's local disk.
+Keep automatic trash emptying disabled so a disconnected share does not remove
+library entries.
