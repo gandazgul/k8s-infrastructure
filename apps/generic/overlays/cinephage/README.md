@@ -60,18 +60,38 @@ to preserve torrent seeding. Hardlinks cannot cross these filesystems.
 Do not enable automatic torrent removal during the initial test.
 This deployment does not change Transmission settings or connect it automatically.
 
-## Connect Overseerr or Seerr
+## Connect Seerr
 
 Cinephage has a Radarr/Sonarr compatibility API. Upstream marks it as WIP.
 Your cluster uses Seerr; its existing server connections are not changed here.
 
 1. Enable **Radarr/Sonarr Compatibility** under **Settings > System > General**.
-2. Generate or copy the **Main API Key** from that page.
-3. Add test Radarr and Sonarr servers in Seerr using the connection URLs shown
-   by Cinephage. The URL bases are `/api/radarr` and `/api/sonarr` respectively.
-   Use the Cinephage Main API Key, not the streaming key.
+2. Generate or copy the **Main API Key** from that page. Do not use the streaming key.
+3. In Seerr, add test Radarr and Sonarr servers. For the in-cluster connection,
+   use these fields:
+
+   | Seerr field | Radarr | Sonarr |
+   |---|---|---|
+   | Hostname or IP Address | `cinephage` | `cinephage` |
+   | Port | `3000` | `3000` |
+   | Use SSL | Off | Off |
+   | URL Base | `/api/radarr` | `/api/sonarr` |
+
+   Put only `cinephage` in the hostname field. Put the API base path in **URL
+   Base**, not in the hostname. Use the Cinephage Main API Key in Seerr.
 4. Select the matching root folder and quality profile. Test the connection
-   and one request before changing any default server.
+   before changing any default server or submitting requests.
+
+You can also use the external HTTPS address: set hostname to
+`cinema.dumbhome.uk`, port to `443`, enable SSL, and set **URL Base** to
+`/api/radarr` or `/api/sonarr`.
+
+## Connect Plex
+
+Plex runs on the Mac at `10.1.1.6`. In Cinephage, use `http://10.1.1.6:32400`
+as the Plex server host. Add path mappings after confirming the media paths Plex
+uses for its Movies and TV libraries. Cinephage uses `/media/movies` and
+`/media/tv`; the Plex paths are not yet recorded.
 
 See the [upstream compatibility guide](https://docs.cinephage.net/guides/configure/system/arr-compat)
 and [Transmission guide](https://docs.cinephage.net/guides/configure/download-clients/transmission).
