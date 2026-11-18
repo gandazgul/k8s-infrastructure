@@ -16,8 +16,6 @@ yarn-error.log
 # Mac
 .DS_Store
 
-.history/
 # BEGIN RunWield owned runtime state
 .wld/internal/
-.wld/plan-staging/
 # END RunWield owned runtime state
