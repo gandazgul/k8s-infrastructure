@@ -40,7 +40,7 @@ spec:
               mountPath: /backup
       containers:
         - name: container
-          image: ghcr.io/gandazgul/chores-app:sha-dd64251a12542a78bb500a23b0454ecd36abddec@sha256:f964f12d32ffbb0d9128e272049dbc7685d19b9cf7ccdb103bb35e304ee57575
+          image: ghcr.io/gandazgul/chores-app:sha-1bf96e1018f6f44891fca8f047c0821d23982c55@sha256:3363dffb3a1a3a5d6c0d37c4a1837af65dbeb5fff488298918c914a27a649e81
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -77,12 +77,9 @@ spec:
             - name: ENABLE_NOTIFICATIONS
               value: "true"
             - name: NOTIFICATION_PROVIDER
-              value: pushover
-            - name: PUSHOVER_APP_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: secrets
-                  key: TOW_PUSHOVER_APP_TOKEN
+              value: fcm
+            - name: FCM_SERVICE_ACCOUNT_FILE
+              value: /run/secrets/tow-fcm/service-account.json
             - name: QUIET_HOURS_START
               value: "21:00"
             - name: QUIET_HOURS_END
@@ -122,7 +119,17 @@ spec:
               subPath: configs/tow
             - name: tmp
               mountPath: /tmp
+            - name: fcm-credentials
+              mountPath: /run/secrets/tow-fcm
+              readOnly: true
       volumes:
+        - name: fcm-credentials
+          secret:
+            secretName: secrets
+            defaultMode: 0444
+            items:
+              - key: TOW_FCM_SERVICE_ACCOUNT_JSON
+                path: service-account.json
         - name: main-volume
           $patch: delete
         - name: tmp

@@ -22,9 +22,26 @@ spec:
             runAsGroup: 1993
             seccompProfile:
               type: RuntimeDefault
+          initContainers:
+            - name: backup-permissions
+              image: docker.io/library/busybox:1.37.0
+              command: ["sh", "-ec"]
+              args: ["chown 1993:1993 /backups && chmod 700 /backups"]
+              securityContext:
+                runAsNonRoot: false
+                runAsUser: 0
+                runAsGroup: 0
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: ["ALL"]
+                  add: ["CHOWN", "FOWNER"]
+              volumeMounts:
+                - name: backups
+                  mountPath: /backups
+                  subPath: apps/tow
           containers:
             - name: backup
-              image: ghcr.io/gandazgul/chores-app:sha-dd64251a12542a78bb500a23b0454ecd36abddec@sha256:f964f12d32ffbb0d9128e272049dbc7685d19b9cf7ccdb103bb35e304ee57575
+              image: ghcr.io/gandazgul/chores-app:sha-1bf96e1018f6f44891fca8f047c0821d23982c55@sha256:3363dffb3a1a3a5d6c0d37c4a1837af65dbeb5fff488298918c914a27a649e81
               command: ["sh", "-ec"]
               args:
                 - >-
