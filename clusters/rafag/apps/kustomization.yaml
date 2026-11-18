@@ -96,6 +96,9 @@ patches:
                   $patch: replace
                   type: Recreate
                 template:
+                  metadata:
+                    annotations:
+                      seedbox.openclaw/reliability-revision: "20261118-v1"
                   spec:
                     containers:
                       - name: container
