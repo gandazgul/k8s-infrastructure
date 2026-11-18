@@ -92,6 +92,9 @@ patches:
                 name: transmission
                 namespace: default
               spec:
+                strategy:
+                  $patch: replace
+                  type: Recreate
                 template:
                   spec:
                     containers:
