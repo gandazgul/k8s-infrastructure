@@ -106,6 +106,8 @@ patches:
                           timeoutSeconds: 5
                       - name: vpn
                         env:
+                          - name: SERVER_REGIONS
+                            value: CA Toronto
                           - name: FIREWALL
                             $patch: delete
                           - name: FIREWALL_ENABLED_DISABLING_IT_SHOOTS_YOU_IN_YOUR_FOOT
