@@ -8,7 +8,7 @@ spec:
     - ReadWriteOnce
   capacity:
     storage: ${VOLUME_CAPACITY}
-  volumeMode: ${VOLUME_MODE}
+  volumeMode: ${VOLUME_MODE:=Filesystem}
   local:
     path: ${VOLUME_PATH}
   nodeAffinity:

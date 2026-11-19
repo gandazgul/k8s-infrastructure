@@ -38,3 +38,112 @@ resources:
   - ../../../apps/KokoroTTS.yaml
   - ../../../apps/WyomingOpenAI.yaml
   - ../../../apps/YouTubeOperationalAPI.yaml
+patches:
+  - target:
+      kind: HelmRelease
+      name: plex
+    patch: |-
+      apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      metadata:
+        name: plex
+        namespace: default
+      spec:
+        values:
+          persistence:
+            films:
+              subPath:
+                - path: public/films
+                  mountPath: /data/films
+                  readOnly: false
+  - target:
+      kind: HelmRelease
+      name: resilio
+    patch: |-
+      apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      metadata:
+        name: resilio
+        namespace: default
+      spec:
+        values:
+          ingress:
+            main:
+              annotations:
+                nginx.ingress.kubernetes.io/custom-http-errors: "403,404,500,503"
+  - target:
+      kind: Kustomization
+      name: transmission
+    patch: |-
+      apiVersion: kustomize.toolkit.fluxcd.io/v1
+      kind: Kustomization
+      metadata:
+        name: transmission
+        namespace: default
+      spec:
+        patches:
+          - target:
+              kind: Deployment
+              name: transmission
+            patch: |-
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: transmission
+                namespace: default
+              spec:
+                strategy:
+                  $patch: replace
+                  type: Recreate
+                template:
+                  metadata:
+                    annotations:
+                      seedbox.openclaw/reliability-revision: "20261118-v1"
+                  spec:
+                    containers:
+                      - name: container
+                        livenessProbe:
+                          $patch: replace
+                          tcpSocket:
+                            port: 9091
+                          initialDelaySeconds: 45
+                          periodSeconds: 60
+                          failureThreshold: 3
+                          timeoutSeconds: 5
+                      - name: vpn
+                        env:
+                          - name: SERVER_REGIONS
+                            value: CA Ontario
+                          - name: FIREWALL
+                            $patch: delete
+                          - name: FIREWALL_ENABLED_DISABLING_IT_SHOOTS_YOU_IN_YOUR_FOOT
+                            value: "on"
+                          - name: UPDATER_PERIOD
+                            value: "480h"
+                          - name: UPDATER_VPN_SERVICE_PROVIDERS
+                            value: private internet access
+                          - name: PORT_FORWARD_ONLY
+                            value: "on"
+                        livenessProbe:
+                          $patch: replace
+                          exec:
+                            command:
+                              - /gluetun-entrypoint
+                              - healthcheck
+                          initialDelaySeconds: 45
+                          periodSeconds: 60
+                          failureThreshold: 3
+                          timeoutSeconds: 12
+                        readinessProbe:
+                          exec:
+                            command:
+                              - /gluetun-entrypoint
+                              - healthcheck
+                          initialDelaySeconds: 10
+                          periodSeconds: 10
+                          failureThreshold: 3
+                          timeoutSeconds: 12
+                        volumeMounts:
+                          - name: yasr-volume
+                            mountPath: /gluetun
+                            subPath: configs/openvpn/gluetun/

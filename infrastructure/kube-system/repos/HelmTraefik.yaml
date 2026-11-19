@@ -1,8 +1,9 @@
+---
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: ingress-nginx
+  name: traefik
   namespace: kube-system
 spec:
-  interval: 1h0m0s
-  url: https://kubernetes.github.io/ingress-nginx
+  interval: 1h
+  url: https://traefik.github.io/charts

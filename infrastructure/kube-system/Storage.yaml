@@ -17,7 +17,7 @@ spec:
       VOLUME_NAME: main-volume
       VOLUME_CAPACITY: 4Ti
       VOLUME_STORAGE_CLASS: hdd
-      VOLUME_PATH: /media/main
+      VOLUME_PATH: ${MAIN_VOLUME_PATH:=/media/main}
       NAMESPACE: default
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
